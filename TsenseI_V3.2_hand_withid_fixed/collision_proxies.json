@@ -1,0 +1,1475 @@
+{
+  "schema": 1,
+  "profile": "shadow_primitive_v1",
+  "units": "metres; body-local URDF frame; MuJoCo quaternion wxyz",
+  "reference": "robopianist-rl/run.sh enables primitive fingertips; Shadow uses rounded finger primitives and separate visual meshes",
+  "derivation": "scripts/generate_collision_proxies.py; MuJoCo 3.13.0; V3.2 geometry only; does not copy Shadow dimensions or inertias",
+  "limitations": [
+    "TODO(V32-06): engineering collision approximation, not hardware calibration",
+    "Palm housing retains original mesh because a single box fills the thumb recess; compound palm fitting remains TODO(V32-06)",
+    "Thin flanges omitted by rounded finger proxies; terminal width follows distal contact face, not proximal gearbox housing; joint tree, inertia and visual mesh unchanged",
+    "Rounded TsenseI_A3.2 ID fingertips use a 1 mm distal cap band for width; this narrow proxy is not a conservative envelope of the outer cover"
+  ],
+  "hands": {
+    "left": {
+      "base_link": {
+        "source_mesh": "meshes_left/base_link.STL",
+        "source_sha256": "c753d840a6f190a5256552646a2f9811eec7f43ef66392fe84369313a3d487a3",
+        "source_bounds": [
+          [
+            -0.009500000763099585,
+            -0.04101325607277414,
+            -0.0040000000000002985
+          ],
+          [
+            0.04141058273299417,
+            0.05799392700217704,
+            0.10130592346191378
+          ]
+        ],
+        "type": "mesh",
+        "physical_role": "palm_housing",
+        "reason": "Retain thumb recess; compound box decomposition pending"
+      },
+      "Left_hand_palm_link": {
+        "source_mesh": "meshes_left/Left_hand_palm_link.STL",
+        "source_sha256": "657573215a205b5764de1c4c9e14d7d769e183eefacdb4103002c073141f0aea",
+        "source_bounds": [
+          [
+            -0.03319999948143959,
+            -0.030000001192092896,
+            -0.048138007521629333
+          ],
+          [
+            0.012800000607967377,
+            0.009999997913837433,
+            -0.01913800649344921
+          ]
+        ],
+        "type": "box",
+        "pos": [
+          -0.010199999436736107,
+          -0.010000001639127731,
+          -0.03363800700753927
+        ],
+        "size": [
+          0.023000000044703484,
+          0.019999999552965164,
+          0.014500000514090061
+        ],
+        "physical_role": "rigid_mount",
+        "reason": "URDF-frame bounding box for rigid mounting base"
+      },
+      "left_hand_thumb_rota_block_link": {
+        "source_mesh": "meshes_left/left_hand_thumb_rota_block_link.STL",
+        "source_sha256": "3e503a3fc9256a6ba154fe0d7f186e12f3139c2d6f0adca55679db21186b70e5",
+        "source_bounds": [
+          [
+            -0.018845615908503532,
+            -0.032006751745939255,
+            -0.011927160434424877
+          ],
+          [
+            0.009992443956434727,
+            0.010004191659390926,
+            0.014372840523719788
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.005267762080098811,
+          -0.018490265396638523,
+          0.0019275141977595554
+        ],
+        "quat": [
+          0.4596292750215517,
+          0.6131112408838235,
+          -0.6090553641799501,
+          0.20466338023371985
+        ],
+        "size": [
+          0.009972741994932982,
+          0.01170960657653419
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_thumb_rotaback_link2": {
+        "source_mesh": "meshes_left/left_hand_thumb_rotaback_link2.STL",
+        "source_sha256": "4e9685398c2e79048b51b886dc444dfbc6967b53c4145ec6c3524d5903d12b7b",
+        "source_bounds": [
+          [
+            -0.006124507170170546,
+            -0.018940268084406853,
+            -0.010488365776836872
+          ],
+          [
+            0.021170472726225853,
+            0.010542127303779125,
+            0.05417104437947273
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.008276415614266319,
+          -0.00383021292134245,
+          0.02648097866782179
+        ],
+        "quat": [
+          0.448932400623164,
+          -0.041376486042466985,
+          -0.1062567523926112,
+          0.8862602262566436
+        ],
+        "size": [
+          0.009716639099964144,
+          0.020326746662848956
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_thumb_MCP_link": {
+        "source_mesh": "meshes_left/left_hand_thumb_MCP_link.STL",
+        "source_sha256": "b23187dceef1e935650351f21356c57deb31e60ccc39ba82c30b3a04fef6140d",
+        "source_bounds": [
+          [
+            -0.02049998566508293,
+            -0.00800000037997961,
+            -0.006500022020190954
+          ],
+          [
+            0.003638050053268671,
+            0.00800000037997961,
+            0.028499944135546684
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008616215938162032,
+          2.005370269885222e-06,
+          0.011842980912022778
+        ],
+        "quat": [
+          0.707002077802119,
+          -0.012168072299553365,
+          -0.012168072299553365,
+          0.707002077802119
+        ],
+        "size": [
+          0.008897844483900194,
+          0.0073771378764324455
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_thumb_PIP_link": {
+        "source_mesh": "meshes_left/left_hand_thumb_PIP_link.STL",
+        "source_sha256": "03fb9fa6a3fe43d15668f83a295f9ad6ce513c112875a175f047e23ec518339e",
+        "source_bounds": [
+          [
+            -0.015342069789767265,
+            -0.007279031444340944,
+            -0.0044999998062849045
+          ],
+          [
+            0.00539261382073164,
+            0.007279030047357082,
+            0.02184802107512951
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.001332400948740542,
+          -1.4899768918663625e-11,
+          0.02184802107512951
+        ],
+        "distal_face_width": 0.004666361724957824,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.001332400948740542,
+          -1.4899768918663625e-11,
+          -0.0021668189438059926,
+          -0.001332400948740542,
+          -1.4899768918663625e-11,
+          0.019514840212650597
+        ],
+        "size": [
+          0.002333180862478912
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      },
+      "left_hand_index_MCP_link": {
+        "source_mesh": "meshes_left/left_hand_index_MCP_link.STL",
+        "source_sha256": "3f5e06a0a51656f6e42bed303e3eef815df936ebe3eb4bb928b6413d0f1d76c2",
+        "source_bounds": [
+          [
+            -0.02460508607327938,
+            -0.010040867142379284,
+            -0.007962019182741642
+          ],
+          [
+            0.00636736024171114,
+            0.010112464427947998,
+            0.019999999552965164
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.009847344401653376,
+          -7.29302493556344e-05,
+          0.009285317606353566
+        ],
+        "quat": [
+          0.09854489561217378,
+          0.7295512646915938,
+          0.08211242321517648,
+          0.671789703470824
+        ],
+        "size": [
+          0.0076313402082336616,
+          0.007114046439262595
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_index_swing_link": {
+        "source_mesh": "meshes_left/left_hand_index_swing_link.STL",
+        "source_sha256": "3eb1aa4a607f7d79092adbf4c69e91a000809952dead60f498b328543dd18187",
+        "source_bounds": [
+          [
+            -0.014554628171026707,
+            -0.010089556686580181,
+            -0.008927585557103157
+          ],
+          [
+            0.016179025173187256,
+            0.009999687783420086,
+            0.04450000450015068
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.003439577600497547,
+          -1.5874564017863773e-05,
+          0.022974948374536144
+        ],
+        "quat": [
+          0.6931461976371067,
+          0.15708372570193813,
+          0.15431918190717586,
+          0.6863371197278498
+        ],
+        "size": [
+          0.010605794594110061,
+          0.012320244849550816
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_index_PIP_link": {
+        "source_mesh": "meshes_left/left_hand_index_PIP_link.STL",
+        "source_sha256": "0d1adea25afb06c3cfddcb6da3c530e758e3dda962c9c4a441740309e30937d4",
+        "source_bounds": [
+          [
+            -0.02049998566508293,
+            -0.008017143234610558,
+            -0.006500022020190954
+          ],
+          [
+            0.0036176377907395363,
+            0.007982857525348663,
+            0.028499944135546684
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008478401216486195,
+          -1.5001395332503108e-05,
+          0.011814319409583664
+        ],
+        "quat": [
+          0.7066814801106378,
+          -0.024521126985499367,
+          -0.024521126985499367,
+          0.7066814801106378
+        ],
+        "size": [
+          0.008921686570641678,
+          0.00749978817836444
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_index_DIP_link": {
+        "source_mesh": "meshes_left/left_hand_index_DIP_link.STL",
+        "source_sha256": "7344a1c9bb92915bccef21113d98b197c5467ba910905433396b143d24ea1b17",
+        "source_bounds": [
+          [
+            -0.015752669423818588,
+            -0.007427352946251631,
+            -0.004489898215979338
+          ],
+          [
+            0.004887477494776249,
+            0.007537397090345621,
+            0.025984086096286774
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.002006369177252054,
+          1.4331066267914139e-05,
+          0.025984086096286774
+        ],
+        "distal_face_width": 0.004838349297642708,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.002006369177252054,
+          1.4331066267914139e-05,
+          -0.0020707235671579838,
+          -0.002006369177252054,
+          1.4331066267914139e-05,
+          0.02356491144746542
+        ],
+        "size": [
+          0.002419174648821354
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      },
+      "left_hand_mid_MCP_link": {
+        "source_mesh": "meshes_left/left_hand_mid_MCP_link.STL",
+        "source_sha256": "812b3937ef2d2f05871b1409824f6fb31a257af768c137bc029778862fb03436",
+        "source_bounds": [
+          [
+            -0.02459999918937683,
+            -0.009999999776482582,
+            -0.007962019182741642
+          ],
+          [
+            0.006300000008195639,
+            0.009999999776482582,
+            0.019999999552965164
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008711005096899463,
+          -0.00011736627623207708,
+          0.00879104487719197
+        ],
+        "quat": [
+          0.05991905926019786,
+          0.7200113757738997,
+          0.05026443859588742,
+          0.6895410149557408
+        ],
+        "size": [
+          0.007975320421581767,
+          0.0075611136135287135
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_mid_swing_link": {
+        "source_mesh": "meshes_left/left_hand_mid_swing_link.STL",
+        "source_sha256": "29712db1e418e6fe7f1ede985b9adb79068607b7a820cfb6863e3dbccffea429",
+        "source_bounds": [
+          [
+            -0.014499999582767487,
+            -0.010000037960708141,
+            -0.008927585557103157
+          ],
+          [
+            0.016117483377456665,
+            0.009999999776482582,
+            0.04450000450015068
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.0020820680321937102,
+          1.7496297727081182e-06,
+          0.02276301622636729
+        ],
+        "quat": [
+          0.6908783594281119,
+          0.151062393405556,
+          0.15062235051253575,
+          0.6907822763350154
+        ],
+        "size": [
+          0.010337239921237352,
+          0.012857236999402855
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_mid_PIP_link": {
+        "source_mesh": "meshes_left/left_hand_mid_PIP_link.STL",
+        "source_sha256": "fca317af48b9575777e82e79b78c9e3024b678ce0839e638847ce438cae695fe",
+        "source_bounds": [
+          [
+            -0.02049998566508293,
+            -0.00800000037997961,
+            -0.006500022020190954
+          ],
+          [
+            0.003617482492700219,
+            0.00800000037997961,
+            0.0320499949157238
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.007903670121547038,
+          -6.821507162338433e-07,
+          0.014296784380185798
+        ],
+        "quat": [
+          0.7050852624694964,
+          0.05343007250904645,
+          0.05343007250904645,
+          0.7050852624694964
+        ],
+        "size": [
+          0.009190189782035141,
+          0.009540572928735256
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_mid_DIP_link": {
+        "source_mesh": "meshes_left/left_hand_mid_DIP_link.STL",
+        "source_sha256": "67d18d9852a788ca7e78edd827e457fcd506c54f1567b1277ae40c263fe5850b",
+        "source_bounds": [
+          [
+            -0.016047514975070953,
+            -0.008002380840480328,
+            -0.0044999998062849045
+          ],
+          [
+            0.005741195287555456,
+            0.008002380840480328,
+            0.02939090132713318
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.001801920821890235,
+          5.703023470138291e-11,
+          0.02939090132713318
+        ],
+        "distal_face_width": 0.004022525157779455,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.001801920821890235,
+          5.703023470138291e-11,
+          -0.002488737227395177,
+          -0.001801920821890235,
+          5.703023470138291e-11,
+          0.02737963874824345
+        ],
+        "size": [
+          0.0020112625788897276
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      },
+      "left_hand_ring_MCP_link": {
+        "source_mesh": "meshes_left/left_hand_ring_MCP_link.STL",
+        "source_sha256": "aa7a1c6584484a4fbefeacfb3e98dea4ea806ba09fcac9b285243828c176c5c0",
+        "source_bounds": [
+          [
+            -0.024604957550764084,
+            -0.010023010894656181,
+            -0.007962019182741642
+          ],
+          [
+            0.006367487832903862,
+            0.0101303206756711,
+            0.019999999552965164
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.009836762321648288,
+          -5.580179486880487e-05,
+          0.00934129023528806
+        ],
+        "quat": [
+          0.07804943450525653,
+          0.7321294902271449,
+          0.060069881132205405,
+          0.6740076443883387
+        ],
+        "size": [
+          0.007580655179748718,
+          0.0071660262626386285
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_ring_swing_link": {
+        "source_mesh": "meshes_left/left_hand_ring_swing_link.STL",
+        "source_sha256": "557e83fb3b29f3f824b6ce2a318349e83b8321acd0a9ac344d3aea8be5dae2ad",
+        "source_bounds": [
+          [
+            -0.014499999582767487,
+            -0.010000037960708141,
+            -0.008927585557103157
+          ],
+          [
+            0.016117483377456665,
+            0.009999999776482582,
+            0.04450000450015068
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.00208213351311274,
+          -8.31315707947689e-07,
+          0.02276302056409926
+        ],
+        "quat": [
+          0.6914558389344012,
+          0.15099683323319202,
+          0.15069110099484145,
+          0.6902035723161934
+        ],
+        "size": [
+          0.010337254270164093,
+          0.01285720428224237
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_ring_PIP_link": {
+        "source_mesh": "meshes_left/left_hand_ring_PIP_link.STL",
+        "source_sha256": "1e9b3da367431ae965cfeb89297dab9d3df190c7d8e6d34368f766e823994028",
+        "source_bounds": [
+          [
+            -0.02049998566508293,
+            -0.007982143200933933,
+            -0.006500022020190954
+          ],
+          [
+            0.0036176377907395363,
+            0.008017857559025288,
+            0.028499944135546684
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008507403923752039,
+          1.9997811140276178e-05,
+          0.011857812124130968
+        ],
+        "quat": [
+          0.7069599805286054,
+          -0.014407842690513989,
+          -0.014407842690513989,
+          0.7069599805286054
+        ],
+        "size": [
+          0.008928780568651115,
+          0.007469118442424973
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_ring_DIP_link": {
+        "source_mesh": "meshes_left/left_hand_ring_DIP_link.STL",
+        "source_sha256": "1a793dcdd6cfbf71fbd39d2c0d6bae4874ab3691b0aa50b5c7e1f6232bd55214",
+        "source_bounds": [
+          [
+            -0.01549999974668026,
+            -0.007505754940211773,
+            -0.004489898215979338
+          ],
+          [
+            0.005537629593163729,
+            0.0074942447245121,
+            0.028684085234999657
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.0016032624989748001,
+          -5.755336587753845e-06,
+          0.028684085234999657
+        ],
+        "distal_face_width": 0.004818107699975371,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.0016032624989748001,
+          -5.755336587753845e-06,
+          -0.002080844365991652,
+          -0.0016032624989748001,
+          -5.755336587753845e-06,
+          0.02627503138501197
+        ],
+        "size": [
+          0.0024090538499876857
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      },
+      "left_hand_pinky_MCP_link": {
+        "source_mesh": "meshes_left/left_hand_pinky_MCP_link.STL",
+        "source_sha256": "22ecb0d59b31dbfa69aad56e7bbde12605dc4a494ed4e8b7c01dc533a7b18649",
+        "source_bounds": [
+          [
+            -0.02459999918937683,
+            -0.009982142597436905,
+            -0.007962019182741642
+          ],
+          [
+            0.006300000008195639,
+            0.01001785695552826,
+            0.019999999552965164
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008688428158563148,
+          -0.00010036107897548804,
+          0.008877100796641385
+        ],
+        "quat": [
+          0.04621192004218139,
+          0.7223338002839771,
+          0.03651054723877134,
+          0.689032161334761
+        ],
+        "size": [
+          0.007906132675432682,
+          0.0076355186357118816
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_pinky_swing_link": {
+        "source_mesh": "meshes_left/left_hand_pinky_SWING_link.STL",
+        "source_sha256": "5d73f6f752abfa28c31bafe27828c6bc28531f4cf6a54c49859dab5f62fc0352",
+        "source_bounds": [
+          [
+            -0.013810000382363796,
+            -0.009000017307698727,
+            -0.008927585557103157
+          ],
+          [
+            0.016375139355659485,
+            0.008999999612569809,
+            0.041750021278858185
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.0021619511148618788,
+          1.2813294615790905e-06,
+          0.021000228844022136
+        ],
+        "quat": [
+          0.6740370596789502,
+          0.2143184340595326,
+          0.21371486185887006,
+          0.6738453894049217
+        ],
+        "size": [
+          0.009637355598567671,
+          0.01253358130310825
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_pinky_PIP_link": {
+        "source_mesh": "meshes_left/left_hand_pinky_PIP_link.STL",
+        "source_sha256": "de94c2ce66b32aedbba6134c7d69cc053534ed0d6bd9b66d1a3fce6d57bd8d6b",
+        "source_bounds": [
+          [
+            -0.01599731482565403,
+            -0.00799619872123003,
+            -0.00447453698143363
+          ],
+          [
+            0.007699782028794289,
+            0.008317939937114716,
+            0.028499944135546684
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.004226552701138143,
+          8.871954674471988e-05,
+          0.012803074679724111
+        ],
+        "quat": [
+          0.6918219222096276,
+          0.09564818932981381,
+          0.09574559714818978,
+          0.7092719030490648
+        ],
+        "size": [
+          0.00864381096880364,
+          0.006968689080781756
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "left_hand_pinky_DIP_link": {
+        "source_mesh": "meshes_left/left_hand_pinky_DIP_link.STL",
+        "source_sha256": "e97b22fdad5d7d0fb19b6d72166ee213793e4c4f2d042ebf5d018bdd0a3327b3",
+        "source_bounds": [
+          [
+            -0.015342069789767265,
+            -0.007279031444340944,
+            -0.0044999998062849045
+          ],
+          [
+            0.00539261382073164,
+            0.007279030047357082,
+            0.02184802107512951
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.001332400948740542,
+          1.849242980966892e-12,
+          0.02184802107512951
+        ],
+        "distal_face_width": 0.004666361724957824,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.001332400948740542,
+          1.849242980966892e-12,
+          -0.0021668189438059926,
+          -0.001332400948740542,
+          1.849242980966892e-12,
+          0.019514840212650597
+        ],
+        "size": [
+          0.002333180862478912
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      }
+    },
+    "right": {
+      "base_link": {
+        "source_mesh": "meshes_right/base_link.STL",
+        "source_sha256": "f5068c3d98ac5580f1c90250f229ea88e35b977919c929ced3ea7186b8d0d79c",
+        "source_bounds": [
+          [
+            -0.009500000763099585,
+            -0.05799392700217704,
+            -0.0040000000000002985
+          ],
+          [
+            0.04141058273299417,
+            0.04101325607277414,
+            0.10130592346191378
+          ]
+        ],
+        "type": "mesh",
+        "physical_role": "palm_housing",
+        "reason": "Retain thumb recess; compound box decomposition pending"
+      },
+      "Right_hand_palm_link": {
+        "source_mesh": "meshes_right/Right_hand_palm_link.STL",
+        "source_sha256": "b0d11caccbfeb5b80881f59d4361527d15f1775fdb470b33c4707d09add31805",
+        "source_bounds": [
+          [
+            -0.03319999948143959,
+            -0.009999997913837433,
+            -0.048138007521629333
+          ],
+          [
+            0.012800000607967377,
+            0.030000001192092896,
+            -0.01913800649344921
+          ]
+        ],
+        "type": "box",
+        "pos": [
+          -0.010199999436736107,
+          0.010000001639127731,
+          -0.03363800700753927
+        ],
+        "size": [
+          0.023000000044703484,
+          0.019999999552965164,
+          0.014500000514090061
+        ],
+        "physical_role": "rigid_mount",
+        "reason": "URDF-frame bounding box for rigid mounting base"
+      },
+      "right_hand_thumb_rota_block_link": {
+        "source_mesh": "meshes_right/right_hand_thumb_rota_block_link.STL",
+        "source_sha256": "1da15e34b7d84e0e58c50e86649458192ee3e955bbfdaa13482e9142be59684a",
+        "source_bounds": [
+          [
+            -0.018845615908503532,
+            -0.010004191659390926,
+            -0.011927160434424877
+          ],
+          [
+            0.009992443956434727,
+            0.032006751745939255,
+            0.014372840523719788
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.005267762080098811,
+          0.018490265396638523,
+          0.0019275141977595554
+        ],
+        "quat": [
+          0.6131112408838234,
+          0.4596292750215518,
+          -0.2046633802337199,
+          0.60905536417995
+        ],
+        "size": [
+          0.009972741994932983,
+          0.01170960657653419
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_thumb_rotaback_link2": {
+        "source_mesh": "meshes_right/right_hand_thumb_rotaback_link2.STL",
+        "source_sha256": "9f854fdadbd7c12a9ff99970a3376e4ad523c41fcd84a5cd374106b61e24e543",
+        "source_bounds": [
+          [
+            -0.006124507170170546,
+            -0.010542127303779125,
+            -0.010488365776836872
+          ],
+          [
+            0.021170472726225853,
+            0.018940268084406853,
+            0.05417104437947273
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.008276415614266319,
+          0.00383021292134245,
+          0.02648097866782179
+        ],
+        "quat": [
+          0.8862602262566435,
+          -0.1062567523926112,
+          -0.041376486042466985,
+          0.44893240062316403
+        ],
+        "size": [
+          0.009716639099964144,
+          0.02032674666284895
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_thumb_MCP_link": {
+        "source_mesh": "meshes_right/right_hand_thumb_MCP_link.STL",
+        "source_sha256": "57e145a93222fdc65774403c47fff6c0eafabf17828dc659c22765b00f90396c",
+        "source_bounds": [
+          [
+            -0.02049998566508293,
+            -0.00800000037997961,
+            -0.006500022020190954
+          ],
+          [
+            0.003638050053268671,
+            0.00800000037997961,
+            0.028499944135546684
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008616215938162032,
+          -2.005370269885222e-06,
+          0.011842980912022778
+        ],
+        "quat": [
+          0.707002077802119,
+          -0.012168072299553365,
+          -0.012168072299553365,
+          0.707002077802119
+        ],
+        "size": [
+          0.008897844483900194,
+          0.0073771378764324455
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_thumb_PIP_link": {
+        "source_mesh": "meshes_right/right_hand_thumb_PIP_link.STL",
+        "source_sha256": "e00e81da98e65f4418b7b2030877de754ce686eceae1cfb423931f480eb8b60f",
+        "source_bounds": [
+          [
+            -0.015342069789767265,
+            -0.007279030047357082,
+            -0.0044999998062849045
+          ],
+          [
+            0.00539261382073164,
+            0.007279031444340944,
+            0.02184802107512951
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.001332400948740542,
+          1.4899768918663625e-11,
+          0.02184802107512951
+        ],
+        "distal_face_width": 0.004666361724957824,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.001332400948740542,
+          1.4899768918663625e-11,
+          -0.0021668189438059926,
+          -0.001332400948740542,
+          1.4899768918663625e-11,
+          0.019514840212650597
+        ],
+        "size": [
+          0.002333180862478912
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      },
+      "right_hand_index_MCP_link": {
+        "source_mesh": "meshes_right/right_hand_index_MCP_link.STL",
+        "source_sha256": "dfa8aea8374cf8212b2d6179964f413aefeb9394dc2026fba94c21eacc690273",
+        "source_bounds": [
+          [
+            -0.02460508607327938,
+            -0.010112464427947998,
+            -0.007962019182741642
+          ],
+          [
+            0.00636736024171114,
+            0.010040867142379284,
+            0.019999999552965164
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.009847344401653376,
+          7.29302493556344e-05,
+          0.009285317606353566
+        ],
+        "quat": [
+          -0.09854489561217378,
+          0.7295512646915938,
+          -0.08211242321517648,
+          0.671789703470824
+        ],
+        "size": [
+          0.0076313402082336616,
+          0.007114046439262595
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_index_swing_link": {
+        "source_mesh": "meshes_right/right_hand_index_swing_link.STL",
+        "source_sha256": "d63a4122aec4e3f1c476843378e87275e19ee2a236a82e18a21ef32e0fa469a6",
+        "source_bounds": [
+          [
+            -0.014554628171026707,
+            -0.009999687783420086,
+            -0.008927585557103157
+          ],
+          [
+            0.016179025173187256,
+            0.010089556686580181,
+            0.04450000450015068
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.003439577600497547,
+          1.5874564017863773e-05,
+          0.022974948374536144
+        ],
+        "quat": [
+          0.6863371197278498,
+          0.15431918190717586,
+          0.15708372570193813,
+          0.6931461976371067
+        ],
+        "size": [
+          0.010605794594110061,
+          0.012320244849550816
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_index_PIP_link": {
+        "source_mesh": "meshes_right/right_hand_index_PIP_link.STL",
+        "source_sha256": "5740c195666a93d35d128f60e4c6ee347ac925f0f415c8d7a55d9023c5a6c0b4",
+        "source_bounds": [
+          [
+            -0.02049998566508293,
+            -0.007982857525348663,
+            -0.006500022020190954
+          ],
+          [
+            0.0036176377907395363,
+            0.008017143234610558,
+            0.028499944135546684
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008478401216486195,
+          1.5001395332503108e-05,
+          0.011814319409583664
+        ],
+        "quat": [
+          0.7066814801106378,
+          -0.024521126985499367,
+          -0.024521126985499367,
+          0.7066814801106378
+        ],
+        "size": [
+          0.008921686570641676,
+          0.007499788178364442
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_index_DIP_link": {
+        "source_mesh": "meshes_right/right_hand_index_DIP_link.STL",
+        "source_sha256": "a67f9d5c243dc5e9d9dacfd164cb10f2a1284ba8b06de9b398253417470036b0",
+        "source_bounds": [
+          [
+            -0.015752669423818588,
+            -0.007537397090345621,
+            -0.004489898215979338
+          ],
+          [
+            0.004887477494776249,
+            0.007427352946251631,
+            0.025984086096286774
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.002006369177252054,
+          -1.4331066267914139e-05,
+          0.025984086096286774
+        ],
+        "distal_face_width": 0.004838349297642708,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.002006369177252054,
+          -1.4331066267914139e-05,
+          -0.0020707235671579838,
+          -0.002006369177252054,
+          -1.4331066267914139e-05,
+          0.02356491144746542
+        ],
+        "size": [
+          0.002419174648821354
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      },
+      "right_hand_mid_MCP_link": {
+        "source_mesh": "meshes_right/right_hand_mid_MCP_link.STL",
+        "source_sha256": "cce658b07646cf05ba85f987f6d17cfd01c713614c5375533066118aa95c108b",
+        "source_bounds": [
+          [
+            -0.02459999918937683,
+            -0.009999999776482582,
+            -0.007962019182741642
+          ],
+          [
+            0.006300000008195639,
+            0.009999999776482582,
+            0.019999999552965164
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008711005096899463,
+          0.00011736627623207708,
+          0.00879104487719197
+        ],
+        "quat": [
+          -0.05991905926019786,
+          0.7200113757738997,
+          -0.05026443859588742,
+          0.6895410149557408
+        ],
+        "size": [
+          0.007975320421581767,
+          0.0075611136135287135
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_mid_swing_link": {
+        "source_mesh": "meshes_right/right_hand_mid_swing_link.STL",
+        "source_sha256": "c717fb76bd3a26b726e415729af9ddf0d260d71668ae628c919d46cb544986fa",
+        "source_bounds": [
+          [
+            -0.014499999582767487,
+            -0.009999999776482582,
+            -0.008927585557103157
+          ],
+          [
+            0.016117483377456665,
+            0.010000037960708141,
+            0.04450000450015068
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.0020820680321937102,
+          -1.7496297727081182e-06,
+          0.02276301622636729
+        ],
+        "quat": [
+          0.6907822763350154,
+          0.15062235051253592,
+          0.15106239340555616,
+          0.6908783594281119
+        ],
+        "size": [
+          0.010337239921237355,
+          0.012857236999402853
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_mid_PIP_link": {
+        "source_mesh": "meshes_right/right_hand_mid_PIP_link.STL",
+        "source_sha256": "c1f50571b0ef55f3cf580d1bd844902c2796fa249dd03a8f2a54196872029ae4",
+        "source_bounds": [
+          [
+            -0.02049998566508293,
+            -0.00800000037997961,
+            -0.006500022020190954
+          ],
+          [
+            0.003617482492700219,
+            0.00800000037997961,
+            0.0320499949157238
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.007903670121547038,
+          6.821507162338433e-07,
+          0.014296784380185798
+        ],
+        "quat": [
+          0.7050852624694964,
+          0.05343007250904645,
+          0.05343007250904645,
+          0.7050852624694964
+        ],
+        "size": [
+          0.009190189782035141,
+          0.009540572928735256
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_mid_DIP_link": {
+        "source_mesh": "meshes_right/right_hand_mid_DIP_link.STL",
+        "source_sha256": "8331b40b725f72e629f26f239379ff3a38cb440ed484e3d066140bc66b4dc8a9",
+        "source_bounds": [
+          [
+            -0.016047514975070953,
+            -0.008002380840480328,
+            -0.0044999998062849045
+          ],
+          [
+            0.005741195287555456,
+            0.008002380840480328,
+            0.02939090132713318
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.001801920821890235,
+          -5.703023470138291e-11,
+          0.02939090132713318
+        ],
+        "distal_face_width": 0.004022525157779455,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.001801920821890235,
+          -5.703023470138291e-11,
+          -0.002488737227395177,
+          -0.001801920821890235,
+          -5.703023470138291e-11,
+          0.02737963874824345
+        ],
+        "size": [
+          0.0020112625788897276
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      },
+      "right_hand_ring_MCP_link": {
+        "source_mesh": "meshes_right/right_hand_ring_MCP_link.STL",
+        "source_sha256": "de3d8df18086569a045632a7a85b3e8a2890c9e6bd6d525b6560abe3591453bc",
+        "source_bounds": [
+          [
+            -0.024604957550764084,
+            -0.0101303206756711,
+            -0.007962019182741642
+          ],
+          [
+            0.006367487832903862,
+            0.010023010894656181,
+            0.019999999552965164
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.009836762321648288,
+          5.580179486880487e-05,
+          0.00934129023528806
+        ],
+        "quat": [
+          -0.07804943450525686,
+          0.7321294902271449,
+          -0.06006988113220596,
+          0.6740076443883387
+        ],
+        "size": [
+          0.007580655179748716,
+          0.007166026262638628
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_ring_swing_link": {
+        "source_mesh": "meshes_right/right_hand_ring_swing_link.STL",
+        "source_sha256": "647de53ae285fe0c45d4bec9b3e4477e9be996bfe99dd302c4173d2cec52eefa",
+        "source_bounds": [
+          [
+            -0.014499999582767487,
+            -0.009999999776482582,
+            -0.008927585557103157
+          ],
+          [
+            0.016117483377456665,
+            0.010000037960708141,
+            0.04450000450015068
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.00208213351311274,
+          8.31315707947689e-07,
+          0.02276302056409926
+        ],
+        "quat": [
+          0.6902035723161934,
+          0.15069110099484145,
+          0.15099683323319202,
+          0.6914558389344012
+        ],
+        "size": [
+          0.010337254270164093,
+          0.01285720428224237
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_ring_PIP_link": {
+        "source_mesh": "meshes_right/right_hand_ring_PIP_link.STL",
+        "source_sha256": "d8fc9a5e2bd7b1f95c576d1e55b19e46c797d6a8b2e0538f7a9e5aca183ef2a7",
+        "source_bounds": [
+          [
+            -0.02049998566508293,
+            -0.008017857559025288,
+            -0.006500022020190954
+          ],
+          [
+            0.0036176377907395363,
+            0.007982143200933933,
+            0.028499944135546684
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008507403923752039,
+          -1.9997811140276178e-05,
+          0.011857812124130968
+        ],
+        "quat": [
+          0.7069599805286054,
+          -0.014407842690513989,
+          -0.014407842690513989,
+          0.7069599805286054
+        ],
+        "size": [
+          0.008928780568651115,
+          0.007469118442424973
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_ring_DIP_link": {
+        "source_mesh": "meshes_right/right_hand_ring_DIP_link.STL",
+        "source_sha256": "dedfcc2e674b81a39c38557649fc934fbce3e00fa30393d1bf196f943d474e4d",
+        "source_bounds": [
+          [
+            -0.01549999974668026,
+            -0.0074942447245121,
+            -0.004489898215979338
+          ],
+          [
+            0.005537629593163729,
+            0.007505754940211773,
+            0.028684085234999657
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.0016032624989748001,
+          5.755336587753845e-06,
+          0.028684085234999657
+        ],
+        "distal_face_width": 0.004818107699975371,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.0016032624989748001,
+          5.755336587753845e-06,
+          -0.002080844365991652,
+          -0.0016032624989748001,
+          5.755336587753845e-06,
+          0.02627503138501197
+        ],
+        "size": [
+          0.0024090538499876857
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      },
+      "right_hand_pinky_MCP_link": {
+        "source_mesh": "meshes_right/right_hand_pinky_MCP_link.STL",
+        "source_sha256": "b062662f397526fb9dbff41628d608ab114bddc2f1f3948542b2db9a147e98a3",
+        "source_bounds": [
+          [
+            -0.02459999918937683,
+            -0.01001785695552826,
+            -0.007962019182741642
+          ],
+          [
+            0.006300000008195639,
+            0.009982142597436905,
+            0.019999999552965164
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.008688428158563148,
+          0.00010036107897548804,
+          0.008877100796641385
+        ],
+        "quat": [
+          -0.04621192004218139,
+          0.7223338002839771,
+          -0.03651054723877134,
+          0.689032161334761
+        ],
+        "size": [
+          0.007906132675432683,
+          0.007635518635711879
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_pinky_swing_link": {
+        "source_mesh": "meshes_right/right_hand_pinky_SWING_link.STL",
+        "source_sha256": "e9bf1f3e834f71f5484b099fec868535d380bf125b38f319a5cbe5f86f00aa38",
+        "source_bounds": [
+          [
+            -0.013810000382363796,
+            -0.008999999612569809,
+            -0.008927585557103157
+          ],
+          [
+            0.016375139355659485,
+            0.009000017307698727,
+            0.041750021278858185
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          0.0021619511148618788,
+          -1.2813294615790905e-06,
+          0.021000228844022136
+        ],
+        "quat": [
+          0.6738453894049217,
+          0.21371486185887006,
+          0.2143184340595326,
+          0.6740370596789502
+        ],
+        "size": [
+          0.009637355598567673,
+          0.012533581303108249
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_pinky_PIP_link": {
+        "source_mesh": "meshes_right/right_hand_pinky_PIP_link.STL",
+        "source_sha256": "191dcef38b55a76088c7424f55683773e487d8c70c0df70ec1c46a346dd1099f",
+        "source_bounds": [
+          [
+            -0.01599731482565403,
+            -0.008317939937114716,
+            -0.00447453698143363
+          ],
+          [
+            0.007699782028794289,
+            0.00799619872123003,
+            0.028499944135546684
+          ]
+        ],
+        "type": "capsule",
+        "pos": [
+          -0.004226552701138143,
+          -8.871954674471988e-05,
+          0.012803074679724111
+        ],
+        "quat": [
+          0.7092719030490648,
+          0.09574559714818978,
+          0.09564818932981381,
+          0.6918219222096276
+        ],
+        "size": [
+          0.00864381096880364,
+          0.006968689080781758
+        ],
+        "reason": "Shadow-compatible MuJoCo mesh-to-capsule equivalent-inertia fitting; compiled dimensions stored explicitly"
+      },
+      "right_hand_pinky_DIP_link": {
+        "source_mesh": "meshes_right/right_hand_pinky_DIP_link.STL",
+        "source_sha256": "f4a1e38d4d82ffd1c110b63c0a5b6270645fa1b04a12fe96f789997ad87c95bf",
+        "source_bounds": [
+          [
+            -0.015342069789767265,
+            -0.007279030047357082,
+            -0.0044999998062849045
+          ],
+          [
+            0.00539261382073164,
+            0.007279031444340944,
+            0.02184802107512951
+          ]
+        ],
+        "preserved_fingertip": [
+          -0.001332400948740542,
+          -1.849242980966892e-12,
+          0.02184802107512951
+        ],
+        "distal_face_width": 0.004666361724957824,
+        "distal_measurement_band_m": 0.001,
+        "distal_width_method": "rounded_cap_band",
+        "type": "capsule",
+        "fromto": [
+          -0.001332400948740542,
+          -1.849242980966892e-12,
+          -0.0021668189438059926,
+          -0.001332400948740542,
+          -1.849242980966892e-12,
+          0.019514840212650597
+        ],
+        "size": [
+          0.002333180862478912
+        ],
+        "reason": "Local-Z capsule; measured distal face/cap-band half-width (not proximal housing); +Z surface exactly at measured fingertip site"
+      }
+    }
+  }
+}

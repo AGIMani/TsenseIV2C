@@ -1,0 +1,68 @@
+{
+  "python": "3.13.13",
+  "platform": "Windows-11-10.0.22000-SP0",
+  "v2_fit_enabled": true,
+  "scope": "warm conversion only; varying angles; no USB, retarget or motion interpolation",
+  "benchmarks": {
+    "v2_before_14_linear": {
+      "n": 10000,
+      "mean_us": 216.47142,
+      "median_us": 199.9,
+      "p95_us": 340.4,
+      "p99_us": 453.4,
+      "throughput_hz": 4619.547467282287
+    },
+    "v2_before_21_conversion": {
+      "n": 10000,
+      "mean_us": 251.7337,
+      "median_us": 219.4,
+      "p95_us": 417.5,
+      "p99_us": 509.2,
+      "throughput_hz": 3972.451840973219
+    },
+    "v2_14_linear": {
+      "n": 10000,
+      "mean_us": 85.38212,
+      "median_us": 76.4,
+      "p95_us": 133.7,
+      "p99_us": 181.4,
+      "throughput_hz": 11712.053999127686
+    },
+    "v2_21_conversion": {
+      "n": 10000,
+      "mean_us": 104.1796,
+      "median_us": 90.7,
+      "p95_us": 168.9,
+      "p99_us": 218.1,
+      "throughput_hz": 9598.808211972402
+    },
+    "v2_21_cached": {
+      "n": 10000,
+      "mean_us": 8.7225,
+      "median_us": 6.8,
+      "p95_us": 13.3,
+      "p99_us": 15.3,
+      "throughput_hz": 114646.03038119806
+    },
+    "a32_20_exact": {
+      "n": 10000,
+      "mean_us": 110.20206,
+      "median_us": 94.25,
+      "p95_us": 189.1,
+      "p99_us": 246.8,
+      "throughput_hz": 9074.240535975461
+    },
+    "a32_20_lut": {
+      "n": 10000,
+      "mean_us": 66.71555,
+      "median_us": 58.1,
+      "p95_us": 116.1,
+      "p99_us": 160.6,
+      "throughput_hz": 14989.009308924233
+    }
+  },
+  "v2_equivalence": {
+    "poses": 2004,
+    "max_difference_mm": 0.0
+  }
+}

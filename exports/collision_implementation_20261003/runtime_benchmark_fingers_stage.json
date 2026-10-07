@@ -1,0 +1,662 @@
+{
+  "environment": {
+    "python": "3.12.3",
+    "mujoco": "3.10.0"
+  },
+  "notes": [
+    "56 sequential targets per run; no hardware, retargeting or I/O timing",
+    "40 synthetic targets + 16 transitions to/from one recorded pose using matching joint names",
+    "Reference uses same final geometry, margins, path sampling, QP and certified separation",
+    "Old geometry changes motion behavior; its timing is context, not an output-equivalence claim"
+  ],
+  "models": {
+    "TsenseI_v3_0/left": {
+      "mink": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.6032500000000001,
+          "p95_ms": 4.419565000000001,
+          "p99_ms": 17.53030400000001,
+          "max_ms": 18.6439,
+          "mean_ms": 1.5628660535714287,
+          "status_counts": {
+            "clear": 126,
+            "limited": 9,
+            "held_distance_check": 33
+          },
+          "distance_queries": 3963,
+          "cache_hits": 438
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 2.59955,
+          "p95_ms": 14.507360000000002,
+          "p99_ms": 49.79440300000002,
+          "max_ms": 50.9933,
+          "mean_ms": 5.002595791666666,
+          "status_counts": {
+            "clear": 126,
+            "limited": 9,
+            "held_distance_check": 33
+          },
+          "distance_queries": 165510,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "stop": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.23659999999999998,
+          "p95_ms": 1.1740650000000001,
+          "p99_ms": 10.153616000000005,
+          "max_ms": 14.1126,
+          "mean_ms": 0.6292970178571429,
+          "status_counts": {
+            "pass": 120,
+            "stop": 48
+          },
+          "distance_queries": 0,
+          "cache_hits": 291
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 0.2362,
+          "p95_ms": 1.1158800000000002,
+          "p99_ms": 1.334834000000003,
+          "max_ms": 1.9557,
+          "mean_ms": 0.4667886904761905,
+          "status_counts": {
+            "pass": 120,
+            "stop": 48
+          },
+          "distance_queries": 0,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "original_mink_old_geometry": {
+        "calls": 56,
+        "p50_ms": 0.30175,
+        "p95_ms": 8.03864925,
+        "p99_ms": 10.835820000000002,
+        "max_ms": 11.005,
+        "mean_ms": 1.469551767857143,
+        "status_counts": {
+          "clear": 46,
+          "limited": 2,
+          "held_distance_check": 8
+        },
+        "distance_queries": 0,
+        "cache_hits": 0
+      }
+    },
+    "TsenseI_v3_0/right": {
+      "mink": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.6015999999999999,
+          "p95_ms": 3.8867950000000016,
+          "p99_ms": 18.085675000000013,
+          "max_ms": 24.6451,
+          "mean_ms": 1.5829517738095238,
+          "status_counts": {
+            "clear": 126,
+            "limited": 9,
+            "held_distance_check": 33
+          },
+          "distance_queries": 3939,
+          "cache_hits": 432
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 2.74355,
+          "p95_ms": 14.060994650000016,
+          "p99_ms": 49.22928433000001,
+          "max_ms": 51.2519,
+          "mean_ms": 5.172161267857142,
+          "status_counts": {
+            "clear": 126,
+            "limited": 9,
+            "held_distance_check": 33
+          },
+          "distance_queries": 163398,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "stop": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.179,
+          "p95_ms": 0.81227,
+          "p99_ms": 1.004209000000002,
+          "max_ms": 1.1325,
+          "mean_ms": 0.32736070833333336,
+          "status_counts": {
+            "pass": 120,
+            "stop": 48
+          },
+          "distance_queries": 0,
+          "cache_hits": 291
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 0.2428,
+          "p95_ms": 1.344205,
+          "p99_ms": 1.6534000000000002,
+          "max_ms": 1.8099,
+          "mean_ms": 0.5153035714285714,
+          "status_counts": {
+            "pass": 120,
+            "stop": 48
+          },
+          "distance_queries": 0,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "original_mink_old_geometry": {
+        "calls": 56,
+        "p50_ms": 0.32989999999999997,
+        "p95_ms": 9.552375,
+        "p99_ms": 13.578064450000005,
+        "max_ms": 14.5437,
+        "mean_ms": 1.6909606964285715,
+        "status_counts": {
+          "clear": 46,
+          "limited": 2,
+          "held_distance_check": 8
+        },
+        "distance_queries": 0,
+        "cache_hits": 0
+      }
+    },
+    "TsenseI_v3_0_withid/left": {
+      "mink": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.7024,
+          "p95_ms": 18.622289350000006,
+          "p99_ms": 32.561236000000015,
+          "max_ms": 33.9118,
+          "mean_ms": 3.154826761904762,
+          "status_counts": {
+            "clear": 123,
+            "limited": 6,
+            "held_distance_check": 39
+          },
+          "distance_queries": 10143,
+          "cache_hits": 768
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 3.2431,
+          "p95_ms": 67.79522935000004,
+          "p99_ms": 101.82874400000009,
+          "max_ms": 114.375199,
+          "mean_ms": 10.630102892857142,
+          "status_counts": {
+            "clear": 123,
+            "limited": 6,
+            "held_distance_check": 39
+          },
+          "distance_queries": 250029,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "stop": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.22899999999999998,
+          "p95_ms": 0.9120200000000002,
+          "p99_ms": 1.090745,
+          "max_ms": 1.2461,
+          "mean_ms": 0.3852488095238095,
+          "status_counts": {
+            "pass": 120,
+            "stop": 48
+          },
+          "distance_queries": 0,
+          "cache_hits": 291
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 0.29055,
+          "p95_ms": 1.3336500000000002,
+          "p99_ms": 1.573039000000001,
+          "max_ms": 1.9417,
+          "mean_ms": 0.5379928571428572,
+          "status_counts": {
+            "pass": 120,
+            "stop": 48
+          },
+          "distance_queries": 0,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "original_mink_old_geometry": {
+        "calls": 56,
+        "p50_ms": 0.27665,
+        "p95_ms": 7.52697425,
+        "p99_ms": 8.545895000000002,
+        "max_ms": 8.6312,
+        "mean_ms": 1.5769964107142858,
+        "status_counts": {
+          "clear": 41,
+          "limited": 5,
+          "held_distance_check": 10
+        },
+        "distance_queries": 0,
+        "cache_hits": 0
+      }
+    },
+    "TsenseI_v3_0_withid/right": {
+      "mink": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.7162,
+          "p95_ms": 28.22839,
+          "p99_ms": 38.91462833000001,
+          "max_ms": 40.487499,
+          "mean_ms": 5.056721988095238,
+          "status_counts": {
+            "clear": 123,
+            "limited": 15,
+            "held_distance_check": 30
+          },
+          "distance_queries": 16971,
+          "cache_hits": 1083
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 2.7752499999999998,
+          "p95_ms": 104.66837900000003,
+          "p99_ms": 136.75381667000005,
+          "max_ms": 145.590699,
+          "mean_ms": 16.703117125,
+          "status_counts": {
+            "clear": 123,
+            "limited": 15,
+            "held_distance_check": 30
+          },
+          "distance_queries": 392988,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "stop": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.23195,
+          "p95_ms": 0.899935,
+          "p99_ms": 1.19666533,
+          "max_ms": 1.3155,
+          "mean_ms": 0.3896202261904762,
+          "status_counts": {
+            "pass": 120,
+            "stop": 48
+          },
+          "distance_queries": 0,
+          "cache_hits": 291
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 0.28625,
+          "p95_ms": 1.4531250000000002,
+          "p99_ms": 1.8624010000000022,
+          "max_ms": 2.0167,
+          "mean_ms": 0.5555452380952381,
+          "status_counts": {
+            "pass": 120,
+            "stop": 48
+          },
+          "distance_queries": 0,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "original_mink_old_geometry": {
+        "calls": 56,
+        "p50_ms": 0.25975000000000004,
+        "p95_ms": 6.808275,
+        "p99_ms": 7.9287750000000035,
+        "max_ms": 8.4631,
+        "mean_ms": 1.4675607142857143,
+        "status_counts": {
+          "clear": 41,
+          "limited": 5,
+          "held_distance_check": 10
+        },
+        "distance_queries": 0,
+        "cache_hits": 0
+      }
+    },
+    "TsenseI_v3_2/left": {
+      "mink": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.6214999999999999,
+          "p95_ms": 19.376405000000005,
+          "p99_ms": 29.18377500000001,
+          "max_ms": 45.9108,
+          "mean_ms": 3.133585083333333,
+          "status_counts": {
+            "clear": 135,
+            "limited": 15,
+            "held_distance_check": 18
+          },
+          "distance_queries": 3267,
+          "cache_hits": 585
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 2.78145,
+          "p95_ms": 59.298559650000016,
+          "p99_ms": 82.26860900000004,
+          "max_ms": 107.670899,
+          "mean_ms": 9.895905261904762,
+          "status_counts": {
+            "clear": 135,
+            "limited": 15,
+            "held_distance_check": 18
+          },
+          "distance_queries": 260994,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "stop": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.16460000000000002,
+          "p95_ms": 0.7006800000000001,
+          "p99_ms": 0.8460590000000002,
+          "max_ms": 0.8794,
+          "mean_ms": 0.2741684523809524,
+          "status_counts": {
+            "pass": 135,
+            "stop": 33
+          },
+          "distance_queries": 0,
+          "cache_hits": 300
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 0.2421,
+          "p95_ms": 1.03607,
+          "p99_ms": 1.1371030000000006,
+          "max_ms": 1.1878,
+          "mean_ms": 0.40444404166666664,
+          "status_counts": {
+            "pass": 135,
+            "stop": 33
+          },
+          "distance_queries": 0,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "original_mink_old_geometry": {
+        "calls": 56,
+        "p50_ms": 0.31894999999999996,
+        "p95_ms": 4.136425,
+        "p99_ms": 6.373130000000006,
+        "max_ms": 7.5289,
+        "mean_ms": 0.8568267857142856,
+        "status_counts": {
+          "clear": 46,
+          "limited": 4,
+          "held_distance_check": 6
+        },
+        "distance_queries": 0,
+        "cache_hits": 0
+      }
+    },
+    "TsenseI_v3_2/right": {
+      "mink": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.5117,
+          "p95_ms": 10.805379650000004,
+          "p99_ms": 19.690924330000037,
+          "max_ms": 22.5581,
+          "mean_ms": 2.130166053571428,
+          "status_counts": {
+            "clear": 135,
+            "limited": 6,
+            "held_distance_check": 27
+          },
+          "distance_queries": 1770,
+          "cache_hits": 507
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 2.9265,
+          "p95_ms": 30.757394650000016,
+          "p99_ms": 62.02275100000003,
+          "max_ms": 75.495499,
+          "mean_ms": 6.675608279761905,
+          "status_counts": {
+            "clear": 135,
+            "limited": 6,
+            "held_distance_check": 27
+          },
+          "distance_queries": 189552,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "stop": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.16625,
+          "p95_ms": 0.72653,
+          "p99_ms": 0.9312370000000044,
+          "max_ms": 1.4438,
+          "mean_ms": 0.28788213690476194,
+          "status_counts": {
+            "pass": 135,
+            "stop": 33
+          },
+          "distance_queries": 0,
+          "cache_hits": 300
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 0.2373,
+          "p95_ms": 1.08314,
+          "p99_ms": 1.5195590000000003,
+          "max_ms": 1.6251,
+          "mean_ms": 0.4211,
+          "status_counts": {
+            "pass": 135,
+            "stop": 33
+          },
+          "distance_queries": 0,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "original_mink_old_geometry": {
+        "calls": 56,
+        "p50_ms": 0.3042995,
+        "p95_ms": 4.300375,
+        "p99_ms": 7.6656100000000045,
+        "max_ms": 8.6104,
+        "mean_ms": 0.8802499821428571,
+        "status_counts": {
+          "clear": 46,
+          "limited": 4,
+          "held_distance_check": 6
+        },
+        "distance_queries": 0,
+        "cache_hits": 0
+      }
+    },
+    "TsenseI_v3_2_withid/left": {
+      "mink": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.52935,
+          "p95_ms": 16.741185000000005,
+          "p99_ms": 26.727719670000017,
+          "max_ms": 38.3241,
+          "mean_ms": 3.90381544047619,
+          "status_counts": {
+            "clear": 111,
+            "limited": 24,
+            "held_distance_check": 33
+          },
+          "distance_queries": 5247,
+          "cache_hits": 834
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 2.917,
+          "p95_ms": 53.20178465,
+          "p99_ms": 83.27239067000035,
+          "max_ms": 107.264599,
+          "mean_ms": 13.241618934523812,
+          "status_counts": {
+            "clear": 111,
+            "limited": 24,
+            "held_distance_check": 33
+          },
+          "distance_queries": 324372,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "stop": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.18425000000000002,
+          "p95_ms": 1.1374400000000002,
+          "p99_ms": 1.6872480000000027,
+          "max_ms": 2.0299,
+          "mean_ms": 0.40941904761904757,
+          "status_counts": {
+            "pass": 114,
+            "stop": 54
+          },
+          "distance_queries": 0,
+          "cache_hits": 282
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 0.36755,
+          "p95_ms": 1.994685,
+          "p99_ms": 3.5318490000000127,
+          "max_ms": 8.0671,
+          "mean_ms": 0.7636220059523809,
+          "status_counts": {
+            "pass": 114,
+            "stop": 54
+          },
+          "distance_queries": 0,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "original_mink_old_geometry": {
+        "calls": 56,
+        "p50_ms": 0.6718,
+        "p95_ms": 14.587150000000001,
+        "p99_ms": 26.169350000000044,
+        "max_ms": 34.7323,
+        "mean_ms": 3.5320767500000003,
+        "status_counts": {
+          "clear": 32,
+          "limited": 11,
+          "held_distance_check": 13
+        },
+        "distance_queries": 0,
+        "cache_hits": 0
+      }
+    },
+    "TsenseI_v3_2_withid/right": {
+      "mink": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.499,
+          "p95_ms": 12.023940650000005,
+          "p99_ms": 20.420566000000072,
+          "max_ms": 27.3939,
+          "mean_ms": 2.4813464345238097,
+          "status_counts": {
+            "clear": 114,
+            "limited": 12,
+            "held_distance_check": 42
+          },
+          "distance_queries": 3753,
+          "cache_hits": 543
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 2.7991,
+          "p95_ms": 42.95610000000005,
+          "p99_ms": 57.49415400000001,
+          "max_ms": 62.8319,
+          "mean_ms": 8.089400017857141,
+          "status_counts": {
+            "clear": 114,
+            "limited": 12,
+            "held_distance_check": 42
+          },
+          "distance_queries": 211110,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "stop": {
+        "optimized": {
+          "calls": 168,
+          "p50_ms": 0.23115,
+          "p95_ms": 1.146185,
+          "p99_ms": 1.7695990000000017,
+          "max_ms": 2.7896,
+          "mean_ms": 0.4406071428571428,
+          "status_counts": {
+            "pass": 114,
+            "stop": 54
+          },
+          "distance_queries": 0,
+          "cache_hits": 282
+        },
+        "reference": {
+          "calls": 168,
+          "p50_ms": 0.32420000000000004,
+          "p95_ms": 2.098840000000001,
+          "p99_ms": 2.4698140000000013,
+          "max_ms": 3.3517,
+          "mean_ms": 0.707397619047619,
+          "status_counts": {
+            "pass": 114,
+            "stop": 54
+          },
+          "distance_queries": 0,
+          "cache_hits": 0
+        },
+        "max_output_difference_rad": 0.0
+      },
+      "original_mink_old_geometry": {
+        "calls": 56,
+        "p50_ms": 0.9852000000000001,
+        "p95_ms": 22.0176,
+        "p99_ms": 32.69564555000001,
+        "max_ms": 33.9915,
+        "mean_ms": 5.021923232142856,
+        "status_counts": {
+          "clear": 31,
+          "limited": 12,
+          "held_distance_check": 13
+        },
+        "distance_queries": 0,
+        "cache_hits": 0
+      }
+    }
+  }
+}

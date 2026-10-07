@@ -1,0 +1,22 @@
+{
+  "left_hand_thumb_rota_block_joint": 0.5368219932846244,
+  "left_hand_thumb_rotaback_joint2": 0.20656916959637103,
+  "left_hand_thumb_MCP_joint": 0.030866102587684716,
+  "left_hand_thumb_PIP_joint": 0.5941427290207272,
+  "left_hand_index_MCP_joint": 0.400460561924606,
+  "left_hand_index_swing_joint": 2.9435141818616737e-17,
+  "left_hand_index_PIP_joint": 0.23559273539109366,
+  "left_hand_index_DIP_joint": 0.3712786568534731,
+  "left_hand_mid_MCP_joint": 0.3385965554835609,
+  "left_hand_mid_swing_joint": 0.08046478593772566,
+  "left_hand_mid_PIP_joint": 0.32717811017768506,
+  "left_hand_mid_DIP_joint": 0.005272609575777411,
+  "left_hand_ring_MCP_joint": 0.20966805616026207,
+  "left_hand_ring_swing_joint": 7.2532489870596e-18,
+  "left_hand_ring_PIP_joint": 0.5650619634183695,
+  "left_hand_ring_DIP_joint": 0.005,
+  "left_hand_pinky_MCP_joint": 0.3929255291970338,
+  "left_hand_pinky_swing_joint": 0.051377079317639074,
+  "left_hand_pinky_PIP_joint": 0.14042886453526027,
+  "left_hand_pinky_DIP_joint": 0.08107042429226322
+}

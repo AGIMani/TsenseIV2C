@@ -1,0 +1,697 @@
+FFFFFFFFFFFFFFFFFF                                                       [100%]
+=================================== FAILURES ===================================
+_____ test_withid_open_gesture_recovers_after_other_fingers_separate[left] _____
+
+side = 'left'
+
+    @pytest.mark.parametrize('side',['left','right'])
+    def test_withid_open_gesture_recovers_after_other_fingers_separate(side):
+        case=json.loads((ROOT/'tests/fixtures/a30_withid_collision_resume.json').read_text())
+        profile=load_hand_profile('TsenseI_v3_0_withid')
+        controller=A30Control(profile,side,'mink',start=False)
+        guard=MinkCollisionGuard(profile,side)
+        target={n.replace('left_',side+'_'):q for n,q in case['target'].items()}
+        open_pose=profile.init_pose(side)
+        held=False
+        try:
+            for frame in range(110):
+                requested=guard.project(target if frame<10 else open_pose)
+                controller.push(requested,frame)
+                for _ in range(15):
+                    controller.step(.002)
+                    assert controller.valid,controller.error
+                    held |= bool(controller.finger_holds)
+                    controller.guard.filter.sync_pose_from_dict(controller.pose)
+                    assert controller.guard.filter.data.ncon==0
+                    assert len(controller.wire)==108
+            assert held  # Exercise an actual collision hold, not only a clear path.
+>           assert guard.diagnostics['status']=='clear'
+E           AssertionError: assert 'held_distance_check' == 'clear'
+E             
+E             - clear
+E             + held_distance_check
+
+tests/test_a30_collision_resume.py:64: AssertionError
+____ test_withid_open_gesture_recovers_after_other_fingers_separate[right] _____
+
+side = 'right'
+
+    @pytest.mark.parametrize('side',['left','right'])
+    def test_withid_open_gesture_recovers_after_other_fingers_separate(side):
+        case=json.loads((ROOT/'tests/fixtures/a30_withid_collision_resume.json').read_text())
+        profile=load_hand_profile('TsenseI_v3_0_withid')
+        controller=A30Control(profile,side,'mink',start=False)
+        guard=MinkCollisionGuard(profile,side)
+        target={n.replace('left_',side+'_'):q for n,q in case['target'].items()}
+        open_pose=profile.init_pose(side)
+        held=False
+        try:
+            for frame in range(110):
+                requested=guard.project(target if frame<10 else open_pose)
+                controller.push(requested,frame)
+                for _ in range(15):
+                    controller.step(.002)
+                    assert controller.valid,controller.error
+                    held |= bool(controller.finger_holds)
+                    controller.guard.filter.sync_pose_from_dict(controller.pose)
+                    assert controller.guard.filter.data.ncon==0
+                    assert len(controller.wire)==108
+            assert held  # Exercise an actual collision hold, not only a clear path.
+>           assert guard.diagnostics['status']=='clear'
+E           AssertionError: assert 'held_distance_check' == 'clear'
+E             
+E             - clear
+E             + held_distance_check
+
+tests/test_a30_collision_resume.py:64: AssertionError
+__ test_target_collision_guard_holds_only_contact_fingers_with_real_geometry ___
+
+    def test_target_collision_guard_holds_only_contact_fingers_with_real_geometry():
+        from online_control.online_motion_track.pipeline_v3_0.collision import StopCollisionGuard
+        case = json.loads((ROOT / 'tests/fixtures/a30_collision_685.json').read_text(encoding='utf-8'))
+        g = StopCollisionGuard(load_hand_profile('TsenseI_v3_0'), 'left', finger_stop=True)
+>       g.current = dict(case['last_safe_pose']); g.guard.rebase(g.current)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_continuous.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+online_control/online_motion_track/pipeline_v3_0/collision.py:30: in rebase
+    super().rebase(current_values)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <online_control.online_motion_track.pipeline_v3_0.collision._KinematicStopGuard object at 0x77f734428560>
+current_values = {'left_hand_thumb_rota_block_joint': 1.9764817953109741, 'left_hand_thumb_rotaback_joint2': 1.1638740301132202, 'left_hand_thumb_MCP_joint': 0.3172200322151184, 'left_hand_thumb_PIP_joint': 0.4202919006347656, ...}
+
+    def rebase(self, current_values: Mapping[str, float] | None) -> None:
+        """Discard stale routes and restart planning at the accepted hand pose.
+    
+        Used after tracking reacquisition; unlike reset(), this never restores
+        the physics model's warm-up pose or assumes the previous goal was met.
+        """
+        self._clear_avoidance()
+        self._previous_safe = None
+        if current_values:
+            current = self._pose(current_values)
+            penetration, _ = self._evaluate(current)
+            if not self._is_safe(penetration):
+>               raise RuntimeError("reacquisition pose exceeds collision tolerance")
+E               RuntimeError: reacquisition pose exceeds collision tolerance
+
+online_control/online_motion_track/pipeline_v2/collision_guard.py:1162: RuntimeError
+____ test_mink_automatic_resume_inside_clearance_keeps_feasible_target_seed ____
+
+    def test_mink_automatic_resume_inside_clearance_keeps_feasible_target_seed():
+        from online_control.online_motion_track.main import Application
+        case = json.loads((ROOT / 'tests/fixtures/a30_collision_685.json').read_text(encoding='utf-8'))
+        app = Application(public=True)
+        try:
+            session = app.create({'model_id':'TsenseI_v3_0', 'recording':False, 'collision_mode':'mink'})
+            obj = app.get(session['session']); obj.control.close()
+            g = obj.pipeline.mink_guard; original = g.q.copy()
+            assert not g._feasible(g._vector(case['last_safe_pose']))
+>           state = obj.command('browser_rebase', {'telemetry':bytes(484).hex(),
+                'pose':case['last_safe_pose'], 'resume_from_commanded_pose':True})
+
+tests/test_a30_continuous.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+online_control/online_motion_track/a30/session.py:50: in command
+    return self.control.rebase(data["telemetry"], data.get("pose"),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <online_control.online_motion_track.a30.control.A30Control object at 0x77f7367eb440>
+payload = '000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000...0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+fallback_pose = {'left_hand_thumb_rota_block_joint': 1.9764817953109741, 'left_hand_thumb_rotaback_joint2': 1.1638740301132202, 'left_hand_thumb_MCP_joint': 0.3172200322151184, 'left_hand_thumb_PIP_joint': 0.4202919006347656, ...}
+resume_from_commanded_pose = True
+
+    def rebase(self, payload, fallback_pose=None, *, resume_from_commanded_pose=False):
+        with self.lock:
+            target, target_at = dict(self.target), self.target_at
+            if resume_from_commanded_pose and not self.valid:
+                raise ValueError("控制器故障未解除，请手动重新开启")
+            missing, clipped = [], []
+            # The preview may already have advanced. Never use it as unmeasured
+            # hardware feedback: use the client's last sent pose or initial pose.
+            pose = measured_pose(payload, self.mapper,
+                                 fallback_pose=self.profile.init_pose(self.side) if fallback_pose is None else fallback_pose,
+                                 missing_joints=missing, clamp=True, clipped_joints=clipped)
+            if resume_from_commanded_pose:
+                # Automatic stream recovery must continue from the last USB
+                # command, not a cached telemetry packet from before that write.
+                if not isinstance(fallback_pose, dict) or any(
+                    n not in fallback_pose or not isinstance(fallback_pose[n], (int, float))
+                    or not math.isfinite(fallback_pose[n])
+                    or not lo-1e-5 <= fallback_pose[n] <= hi+1e-5
+                    for n, (lo, hi) in self.limits.items()
+                ):
+                    raise ValueError("恢复轨迹缺少有效的最后下发姿态")
+                pose = self.mapper.convert(fallback_pose, clamp=True).joint_angles_rad
+            if self.guard:
+                self.guard.filter.sync_pose_from_dict(pose)
+                if self.guard.filter.data.ncon:
+>                   raise ValueError("当前反馈姿态存在碰撞，请先调整实机")
+E                   ValueError: 当前反馈姿态存在碰撞，请先调整实机
+
+online_control/online_motion_track/a30/control.py:137: ValueError
+____ test_retained_channels_match_a32_and_four_dips_are_direct[exact-left] _____
+
+side = 'left', method = 'exact'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    @pytest.mark.parametrize("method", ["exact", "lut"])
+    def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+        mapper = A30StrokeMapper(side, method=method)
+        reference = A32StrokeMapper(side, method=method)
+        assert mapper._prepared.n == 9
+        assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
+        assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
+        dips = {f"{side}_hand_{f}_DIP_joint" for f in ("index", "mid", "ring", "pinky")}
+        rng = np.random.default_rng(30)
+        for _ in range(40):
+            pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
+            before = dict(pose)
+            target = mapper.convert(pose)
+            ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
+>           ref = reference.convert(ref_pose)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_mapper.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <a32_kinematics.mapper.A32StrokeMapper object at 0x77f735b77fb0>
+joint_angles = {'left_hand_thumb_rota_block_joint': 0.4928195020581935, 'left_hand_thumb_rotaback_joint2': 0.7466461776785114, 'left_hand_thumb_MCP_joint': 0.14486863598866864, 'left_hand_thumb_PIP_joint': 0.9303863284188952, ...}
+clamp = False
+
+    def convert(self, joint_angles: Mapping[str, float], *, clamp: bool = False) -> A32MotorTargets:
+        if not isinstance(joint_angles, Mapping):
+            raise ValueError("A3.2 pose must be a joint-name mapping")
+        if joint_angles.keys() != self._name_set:
+            missing = self._name_set - joint_angles.keys()
+            unknown = joint_angles.keys() - self._name_set
+            raise ValueError(f"A3.2 requires its own complete 20-joint pose; "
+                             f"missing={sorted(missing)}, unknown={sorted(unknown, key=repr)}")
+        angles, applied, clamped = [], {}, {}
+        for name, (lo, hi), sign in zip(self.joint_names, self._limits, self._source_signs):
+            value = joint_angles[name]
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}") from exc
+            if not math.isfinite(value):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            if value < lo - 1e-10 or value > hi + 1e-10:
+                if not clamp:
+>                   raise A32Error("AngleLimit", f"{name}: {value} rad outside [{lo}, {hi}]")
+E                   a32_kinematics.a32_angles_to_inputs.A32Error: A32:AngleLimit: left_hand_ring_MCP_joint: 1.374140568022994 rad outside [0.005, 1.3]
+
+src/a32_kinematics/mapper.py:143: A32Error
+____ test_retained_channels_match_a32_and_four_dips_are_direct[exact-right] ____
+
+side = 'right', method = 'exact'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    @pytest.mark.parametrize("method", ["exact", "lut"])
+    def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+        mapper = A30StrokeMapper(side, method=method)
+        reference = A32StrokeMapper(side, method=method)
+        assert mapper._prepared.n == 9
+        assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
+        assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
+        dips = {f"{side}_hand_{f}_DIP_joint" for f in ("index", "mid", "ring", "pinky")}
+        rng = np.random.default_rng(30)
+        for _ in range(40):
+            pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
+            before = dict(pose)
+            target = mapper.convert(pose)
+            ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
+>           ref = reference.convert(ref_pose)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_mapper.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <a32_kinematics.mapper.A32StrokeMapper object at 0x77f73b61e7e0>
+joint_angles = {'right_hand_thumb_rota_block_joint': 0.4928195020581935, 'right_hand_thumb_rotaback_joint2': 0.7466461776785114, 'right_hand_thumb_MCP_joint': 0.14486863598866864, 'right_hand_thumb_PIP_joint': 0.9303863284188952, ...}
+clamp = False
+
+    def convert(self, joint_angles: Mapping[str, float], *, clamp: bool = False) -> A32MotorTargets:
+        if not isinstance(joint_angles, Mapping):
+            raise ValueError("A3.2 pose must be a joint-name mapping")
+        if joint_angles.keys() != self._name_set:
+            missing = self._name_set - joint_angles.keys()
+            unknown = joint_angles.keys() - self._name_set
+            raise ValueError(f"A3.2 requires its own complete 20-joint pose; "
+                             f"missing={sorted(missing)}, unknown={sorted(unknown, key=repr)}")
+        angles, applied, clamped = [], {}, {}
+        for name, (lo, hi), sign in zip(self.joint_names, self._limits, self._source_signs):
+            value = joint_angles[name]
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}") from exc
+            if not math.isfinite(value):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            if value < lo - 1e-10 or value > hi + 1e-10:
+                if not clamp:
+>                   raise A32Error("AngleLimit", f"{name}: {value} rad outside [{lo}, {hi}]")
+E                   a32_kinematics.a32_angles_to_inputs.A32Error: A32:AngleLimit: right_hand_ring_MCP_joint: 1.374140568022994 rad outside [0.005, 1.3]
+
+src/a32_kinematics/mapper.py:143: A32Error
+_____ test_retained_channels_match_a32_and_four_dips_are_direct[lut-left] ______
+
+side = 'left', method = 'lut'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    @pytest.mark.parametrize("method", ["exact", "lut"])
+    def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+        mapper = A30StrokeMapper(side, method=method)
+        reference = A32StrokeMapper(side, method=method)
+        assert mapper._prepared.n == 9
+        assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
+        assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
+        dips = {f"{side}_hand_{f}_DIP_joint" for f in ("index", "mid", "ring", "pinky")}
+        rng = np.random.default_rng(30)
+        for _ in range(40):
+            pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
+            before = dict(pose)
+            target = mapper.convert(pose)
+            ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
+>           ref = reference.convert(ref_pose)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_mapper.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <a32_kinematics.mapper.A32StrokeMapper object at 0x77f735b75250>
+joint_angles = {'left_hand_thumb_rota_block_joint': 0.4928195020581935, 'left_hand_thumb_rotaback_joint2': 0.7466461776785114, 'left_hand_thumb_MCP_joint': 0.14486863598866864, 'left_hand_thumb_PIP_joint': 0.9303863284188952, ...}
+clamp = False
+
+    def convert(self, joint_angles: Mapping[str, float], *, clamp: bool = False) -> A32MotorTargets:
+        if not isinstance(joint_angles, Mapping):
+            raise ValueError("A3.2 pose must be a joint-name mapping")
+        if joint_angles.keys() != self._name_set:
+            missing = self._name_set - joint_angles.keys()
+            unknown = joint_angles.keys() - self._name_set
+            raise ValueError(f"A3.2 requires its own complete 20-joint pose; "
+                             f"missing={sorted(missing)}, unknown={sorted(unknown, key=repr)}")
+        angles, applied, clamped = [], {}, {}
+        for name, (lo, hi), sign in zip(self.joint_names, self._limits, self._source_signs):
+            value = joint_angles[name]
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}") from exc
+            if not math.isfinite(value):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            if value < lo - 1e-10 or value > hi + 1e-10:
+                if not clamp:
+>                   raise A32Error("AngleLimit", f"{name}: {value} rad outside [{lo}, {hi}]")
+E                   a32_kinematics.a32_angles_to_inputs.A32Error: A32:AngleLimit: left_hand_ring_MCP_joint: 1.374140568022994 rad outside [0.005, 1.3]
+
+src/a32_kinematics/mapper.py:143: A32Error
+_____ test_retained_channels_match_a32_and_four_dips_are_direct[lut-right] _____
+
+side = 'right', method = 'lut'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    @pytest.mark.parametrize("method", ["exact", "lut"])
+    def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+        mapper = A30StrokeMapper(side, method=method)
+        reference = A32StrokeMapper(side, method=method)
+        assert mapper._prepared.n == 9
+        assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
+        assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
+        dips = {f"{side}_hand_{f}_DIP_joint" for f in ("index", "mid", "ring", "pinky")}
+        rng = np.random.default_rng(30)
+        for _ in range(40):
+            pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
+            before = dict(pose)
+            target = mapper.convert(pose)
+            ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
+>           ref = reference.convert(ref_pose)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_mapper.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <a32_kinematics.mapper.A32StrokeMapper object at 0x77f73b17d2b0>
+joint_angles = {'right_hand_thumb_rota_block_joint': 0.4928195020581935, 'right_hand_thumb_rotaback_joint2': 0.7466461776785114, 'right_hand_thumb_MCP_joint': 0.14486863598866864, 'right_hand_thumb_PIP_joint': 0.9303863284188952, ...}
+clamp = False
+
+    def convert(self, joint_angles: Mapping[str, float], *, clamp: bool = False) -> A32MotorTargets:
+        if not isinstance(joint_angles, Mapping):
+            raise ValueError("A3.2 pose must be a joint-name mapping")
+        if joint_angles.keys() != self._name_set:
+            missing = self._name_set - joint_angles.keys()
+            unknown = joint_angles.keys() - self._name_set
+            raise ValueError(f"A3.2 requires its own complete 20-joint pose; "
+                             f"missing={sorted(missing)}, unknown={sorted(unknown, key=repr)}")
+        angles, applied, clamped = [], {}, {}
+        for name, (lo, hi), sign in zip(self.joint_names, self._limits, self._source_signs):
+            value = joint_angles[name]
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}") from exc
+            if not math.isfinite(value):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            if value < lo - 1e-10 or value > hi + 1e-10:
+                if not clamp:
+>                   raise A32Error("AngleLimit", f"{name}: {value} rad outside [{lo}, {hi}]")
+E                   a32_kinematics.a32_angles_to_inputs.A32Error: A32:AngleLimit: right_hand_ring_MCP_joint: 1.374140568022994 rad outside [0.005, 1.3]
+
+src/a32_kinematics/mapper.py:143: A32Error
+__________ test_recorded_retreat_does_not_freeze_both_contact_fingers __________
+
+    def test_recorded_retreat_does_not_freeze_both_contact_fingers():
+        case = json.loads((ROOT / "tests/fixtures/a30_plateau_145628.json").read_text())
+        c = A30Control(load_hand_profile("TsenseI_v3_0"), "left", "mink", start=False)
+        try:
+>           c._seed(case["seed_pose"])
+
+tests/test_a30_plateau.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+online_control/online_motion_track/a30/control.py:68: in _seed
+    self.guard.current = dict(pose); self.guard.guard.rebase(pose)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+online_control/online_motion_track/pipeline_v3_0/collision.py:30: in rebase
+    super().rebase(current_values)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <online_control.online_motion_track.pipeline_v3_0.collision._KinematicStopGuard object at 0x77f735b74860>
+current_values = {'left_hand_thumb_rota_block_joint': 1.6853546954877168, 'left_hand_thumb_rotaback_joint2': 1.1806582144134563, 'left_hand_thumb_MCP_joint': 0.5529742440082737, 'left_hand_thumb_PIP_joint': 0.3395892972139983, ...}
+
+    def rebase(self, current_values: Mapping[str, float] | None) -> None:
+        """Discard stale routes and restart planning at the accepted hand pose.
+    
+        Used after tracking reacquisition; unlike reset(), this never restores
+        the physics model's warm-up pose or assumes the previous goal was met.
+        """
+        self._clear_avoidance()
+        self._previous_safe = None
+        if current_values:
+            current = self._pose(current_values)
+            penetration, _ = self._evaluate(current)
+            if not self._is_safe(penetration):
+>               raise RuntimeError("reacquisition pose exceeds collision tolerance")
+E               RuntimeError: reacquisition pose exceeds collision tolerance
+
+online_control/online_motion_track/pipeline_v2/collision_guard.py:1162: RuntimeError
+_ test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample[avoid] _
+
+mode = 'avoid'
+
+    @pytest.mark.parametrize("mode", ["avoid", "stop"])
+    def test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample(mode):
+        flex = "left_hand_index_MCP_joint"
+        lateral = "left_hand_index_swing_joint"
+        fixed = "left_hand_pinky_rota_joint"
+        current = {flex: 0.1, lateral: 0.0, fixed: 0.0}
+        interp = PhaseSynchronizedRuckigInterpolator(joint_names=list(current))
+        interp.seed_ramp(current, current)
+        tracking = TrackingTransition(interp)
+        planner = SelfCollisionGuard(strategy=mode, path_step_rad=0.025, physics_filter=_BlockedTransitionFilter())
+        sample_guard = SelfCollisionGuard(strategy="stop", path_step_rad=0.01, physics_filter=_BlockedTransitionFilter())
+        sample_guard.rebase(current)
+        now = 0.0
+        for _ in range(3):
+            tracking.observe(True, now=now, current=current)
+            now += 0.03
+        interp.push({flex: 0.3, lateral: 0.0, fixed: 0.0})
+        history = []
+    
+        def sample():
+            nonlocal now, current
+            tracking.tick(now=now, current=current)
+            pose, diag = sample_guard.project(interp.sample())
+            assert diag["output_max_penetration_mm"] <= 0.200001
+            assert max(abs(pose[name] - current[name]) for name in pose) <= 0.008001
+            assert pose[fixed] == 0.0
+            assert not interp.last_faults
+            if diag["limited"]:
+                interp.sync_current_pose(pose)
+            current = pose
+            history.append(dict(current))
+            now += 0.002
+    
+        for tick in range(225):
+            if tick % 16 == 0:
+                tracking.observe(True, now=now, current=current)
+            sample()
+        lost_pose = dict(current)
+        tracking.observe(False, now=now, current=current)
+        for _ in range(650):
+            sample()
+        assert tracking.phase == "holding"
+        stopped = dict(current)
+        assert stopped[flex] >= lost_pose[flex]
+        assert stopped[flex] < 0.35
+>       assert history[-1] == history[-50]
+E       AssertionError: assert {'left_hand_i...a_joint': 0.0} == {'left_hand_i...a_joint': 0.0}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing items:
+E         {'left_hand_index_MCP_joint': 0.30000000000000077} != {'left_hand_index_MCP_joint': 0.30000000000000066}
+E         Use -v to get more diff
+
+tests/test_light_test_pipeline.py:369: AssertionError
+_ test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample[stop] _
+
+mode = 'stop'
+
+    @pytest.mark.parametrize("mode", ["avoid", "stop"])
+    def test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample(mode):
+        flex = "left_hand_index_MCP_joint"
+        lateral = "left_hand_index_swing_joint"
+        fixed = "left_hand_pinky_rota_joint"
+        current = {flex: 0.1, lateral: 0.0, fixed: 0.0}
+        interp = PhaseSynchronizedRuckigInterpolator(joint_names=list(current))
+        interp.seed_ramp(current, current)
+        tracking = TrackingTransition(interp)
+        planner = SelfCollisionGuard(strategy=mode, path_step_rad=0.025, physics_filter=_BlockedTransitionFilter())
+        sample_guard = SelfCollisionGuard(strategy="stop", path_step_rad=0.01, physics_filter=_BlockedTransitionFilter())
+        sample_guard.rebase(current)
+        now = 0.0
+        for _ in range(3):
+            tracking.observe(True, now=now, current=current)
+            now += 0.03
+        interp.push({flex: 0.3, lateral: 0.0, fixed: 0.0})
+        history = []
+    
+        def sample():
+            nonlocal now, current
+            tracking.tick(now=now, current=current)
+            pose, diag = sample_guard.project(interp.sample())
+            assert diag["output_max_penetration_mm"] <= 0.200001
+            assert max(abs(pose[name] - current[name]) for name in pose) <= 0.008001
+            assert pose[fixed] == 0.0
+            assert not interp.last_faults
+            if diag["limited"]:
+                interp.sync_current_pose(pose)
+            current = pose
+            history.append(dict(current))
+            now += 0.002
+    
+        for tick in range(225):
+            if tick % 16 == 0:
+                tracking.observe(True, now=now, current=current)
+            sample()
+        lost_pose = dict(current)
+        tracking.observe(False, now=now, current=current)
+        for _ in range(650):
+            sample()
+        assert tracking.phase == "holding"
+        stopped = dict(current)
+        assert stopped[flex] >= lost_pose[flex]
+        assert stopped[flex] < 0.35
+>       assert history[-1] == history[-50]
+E       AssertionError: assert {'left_hand_i...a_joint': 0.0} == {'left_hand_i...a_joint': 0.0}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing items:
+E         {'left_hand_index_MCP_joint': 0.30000000000000077} != {'left_hand_index_MCP_joint': 0.30000000000000066}
+E         Use -v to get more diff
+
+tests/test_light_test_pipeline.py:369: AssertionError
+_ test_corrected_markers_have_consistent_jacobian_and_recover_bent_thumb[auto] _
+
+fk = <TsenseI_retargeting.fk.fk.RobotKeypointFK object at 0x77f735b74050>
+backend = 'auto'
+
+    @pytest.mark.parametrize("backend", ["auto", "numpy"])
+    def test_corrected_markers_have_consistent_jacobian_and_recover_bent_thumb(fk, backend):
+        config = replace(runtime._build_topo_config(), kinematics_backend=backend)
+        solver = TopoRetargeter(config)
+        q = (solver.lower + solver.upper) * .4
+>       points, jac = solver._analytic_kinematics.compute_points_and_jacobian(q)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'compute_points_and_jacobian'
+
+tests/test_thumb_retarget_geometry.py:96: AttributeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips0-auto] ______
+
+backend = 'auto', tips = (8,)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips1-auto] ______
+
+backend = 'auto', tips = (12,)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips2-auto] ______
+
+backend = 'auto', tips = (16,)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips3-auto] ______
+
+backend = 'auto', tips = (20,)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips4-auto] ______
+
+backend = 'auto', tips = (8, 12, 16, 20)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+________ test_variable_steps_preserve_motion_constraints_and_phase_path ________
+
+    def test_variable_steps_preserve_motion_constraints_and_phase_path():
+        names = [JOINT, "left_hand_index_MCP_joint"]
+        interp = PhaseSynchronizedRuckigInterpolator(names)
+        interp.seed_ramp(dict.fromkeys(names, 0.0), {names[0]: 1.2, names[1]: .6})
+        for n in range(80):
+            pose = interp.sample(delta_time=(.002, .015, .008)[n % 3])
+            assert not interp.last_faults
+            assert pose[names[1]] == pytest.approx(pose[names[0]] / 2, abs=1e-8)
+>           assert max(abs(v) for v in interp._output.new_velocity) <= 4 + 1e-8
+E           assert 4.012328056970277 <= (4 + 1e-08)
+E            +  where 4.012328056970277 = max(<generator object test_variable_steps_preserve_motion_constraints_and_phase_path.<locals>.<genexpr> at 0x77f735ddb9f0>)
+
+tests/test_web_v2_control_timing.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_a30_collision_resume.py::test_withid_open_gesture_recovers_after_other_fingers_separate[left]
+FAILED tests/test_a30_collision_resume.py::test_withid_open_gesture_recovers_after_other_fingers_separate[right]
+FAILED tests/test_a30_continuous.py::test_target_collision_guard_holds_only_contact_fingers_with_real_geometry
+FAILED tests/test_a30_continuous.py::test_mink_automatic_resume_inside_clearance_keeps_feasible_target_seed
+FAILED tests/test_a30_mapper.py::test_retained_channels_match_a32_and_four_dips_are_direct[exact-left]
+FAILED tests/test_a30_mapper.py::test_retained_channels_match_a32_and_four_dips_are_direct[exact-right]
+FAILED tests/test_a30_mapper.py::test_retained_channels_match_a32_and_four_dips_are_direct[lut-left]
+FAILED tests/test_a30_mapper.py::test_retained_channels_match_a32_and_four_dips_are_direct[lut-right]
+FAILED tests/test_a30_plateau.py::test_recorded_retreat_does_not_freeze_both_contact_fingers
+FAILED tests/test_light_test_pipeline.py::test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample[avoid]
+FAILED tests/test_light_test_pipeline.py::test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample[stop]
+FAILED tests/test_thumb_retarget_geometry.py::test_corrected_markers_have_consistent_jacobian_and_recover_bent_thumb[auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips0-auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips1-auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips2-auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips3-auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips4-auto]
+FAILED tests/test_web_v2_control_timing.py::test_variable_steps_preserve_motion_constraints_and_phase_path
+18 failed in 4.05s

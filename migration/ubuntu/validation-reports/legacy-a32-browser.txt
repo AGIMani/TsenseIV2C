@@ -1,0 +1,23 @@
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: Expected values to be strictly deep-equal:
++ actual - expected
+
+  [
+    0.005,
++   1.020649563213339
+-   1.565
+  ]
+
+    at file:///tmp/hand-ubuntu-20261006/browser-qa/a32-browser.mjs:27:28 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: [ 0.005, 1.020649563213339 ],
+  expected: [ 0.005, 1.565 ],
+  operator: 'deepStrictEqual',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

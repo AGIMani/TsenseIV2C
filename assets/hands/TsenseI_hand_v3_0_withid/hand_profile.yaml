@@ -1,0 +1,39 @@
+schema_version: 1
+model_id: TsenseI_v3_0_withid
+display_name: TsenseI A3.0 with ID
+coordinate_space: urdf_radians
+sides:
+  left:
+    urdf: urdf/TsenseI_hand_left_v3_0_withid.urdf
+    keypoints: robot_keypoints_21.yaml
+    eval_config: eval_config.yaml
+    mjcf: mjcf/mjmodel.xml
+  right:
+    urdf: urdf/TsenseI_hand_right_v3_0_withid.urdf
+    keypoints: robot_keypoints_21_right.yaml
+    eval_config: eval_config_right.yaml
+    mjcf: mjcf/mjmodel_right.xml
+fixed_joints: {}
+hardware:
+  enabled: false
+  adapter: null
+retarget:
+  pinch_enabled: true
+  pinch_full_ratio: 0.08
+  pinch_start_ratio: 0.5
+  pinch_weight: 65.0
+  lambda_smooth: 0.1
+  lambda_reg: 0.1
+  init_max_iters: 2
+  topo_max_iters: 3
+mirror_axis: y
+notes:
+- Independent with-ID shell geometry and 21-point annotations; not the bare A3.0 package.
+- Canonical joint frames/axes/limits match A3.0; shared nine-linear/eleven-rotary
+  hardware conversion.
+- New geometry seeds require manual landmark calibration; do not inherit bare A3.0
+  annotations.
+- 15 finger capsules; different-finger pairs only. Palm, wrist and mounting shell
+  excluded.
+- Right hand is an XZ mirror, not an independently measured right CAD export.
+collision_scope: different_fingers_only

@@ -1,0 +1,5 @@
+# Additional local V2 runtime; reuse the shared web requirements.
+-r ../requirements-server.txt
+mujoco==3.10.0
+ruckig==0.17.3
+pyserial==3.5

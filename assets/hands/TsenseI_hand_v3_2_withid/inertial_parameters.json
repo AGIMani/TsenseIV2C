@@ -1,0 +1,824 @@
+{
+  "schema_version": 1,
+  "model_id": "TsenseI_v3_2_withid",
+  "source_package": "TsenseI_V3.2_hand_mass_inertia_corrected_952g",
+  "mass_per_hand_kg": 0.952,
+  "mass_source": "link质量.xlsx, Sheet1!A2:B23; grams converted to kilograms in supplied URDF",
+  "inertia_method": "I_new = I_original * (mass_new / mass_original); copy supplied final tensor without further scaling",
+  "units": {
+    "mass": "kg",
+    "xyz": "m",
+    "rpy": "rad",
+    "inertia": "kg*m^2"
+  },
+  "right_hand": "Supplied provisional XZ mirror; retain mirrored COM and off-diagonal inertia signs",
+  "source_sha256": {
+    "质量修改说明.md": "f775b184975f959ddd271ec09a7c952bcf425d256ea5d4180711d80a7e06c2b1",
+    "mass_update_report.json": "5fa3edbe5ae40f88cd704d06eb171d26e49d68681d452fbdcc275906e7d83aeb",
+    "inertia_update_report.json": "2ecb477d695031a79b084a3b19359e4b59f3d943a3343eb201ff6ae0cea3039c",
+    "model_derivation.json": "c961a4e9841a5e857677b90153bfd77fc9688f55d041e3a2ec01a9409e8fe05f",
+    "drive_settings.json": "1a5896b62e9cea808ed2190a322fc8f9ed379c967084a087851a5b2be0ea7e6a",
+    "contact_settings.json": "3a19f4476786e5063c35474afcf7976077224e191471e320fa9b334b29b9cf70",
+    "collision_proxies.json": "83012304fcbc44e9668b8477636d8587c59af99ea2d741e991ad3a0cc89fb940",
+    "urdf/TsenseI_left.urdf": "4d8f6c76e231a66fa78c6a38ca28e5729f1195265c1f3ee3b2ed83a9522f6424",
+    "urdf/TsenseI_right.urdf": "694b15afdfd8dd8384f0d46a31b14d79633db2c7189ffb90ad600ff02b81c0ba"
+  },
+  "hands": {
+    "left": {
+      "base_link": {
+        "joint": null,
+        "parent_link": null,
+        "mass_kg": "0.15",
+        "origin": {
+          "xyz": "0.011543099682429009 0.0040318741870570786 0.036364328173666402",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.000098387178786796999",
+          "ixy": "-0.0000012913832260820987",
+          "ixz": "0.0000016778729450149051",
+          "iyy": "0.000046505778008583841",
+          "iyz": "0.000012831147427021091",
+          "izz": "0.000070319343107243382"
+        },
+        "source_cell": "Sheet1!B2"
+      },
+      "Left_hand_palm_link": {
+        "joint": "Left_hand_palm_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.017",
+        "origin": {
+          "xyz": "-0.0177916001682625 -0.00824250774919223 -0.0391542113268037",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000032513914639243260",
+          "ixy": "-6.3494466076428325e-7",
+          "ixz": "7.8082827393655695e-7",
+          "iyy": "0.0000042259769426457957",
+          "iyz": "0.0000010258910255737574",
+          "izz": "0.0000046895119538357488"
+        },
+        "source_cell": "Sheet1!B11"
+      },
+      "left_hand_thumb_rota_block_link": {
+        "joint": "left_hand_thumb_rota_block_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.035",
+        "origin": {
+          "xyz": "-0.00287775233854371 -0.014221429943222 0.00759780701699019",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000034697447116161892",
+          "ixy": "-6.2574594223511107e-7",
+          "ixz": "-3.7953329622616734e-8",
+          "iyy": "0.0000016552168948205018",
+          "iyz": "-1.6043970779262275e-7",
+          "izz": "0.0000039888476254530798"
+        },
+        "source_cell": "Sheet1!B22"
+      },
+      "left_hand_thumb_rotaback_link2": {
+        "joint": "left_hand_thumb_rotaback_joint2",
+        "parent_link": "left_hand_thumb_rota_block_link",
+        "mass_kg": "0.075",
+        "origin": {
+          "xyz": "0.00918852823167288 -0.00282990228475839 0.0194294177118104",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000089989057536960922",
+          "ixy": "5.3320381866852324e-8",
+          "ixz": "0.0000011781157711660845",
+          "iyy": "0.0000082192258315186962",
+          "iyz": "6.9941813085608363e-7",
+          "izz": "0.0000048893639270824023"
+        },
+        "source_cell": "Sheet1!B23"
+      },
+      "left_hand_thumb_MCP_link": {
+        "joint": "left_hand_thumb_MCP_joint",
+        "parent_link": "left_hand_thumb_rotaback_link2",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.00660144359751896 -1.7635235690372E-06 0.0112994982600339",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000024875198912131291",
+          "ixy": "8.1371606209394175e-10",
+          "ixz": "1.0983654508132432e-8",
+          "iyy": "0.0000021538306901224122",
+          "iyz": "3.3676625014570043e-11",
+          "izz": "0.0000018949625957653452"
+        },
+        "source_cell": "Sheet1!B20"
+      },
+      "left_hand_thumb_PIP_link": {
+        "joint": "left_hand_thumb_PIP_joint",
+        "parent_link": "left_hand_thumb_MCP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.00527653952258859 -6.66768763222386E-06 0.00732466227018678",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "5.4349142382641509e-7",
+          "ixy": "-4.3127322231585773e-10",
+          "ixz": "-1.1988143763217868e-7",
+          "iyy": "4.8267589499929878e-7",
+          "iyz": "-5.5314433493714850e-10",
+          "izz": "3.0229677864916670e-7"
+        },
+        "source_cell": "Sheet1!B21"
+      },
+      "left_hand_index_MCP_link": {
+        "joint": "left_hand_index_MCP_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.03",
+        "origin": {
+          "xyz": "-0.0106142746199819 4.74881676214185E-05 0.00791287328660866",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000011634383725196219",
+          "ixy": "-6.2834032675062344e-10",
+          "ixz": "-1.9481005508301516e-8",
+          "iyy": "0.0000011487732125175695",
+          "iyz": "-8.7952313477132828e-10",
+          "izz": "0.0000013685479829882309"
+        },
+        "source_cell": "Sheet1!B4"
+      },
+      "left_hand_index_swing_link": {
+        "joint": "left_hand_index_swing_joint",
+        "parent_link": "left_hand_index_MCP_link",
+        "mass_kg": "0.07",
+        "origin": {
+          "xyz": "0.0020049364439405 9.15892972866428E-06 0.0193456563502929",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000078645564596793719",
+          "ixy": "-1.5891420461034171e-8",
+          "ixz": "-8.0145615330731014e-8",
+          "iyy": "0.0000057201022155560266",
+          "iyz": "6.3527512154159416e-10",
+          "izz": "0.0000043339953699145099"
+        },
+        "source_cell": "Sheet1!B6"
+      },
+      "left_hand_index_PIP_link": {
+        "joint": "left_hand_index_PIP_joint",
+        "parent_link": "left_hand_index_swing_link",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.00653284320407401 -9.72527428279302E-06 0.0112984123710339",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000025446876908400989",
+          "ixy": "2.2225508661452004e-9",
+          "ixz": "1.3690607523151023e-8",
+          "iyy": "0.0000022008613858776934",
+          "iyz": "8.2294113980756971e-11",
+          "izz": "0.0000018836803085620113"
+        },
+        "source_cell": "Sheet1!B5"
+      },
+      "left_hand_index_DIP_link": {
+        "joint": "left_hand_index_DIP_joint",
+        "parent_link": "left_hand_index_PIP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.00583473671136419 3.37569599070664E-05 0.00905338354281131",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "7.2980867273898945e-7",
+          "ixy": "-9.0616082327015123e-10",
+          "ixz": "-1.4317957815261916e-7",
+          "iyy": "6.6634720679316464e-7",
+          "iyz": "7.4569815309147156e-11",
+          "izz": "2.9211211028827194e-7"
+        },
+        "source_cell": "Sheet1!B3"
+      },
+      "left_hand_mid_MCP_link": {
+        "joint": "left_hand_mid_MCP_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.03",
+        "origin": {
+          "xyz": "-0.0097449039142485 -2.22520005175301E-05 0.00692633469007895",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000012171692624236225",
+          "ixy": "-9.9600531348087661e-11",
+          "ixz": "-3.5804287905567007e-8",
+          "iyy": "0.0000012646367851955083",
+          "iyz": "-7.4355850465050874e-10",
+          "izz": "0.0000016001873979606324"
+        },
+        "source_cell": "Sheet1!B8"
+      },
+      "left_hand_mid_swing_link": {
+        "joint": "left_hand_mid_swing_joint",
+        "parent_link": "left_hand_mid_MCP_link",
+        "mass_kg": "0.07",
+        "origin": {
+          "xyz": "0.000114017921113242 -2.51064367484513E-06 0.0183589698058963",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000069317651853575683",
+          "ixy": "-5.5020910846371330e-10",
+          "ixz": "-6.9226017712075117e-8",
+          "iyy": "0.0000052666708565674381",
+          "iyz": "-6.9629101321535217e-10",
+          "izz": "0.0000039656424474042828"
+        },
+        "source_cell": "Sheet1!B10"
+      },
+      "left_hand_mid_PIP_link": {
+        "joint": "left_hand_mid_PIP_joint",
+        "parent_link": "left_hand_mid_swing_link",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.00583018996016443 -2.66510051889372E-06 0.0137400658635952",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000039157764551018839",
+          "ixy": "4.8252740760661561e-10",
+          "ixz": "1.2979015817047082e-8",
+          "iyy": "0.0000034095739016913850",
+          "iyz": "7.2574228200688065e-11",
+          "izz": "0.0000019181637641965276"
+        },
+        "source_cell": "Sheet1!B9"
+      },
+      "left_hand_mid_DIP_link": {
+        "joint": "left_hand_mid_DIP_joint",
+        "parent_link": "left_hand_mid_PIP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.00508651465017483 -5.42974594518582E-06 0.0100479890816567",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "9.4201809035765782e-7",
+          "ixy": "-3.0703543261234813e-10",
+          "ixz": "-1.6349777292123494e-7",
+          "iyy": "8.1591565721779961e-7",
+          "iyz": "-6.0847124355377723e-10",
+          "izz": "3.5796355138807683e-7"
+        },
+        "source_cell": "Sheet1!B7"
+      },
+      "left_hand_ring_MCP_link": {
+        "joint": "left_hand_ring_MCP_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.03",
+        "origin": {
+          "xyz": "-0.0106014117842674 6.57849972365218E-05 0.00803611569969116",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000011734224514103369",
+          "ixy": "-6.2972359809919072e-10",
+          "ixz": "-1.9660031001347819e-8",
+          "iyy": "0.0000011592325391646831",
+          "iyz": "-8.8757485175927812e-10",
+          "izz": "0.0000013804199268782989"
+        },
+        "source_cell": "Sheet1!B17"
+      },
+      "left_hand_ring_swing_link": {
+        "joint": "left_hand_ring_swing_joint",
+        "parent_link": "left_hand_ring_MCP_link",
+        "mass_kg": "0.07",
+        "origin": {
+          "xyz": "0.000114018372146359 -7.2466380404354E-06 0.0183589692757444",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000069317651770289352",
+          "ixy": "-5.5003543111751788e-10",
+          "ixz": "-6.9225639897602559e-8",
+          "iyy": "0.0000052666716619542305",
+          "iyz": "-6.9641035226130294e-10",
+          "izz": "0.0000039656421354627814"
+        },
+        "source_cell": "Sheet1!B19"
+      },
+      "left_hand_ring_PIP_link": {
+        "joint": "left_hand_ring_PIP_joint",
+        "parent_link": "left_hand_ring_swing_link",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.00655441791124188 2.52914385609135E-05 0.011335766386824",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000025529878978103810",
+          "ixy": "2.2307099154343406e-9",
+          "ixz": "1.3735405935504704e-8",
+          "iyy": "0.0000022079943811336202",
+          "iyz": "8.4328376540530964e-11",
+          "izz": "0.0000018897956970263185"
+        },
+        "source_cell": "Sheet1!B18"
+      },
+      "left_hand_ring_DIP_link": {
+        "joint": "left_hand_ring_DIP_joint",
+        "parent_link": "left_hand_ring_PIP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.00542827837463897 -1.16179503534715E-05 0.0103335082324084",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "8.4710669906599156e-7",
+          "ixy": "-3.6669641131589474e-10",
+          "ixz": "-1.4908281068077731e-7",
+          "iyy": "7.6384722984868145e-7",
+          "iyz": "-8.4951883604945327e-10",
+          "izz": "3.0841880439551668e-7"
+        },
+        "source_cell": "Sheet1!B16"
+      },
+      "left_hand_pinky_MCP_link": {
+        "joint": "left_hand_pinky_MCP_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.03",
+        "origin": {
+          "xyz": "-0.00971195415666607 -3.46049200662668E-06 0.00710789940158277",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000012338308456839026",
+          "ixy": "-1.0110682652574451e-10",
+          "ixz": "-3.6327365138889273e-8",
+          "iyy": "0.0000012829620431216725",
+          "iyz": "-7.5446472448057347e-10",
+          "izz": "0.0000016224505448672845"
+        },
+        "source_cell": "Sheet1!B13"
+      },
+      "left_hand_pinky_swing_link": {
+        "joint": "left_hand_pinky_swing_joint",
+        "parent_link": "left_hand_pinky_MCP_link",
+        "mass_kg": "0.07",
+        "origin": {
+          "xyz": "0.000274204155159384 -7.56933162854995E-06 0.0172239133681881",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000053695558324703811",
+          "ixy": "4.9649944402722229e-11",
+          "ixz": "-7.2267142897419904e-8",
+          "iyy": "0.0000037876631283759538",
+          "iyz": "-1.4994483479820389e-9",
+          "izz": "0.0000032100798477473220"
+        },
+        "source_cell": "Sheet1!B15"
+      },
+      "left_hand_pinky_PIP_link": {
+        "joint": "left_hand_pinky_PIP_joint",
+        "parent_link": "left_hand_pinky_swing_link",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.00256036575895302 0.000117999611699414 0.0126670531721035",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000025372503022235211",
+          "ixy": "1.3659355326211771e-8",
+          "ixz": "-2.1126126300761932e-8",
+          "iyy": "0.0000019446483015489526",
+          "iyz": "7.8600796305774999e-9",
+          "izz": "0.0000018128273087665459"
+        },
+        "source_cell": "Sheet1!B14"
+      },
+      "left_hand_pinky_DIP_link": {
+        "joint": "left_hand_pinky_DIP_joint",
+        "parent_link": "left_hand_pinky_PIP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.00527669330617801 -6.71735892755071E-06 0.0073246804908844",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "5.4348776924579158e-7",
+          "ixy": "-4.2350731191334170e-10",
+          "ixz": "-1.1987834221503031e-7",
+          "iyy": "4.8265878985996448e-7",
+          "iyz": "-5.4617296270026136e-10",
+          "izz": "3.0229372228460263e-7"
+        },
+        "source_cell": "Sheet1!B12"
+      }
+    },
+    "right": {
+      "base_link": {
+        "joint": null,
+        "parent_link": null,
+        "mass_kg": "0.15",
+        "origin": {
+          "xyz": "0.011543099682429009 -0.0040318741870570786 0.036364328173666402",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.000098387178786796999",
+          "ixy": "0.0000012913832260820987",
+          "ixz": "0.0000016778729450149051",
+          "iyy": "0.000046505778008583841",
+          "iyz": "-0.000012831147427021091",
+          "izz": "0.000070319343107243382"
+        },
+        "source_cell": "Sheet1!B2"
+      },
+      "Right_hand_palm_link": {
+        "joint": "Right_hand_palm_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.017",
+        "origin": {
+          "xyz": "-0.017791600168262499 0.0082425077491922304 -0.039154211326803703",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000032513914639243260",
+          "ixy": "6.3494466076428322e-7",
+          "ixz": "7.8082827393655695e-7",
+          "iyy": "0.0000042259769426457957",
+          "iyz": "-0.0000010258910255737574",
+          "izz": "0.0000046895119538357488"
+        },
+        "source_cell": "Sheet1!B11"
+      },
+      "right_hand_thumb_rota_block_link": {
+        "joint": "right_hand_thumb_rota_block_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.035",
+        "origin": {
+          "xyz": "-0.0028777523385437099 0.014221429943221999 0.0075978070169901903",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000034697447116161892",
+          "ixy": "6.2574594223511107e-7",
+          "ixz": "-3.7953329622616734e-8",
+          "iyy": "0.0000016552168948205018",
+          "iyz": "1.6043970779262275e-7",
+          "izz": "0.0000039888476254530798"
+        },
+        "source_cell": "Sheet1!B22"
+      },
+      "right_hand_thumb_rotaback_link2": {
+        "joint": "right_hand_thumb_rotaback_joint2",
+        "parent_link": "right_hand_thumb_rota_block_link",
+        "mass_kg": "0.075",
+        "origin": {
+          "xyz": "0.0091885282316728802 0.0028299022847583901 0.0194294177118104",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000089989057536960922",
+          "ixy": "-5.3320381866852328e-8",
+          "ixz": "0.0000011781157711660845",
+          "iyy": "0.0000082192258315186962",
+          "iyz": "-6.9941813085608360e-7",
+          "izz": "0.0000048893639270824023"
+        },
+        "source_cell": "Sheet1!B23"
+      },
+      "right_hand_thumb_MCP_link": {
+        "joint": "right_hand_thumb_MCP_joint",
+        "parent_link": "right_hand_thumb_rotaback_link2",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.0066014435975189599 1.7635235690372e-06 0.0112994982600339",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000024875198912131291",
+          "ixy": "-8.1371606209394172e-10",
+          "ixz": "1.0983654508132432e-8",
+          "iyy": "0.0000021538306901224122",
+          "iyz": "-3.3676625014570045e-11",
+          "izz": "0.0000018949625957653452"
+        },
+        "source_cell": "Sheet1!B20"
+      },
+      "right_hand_thumb_PIP_link": {
+        "joint": "right_hand_thumb_PIP_joint",
+        "parent_link": "right_hand_thumb_MCP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.0052765395225885898 6.6676876322238604e-06 0.0073246622701867801",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "5.4349142382641509e-7",
+          "ixy": "4.3127322231585770e-10",
+          "ixz": "-1.1988143763217868e-7",
+          "iyy": "4.8267589499929878e-7",
+          "iyz": "5.5314433493714846e-10",
+          "izz": "3.0229677864916670e-7"
+        },
+        "source_cell": "Sheet1!B21"
+      },
+      "right_hand_index_MCP_link": {
+        "joint": "right_hand_index_MCP_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.03",
+        "origin": {
+          "xyz": "-0.010614274619981901 -4.7488167621418498e-05 0.0079128732866086595",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000011634383725196219",
+          "ixy": "6.2834032675062347e-10",
+          "ixz": "-1.9481005508301516e-8",
+          "iyy": "0.0000011487732125175695",
+          "iyz": "8.7952313477132835e-10",
+          "izz": "0.0000013685479829882309"
+        },
+        "source_cell": "Sheet1!B4"
+      },
+      "right_hand_index_swing_link": {
+        "joint": "right_hand_index_swing_joint",
+        "parent_link": "right_hand_index_MCP_link",
+        "mass_kg": "0.07",
+        "origin": {
+          "xyz": "0.0020049364439404999 -9.1589297286642796e-06 0.019345656350292902",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000078645564596793719",
+          "ixy": "1.5891420461034169e-8",
+          "ixz": "-8.0145615330731014e-8",
+          "iyy": "0.0000057201022155560266",
+          "iyz": "-6.3527512154159417e-10",
+          "izz": "0.0000043339953699145099"
+        },
+        "source_cell": "Sheet1!B6"
+      },
+      "right_hand_index_PIP_link": {
+        "joint": "right_hand_index_PIP_joint",
+        "parent_link": "right_hand_index_swing_link",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.0065328432040740103 9.7252742827930206e-06 0.011298412371033901",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000025446876908400989",
+          "ixy": "-2.2225508661452004e-9",
+          "ixz": "1.3690607523151023e-8",
+          "iyy": "0.0000022008613858776934",
+          "iyz": "-8.2294113980756974e-11",
+          "izz": "0.0000018836803085620113"
+        },
+        "source_cell": "Sheet1!B5"
+      },
+      "right_hand_index_DIP_link": {
+        "joint": "right_hand_index_DIP_joint",
+        "parent_link": "right_hand_index_PIP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.0058347367113641899 -3.3756959907066397e-05 0.0090533835428113097",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "7.2980867273898945e-7",
+          "ixy": "9.0616082327015123e-10",
+          "ixz": "-1.4317957815261916e-7",
+          "iyy": "6.6634720679316464e-7",
+          "iyz": "-7.4569815309147152e-11",
+          "izz": "2.9211211028827194e-7"
+        },
+        "source_cell": "Sheet1!B3"
+      },
+      "right_hand_mid_MCP_link": {
+        "joint": "right_hand_mid_MCP_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.03",
+        "origin": {
+          "xyz": "-0.0097449039142485008 2.22520005175301e-05 0.0069263346900789498",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000012171692624236225",
+          "ixy": "9.9600531348087666e-11",
+          "ixz": "-3.5804287905567007e-8",
+          "iyy": "0.0000012646367851955083",
+          "iyz": "7.4355850465050874e-10",
+          "izz": "0.0000016001873979606324"
+        },
+        "source_cell": "Sheet1!B8"
+      },
+      "right_hand_mid_swing_link": {
+        "joint": "right_hand_mid_swing_joint",
+        "parent_link": "right_hand_mid_MCP_link",
+        "mass_kg": "0.07",
+        "origin": {
+          "xyz": "0.000114017921113242 2.5106436748451301e-06 0.0183589698058963",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000069317651853575683",
+          "ixy": "5.5020910846371333e-10",
+          "ixz": "-6.9226017712075117e-8",
+          "iyy": "0.0000052666708565674381",
+          "iyz": "6.9629101321535217e-10",
+          "izz": "0.0000039656424474042828"
+        },
+        "source_cell": "Sheet1!B10"
+      },
+      "right_hand_mid_PIP_link": {
+        "joint": "right_hand_mid_PIP_joint",
+        "parent_link": "right_hand_mid_swing_link",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.0058301899601644301 2.6651005188937198e-06 0.0137400658635952",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000039157764551018839",
+          "ixy": "-4.8252740760661557e-10",
+          "ixz": "1.2979015817047082e-8",
+          "iyy": "0.0000034095739016913850",
+          "iyz": "-7.2574228200688060e-11",
+          "izz": "0.0000019181637641965276"
+        },
+        "source_cell": "Sheet1!B9"
+      },
+      "right_hand_mid_DIP_link": {
+        "joint": "right_hand_mid_DIP_joint",
+        "parent_link": "right_hand_mid_PIP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.0050865146501748301 5.4297459451858204e-06 0.010047989081656701",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "9.4201809035765782e-7",
+          "ixy": "3.0703543261234813e-10",
+          "ixz": "-1.6349777292123494e-7",
+          "iyy": "8.1591565721779961e-7",
+          "iyz": "6.0847124355377723e-10",
+          "izz": "3.5796355138807683e-7"
+        },
+        "source_cell": "Sheet1!B7"
+      },
+      "right_hand_ring_MCP_link": {
+        "joint": "right_hand_ring_MCP_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.03",
+        "origin": {
+          "xyz": "-0.010601411784267401 -6.57849972365218e-05 0.0080361156996911608",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000011734224514103369",
+          "ixy": "6.2972359809919072e-10",
+          "ixz": "-1.9660031001347819e-8",
+          "iyy": "0.0000011592325391646831",
+          "iyz": "8.8757485175927815e-10",
+          "izz": "0.0000013804199268782989"
+        },
+        "source_cell": "Sheet1!B17"
+      },
+      "right_hand_ring_swing_link": {
+        "joint": "right_hand_ring_swing_joint",
+        "parent_link": "right_hand_ring_MCP_link",
+        "mass_kg": "0.07",
+        "origin": {
+          "xyz": "0.000114018372146359 7.2466380404353996e-06 0.018358969275744399",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000069317651770289352",
+          "ixy": "5.5003543111751785e-10",
+          "ixz": "-6.9225639897602559e-8",
+          "iyy": "0.0000052666716619542305",
+          "iyz": "6.9641035226130292e-10",
+          "izz": "0.0000039656421354627814"
+        },
+        "source_cell": "Sheet1!B19"
+      },
+      "right_hand_ring_PIP_link": {
+        "joint": "right_hand_ring_PIP_joint",
+        "parent_link": "right_hand_ring_swing_link",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.0065544179112418796 -2.5291438560913499e-05 0.011335766386824001",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000025529878978103810",
+          "ixy": "-2.2307099154343408e-9",
+          "ixz": "1.3735405935504704e-8",
+          "iyy": "0.0000022079943811336202",
+          "iyz": "-8.4328376540530964e-11",
+          "izz": "0.0000018897956970263185"
+        },
+        "source_cell": "Sheet1!B18"
+      },
+      "right_hand_ring_DIP_link": {
+        "joint": "right_hand_ring_DIP_joint",
+        "parent_link": "right_hand_ring_PIP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.0054282783746389699 1.16179503534715e-05 0.0103335082324084",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "8.4710669906599156e-7",
+          "ixy": "3.6669641131589477e-10",
+          "ixz": "-1.4908281068077731e-7",
+          "iyy": "7.6384722984868145e-7",
+          "iyz": "8.4951883604945333e-10",
+          "izz": "3.0841880439551668e-7"
+        },
+        "source_cell": "Sheet1!B16"
+      },
+      "right_hand_pinky_MCP_link": {
+        "joint": "right_hand_pinky_MCP_joint",
+        "parent_link": "base_link",
+        "mass_kg": "0.03",
+        "origin": {
+          "xyz": "-0.0097119541566660708 3.46049200662668e-06 0.0071078994015827696",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000012338308456839026",
+          "ixy": "1.0110682652574451e-10",
+          "ixz": "-3.6327365138889273e-8",
+          "iyy": "0.0000012829620431216725",
+          "iyz": "7.5446472448057353e-10",
+          "izz": "0.0000016224505448672845"
+        },
+        "source_cell": "Sheet1!B13"
+      },
+      "right_hand_pinky_swing_link": {
+        "joint": "right_hand_pinky_swing_joint",
+        "parent_link": "right_hand_pinky_MCP_link",
+        "mass_kg": "0.07",
+        "origin": {
+          "xyz": "0.00027420415515938399 7.5693316285499502e-06 0.017223913368188098",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000053695558324703811",
+          "ixy": "-4.9649944402722232e-11",
+          "ixz": "-7.2267142897419904e-8",
+          "iyy": "0.0000037876631283759538",
+          "iyz": "1.4994483479820388e-9",
+          "izz": "0.0000032100798477473220"
+        },
+        "source_cell": "Sheet1!B15"
+      },
+      "right_hand_pinky_PIP_link": {
+        "joint": "right_hand_pinky_PIP_joint",
+        "parent_link": "right_hand_pinky_swing_link",
+        "mass_kg": "0.04",
+        "origin": {
+          "xyz": "-0.00256036575895302 -0.000117999611699414 0.012667053172103499",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "0.0000025372503022235211",
+          "ixy": "-1.3659355326211772e-8",
+          "ixz": "-2.1126126300761932e-8",
+          "iyy": "0.0000019446483015489526",
+          "iyz": "-7.8600796305774997e-9",
+          "izz": "0.0000018128273087665459"
+        },
+        "source_cell": "Sheet1!B14"
+      },
+      "right_hand_pinky_DIP_link": {
+        "joint": "right_hand_pinky_DIP_joint",
+        "parent_link": "right_hand_pinky_PIP_link",
+        "mass_kg": "0.015",
+        "origin": {
+          "xyz": "-0.0052766933061780099 6.7173589275507104e-06 0.0073246804908844",
+          "rpy": "0 0 0"
+        },
+        "inertia": {
+          "ixx": "5.4348776924579158e-7",
+          "ixy": "4.2350731191334168e-10",
+          "ixz": "-1.1987834221503031e-7",
+          "iyy": "4.8265878985996448e-7",
+          "iyz": "5.4617296270026140e-10",
+          "izz": "3.0229372228460263e-7"
+        },
+        "source_cell": "Sheet1!B12"
+      }
+    }
+  }
+}

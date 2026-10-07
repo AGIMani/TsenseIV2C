@@ -1,0 +1,30 @@
+[
+  {
+    "model_id": "TsenseI_v3_0",
+    "links": 44,
+    "full_vertices": 8854,
+    "simplified_vertices": 3716,
+    "max_excess_mm": 0.345081480716724
+  },
+  {
+    "model_id": "TsenseI_v3_0_withid",
+    "links": 42,
+    "full_vertices": 23774,
+    "simplified_vertices": 5086,
+    "max_excess_mm": 0.3472573713958796
+  },
+  {
+    "model_id": "TsenseI_v3_2",
+    "links": 44,
+    "full_vertices": 8644,
+    "simplified_vertices": 4318,
+    "max_excess_mm": 0.3415580022374856
+  },
+  {
+    "model_id": "TsenseI_v3_2_withid",
+    "links": 44,
+    "full_vertices": 23142,
+    "simplified_vertices": 5278,
+    "max_excess_mm": 0.34847575248256346
+  }
+]

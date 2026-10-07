@@ -1,0 +1,7277 @@
+{
+  "initial": {
+    "model_id": "TsenseI_v2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.0,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.0,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 0,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.5,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": false,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "无动作"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": 0.0,
+          "max": 50.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": 0.0,
+          "at_ui_max": 50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "initial_export": {
+    "_hand_side": "left"
+  },
+  "edited": {
+    "model_id": "TsenseI_v2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.6,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 0,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.25,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.015,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": false,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "无动作"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.6,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": 0.0,
+          "max": 50.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": 0.0,
+          "at_ui_max": 50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "edited_export": {
+    "_hand_side": "left"
+  },
+  "saved": {
+    "model_id": "TsenseI_v2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.6,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 1,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.25,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.015,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "动作甲"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.6,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": 0.0,
+          "max": 50.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": 0.0,
+          "at_ui_max": 50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "saved_export": {
+    "_hand_side": "left",
+    "动作甲": {
+      "_transition_s": 0.25,
+      "_interval_s": 0.015,
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.4,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    }
+  },
+  "inserted": {
+    "model_id": "TsenseI_v2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 1.2,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 2,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.25,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.015,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": true,
+        "kind": "select",
+        "value": 1,
+        "options": [
+          "动作甲",
+          "动作乙"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 1.2,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": 0.0,
+          "max": 50.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": 0.0,
+          "at_ui_max": 50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "inserted_export": {
+    "_hand_side": "left",
+    "动作甲": {
+      "_transition_s": 0.25,
+      "_interval_s": 0.015,
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.4,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "动作乙": {
+      "_transition_s": 0.25,
+      "_interval_s": 0.015,
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": -0.2,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    }
+  },
+  "loaded": {
+    "model_id": "TsenseI_v2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.6,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 2,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.25,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.015,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "动作甲",
+          "动作乙"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.6,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": 0.0,
+          "max": 50.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": 0.0,
+          "at_ui_max": 50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "loaded_export": {
+    "_hand_side": "left",
+    "动作甲": {
+      "_transition_s": 0.25,
+      "_interval_s": 0.015,
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.4,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "动作乙": {
+      "_transition_s": 0.25,
+      "_interval_s": 0.015,
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": -0.2,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    }
+  },
+  "deleted": {
+    "model_id": "TsenseI_v2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 1.2,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 1,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.25,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.015,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "动作乙"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 1.2,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": 0.0,
+          "max": 50.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": 0.0,
+          "at_ui_max": 50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "deleted_export": {
+    "_hand_side": "left",
+    "动作乙": {
+      "_transition_s": 0.25,
+      "_interval_s": 0.015,
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": -0.2,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.2,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    }
+  },
+  "right_imported": {
+    "model_id": "TsenseI_v2",
+    "side": "right",
+    "pose": {
+      "right_hand_thumb_rota_joint": 0.0,
+      "right_hand_thumb_swing_joint": 1.2,
+      "right_hand_thumb_MCP_joint": 0.0,
+      "right_hand_thumb_PIP_joint": 0.0,
+      "right_hand_index_swing_joint": 0.0,
+      "right_hand_index_MCP_joint": 0.2,
+      "right_hand_index_PIP_joint": 0.0,
+      "right_hand_index_DIP_joint": 0.0,
+      "right_hand_mid_swing_joint": 0.0,
+      "right_hand_mid_MCP_joint": 0.0,
+      "right_hand_mid_PIP_joint": 0.0,
+      "right_hand_mid_DIP_joint": 0.0,
+      "right_hand_ring_swing_joint": 0.0,
+      "right_hand_ring_MCP_joint": 0.0,
+      "right_hand_ring_PIP_joint": 0.0,
+      "right_hand_ring_DIP_joint": 0.0,
+      "right_hand_pinky_rota_joint": 0.0,
+      "right_hand_pinky_swing_joint": 0.0,
+      "right_hand_pinky_MCP_joint": 0.0,
+      "right_hand_pinky_PIP_joint": 0.0,
+      "right_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 1,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.012,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "姿态一"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 1,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 1.2,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 39.878,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.0,
+          "at_ui_max": 39.878
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 39.878,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.0,
+          "at_ui_max": 39.878
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 39.878,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.0,
+          "at_ui_max": 39.878
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": -50.0,
+          "max": -0.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": -0.0,
+          "at_ui_max": -50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 39.878,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.0,
+          "at_ui_max": 39.878
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "right_imported_export": {
+    "_hand_side": "right",
+    "姿态一": {
+      "left_hand_thumb_swing_joint": -0.4,
+      "left_hand_pinky_rota_joint": -0.3,
+      "left_hand_index_swing_joint": 0.2,
+      "_transition_s": 0.012,
+      "_interval_s": 0.0
+    }
+  },
+  "right_loaded": {
+    "model_id": "TsenseI_v2",
+    "side": "right",
+    "pose": {
+      "right_hand_thumb_rota_joint": 0.0,
+      "right_hand_thumb_swing_joint": 0.6,
+      "right_hand_thumb_MCP_joint": 0.0,
+      "right_hand_thumb_PIP_joint": 0.0,
+      "right_hand_index_swing_joint": 0.2,
+      "right_hand_index_MCP_joint": 0.0,
+      "right_hand_index_PIP_joint": 0.0,
+      "right_hand_index_DIP_joint": 0.0,
+      "right_hand_mid_swing_joint": 0.0,
+      "right_hand_mid_MCP_joint": 0.0,
+      "right_hand_mid_PIP_joint": 0.0,
+      "right_hand_mid_DIP_joint": 0.0,
+      "right_hand_ring_swing_joint": 0.0,
+      "right_hand_ring_MCP_joint": 0.0,
+      "right_hand_ring_PIP_joint": 0.0,
+      "right_hand_ring_DIP_joint": 0.0,
+      "right_hand_pinky_rota_joint": 0.3,
+      "right_hand_pinky_swing_joint": 0.0,
+      "right_hand_pinky_MCP_joint": 0.0,
+      "right_hand_pinky_PIP_joint": 0.0,
+      "right_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 1,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.012,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "姿态一"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 1,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.6,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 39.878,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.0,
+          "at_ui_max": 39.878
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 39.878,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.0,
+          "at_ui_max": 39.878
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 39.878,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.0,
+          "at_ui_max": 39.878
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.3,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": -50.0,
+          "max": -0.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": -0.0,
+          "at_ui_max": -50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 39.878,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.0,
+          "at_ui_max": 39.878
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "right_loaded_export": {
+    "_hand_side": "right",
+    "姿态一": {
+      "left_hand_thumb_swing_joint": -0.4,
+      "left_hand_pinky_rota_joint": -0.3,
+      "left_hand_index_swing_joint": 0.2,
+      "_transition_s": 0.012,
+      "_interval_s": 0.0
+    }
+  },
+  "legacy_imported": {
+    "model_id": "TsenseI_v2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.6,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.2,
+      "left_hand_index_MCP_joint": 0.0,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.3,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 1,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.5,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "旧动作"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.6,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.3,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": 0.0,
+          "max": 50.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": 0.0,
+          "at_ui_max": 50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "legacy_imported_export": {
+    "_hand_side": "left",
+    "旧动作": {
+      "left_hand_index_MCP_joint": 0.6
+    }
+  },
+  "TsenseI_v3_0": {
+    "model_id": "TsenseI_v3_0",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_block_joint": 0.0,
+      "left_hand_thumb_rotaback_joint2": 0.0,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 0,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "handSide": {
+        "kind": "select",
+        "enabled": true,
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      },
+      "choosemotion": {
+        "kind": "select",
+        "enabled": false,
+        "value": 0,
+        "options": [
+          "无动作"
+        ]
+      },
+      "savemotion": {
+        "kind": "button",
+        "enabled": true
+      },
+      "loadmotion": {
+        "kind": "button",
+        "enabled": false
+      },
+      "deletemotion": {
+        "kind": "button",
+        "enabled": false
+      },
+      "motionstreamplay": {
+        "kind": "button",
+        "enabled": false
+      },
+      "transition": {
+        "kind": "number",
+        "enabled": true,
+        "value": 1.0,
+        "min": 0.0,
+        "max": 600,
+        "step": 0.01
+      },
+      "interval": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.2,
+        "min": 0.0,
+        "max": 600,
+        "step": 0.01
+      },
+      "motionStreamLoop": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "isConnectOffline": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "realtimeJointControl": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "openSendLog": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "a30Home": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a30Reset": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a30Init": {
+        "kind": "button",
+        "enabled": true
+      },
+      "a30PowerOff": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a30LinearIq": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.0,
+        "min": 0.0,
+        "max": 5000,
+        "step": 0.01
+      },
+      "a30RotaryIq": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.0,
+        "min": 0.0,
+        "max": 5000,
+        "step": 0.01
+      }
+    },
+    "joints": [
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_rota_block_joint",
+        "short": "thumb_rota_block",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 2.09,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 3592.445,
+          "unit": "deg",
+          "slot": "mit_pos_deg[1]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 3592.445
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_rotaback_joint2",
+        "short": "thumb_rotaback",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.74,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 4984.733,
+          "unit": "deg",
+          "slot": "mit_pos_deg[0]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 4984.733
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -16.928,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[17]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -16.928
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[16]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.523,
+        "step": 0.001,
+        "downlink": {
+          "min": -23.895,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[15]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -23.895
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "value": 0.0,
+        "min": -0.35,
+        "max": 0.35,
+        "step": 0.001,
+        "downlink": {
+          "min": -20.054,
+          "max": 20.054,
+          "unit": "deg",
+          "slot": "self_pos[11]",
+          "at_ui_min": -20.054,
+          "at_ui_max": 20.054
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -16.558,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[14]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -16.558
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[10]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -19.614,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[13]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -19.614
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "value": 0.0,
+        "min": -0.35,
+        "max": 0.35,
+        "step": 0.001,
+        "downlink": {
+          "min": -20.054,
+          "max": 20.054,
+          "unit": "deg",
+          "slot": "self_pos[9]",
+          "at_ui_min": -20.054,
+          "at_ui_max": 20.054
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -16.545,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "self_pos[12]",
+          "at_ui_min": 0.0,
+          "at_ui_max": -16.545
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[8]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.523,
+        "step": 0.001,
+        "downlink": {
+          "min": -23.895,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[7]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -23.895
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "value": 0.0,
+        "min": -0.35,
+        "max": 0.35,
+        "step": 0.001,
+        "downlink": {
+          "min": -20.054,
+          "max": 20.054,
+          "unit": "deg",
+          "slot": "self_pos[3]",
+          "at_ui_min": -20.054,
+          "at_ui_max": 20.054
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -16.558,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[6]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -16.558
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[2]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -19.605,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[5]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -19.605
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "value": 0.0,
+        "min": -0.35,
+        "max": 0.35,
+        "step": 0.001,
+        "downlink": {
+          "min": -20.054,
+          "max": 20.054,
+          "unit": "deg",
+          "slot": "self_pos[1]",
+          "at_ui_min": -20.054,
+          "at_ui_max": 20.054
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -15.652,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[4]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -15.652
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[0]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "TsenseI_v3_0_export": {
+    "_model_id": "TsenseI_v3_0",
+    "_hand_side": "left",
+    "motions": {}
+  },
+  "TsenseI_v3_0_withid": {
+    "model_id": "TsenseI_v3_0_withid",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_block_joint": 0.0,
+      "left_hand_thumb_rotaback_joint2": 0.0,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_MCP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 0,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "handSide": {
+        "kind": "select",
+        "enabled": true,
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      },
+      "choosemotion": {
+        "kind": "select",
+        "enabled": false,
+        "value": 0,
+        "options": [
+          "无动作"
+        ]
+      },
+      "savemotion": {
+        "kind": "button",
+        "enabled": true
+      },
+      "loadmotion": {
+        "kind": "button",
+        "enabled": false
+      },
+      "deletemotion": {
+        "kind": "button",
+        "enabled": false
+      },
+      "motionstreamplay": {
+        "kind": "button",
+        "enabled": false
+      },
+      "transition": {
+        "kind": "number",
+        "enabled": true,
+        "value": 1.0,
+        "min": 0.0,
+        "max": 600,
+        "step": 0.01
+      },
+      "interval": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.2,
+        "min": 0.0,
+        "max": 600,
+        "step": 0.01
+      },
+      "motionStreamLoop": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "isConnectOffline": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "realtimeJointControl": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "openSendLog": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "a30Home": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a30Reset": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a30Init": {
+        "kind": "button",
+        "enabled": true
+      },
+      "a30PowerOff": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a30LinearIq": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.0,
+        "min": 0.0,
+        "max": 5000,
+        "step": 0.01
+      },
+      "a30RotaryIq": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.0,
+        "min": 0.0,
+        "max": 5000,
+        "step": 0.01
+      }
+    },
+    "joints": [
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_rota_block_joint",
+        "short": "thumb_rota_block",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 2.09,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 3592.445,
+          "unit": "deg",
+          "slot": "mit_pos_deg[1]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 3592.445
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_rotaback_joint2",
+        "short": "thumb_rotaback",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.74,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 4984.733,
+          "unit": "deg",
+          "slot": "mit_pos_deg[0]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 4984.733
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -16.928,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[17]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -16.928
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[16]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.523,
+        "step": 0.001,
+        "downlink": {
+          "min": -23.895,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[15]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -23.895
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "value": 0.0,
+        "min": -0.35,
+        "max": 0.35,
+        "step": 0.001,
+        "downlink": {
+          "min": -20.054,
+          "max": 20.054,
+          "unit": "deg",
+          "slot": "self_pos[11]",
+          "at_ui_min": -20.054,
+          "at_ui_max": 20.054
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -16.558,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[14]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -16.558
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[10]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -19.614,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[13]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -19.614
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "value": 0.0,
+        "min": -0.35,
+        "max": 0.35,
+        "step": 0.001,
+        "downlink": {
+          "min": -20.054,
+          "max": 20.054,
+          "unit": "deg",
+          "slot": "self_pos[9]",
+          "at_ui_min": -20.054,
+          "at_ui_max": 20.054
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -16.545,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "self_pos[12]",
+          "at_ui_min": 0.0,
+          "at_ui_max": -16.545
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[8]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.523,
+        "step": 0.001,
+        "downlink": {
+          "min": -23.895,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[7]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -23.895
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "value": 0.0,
+        "min": -0.35,
+        "max": 0.35,
+        "step": 0.001,
+        "downlink": {
+          "min": -20.054,
+          "max": 20.054,
+          "unit": "deg",
+          "slot": "self_pos[3]",
+          "at_ui_min": -20.054,
+          "at_ui_max": 20.054
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -16.558,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[6]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -16.558
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[2]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -19.605,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[5]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -19.605
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "value": 0.0,
+        "min": -0.35,
+        "max": 0.35,
+        "step": 0.001,
+        "downlink": {
+          "min": -20.054,
+          "max": 20.054,
+          "unit": "deg",
+          "slot": "self_pos[1]",
+          "at_ui_min": -20.054,
+          "at_ui_max": 20.054
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": -15.652,
+          "max": -0.0,
+          "unit": "mm",
+          "slot": "self_pos[4]",
+          "at_ui_min": -0.0,
+          "at_ui_max": -15.652
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.0,
+          "max": 89.954,
+          "unit": "deg",
+          "slot": "self_pos[0]",
+          "at_ui_min": 0.0,
+          "at_ui_max": 89.954
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "TsenseI_v3_0_withid_export": {
+    "_model_id": "TsenseI_v3_0_withid",
+    "_hand_side": "left",
+    "motions": {}
+  },
+  "TsenseI_v3_2": {
+    "model_id": "TsenseI_v3_2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_block_joint": 0.0,
+      "left_hand_thumb_rotaback_joint2": 0.0,
+      "left_hand_thumb_MCP_joint": 0.005,
+      "left_hand_thumb_PIP_joint": 0.005,
+      "left_hand_index_MCP_joint": 0.005,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_PIP_joint": 0.005,
+      "left_hand_index_DIP_joint": 0.005,
+      "left_hand_mid_MCP_joint": 0.005,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.005,
+      "left_hand_mid_DIP_joint": 0.005,
+      "left_hand_ring_MCP_joint": 0.005,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.005,
+      "left_hand_ring_DIP_joint": 0.005,
+      "left_hand_pinky_MCP_joint": 0.005,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.005,
+      "left_hand_pinky_DIP_joint": 0.005
+    },
+    "count": 0,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "handSide": {
+        "kind": "select",
+        "enabled": true,
+        "value": 0,
+        "options": [
+          "左手",
+          "右手（离线）"
+        ]
+      },
+      "choosemotion": {
+        "kind": "select",
+        "enabled": false,
+        "value": 0,
+        "options": [
+          "无动作"
+        ]
+      },
+      "savemotion": {
+        "kind": "button",
+        "enabled": true
+      },
+      "loadmotion": {
+        "kind": "button",
+        "enabled": false
+      },
+      "deletemotion": {
+        "kind": "button",
+        "enabled": false
+      },
+      "motionstreamplay": {
+        "kind": "button",
+        "enabled": false
+      },
+      "transition": {
+        "kind": "number",
+        "enabled": true,
+        "value": 1.0,
+        "min": 0.0,
+        "max": 600,
+        "step": 0.01
+      },
+      "interval": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.2,
+        "min": 0.0,
+        "max": 600,
+        "step": 0.01
+      },
+      "motionStreamLoop": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "isConnectOffline": {
+        "kind": "check",
+        "enabled": false,
+        "value": false
+      },
+      "realtimeJointControl": {
+        "kind": "check",
+        "enabled": false,
+        "value": false
+      },
+      "a32Enable": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a32Disable": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a32Reset": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a32Init": {
+        "kind": "button",
+        "enabled": true
+      },
+      "a32Home": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a32HomeSlot": {
+        "kind": "select",
+        "enabled": true,
+        "value": 0,
+        "options": [
+          "全部 18 self",
+          "self 0",
+          "self 1",
+          "self 2",
+          "self 3",
+          "self 4",
+          "self 5",
+          "self 6",
+          "self 7",
+          "self 8",
+          "self 9",
+          "self 10",
+          "self 11",
+          "self 12",
+          "self 13",
+          "self 14",
+          "self 15",
+          "self 16",
+          "self 17"
+        ]
+      },
+      "a32HomeIq": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1000.0,
+        "step": 1.0
+      }
+    },
+    "joints": [
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.021,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 8.0,
+          "unit": "mm",
+          "slot": "self 0",
+          "at_ui_min": 0.04,
+          "at_ui_max": 8.0
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.047,
+          "max": 15.564,
+          "unit": "mm",
+          "slot": "self 1",
+          "at_ui_min": 0.047,
+          "at_ui_max": 15.564
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.063,
+          "max": 15.917,
+          "unit": "mm",
+          "slot": "self 2",
+          "at_ui_min": 0.063,
+          "at_ui_max": 15.917
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.018,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 8.0,
+          "unit": "mm",
+          "slot": "self 3",
+          "at_ui_min": 0.04,
+          "at_ui_max": 8.0
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.049,
+          "max": 16.494,
+          "unit": "mm",
+          "slot": "self 4",
+          "at_ui_min": 0.049,
+          "at_ui_max": 16.494
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.053,
+          "max": 17.506,
+          "unit": "mm",
+          "slot": "self 5",
+          "at_ui_min": 0.053,
+          "at_ui_max": 17.506
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.7,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.286,
+          "max": 39.821,
+          "unit": "deg",
+          "slot": "self 6",
+          "at_ui_min": 0.286,
+          "at_ui_max": 39.821
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.7,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.286,
+          "max": 39.821,
+          "unit": "deg",
+          "slot": "self 7",
+          "at_ui_min": 0.286,
+          "at_ui_max": 39.821
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.033,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 8.0,
+          "unit": "mm",
+          "slot": "self 8",
+          "at_ui_min": 0.04,
+          "at_ui_max": 8.0
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.048,
+          "max": 16.481,
+          "unit": "mm",
+          "slot": "self 9",
+          "at_ui_min": 0.048,
+          "at_ui_max": 16.481
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.064,
+          "max": 15.926,
+          "unit": "mm",
+          "slot": "self 10",
+          "at_ui_min": 0.064,
+          "at_ui_max": 15.926
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.018,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 8.0,
+          "unit": "mm",
+          "slot": "self 11",
+          "at_ui_min": 0.04,
+          "at_ui_max": 8.0
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.049,
+          "max": 16.494,
+          "unit": "mm",
+          "slot": "self 12",
+          "at_ui_min": 0.049,
+          "at_ui_max": 16.494
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.053,
+          "max": 17.506,
+          "unit": "mm",
+          "slot": "self 13",
+          "at_ui_min": 0.053,
+          "at_ui_max": 17.506
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.7,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.286,
+          "max": 39.821,
+          "unit": "deg",
+          "slot": "self 14",
+          "at_ui_min": 0.286,
+          "at_ui_max": 39.821
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.7,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.286,
+          "max": 39.821,
+          "unit": "deg",
+          "slot": "self 15",
+          "at_ui_min": 0.286,
+          "at_ui_max": 39.821
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 12.381,
+          "unit": "mm",
+          "slot": "self 16",
+          "at_ui_min": 0.04,
+          "at_ui_max": 12.381
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.049,
+          "max": 13.724,
+          "unit": "mm",
+          "slot": "self 17",
+          "at_ui_min": 0.049,
+          "at_ui_max": 13.724
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_rotaback_joint2",
+        "short": "thumb_rotaback",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.728,
+        "step": 0.001,
+        "downlink": {
+          "min": 0,
+          "max": 99,
+          "unit": "deg",
+          "slot": "mit 0",
+          "at_ui_min": 0,
+          "at_ui_max": 99
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_rota_block_joint",
+        "short": "thumb_rota_block",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 2.077,
+        "step": 0.001,
+        "downlink": {
+          "min": 0,
+          "max": 119,
+          "unit": "deg",
+          "slot": "mit 1",
+          "at_ui_min": 0,
+          "at_ui_max": 119
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "TsenseI_v3_2_export": {
+    "_model_id": "TsenseI_v3_2",
+    "_hand_side": "left",
+    "_joint_coordinate_version": "a32-positive-swing-v1",
+    "_swing_axis_alignment": "id-direction-v1",
+    "motions": {}
+  },
+  "TsenseI_v3_2_withid": {
+    "model_id": "TsenseI_v3_2_withid",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_block_joint": 0.0,
+      "left_hand_thumb_rotaback_joint2": 0.0,
+      "left_hand_thumb_MCP_joint": 0.005,
+      "left_hand_thumb_PIP_joint": 0.005,
+      "left_hand_index_MCP_joint": 0.005,
+      "left_hand_index_swing_joint": 0.0,
+      "left_hand_index_PIP_joint": 0.005,
+      "left_hand_index_DIP_joint": 0.005,
+      "left_hand_mid_MCP_joint": 0.005,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.005,
+      "left_hand_mid_DIP_joint": 0.005,
+      "left_hand_ring_MCP_joint": 0.005,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.005,
+      "left_hand_ring_DIP_joint": 0.005,
+      "left_hand_pinky_MCP_joint": 0.005,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.005,
+      "left_hand_pinky_DIP_joint": 0.005
+    },
+    "count": 0,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "handSide": {
+        "kind": "select",
+        "enabled": true,
+        "value": 0,
+        "options": [
+          "左手",
+          "右手（离线）"
+        ]
+      },
+      "choosemotion": {
+        "kind": "select",
+        "enabled": false,
+        "value": 0,
+        "options": [
+          "无动作"
+        ]
+      },
+      "savemotion": {
+        "kind": "button",
+        "enabled": true
+      },
+      "loadmotion": {
+        "kind": "button",
+        "enabled": false
+      },
+      "deletemotion": {
+        "kind": "button",
+        "enabled": false
+      },
+      "motionstreamplay": {
+        "kind": "button",
+        "enabled": false
+      },
+      "transition": {
+        "kind": "number",
+        "enabled": true,
+        "value": 1.0,
+        "min": 0.0,
+        "max": 600,
+        "step": 0.01
+      },
+      "interval": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.2,
+        "min": 0.0,
+        "max": 600,
+        "step": 0.01
+      },
+      "motionStreamLoop": {
+        "kind": "check",
+        "enabled": true,
+        "value": false
+      },
+      "isConnectOffline": {
+        "kind": "check",
+        "enabled": false,
+        "value": false
+      },
+      "realtimeJointControl": {
+        "kind": "check",
+        "enabled": false,
+        "value": false
+      },
+      "a32Enable": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a32Disable": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a32Reset": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a32Init": {
+        "kind": "button",
+        "enabled": true
+      },
+      "a32Home": {
+        "kind": "button",
+        "enabled": false
+      },
+      "a32HomeSlot": {
+        "kind": "select",
+        "enabled": true,
+        "value": 0,
+        "options": [
+          "全部 18 self",
+          "self 0",
+          "self 1",
+          "self 2",
+          "self 3",
+          "self 4",
+          "self 5",
+          "self 6",
+          "self 7",
+          "self 8",
+          "self 9",
+          "self 10",
+          "self 11",
+          "self 12",
+          "self 13",
+          "self 14",
+          "self 15",
+          "self 16",
+          "self 17"
+        ]
+      },
+      "a32HomeIq": {
+        "kind": "number",
+        "enabled": true,
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1000.0,
+        "step": 1.0
+      }
+    },
+    "joints": [
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.021,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 8.0,
+          "unit": "mm",
+          "slot": "self 0",
+          "at_ui_min": 0.04,
+          "at_ui_max": 8.0
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.047,
+          "max": 15.564,
+          "unit": "mm",
+          "slot": "self 1",
+          "at_ui_min": 0.047,
+          "at_ui_max": 15.564
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.063,
+          "max": 15.917,
+          "unit": "mm",
+          "slot": "self 2",
+          "at_ui_min": 0.063,
+          "at_ui_max": 15.917
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.018,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 8.0,
+          "unit": "mm",
+          "slot": "self 3",
+          "at_ui_min": 0.04,
+          "at_ui_max": 8.0
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.049,
+          "max": 16.494,
+          "unit": "mm",
+          "slot": "self 4",
+          "at_ui_min": 0.049,
+          "at_ui_max": 16.494
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.053,
+          "max": 17.506,
+          "unit": "mm",
+          "slot": "self 5",
+          "at_ui_min": 0.053,
+          "at_ui_max": 17.506
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.7,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.286,
+          "max": 39.821,
+          "unit": "deg",
+          "slot": "self 6",
+          "at_ui_min": 0.286,
+          "at_ui_max": 39.821
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.7,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.286,
+          "max": 39.821,
+          "unit": "deg",
+          "slot": "self 7",
+          "at_ui_min": 0.286,
+          "at_ui_max": 39.821
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.033,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 8.0,
+          "unit": "mm",
+          "slot": "self 8",
+          "at_ui_min": 0.04,
+          "at_ui_max": 8.0
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.048,
+          "max": 16.481,
+          "unit": "mm",
+          "slot": "self 9",
+          "at_ui_min": 0.048,
+          "at_ui_max": 16.481
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.064,
+          "max": 15.926,
+          "unit": "mm",
+          "slot": "self 10",
+          "at_ui_min": 0.064,
+          "at_ui_max": 15.926
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.018,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 8.0,
+          "unit": "mm",
+          "slot": "self 11",
+          "at_ui_min": 0.04,
+          "at_ui_max": 8.0
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.049,
+          "max": 16.494,
+          "unit": "mm",
+          "slot": "self 12",
+          "at_ui_min": 0.049,
+          "at_ui_max": 16.494
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.053,
+          "max": 17.506,
+          "unit": "mm",
+          "slot": "self 13",
+          "at_ui_min": 0.053,
+          "at_ui_max": 17.506
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.7,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.286,
+          "max": 39.821,
+          "unit": "deg",
+          "slot": "self 14",
+          "at_ui_min": 0.286,
+          "at_ui_max": 39.821
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.7,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.286,
+          "max": 39.821,
+          "unit": "deg",
+          "slot": "self 15",
+          "at_ui_min": 0.286,
+          "at_ui_max": 39.821
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.565,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.04,
+          "max": 12.381,
+          "unit": "mm",
+          "slot": "self 16",
+          "at_ui_min": 0.04,
+          "at_ui_max": 12.381
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "value": 0.005,
+        "min": 0.005,
+        "max": 1.3,
+        "step": 0.001,
+        "downlink": {
+          "min": 0.049,
+          "max": 13.724,
+          "unit": "mm",
+          "slot": "self 17",
+          "at_ui_min": 0.049,
+          "at_ui_max": 13.724
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_rotaback_joint2",
+        "short": "thumb_rotaback",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.728,
+        "step": 0.001,
+        "downlink": {
+          "min": 0,
+          "max": 99,
+          "unit": "deg",
+          "slot": "mit 0",
+          "at_ui_min": 0,
+          "at_ui_max": 99
+        }
+      },
+      {
+        "kind": "number",
+        "enabled": true,
+        "name": "left_hand_thumb_rota_block_joint",
+        "short": "thumb_rota_block",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 2.077,
+        "step": 0.001,
+        "downlink": {
+          "min": 0,
+          "max": 119,
+          "unit": "deg",
+          "slot": "mit 1",
+          "at_ui_min": 0,
+          "at_ui_max": 119
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "TsenseI_v3_2_withid_export": {
+    "_model_id": "TsenseI_v3_2_withid",
+    "_hand_side": "left",
+    "_joint_coordinate_version": "a32-positive-swing-v1",
+    "_swing_axis_alignment": "id-direction-v1",
+    "motions": {}
+  },
+  "TsenseI_v2": {
+    "model_id": "TsenseI_v2",
+    "side": "left",
+    "pose": {
+      "left_hand_thumb_rota_joint": 0.0,
+      "left_hand_thumb_swing_joint": 0.6,
+      "left_hand_thumb_MCP_joint": 0.0,
+      "left_hand_thumb_PIP_joint": 0.0,
+      "left_hand_index_swing_joint": 0.2,
+      "left_hand_index_MCP_joint": 0.0,
+      "left_hand_index_PIP_joint": 0.0,
+      "left_hand_index_DIP_joint": 0.0,
+      "left_hand_mid_swing_joint": 0.0,
+      "left_hand_mid_MCP_joint": 0.0,
+      "left_hand_mid_PIP_joint": 0.0,
+      "left_hand_mid_DIP_joint": 0.0,
+      "left_hand_ring_swing_joint": 0.0,
+      "left_hand_ring_MCP_joint": 0.0,
+      "left_hand_ring_PIP_joint": 0.0,
+      "left_hand_ring_DIP_joint": 0.0,
+      "left_hand_pinky_rota_joint": 0.3,
+      "left_hand_pinky_swing_joint": 0.0,
+      "left_hand_pinky_MCP_joint": 0.0,
+      "left_hand_pinky_PIP_joint": 0.0,
+      "left_hand_pinky_DIP_joint": 0.0
+    },
+    "count": 1,
+    "connected": false,
+    "playing": false,
+    "homing": false,
+    "controls": {
+      "savemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "loadmotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "deletemotion": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motionstreamplay": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allzero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "allreset": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "calibrationRotateMotor": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "oneKeyZero": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "motiondirectlysend": {
+        "enabled": true,
+        "kind": "button"
+      },
+      "isConnectOffline": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "motionStreamLoop": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "openSendLog": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "realtimeJointControl": {
+        "enabled": true,
+        "kind": "check",
+        "value": false
+      },
+      "transition": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.5,
+        "min": 0.001,
+        "max": 5.0,
+        "step": 0.001
+      },
+      "interval": {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 30.0,
+        "step": 0.001
+      },
+      "choosemotion": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "旧动作"
+        ]
+      },
+      "handSide": {
+        "enabled": true,
+        "kind": "select",
+        "value": 0,
+        "options": [
+          "左手",
+          "右手"
+        ]
+      }
+    },
+    "joints": [
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_rota_joint",
+        "short": "thumb_rota",
+        "downlink": {
+          "min": 0.5,
+          "max": 89.5,
+          "unit": "deg",
+          "slot": "R04",
+          "at_ui_min": 0.5,
+          "at_ui_max": 89.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.6,
+        "min": 0.0,
+        "max": 2.0,
+        "step": 0.001,
+        "name": "left_hand_thumb_swing_joint",
+        "short": "thumb_swing",
+        "downlink": {
+          "min": 0.0,
+          "max": 114.592,
+          "unit": "deg",
+          "slot": "R05",
+          "at_ui_min": 0.0,
+          "at_ui_max": 114.592
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_MCP_joint",
+        "short": "thumb_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L12",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_thumb_PIP_joint",
+        "short": "thumb_pip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L13",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.2,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_index_swing_joint",
+        "short": "index_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R00",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_MCP_joint",
+        "short": "index_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L06",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_PIP_joint",
+        "short": "index_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L07",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_index_DIP_joint",
+        "short": "index_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L08",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_mid_swing_joint",
+        "short": "mid_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R01",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_MCP_joint",
+        "short": "mid_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L09",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_PIP_joint",
+        "short": "mid_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L10",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_mid_DIP_joint",
+        "short": "mid_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L11",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_ring_swing_joint",
+        "short": "ring_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R02",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_MCP_joint",
+        "short": "ring_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L00",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_PIP_joint",
+        "short": "ring_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L01",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_ring_DIP_joint",
+        "short": "ring_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L02",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.3,
+        "min": 0.0,
+        "max": 0.873,
+        "step": 0.001,
+        "name": "left_hand_pinky_rota_joint",
+        "short": "pinky_rota",
+        "downlink": {
+          "min": 0.0,
+          "max": 50.0,
+          "unit": "deg",
+          "slot": "R06",
+          "at_ui_min": 0.0,
+          "at_ui_max": 50.0
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 0.696,
+        "step": 0.001,
+        "name": "left_hand_pinky_swing_joint",
+        "short": "pinky_swing",
+        "downlink": {
+          "min": 0.5,
+          "max": 39.5,
+          "unit": "deg",
+          "slot": "R03",
+          "at_ui_min": 0.5,
+          "at_ui_max": 39.5
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_MCP_joint",
+        "short": "pinky_mcp",
+        "downlink": {
+          "min": -14.544,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L03",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.544
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_PIP_joint",
+        "short": "pinky_pip",
+        "downlink": {
+          "min": -15.043,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L04",
+          "at_ui_min": 0.0,
+          "at_ui_max": -15.043
+        }
+      },
+      {
+        "enabled": true,
+        "kind": "number",
+        "value": 0.0,
+        "min": 0.0,
+        "max": 1.57,
+        "step": 0.001,
+        "name": "left_hand_pinky_DIP_joint",
+        "short": "pinky_dip",
+        "downlink": {
+          "min": -14.458,
+          "max": 0.0,
+          "unit": "mm",
+          "slot": "L05",
+          "at_ui_min": 0.0,
+          "at_ui_max": -14.458
+        }
+      }
+    ],
+    "dialogs": []
+  },
+  "TsenseI_v2_export": {
+    "_hand_side": "left",
+    "旧动作": {
+      "left_hand_index_MCP_joint": 0.6
+    }
+  },
+  "released_available": true
+}

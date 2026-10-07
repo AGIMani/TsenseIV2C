@@ -1,0 +1,40 @@
+{
+  "schema": 1,
+  "default_profile": "legacy_v1",
+  "profiles": {
+    "legacy_v1": {
+      "description": "Existing V3.2 URDF masses and provisional position servos; preserve historical behavior."
+    },
+    "shadow_v1": {
+      "description": "Shadow-referenced upstream positioning platform represented by TX/TY reflected translational inertia, not measured V3.2 hardware inertia or a Shadow kinematic replica.",
+      "shadow_forearm_reference_only": {
+        "mass": 3.0,
+        "pos": [0.0, 0.0, 0.09],
+        "diaginertia": [0.0138, 0.0138, 0.00744]
+      },
+      "translation": {
+        "joints": ["forearm_tx", "forearm_ty"],
+        "kp": 300.0,
+        "armature": 3.0,
+        "damping": "critical_from_compiled_dof_M0",
+        "force_limit": 50.0,
+        "inertia_semantics": "translation_armature_v1: 3 kg per orthogonal slide; no additional rigid body, Pitch inertia, gravity force, or collision geometry."
+      },
+      "pitch": {
+        "kp": 8.0,
+        "damping": 0.5,
+        "force_limit": 5.0,
+        "reference": "Shadow WRJ1 numeric gain reference only; V3.2 forearm_pitch has a different world-axis convention."
+      },
+      "finger": {
+        "kp": 1.0,
+        "damping": 0.05,
+        "armature": 0.0002,
+        "frictionloss": 0.01,
+        "force_limit": 0.6
+      },
+      "scope": "Apply only when explicitly selected. Preserve V3.2 geometry, coordinate axes, joint ranges, initial pose, and position-control semantics. Other wrist axes retain their existing servo parameters.",
+      "calibration_todo": "V32-04: virtual platform mass, servo gains and force limits are simulation adaptations, not hardware calibration."
+    }
+  }
+}

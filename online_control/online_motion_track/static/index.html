@@ -1,0 +1,377 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f1f7f9" />
+    <title>TsenseI · 手势映射工作台</title>
+    <link rel="icon" href="/brand/tsensei-favicon.svg?v=1" type="image/svg+xml" sizes="any" />
+    <link rel="stylesheet" href="/style.css" />
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "/vendor/three/build/three.module.js",
+          "three/addons/": "/vendor/three/examples/jsm/"
+        }
+      }
+    </script>
+    <script type="module" src="/app.js"></script>
+    <script type="module" src="/shared/ui-language.js"></script>
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" aria-label="TsenseI 达显身手工作台"
+          ><img
+            class="brand-logo"
+            src="/brand/tsensei-logo.png?v=943c7fd00210"
+            alt="TsenseI 公司标志"
+            width="4844"
+            height="1418"
+        /></a>
+        <div class="topbar-right">
+          <nav class="workspace-nav" aria-label="工作页面"><a href="/" aria-current="page">手势跟踪</a><a id="calibration-link" href="/calibration">动态标定</a></nav>
+          <span class="version" id="model-version">V3.2</span
+          ><span class="connection"
+            ><i id="connection-dot"></i
+            ><span id="connection-text">连接服务</span></span
+          >
+          <button id="language-toggle" class="language-toggle" type="button" translate="no" aria-label="Switch to English" title="Switch to English">EN</button>
+        </div>
+      </header>
+      <main>
+        <div class="page-intro">
+          <div>
+            <p class="eyebrow">REAL-TIME RETARGETING</p>
+            <h1>手势映射工作台<span class="title-dot">.</span></h1>
+            <p class="intro-copy">看见你的动作，连接机械手的每一个关节。</p>
+          </div>
+          <div class="intro-note">
+            <span class="mini-line"></span>你的手势，实时同步
+          </div>
+        </div>
+        <section class="controls" aria-label="采集设置">
+          <div class="control-item">
+            <label for="hand-model">手型</label>
+            <div class="select-wrap"><select id="hand-model">
+              <option value="TsenseI_v3_2">A3.2</option>
+              <option value="TsenseI_v3_2_withid">A3.2 with ID</option>
+              <option value="TsenseI_v3_0">A3.0</option>
+              <option value="TsenseI_v3_0_withid">A3.0 with ID</option>
+              <option value="TsenseI_v2" disabled>V2 · 下位机控制</option>
+            </select></div>
+          </div>
+          <div class="control-item">
+            <label for="side">模型手别</label>
+            <div class="select-wrap">
+              <select id="side">
+                <option value="left">左手模型</option>
+                <option value="right">右手模型</option>
+              </select>
+            </div>
+          </div>
+          <div class="control-item">
+            <label for="input-source">关键点来源</label>
+            <div class="select-wrap"><select id="input-source">
+              <option value="mediapipe">MediaPipe · 相机</option>
+              <option value="webxr">Quest 3 · WebXR</option>
+              <option value="wuji_glove">Wuji · 数据手套</option>
+              <option value="leapmotion">Leap Motion 2 · 红外追踪</option>
+            </select></div>
+          </div>
+          <div class="control-item camera-control" id="camera-control">
+            <label for="camera">视频来源</label>
+            <div class="select-wrap">
+              <select id="camera">
+                <option value="">默认摄像头</option>
+              </select>
+            </div>
+          </div>
+          <div class="control-item">
+            <label for="collision-mode">自碰撞处理</label>
+            <div class="select-wrap">
+              <select id="collision-mode">
+                <option value="off">关闭保护 · 可下发</option>
+                <option value="mink" disabled>Mink · 避碰</option>
+              </select>
+            </div>
+          </div>
+          <div class="preview-mode-control">
+          <label class="record-control" title="A3 直控：限位后直接映射，关闭 Ruckig、碰撞处理和额外关节平滑；切换将结束当前会话">
+            <input id="direct-preview" type="checkbox" aria-describedby="direct-preview-note" />
+            <span class="switch"></span><span>直控（关闭 Ruckig）</span>
+          </label>
+          <span id="direct-preview-note" class="hardware-note" role="status">Ruckig 限速</span>
+          </div>
+          <label class="record-control"
+            ><input id="recording" type="checkbox" checked /><span
+              class="switch"
+            ></span
+            ><span>记录角度</span></label
+          >
+          <div class="control-spacer"></div>
+          <span id="gpu-badge" class="chip muted"
+            ><i></i><span>GPU 待初始化</span></span
+          >
+          <button id="start" class="primary" disabled>
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="m7 4 9 6-9 6Z" /></svg
+            ><span>开始识别</span>
+          </button>
+        </section>
+        <section id="hardware-panel" class="hardware-panel" hidden aria-label="下位机控制">
+          <div class="hardware-heading"><strong id="hardware-title">V2 下位机控制</strong><span id="hardware-status">未连接 · Ruckig 已开启</span></div>
+          <p class="hardware-note">Chrome / Edge 直连这台电脑的 USB 串口，无需安装 Python。连接并收到位置反馈后即可开启识别与实时下发，一键找零可选。每次开启均从反馈姿态平滑起步。计算在服务器进行，串口与记录在本机；停止识别会断开串口并下载记录。</p>
+          <div class="hardware-controls">
+            <label for="serial-port">本机串口</label><select id="serial-port"><option value="new">选择新的 USB 串口…</option></select>
+            <button id="refresh-ports" class="secondary">已授权串口</button>
+            <label for="serial-baud" title="原生 CDC 通常忽略此值；UART 必须与固件一致">串口速率</label><select id="serial-baud"><option>115200</option><option>230400</option><option>460800</option><option>921600</option><option>1000000</option><option>2000000</option><option>3000000</option></select>
+            <button id="connect-serial" class="secondary">连接串口</button>
+            <label for="homing-iq">找零 Iq</label><input id="homing-iq" type="number" min="0" max="5000" step="50" value="700">
+            <button id="home-hand" class="secondary" disabled>一键找零</button>
+            <button id="homing-result-open" class="secondary" disabled>查看找零结果</button>
+            <button id="arm-hand" class="secondary" disabled>开启实时下发</button>
+            <button id="emergency-hand" class="danger" disabled>停止并断电</button>
+            <button id="close-control" class="secondary" disabled>结束会话并保存</button>
+          </div>
+          <p id="arm-blockers" class="hardware-note" role="status">请连接串口并开始手势识别</p>
+          <p id="serial-diagnostics" class="hardware-note"></p>
+          <div class="hardware-footer"><span id="control-stats">碰撞检查 → Ruckig → 采样碰撞复查 → 下发</span>
+            <div><a id="download-control" hidden>下载全链路记录</a> <a href="/data-viewer" target="_blank" rel="noopener">打开数据查看器</a></div>
+          </div>
+        </section>
+        <section id="a32-sdk-panel" class="hardware-panel" hidden aria-label="A3.2 SDK 控制">
+          <div class="hardware-heading"><strong>A3.2 · 本机 SDK 控制</strong><span id="a32-sdk-state">未连接</span></div>
+          <p class="hardware-note">两种模型使用同一套 A3.2 驱动。连接并收到首包有效遥测后，开始识别并手动开启实时下发；关闭碰撞保护或仅检测也可下发。一键找零可选，有反馈的关节参考实测位置；缺失反馈时从上次下发或初始姿态起步。找零仅覆盖 18 路自研电机。</p>
+          <div class="hardware-controls">
+            <label for="a32-transport">连接方式</label><select id="a32-transport"><option value="usb">USB CDC</option><option value="eth">ETH TCP</option></select>
+            <label for="a32-address">设备</label><input id="a32-address" type="text" placeholder="auto 或 /dev/ttyACM0">
+            <button id="a32-connect" class="secondary">连接 SDK</button>
+            <label for="a32-iq">找零 Iq 码值</label><input id="a32-iq" type="number" min="1" max="1000" value="80">
+            <button id="a32-home" class="secondary" disabled>18 路找零</button>
+            <button id="a32-reset-home" class="secondary" disabled>复位找零状态</button>
+            <button id="a32-arm" class="secondary" disabled>开启实时下发</button>
+            <button id="a32-stop" class="danger" disabled>停止并断电</button>
+          </div>
+          <p id="a32-sdk-detail" class="hardware-note"></p>
+        </section>
+        <details id="joint-enable-panel" class="joint-enable-panel" open>
+          <summary>关节电源控制 <span id="joint-enable-count"></span></summary>
+          <div class="joint-enable-toolbar">
+            <button id="enable-all-joints" class="secondary" type="button">全部使能</button>
+            <button id="disable-all-joints" class="secondary" type="button">全部失能</button>
+            <span id="joint-enable-note">失能发送电机断电指令，位置槽位不清零。</span>
+          </div>
+          <div id="joint-enable-groups" class="joint-enable-groups"></div>
+        </details>
+        <section id="a30-integration" class="local-recordings" aria-label="A3.0 接口状态" hidden>
+          <strong>A3.0 · 碰撞与执行器预览</strong>
+          <span>首次使用请完成 21 点标定。输出 9 路直线行程 + 11 路旋转角度，四指 DIP、拇指 PIP 直接输出角度；本机串口下发与 Ruckig 已接入。找零覆盖 18 路自研电机；外接两路按反馈起步，源协议无独立找零或断电命令。</span>
+        </section>
+        <section class="local-recordings" aria-label="本机数据记录">
+          <label>设备名称 <input id="recording-hand-name" type="text" maxlength="80" placeholder="可选，如样机 01"></label>
+          <button id="recording-directory" class="secondary" type="button">选择日志根目录</button>
+          <span id="recording-directory-status">请选择独立日志目录 · 按 A30 / A32 / V2 保存 · 每段 512 MiB</span>
+          <span>本机数据</span><select id="local-recordings" aria-label="本机历史记录"><option value="">本机历史记录</option></select>
+          <button id="recover-recording" class="secondary">下载所选记录</button>
+          <button id="delete-recording" class="secondary">删除所选缓存</button>
+           <a id="download-local" hidden>下载本次 JSONL</a>
+           <select id="recording-part" aria-label="记录分段" hidden></select>
+           <button id="download-recording-part" class="secondary" hidden>下载所选分段</button>
+          <a href="/data-viewer" target="_blank" rel="noopener">数据查看器</a>
+        </section>
+        <details class="diagnostic-panel" id="diagnostic-panel">
+          <summary>本地诊断日志 <span>自动记录操作、失败原因与关键状态</span></summary>
+          <div class="local-recordings">
+            <button id="download-diagnostics" class="secondary" type="button">下载当前诊断日志</button>
+            <button id="diagnostic-directory" class="secondary" type="button">选择日志目录 · 自动写入</button>
+            <button id="diagnostic-history-refresh" class="secondary" type="button">读取历史日志</button>
+            <select id="diagnostic-history" aria-label="历史诊断日志"><option value="">选择历史诊断日志</option></select>
+            <button id="diagnostic-history-download" class="secondary" type="button">下载历史诊断日志</button>
+          </div>
+          <p id="diagnostic-status" class="hardware-note" role="status">正在开启本地诊断日志…</p>
+          <p class="hardware-note">不需要勾选“记录角度”。日志只保存在此电脑，不上传服务器；选择目录后每秒写入 JSONL 文件，刷新页面后需重新选择目录。未选择目录也可直接下载，页面意外关闭后可恢复浏览器中的历史日志。</p>
+        </details>
+        <section id="leapmotion-input-panel" class="hardware-panel" hidden aria-label="Leap Motion 2">
+          <div class="hardware-heading"><strong>Leap Motion 2 · 21 点骨架输入</strong><span id="leapmotion-state" role="status">待开始</span></div>
+          <p class="hardware-note">服务所在 Linux 需安装 Ultraleap Tracking Service 和 LeapC SDK，并能访问 USB 设备。选择与输入手一致的左右手，点击「开始识别」，将手放入设备视野。连接后仅预览骨架与模型；机械手实时下发需手动开启。</p>
+        </section>
+        <section id="wuji-input-panel" class="hardware-panel" hidden aria-label="Wuji 数据手套">
+          <div class="hardware-heading"><strong>Wuji · 21 点骨架输入</strong><span id="wuji-state" role="status">待开始</span></div>
+          <p class="hardware-note">选择与手套一致的左右手，点击「开始识别」。连接后可在下方查看骨架与模型跟随。</p>
+        </section>
+        <section id="quest-input-panel" class="hardware-panel" hidden aria-label="Quest 3 配对">
+          <div class="hardware-heading"><strong>Quest 3 · 手部关节输入</strong><span id="quest-state">待开始</span></div>
+          <p class="hardware-note">在电脑点击「开始识别」生成连接信息，然后在 Quest Browser 打开采集页并进入 XR。电脑保持此页面在前台，连接机械手并手动开启实时下发。</p>
+          <div id="quest-pairing" hidden>
+            <label for="quest-link">Quest 采集地址</label>
+            <input id="quest-link" type="text" readonly aria-label="Quest 采集地址">
+            <button id="quest-copy" class="secondary" type="button">复制短网址</button>
+            <p id="quest-connection-note" class="hardware-note" role="status"></p>
+            <p class="hardware-note">Quest 首次打开上方短地址并收藏。固定配对码，永久有效：</p>
+            <strong id="quest-token" aria-label="六位配对码"></strong>
+            <p class="hardware-note">采集页自动填入并连接，无需每次输入。请只保留一个 Quest 控制会话；电脑停止后，旧采集连接随之停止。</p>
+          </div>
+          <p id="quest-origin-note" class="hardware-note"></p>
+        </section>
+        <div id="notice" class="notice" role="status" hidden></div>
+        <div class="workspace">
+          <section class="panel camera-panel" aria-labelledby="camera-title">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <span class="panel-number">01</span>
+                <h2 id="camera-title">原始关键点输入</h2>
+                <span class="panel-subtitle">INPUT</span>
+              </div>
+              <span id="camera-state" class="small-status">待开启</span>
+            </div>
+            <div class="camera-stage">
+              <video id="video" playsinline muted autoplay></video>
+              <canvas
+                id="camera-overlay"
+                aria-label="MediaPipe 21 个手部关节点"
+              ></canvas>
+              <div id="camera-placeholder" class="camera-placeholder">
+                <div class="camera-symbol">
+                  <svg viewBox="0 0 48 48" fill="none" aria-hidden="true">
+                    <rect x="7" y="12" width="25" height="25" rx="6" />
+                    <path d="m33 21 9-6v19l-9-6M16 24h7m-3.5-3.5v7" />
+                  </svg>
+                </div>
+                <h3>让手势进入画面</h3>
+                <p>点击「开始识别」，允许浏览器使用相机</p>
+                <span>建议保持手掌完整入镜</span>
+              </div>
+              <div class="view-label">
+                <i></i><span id="camera-caption">CAMERA / 待机</span>
+              </div>
+              <div class="frame-corner top-left"></div>
+              <div class="frame-corner bottom-right"></div>
+              <span class="mirror-label">镜像预览</span>
+            </div>
+            <div class="panel-footer">
+              <span class="tracking-text"
+                ><i id="tracking-dot"></i
+                ><span id="tracking-text">等待开始识别</span></span
+              ><span class="stat"><strong id="fps">—</strong> FPS</span>
+            </div>
+          </section>
+          <section class="panel skeleton-panel" aria-labelledby="skeleton-title">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <span class="panel-number">02</span>
+                <h2 id="skeleton-title">手势骨架</h2>
+              </div>
+            </div>
+            <div id="skeleton-stage" class="model-stage"></div>
+            <div class="panel-footer">
+              <span id="skeleton-status" class="small-status">未检测</span>
+            </div>
+          </section>
+          <section class="panel model-panel" aria-labelledby="model-title">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <span class="panel-number">03</span>
+                <h2 id="model-title">原始模型跟随</h2>
+                <span class="panel-subtitle">OUTPUT</span>
+              </div>
+              <button
+                id="reset-view"
+                class="icon-button"
+                title="重置模型视角"
+                aria-label="重置模型视角"
+              >
+                <svg viewBox="0 0 20 20">
+                  <path d="M4 8a6 6 0 1 1 0 5M4 3v5h5" />
+                </svg>
+              </button>
+            </div>
+            <div class="model-stage" id="model-stage">
+              <div class="view-label model-label">
+                <span class="model-square"></span
+                ><span id="model-caption">TSENSEI V3.2 / LEFT</span>
+              </div>
+              <div id="model-loading" class="model-loading">
+                <span class="spinner"></span><span>加载完整 URDF 模型</span>
+              </div>
+              <div class="orbit-hint">
+                <svg viewBox="0 0 20 20">
+                  <path
+                    d="M10 4c-5 0-8 2-8 5s3 5 8 5 8-2 8-5M14 2l-4 2 4 3"
+                  /></svg
+                >拖动旋转 · 滚轮缩放
+              </div>
+              <div class="axis-key">
+                <span class="axis-x">X</span><span class="axis-y">Y</span
+                ><span class="axis-z">Z</span>
+              </div>
+            </div>
+            <div class="panel-footer">
+              <span class="model-meta"
+                ><i></i><span id="collision-status" aria-live="polite">原版模型 / 20 个关节</span></span
+              ><span class="stat"
+                >Retarget <strong id="solve-ms">—</strong> ms</span
+              >
+            </div>
+          </section>
+          <section class="panel model-panel feedback-panel" aria-labelledby="feedback-title">
+            <div class="panel-heading">
+              <div class="panel-title">
+                <span class="panel-number">04</span>
+                <h2 id="feedback-title">真实模型反馈</h2>
+                <span class="panel-subtitle">FEEDBACK</span>
+              </div>
+              <button
+                id="reset-feedback-view"
+                class="icon-button"
+                type="button"
+                title="重置反馈模型视角"
+                aria-label="重置反馈模型视角"
+              >
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M4 8a6 6 0 1 1 0 5M4 3v5h5" />
+                </svg>
+              </button>
+            </div>
+            <div class="model-stage" id="feedback-stage">
+              <div class="view-label model-label">
+                <span class="model-square"></span
+                ><span id="feedback-caption">TSENSEI V3.2 / LEFT · 实测关节角</span>
+              </div>
+              <div id="feedback-loading" class="model-loading">
+                <span class="spinner"></span><span>加载完整 URDF 模型</span>
+              </div>
+              <div id="feedback-empty" class="feedback-empty" role="status">连接机械手后显示遥测姿态</div>
+              <div class="orbit-hint">
+                <svg viewBox="0 0 20 20" aria-hidden="true">
+                  <path d="M10 4c-5 0-8 2-8 5s3 5 8 5 8-2 8-5M14 2l-4 2 4 3" />
+                </svg>拖动旋转 · 滚轮缩放
+              </div>
+              <div class="axis-key">
+                <span class="axis-x">X</span><span class="axis-y">Y</span
+                ><span class="axis-z">Z</span>
+              </div>
+            </div>
+            <div class="panel-footer">
+              <span class="model-meta"
+                ><i id="feedback-dot"></i><span id="feedback-status">等待关节遥测</span></span
+              ><span id="feedback-age" class="stat">遥测 —</span>
+            </div>
+          </section>
+        </div>
+        <footer class="page-footer">
+          <span><i class="local-dot"></i>图像留在浏览器 · 仅发送手部关键点</span
+          ><span id="record-status">开始后自动记录骨架与关节角度</span>
+        </footer>
+      </main>
+    </div>
+    <dialog id="homing-result-dialog" class="homing-dialog" aria-labelledby="homing-result-title" aria-describedby="homing-result-note">
+      <div class="homing-dialog-heading"><span class="eyebrow">HOMING RESULT</span><h2 id="homing-result-title">一键找零结果</h2></div>
+      <p id="homing-result-summary"></p>
+      <div class="homing-result-scroll"><table id="homing-result-table"><thead><tr><th>关节</th><th>电机通道</th><th>未成功原因</th></tr></thead><tbody id="homing-result-rows"></tbody></table></div>
+      <p id="homing-result-note" class="homing-result-note"></p>
+      <form method="dialog"><button class="primary" id="homing-result-close" value="close" autofocus>知道了</button></form>
+    </dialog>
+    <noscript>此页面需要启用 JavaScript。</noscript>
+  </body>
+</html>

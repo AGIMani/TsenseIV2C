@@ -1,0 +1,18 @@
+source: vendor/a3-cpp-sdk/daxian_hand_v3_2
+geometry_matches: true
+comparison: Original mesh geometry retained; bare swing axes aligned with ID; thumb
+  rotaback origin calibrated to mechanical stop; documented origin/axis and limit
+  changes.
+sides:
+  left:
+    sdk_urdf_sha256: 86098a5c1b6de17a4b7cabe7a6c21edd2df5f6cbe31417de080e14bff4c40c45
+    installed_urdf_sha256: 8d4706983c736b3718783c17d0ac33a8dbeacb4670f749501472d8edee47fd2c
+  right:
+    sdk_urdf_sha256: f9b3479a5dec9e40f6e7175d59d9c4b66c1a7de0d6deb449bf4db47ef9a03b05
+    installed_urdf_sha256: 1bc73c3bf26a771005156a4096cfb77b85682d199ea5517a99e631e09dc9c546
+existing_keypoint_annotations_preserved: true
+joint_coordinate_version: a32-positive-swing-v1
+swing_axis_alignment: id-direction-v1
+thumb_zero_alignment: mechanical-stop-v1
+thumb_rotaback_origin_offset_rad: -0.25042009379455915
+collision_proxy_version: supporting_outer_hull_v1

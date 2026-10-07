@@ -1,0 +1,4 @@
+# Optional local experiment; the minimal server requirements stay unchanged.
+mink==1.3.0
+mujoco==3.10.0
+qpsolvers[daqp]==4.13.0

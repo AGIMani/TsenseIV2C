@@ -1,0 +1,4399 @@
+{
+  "environment": {
+    "python": "3.12.3",
+    "mujoco": "3.10.0",
+    "mink_module": "/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/mink/__init__.py",
+    "platform": "Linux-6.18.33.2-microsoft-standard-WSL2-x86_64-with-glibc2.39"
+  },
+  "notes": [
+    "40 deterministic sequential synthetic joint-space targets per timing run; no hardware, no retarget or Ruckig timing",
+    "Timer wrappers are only enabled for a separate profile run; profile timings are inclusive and must not be summed",
+    "Prototype caches exact repeated configurations and feasibility results within one project call, broadphase uses finite positive geom_rbound for all geometry types",
+    "Reported geometry differences change actual motion/feasibility; this is not an apples-to-apples shape fidelity comparison"
+  ],
+  "models": {
+    "TsenseI_v3_2": {
+      "baseline": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 0.43135,
+          "p95_ms": 7.11572595,
+          "max_ms": 7.468301,
+          "mean_ms": 1.102237575,
+          "statuses": {
+            "clear": 35,
+            "limited": 2,
+            "held_distance_check": 3
+          },
+          "mean_iterations": 0.575
+        },
+        "by_category": {
+          "open": {
+            "calls": 8,
+            "p50_ms": 0.4044,
+            "p95_ms": 0.5179149999999999,
+            "max_ms": 0.5568,
+            "mean_ms": 0.4225125,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "flex": {
+            "calls": 8,
+            "p50_ms": 0.2992005,
+            "p95_ms": 0.337095,
+            "max_ms": 0.3512,
+            "mean_ms": 0.303225125,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "pinch_synthetic": {
+            "calls": 8,
+            "p50_ms": 0.8875500000000001,
+            "p95_ms": 0.9902549999999999,
+            "max_ms": 1.0045,
+            "mean_ms": 0.8828625000000001,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "crossed": {
+            "calls": 8,
+            "p50_ms": 0.95835,
+            "p95_ms": 7.343001,
+            "max_ms": 7.468301,
+            "mean_ms": 2.5774252499999997,
+            "statuses": {
+              "clear": 5,
+              "limited": 1,
+              "held_distance_check": 2
+            },
+            "mean_iterations": 1.75
+          },
+          "release": {
+            "calls": 8,
+            "p50_ms": 0.35105,
+            "p95_ms": 5.175429999999997,
+            "max_ms": 7.2188,
+            "mean_ms": 1.3251624999999998,
+            "statuses": {
+              "held_distance_check": 1,
+              "limited": 1,
+              "clear": 6
+            },
+            "mean_iterations": 1.125
+          }
+        },
+        "ngeom": 16,
+        "nmesh": 0,
+        "pair_count": 100,
+        "trace_counts": {},
+        "trace_inclusive_ms": {},
+        "rows": [
+          {
+            "category": "open",
+            "wall_ms": 0.5568,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.697392848544876,
+            "min_distance_mm": 5.697392848544876,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5434000013337936
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.4457,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.683407432948876,
+            "min_distance_mm": 5.683407432948876,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.436700000136625
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.3993,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.624010129361707,
+            "min_distance_mm": 5.624010129361707,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.39280000055441633
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.3846,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.51931471085805,
+            "min_distance_mm": 5.51931471085805,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3781000013987068
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.4095,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.369521719078615,
+            "min_distance_mm": 5.369521719078615,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.4028000003017951
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.3848,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.1749180843200895,
+            "min_distance_mm": 5.1749180843200895,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3782999992836267
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.417,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.935876582198434,
+            "min_distance_mm": 4.935876582198434,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.41029999920283444
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.3824,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.652855128182358,
+            "min_distance_mm": 4.652855128182358,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3772000018216204
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.3085,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.675594973710565,
+            "min_distance_mm": 4.675594973710565,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.30420000257436186
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.3512,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.709412657094857,
+            "min_distance_mm": 4.709412657094857,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3469000002951361
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.297201,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.753612070586906,
+            "min_distance_mm": 4.753612070586906,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.29310099853319116
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.2909,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.807168840760413,
+            "min_distance_mm": 4.807168840760413,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.28700000257231295
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.3012,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.868761651346497,
+            "min_distance_mm": 4.868761651346497,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.2970000023196917
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.3109,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.936812234443012,
+            "min_distance_mm": 4.936812234443012,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3068000005441718
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.2829,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.009532227089795,
+            "min_distance_mm": 5.009532227089795,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.2792000013869256
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.283,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.0849749315102155,
+            "min_distance_mm": 5.0849749315102155,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.2792000013869256
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.6195,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.009532227089795,
+            "min_distance_mm": 5.009532227089795,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.6121000005805399
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.8863,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.936812234443012,
+            "min_distance_mm": 4.936812234443012,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.8787999977357686
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.8888,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.868761651346497,
+            "min_distance_mm": 4.868761651346497,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.8816999979899265
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.9638,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.807168840760413,
+            "min_distance_mm": 4.807168840760413,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.9563000021444168
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.9514,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.753612070586906,
+            "min_distance_mm": 4.753612070586906,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.9443000017199665
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.8639,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.709412657094857,
+            "min_distance_mm": 4.709412657094857,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.857000002724817
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.0045,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.675594973710565,
+            "min_distance_mm": 4.675594973710565,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.9970999999495689
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.8847,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.652855128182358,
+            "min_distance_mm": 4.652855128182358,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.8772000001044944
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.9136,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.0241812633065495,
+            "min_distance_mm": 5.0241812633065495,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.9061999990080949
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.9524,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.941508367190967,
+            "min_distance_mm": 4.941508367190967,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.945200001297053
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.8215,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.522881694540231,
+            "min_distance_mm": 3.522881694540231,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.8137000004353467
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.9408,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.0812829459897677,
+            "min_distance_mm": 2.0812829459897677,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.933300001634052
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.9643,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 0.6450210508435836,
+            "min_distance_mm": 0.6450210508435836,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.9564000029058661
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 7.110301,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 100,
+            "iterations": 6,
+            "raw_min_distance_mm": -2.197642818500569,
+            "min_distance_mm": 0.49993901557269205,
+            "correction_deg": 1.3892632446947486,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 7.09680100044352
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 7.468301,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 7,
+            "raw_min_distance_mm": -5.508496495145804,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 7.546928457738815,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 7.454000999132404
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.4482,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 1,
+            "raw_min_distance_mm": -8.704908334400821,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 16.14129538470116,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.4363999980560038
+          },
+          {
+            "category": "release",
+            "wall_ms": 1.3806,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 1,
+            "raw_min_distance_mm": -5.012997172124065,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 16.14129538470116,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.369899997371249
+          },
+          {
+            "category": "release",
+            "wall_ms": 7.2188,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 100,
+            "iterations": 8,
+            "raw_min_distance_mm": -1.316713095435483,
+            "min_distance_mm": 0.4999742748899097,
+            "correction_deg": 0.8330114368639527,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 7.208800001535565
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.3804,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 1.3714795573691128,
+            "min_distance_mm": 1.3714795573691128,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.3753000019059982
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.3119,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.952145671156004,
+            "min_distance_mm": 2.952145671156004,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.3077000001212582
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.2918,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.488734815985334,
+            "min_distance_mm": 4.488734815985334,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.28810000003431924
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.3157,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.8504643915666295,
+            "min_distance_mm": 5.8504643915666295,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3116000007139519
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.3444,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.758748901961829,
+            "min_distance_mm": 5.758748901961829,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3395000021555461
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.3577,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.665939587228896,
+            "min_distance_mm": 5.665939587228896,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3532999980961904
+          }
+        ]
+      },
+      "prototype": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 0.3242,
+          "p95_ms": 3.2297999999999973,
+          "max_ms": 5.6701,
+          "mean_ms": 0.6454250500000001,
+          "statuses": {
+            "clear": 35,
+            "limited": 2,
+            "held_distance_check": 3
+          },
+          "mean_iterations": 0.575
+        },
+        "by_category": {
+          "open": {
+            "calls": 8,
+            "p50_ms": 0.2407,
+            "p95_ms": 0.29133,
+            "max_ms": 0.3103,
+            "mean_ms": 0.244375,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "flex": {
+            "calls": 8,
+            "p50_ms": 0.30315000000000003,
+            "p95_ms": 0.33368,
+            "max_ms": 0.339,
+            "mean_ms": 0.30243762500000004,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "pinch_synthetic": {
+            "calls": 8,
+            "p50_ms": 0.40775,
+            "p95_ms": 0.44981,
+            "max_ms": 0.458,
+            "mean_ms": 0.4058875,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "crossed": {
+            "calls": 8,
+            "p50_ms": 0.4113,
+            "p95_ms": 3.7409999999999997,
+            "max_ms": 4.0392,
+            "mean_ms": 1.240075125,
+            "statuses": {
+              "clear": 5,
+              "limited": 1,
+              "held_distance_check": 2
+            },
+            "mean_iterations": 1.75
+          },
+          "release": {
+            "calls": 8,
+            "p50_ms": 0.29469999999999996,
+            "p95_ms": 3.9836249999999973,
+            "max_ms": 5.6701,
+            "mean_ms": 1.03435,
+            "statuses": {
+              "held_distance_check": 1,
+              "limited": 1,
+              "clear": 6
+            },
+            "mean_iterations": 1.125
+          }
+        },
+        "ngeom": 16,
+        "nmesh": 0,
+        "pair_count": 100,
+        "trace_counts": {},
+        "trace_inclusive_ms": {},
+        "rows": [
+          {
+            "category": "open",
+            "wall_ms": 0.3103,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.697392848544876,
+            "min_distance_mm": 5.697392848544876,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3028999999514781
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.2343,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.683407432948876,
+            "min_distance_mm": 5.683407432948876,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.22900000112713315
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.2561,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.624010129361707,
+            "min_distance_mm": 5.624010129361707,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.25100000129896216
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.2234,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.51931471085805,
+            "min_distance_mm": 5.51931471085805,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.2187000027333852
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.2103,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.369521719078615,
+            "min_distance_mm": 5.369521719078615,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.2057999990938697
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.2471,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.1749180843200895,
+            "min_distance_mm": 5.1749180843200895,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.24220000341301784
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.2491,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.935876582198434,
+            "min_distance_mm": 4.935876582198434,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.24400000256719068
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.2244,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.652855128182358,
+            "min_distance_mm": 4.652855128182358,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.21969999943394214
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.3202,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.675594973710565,
+            "min_distance_mm": 4.675594973710565,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.31540000054519624
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.2885,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.709412657094857,
+            "min_distance_mm": 4.709412657094857,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.283800000033807
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.2792,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.753612070586906,
+            "min_distance_mm": 4.753612070586906,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.27489999774843454
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.2751,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.807168840760413,
+            "min_distance_mm": 4.807168840760413,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.2709000000322703
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.339,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.868761651346497,
+            "min_distance_mm": 4.868761651346497,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.33429999893996865
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.275901,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.936812234443012,
+            "min_distance_mm": 4.936812234443012,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.2715009977691807
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.3238,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.009532227089795,
+            "min_distance_mm": 5.009532227089795,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.31880000096862204
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.3178,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.0849749315102155,
+            "min_distance_mm": 5.0849749315102155,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.312700001813937
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.3962,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.009532227089795,
+            "min_distance_mm": 5.009532227089795,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.39089999700081535
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.3426,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.936812234443012,
+            "min_distance_mm": 4.936812234443012,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.33740000071702525
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.458,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.868761651346497,
+            "min_distance_mm": 4.868761651346497,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.45260000115376897
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.38,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.807168840760413,
+            "min_distance_mm": 4.807168840760413,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.37539999902946874
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.4193,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.753612070586906,
+            "min_distance_mm": 4.753612070586906,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.4144000013184268
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.3924,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.709412657094857,
+            "min_distance_mm": 4.709412657094857,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.38729999869246967
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.424,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.675594973710565,
+            "min_distance_mm": 4.675594973710565,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.41910000072675757
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.4346,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.652855128182358,
+            "min_distance_mm": 4.652855128182358,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.4298000021663029
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.3602,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.0241812633065495,
+            "min_distance_mm": 5.0241812633065495,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3552999987732619
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.416,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.941508367190967,
+            "min_distance_mm": 4.941508367190967,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.4112999995413702
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.3423,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.522881694540231,
+            "min_distance_mm": 3.522881694540231,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.3378000001248438
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.4066,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.0812829459897677,
+            "min_distance_mm": 2.0812829459897677,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.4017999999632593
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.3801,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 0.6450210508435836,
+            "min_distance_mm": 0.6450210508435836,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.3754999997909181
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 3.1872,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 100,
+            "iterations": 6,
+            "raw_min_distance_mm": -2.197642818500569,
+            "min_distance_mm": 0.49993901557269205,
+            "correction_deg": 1.3892632446947486,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 3.178200000547804
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 4.0392,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 7,
+            "raw_min_distance_mm": -5.508496495145804,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 7.546928457738815,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 4.027399998449255
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.789001,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 1,
+            "raw_min_distance_mm": -8.704908334400821,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 16.14129538470116,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.7784010012983344
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.8516,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 1,
+            "raw_min_distance_mm": -5.012997172124065,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 16.14129538470116,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.8381999978155363
+          },
+          {
+            "category": "release",
+            "wall_ms": 5.6701,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 100,
+            "iterations": 8,
+            "raw_min_distance_mm": -1.316713095435483,
+            "min_distance_mm": 0.4999742748899097,
+            "correction_deg": 0.8330114368639527,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 5.656900000758469
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.3021,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 1.3714795573691128,
+            "min_distance_mm": 1.3714795573691128,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.2932999996119179
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.2873,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.952145671156004,
+            "min_distance_mm": 2.952145671156004,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.2824000002874527
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.2815,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.488734815985334,
+            "min_distance_mm": 4.488734815985334,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.2767999976640567
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.3246,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.8504643915666295,
+            "min_distance_mm": 5.8504643915666295,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.31960000342223793
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.2824,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.758748901961829,
+            "min_distance_mm": 5.758748901961829,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.27770000087912194
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.2752,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.665939587228896,
+            "min_distance_mm": 5.665939587228896,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.2705999977479223
+          }
+        ]
+      },
+      "profile_baseline": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 0.5562499999999999,
+          "p95_ms": 4.909555049999998,
+          "max_ms": 7.451101,
+          "mean_ms": 0.982310075,
+          "statuses": {
+            "clear": 35,
+            "limited": 2,
+            "held_distance_check": 3
+          },
+          "mean_iterations": 0.575
+        },
+        "by_category": {
+          "open": {
+            "calls": 8,
+            "p50_ms": 0.38065,
+            "p95_ms": 0.49958,
+            "max_ms": 0.5,
+            "mean_ms": 0.40627512499999996,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "flex": {
+            "calls": 8,
+            "p50_ms": 0.5335,
+            "p95_ms": 0.817765,
+            "max_ms": 0.822,
+            "mean_ms": 0.6061375,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "pinch_synthetic": {
+            "calls": 8,
+            "p50_ms": 0.5972500000000001,
+            "p95_ms": 0.638635,
+            "max_ms": 0.6414,
+            "mean_ms": 0.5986625,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "crossed": {
+            "calls": 8,
+            "p50_ms": 0.7762,
+            "p95_ms": 5.3710156499999995,
+            "max_ms": 5.640201,
+            "mean_ms": 1.876025125,
+            "statuses": {
+              "clear": 5,
+              "limited": 1,
+              "held_distance_check": 2
+            },
+            "mean_iterations": 1.75
+          },
+          "release": {
+            "calls": 8,
+            "p50_ms": 0.5106999999999999,
+            "p95_ms": 5.170955649999996,
+            "max_ms": 7.451101,
+            "mean_ms": 1.424450125,
+            "statuses": {
+              "held_distance_check": 1,
+              "limited": 1,
+              "clear": 6
+            },
+            "mean_iterations": 1.125
+          }
+        },
+        "ngeom": 16,
+        "nmesh": 0,
+        "pair_count": 100,
+        "trace_counts": {
+          "_update": 459,
+          "mj_geomDistance": 13978,
+          "_distances": 80,
+          "_feasible": 356,
+          "_path_feasible": 150,
+          "inequalities": 46,
+          "solve_qp": 23
+        },
+        "trace_inclusive_ms": {
+          "_update": 4.136299999999993,
+          "mj_geomDistance": 10.995500000000973,
+          "_distances": 9.223101999999997,
+          "_feasible": 19.042701,
+          "_path_feasible": 21.023801000000006,
+          "inequalities": 3.9579999999999993,
+          "solve_qp": 1.1185
+        },
+        "rows": [
+          {
+            "category": "open",
+            "wall_ms": 0.5,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.697392848544876,
+            "min_distance_mm": 5.697392848544876,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.49199999921256676
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.4988,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.683407432948876,
+            "min_distance_mm": 5.683407432948876,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.4920999999740161
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.3731,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.624010129361707,
+            "min_distance_mm": 5.624010129361707,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.36860000182059593
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.3919,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.51931471085805,
+            "min_distance_mm": 5.51931471085805,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.38720000156899914
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.3812,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.369521719078615,
+            "min_distance_mm": 5.369521719078615,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3766999980143737
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.3801,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.1749180843200895,
+            "min_distance_mm": 5.1749180843200895,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.3754999997909181
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.366101,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.935876582198434,
+            "min_distance_mm": 4.935876582198434,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.36180099777993746
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.359,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.652855128182358,
+            "min_distance_mm": 4.652855128182358,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.35489999936544336
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.5189,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.675594973710565,
+            "min_distance_mm": 4.675594973710565,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5147000010765623
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.5357,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.709412657094857,
+            "min_distance_mm": 4.709412657094857,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5311999993864447
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.5313,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.753612070586906,
+            "min_distance_mm": 4.753612070586906,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5266000007395633
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.8099,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.807168840760413,
+            "min_distance_mm": 4.807168840760413,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.8037999978114385
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.822,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.868761651346497,
+            "min_distance_mm": 4.868761651346497,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.8166000006895047
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.6599,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.936812234443012,
+            "min_distance_mm": 4.936812234443012,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.6549999998242129
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.4822,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.009532227089795,
+            "min_distance_mm": 5.009532227089795,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.4778000002261251
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.4892,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.0849749315102155,
+            "min_distance_mm": 5.0849749315102155,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.4847000018344261
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.601,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.009532227089795,
+            "min_distance_mm": 5.009532227089795,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5966999997326639
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.5549,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.936812234443012,
+            "min_distance_mm": 4.936812234443012,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.550900000234833
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.5789,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.868761651346497,
+            "min_distance_mm": 4.868761651346497,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5748999974457547
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.6073,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.807168840760413,
+            "min_distance_mm": 4.807168840760413,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.6035000005795155
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.6335,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.753612070586906,
+            "min_distance_mm": 4.753612070586906,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.6294000013440382
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.5788,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.709412657094857,
+            "min_distance_mm": 4.709412657094857,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5748000003222842
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.6414,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.675594973710565,
+            "min_distance_mm": 4.675594973710565,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.6376000019372441
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.5935,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.652855128182358,
+            "min_distance_mm": 4.652855128182358,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5894999994779937
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.5576,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.0241812633065495,
+            "min_distance_mm": 5.0241812633065495,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.5538000004889909
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.6257,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.941508367190967,
+            "min_distance_mm": 4.941508367190967,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.6215000030351803
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.5869,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.522881694540231,
+            "min_distance_mm": 3.522881694540231,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.5826000015076715
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.6094,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.0812829459897677,
+            "min_distance_mm": 2.0812829459897677,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.6057999999029562
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.1906,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 0.6450210508435836,
+            "min_distance_mm": 0.6450210508435836,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.1823000022559427
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 5.640201,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 100,
+            "iterations": 6,
+            "raw_min_distance_mm": -2.197642818500569,
+            "min_distance_mm": 0.49993901557269205,
+            "correction_deg": 1.3892632446947486,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 5.617201000859495
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 4.8711,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 7,
+            "raw_min_distance_mm": -5.508496495145804,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 7.546928457738815,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 4.861699999310076
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.9267,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 1,
+            "raw_min_distance_mm": -8.704908334400821,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 16.14129538470116,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.9199000014632475
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.9364,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 100,
+            "iterations": 1,
+            "raw_min_distance_mm": -5.012997172124065,
+            "min_distance_mm": 0.4999000361966561,
+            "correction_deg": 16.14129538470116,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.9300999990955461
+          },
+          {
+            "category": "release",
+            "wall_ms": 7.451101,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 100,
+            "iterations": 8,
+            "raw_min_distance_mm": -1.316713095435483,
+            "min_distance_mm": 0.4999742748899097,
+            "correction_deg": 0.8330114368639527,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 7.44300099904649
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.4927,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 1.3714795573691128,
+            "min_distance_mm": 1.3714795573691128,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.487299999804236
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.5103,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.952145671156004,
+            "min_distance_mm": 2.952145671156004,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.5060000003140885
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.5277,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.488734815985334,
+            "min_distance_mm": 4.488734815985334,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.5228000009083189
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.5111,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.8504643915666295,
+            "min_distance_mm": 5.8504643915666295,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.506599997606827
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.4699,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.758748901961829,
+            "min_distance_mm": 5.758748901961829,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.4659000005631242
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.4964,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 100,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.665939587228896,
+            "min_distance_mm": 5.665939587228896,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_MCP_link_capsule"
+            ],
+            "solve_ms": 0.4924000022583641
+          }
+        ]
+      },
+      "max_joint_output_difference_rad": 0.0
+    },
+    "TsenseI_v3_2_withid": {
+      "baseline": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 0.8023,
+          "p95_ms": 20.795645999999994,
+          "max_ms": 25.262102,
+          "mean_ms": 4.519437825,
+          "statuses": {
+            "clear": 27,
+            "limited": 5,
+            "held_distance_check": 8
+          },
+          "mean_iterations": 2.025
+        },
+        "by_category": {
+          "open": {
+            "calls": 8,
+            "p50_ms": 0.6935,
+            "p95_ms": 6.076525649999996,
+            "max_ms": 8.936201,
+            "mean_ms": 1.6994501250000003,
+            "statuses": {
+              "clear": 7,
+              "limited": 1
+            },
+            "mean_iterations": 1.25
+          },
+          "flex": {
+            "calls": 8,
+            "p50_ms": 0.6289005,
+            "p95_ms": 9.481510649999993,
+            "max_ms": 14.161501,
+            "mean_ms": 2.34007525,
+            "statuses": {
+              "limited": 1,
+              "clear": 7
+            },
+            "mean_iterations": 1.5
+          },
+          "pinch_synthetic": {
+            "calls": 8,
+            "p50_ms": 1.00455,
+            "p95_ms": 22.638816649999995,
+            "max_ms": 25.262102,
+            "mean_ms": 8.065500499999999,
+            "statuses": {
+              "clear": 5,
+              "limited": 2,
+              "held_distance_check": 1
+            },
+            "mean_iterations": 3.125
+          },
+          "crossed": {
+            "calls": 8,
+            "p50_ms": 1.5859505,
+            "p95_ms": 19.799670999999996,
+            "max_ms": 23.051801,
+            "mean_ms": 6.691863,
+            "statuses": {
+              "clear": 3,
+              "held_distance_check": 4,
+              "limited": 1
+            },
+            "mean_iterations": 2.875
+          },
+          "release": {
+            "calls": 8,
+            "p50_ms": 0.771,
+            "p95_ms": 15.095660649999992,
+            "max_ms": 20.676901,
+            "mean_ms": 3.8003002500000003,
+            "statuses": {
+              "held_distance_check": 3,
+              "clear": 5
+            },
+            "mean_iterations": 1.375
+          }
+        },
+        "ngeom": 15,
+        "nmesh": 5,
+        "pair_count": 90,
+        "trace_counts": {},
+        "trace_inclusive_ms": {},
+        "rows": [
+          {
+            "category": "open",
+            "wall_ms": 0.7506,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.500778048643841,
+            "min_distance_mm": 4.500778048643841,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7416999978886452
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.7657,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.413965086918796,
+            "min_distance_mm": 4.413965086918796,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7579999983136076
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6732,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.296212343933533,
+            "min_distance_mm": 4.296212343933533,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6657999983872287
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6895,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.147685783818302,
+            "min_distance_mm": 4.147685783818302,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6828999976278283
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6791,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.9686666469614367,
+            "min_distance_mm": 3.9686666469614367,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.672499998472631
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6975,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.759552657321476,
+            "min_distance_mm": 3.759552657321476,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6909000003361143
+          },
+          {
+            "category": "open",
+            "wall_ms": 8.936201,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 0.0,
+            "min_distance_mm": 3.52123073489752,
+            "correction_deg": 0.003671909697799491,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 8.925701000407571
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.4038,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.253224381517891,
+            "min_distance_mm": 3.253224381517891,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.39850000030128285
+          },
+          {
+            "category": "flex",
+            "wall_ms": 14.161501,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 12,
+            "raw_min_distance_mm": 3.3516298497871366,
+            "min_distance_mm": 3.3514865590287424,
+            "correction_deg": 0.008210160589922381,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 14.151700997899752
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.7901,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.451050740377744,
+            "min_distance_mm": 3.451050740377744,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7828000016161241
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.6633,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.5487262687912917,
+            "min_distance_mm": 3.5487262687912917,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6570000005012844
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.7769,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.6419374375281626,
+            "min_distance_mm": 3.6419374375281626,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7704999989073258
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.5851,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.728074455094618,
+            "min_distance_mm": 3.728074455094618,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5803999993077014
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.589,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.804698361141926,
+            "min_distance_mm": 3.804698361141926,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.583999997616047
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.5602,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.8695960555314106,
+            "min_distance_mm": 3.8695960555314106,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.556200000573881
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.594501,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.9208282822450045,
+            "min_distance_mm": 3.9208282822450045,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5904010031372309
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.8145,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.8695960555314035,
+            "min_distance_mm": 3.8695960555314035,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8100999984890223
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.7579,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.804698361141926,
+            "min_distance_mm": 3.804698361141926,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7533999996667262
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.7361,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.728074455094618,
+            "min_distance_mm": 3.728074455094618,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7317999989027157
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.836,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.6419374375281626,
+            "min_distance_mm": 3.6419374375281626,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8316999992530327
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 17.767001,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 3.5487262687912917,
+            "min_distance_mm": 3.5487262687912917,
+            "correction_deg": 0.003357174580841614,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 17.75420100238989
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.1731,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.451050740377744,
+            "min_distance_mm": 3.451050740377744,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.1618000025919173
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 25.262102,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 3.3516298497871366,
+            "min_distance_mm": 3.3516298497871366,
+            "correction_deg": 0.003357174580854336,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 25.24820200051181
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 17.177301,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 5,
+            "raw_min_distance_mm": 3.2532243815178874,
+            "min_distance_mm": 3.2532243815178874,
+            "correction_deg": 1.4370491934445138,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 17.160701001557754
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.2413,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.4623765343935355,
+            "min_distance_mm": 4.4623765343935355,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.2305999989621341
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.6772,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.396765553459369,
+            "min_distance_mm": 4.396765553459369,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.6553999994357582
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.494701,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.9226309734713163,
+            "min_distance_mm": 2.9226309734713163,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.4864009972370695
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 23.051801,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 5,
+            "raw_min_distance_mm": 1.4561818598072886,
+            "min_distance_mm": 1.4561818598072886,
+            "correction_deg": 1.43424792796023,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 23.035600999719463
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 13.760001,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 8,
+            "raw_min_distance_mm": -1.0582602713952727,
+            "min_distance_mm": 0.4999963687592861,
+            "correction_deg": 0.8278961392172361,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 13.74800100165885
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 9.862901,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 8,
+            "raw_min_distance_mm": -4.169578843969885,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 7.170924904684204,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 9.844300999247935
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.0305,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -7.387368860318844,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 15.765291831646561,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 1.020699997752672
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.4165,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -10.909358322482225,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 24.359658758608905,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 1.4039999987289775
+          },
+          {
+            "category": "release",
+            "wall_ms": 4.7305,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 3,
+            "raw_min_distance_mm": -6.969149949122213,
+            "min_distance_mm": 0.49990002054900795,
+            "correction_deg": 24.252229172021877,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 4.718000000139
+          },
+          {
+            "category": "release",
+            "wall_ms": 1.683001,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -3.410475554298125,
+            "min_distance_mm": 0.49990002054900795,
+            "correction_deg": 24.252229172021877,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 1.6733010015741456
+          },
+          {
+            "category": "release",
+            "wall_ms": 20.676901,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 7,
+            "raw_min_distance_mm": -0.3107988661256895,
+            "min_distance_mm": 0.6225063501899206,
+            "correction_deg": 7.9229320107934145,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 20.664600997406524
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.8154,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.1606242892658334,
+            "min_distance_mm": 2.1606242892658334,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.8089999973890372
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.5726,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.719333265119168,
+            "min_distance_mm": 3.719333265119168,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.5669000020134263
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.7266,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.2430635365169165,
+            "min_distance_mm": 5.2430635365169165,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.7202000015240628
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.6048,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.50842226617017,
+            "min_distance_mm": 5.50842226617017,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5995999999868218
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.5926,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.556599803452724,
+            "min_distance_mm": 4.556599803452724,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5877000003238209
+          }
+        ]
+      },
+      "prototype": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 0.85295,
+          "p95_ms": 10.465100999999995,
+          "max_ms": 12.503601,
+          "mean_ms": 2.434370175,
+          "statuses": {
+            "clear": 28,
+            "limited": 4,
+            "held_distance_check": 8
+          },
+          "mean_iterations": 1.725
+        },
+        "by_category": {
+          "open": {
+            "calls": 8,
+            "p50_ms": 0.56765,
+            "p95_ms": 5.268899999999997,
+            "max_ms": 7.7644,
+            "mean_ms": 1.472037625,
+            "statuses": {
+              "clear": 7,
+              "limited": 1
+            },
+            "mean_iterations": 1.25
+          },
+          "flex": {
+            "calls": 8,
+            "p50_ms": 0.7597,
+            "p95_ms": 0.839605,
+            "max_ms": 0.843,
+            "mean_ms": 0.760450125,
+            "statuses": {
+              "clear": 8
+            },
+            "mean_iterations": 0.0
+          },
+          "pinch_synthetic": {
+            "calls": 8,
+            "p50_ms": 0.97905,
+            "p95_ms": 11.152700999999999,
+            "max_ms": 11.553801,
+            "mean_ms": 3.4617752499999996,
+            "statuses": {
+              "clear": 6,
+              "limited": 2
+            },
+            "mean_iterations": 2.5
+          },
+          "crossed": {
+            "calls": 8,
+            "p50_ms": 2.9255,
+            "p95_ms": 9.77776035,
+            "max_ms": 10.3687,
+            "mean_ms": 4.15277525,
+            "statuses": {
+              "held_distance_check": 5,
+              "clear": 2,
+              "limited": 1
+            },
+            "mean_iterations": 3.5
+          },
+          "release": {
+            "calls": 8,
+            "p50_ms": 0.67525,
+            "p95_ms": 8.967970649999994,
+            "max_ms": 12.503601,
+            "mean_ms": 2.324812625,
+            "statuses": {
+              "held_distance_check": 3,
+              "clear": 5
+            },
+            "mean_iterations": 1.375
+          }
+        },
+        "ngeom": 15,
+        "nmesh": 5,
+        "pair_count": 90,
+        "trace_counts": {},
+        "trace_inclusive_ms": {},
+        "rows": [
+          {
+            "category": "open",
+            "wall_ms": 0.6344,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.500778048643841,
+            "min_distance_mm": 4.500778048643841,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6236999979591928
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.5504,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.413965086918796,
+            "min_distance_mm": 4.413965086918796,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5428000004030764
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6153,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.296212343933533,
+            "min_distance_mm": 4.296212343933533,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6065999987185933
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.5237,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.147685783818302,
+            "min_distance_mm": 4.147685783818302,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.515899999300018
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.556,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.9686666469614367,
+            "min_distance_mm": 3.9686666469614367,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5481000007421244
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.552801,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.759552657321476,
+            "min_distance_mm": 3.759552657321476,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5446010000014212
+          },
+          {
+            "category": "open",
+            "wall_ms": 7.7644,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 0.0,
+            "min_distance_mm": 3.52123073489752,
+            "correction_deg": 0.003671909697799491,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 7.750500000838656
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.5793,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.253224381517891,
+            "min_distance_mm": 3.253224381517891,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5672000006597955
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.7611,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.3516298497871366,
+            "min_distance_mm": 3.3516298497871366,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7511000003432855
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.8333,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.451050740377744,
+            "min_distance_mm": 3.451050740377744,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8237000001827255
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.6932,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.5487262687912917,
+            "min_distance_mm": 3.5487262687912917,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6849000019428786
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.7583,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.6419374375281626,
+            "min_distance_mm": 3.6419374375281626,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7503000015276484
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.67,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.728074455094618,
+            "min_distance_mm": 3.728074455094618,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6625999994867016
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.7361,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.804698361141926,
+            "min_distance_mm": 3.804698361141926,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7282000005943701
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.788601,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.8695960555314106,
+            "min_distance_mm": 3.8695960555314106,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.7810010029061232
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.843,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.9208282822450045,
+            "min_distance_mm": 3.9208282822450045,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8299000000988599
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.0006,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.8695960555314035,
+            "min_distance_mm": 3.8695960555314035,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.9886000007099938
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.9158,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.804698361141926,
+            "min_distance_mm": 3.804698361141926,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.9076999995158985
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.8552,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.728074455094618,
+            "min_distance_mm": 3.728074455094618,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8472000008623581
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.9575,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.6419374375281626,
+            "min_distance_mm": 3.6419374375281626,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.9486000017204788
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 11.553801,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 3.5487262687912917,
+            "min_distance_mm": 3.5487262687912917,
+            "correction_deg": 0.003357174580841614,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 11.539500999788288
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 0.9531,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.451050740377744,
+            "min_distance_mm": 3.451050740377744,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.941999998758547
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 10.407801,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 3.3516298497871366,
+            "min_distance_mm": 3.3516298497871366,
+            "correction_deg": 0.003357174580854336,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 10.395100998721318
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.0504,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.2532243815178874,
+            "min_distance_mm": 3.2532243815178874,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.0412000010546762
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 10.3687,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 5,
+            "raw_min_distance_mm": 4.4623765343935355,
+            "min_distance_mm": 4.4623765343935355,
+            "correction_deg": 1.434247927960249,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 10.357299997849623
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.1608,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.396765553459369,
+            "min_distance_mm": 4.396765553459369,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.1513999997987412
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.8648,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.9226309734713163,
+            "min_distance_mm": 2.9226309734713163,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.8559999987483025
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 8.680301,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 5,
+            "raw_min_distance_mm": 1.4561818598072886,
+            "min_distance_mm": 1.4561818598072886,
+            "correction_deg": 1.43424792796023,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 8.670400999108097
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 5.739801,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 8,
+            "raw_min_distance_mm": -1.0582602713952727,
+            "min_distance_mm": 0.4999963687592861,
+            "correction_deg": 0.8278961392172361,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 5.731301000196254
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 4.6902,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 8,
+            "raw_min_distance_mm": -4.169578843969885,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 7.170924904684204,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 4.678600002080202
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.8669,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -7.387368860318844,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 15.765291831646561,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 0.8564000017940998
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 0.8507,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -10.909358322482225,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 24.359658758608905,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 0.8422999999311287
+          },
+          {
+            "category": "release",
+            "wall_ms": 2.4018,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 3,
+            "raw_min_distance_mm": -6.969149949122213,
+            "min_distance_mm": 0.49990002054900795,
+            "correction_deg": 24.252229172021877,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 2.3929000017233193
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.8764,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -3.410475554298125,
+            "min_distance_mm": 0.49990002054900795,
+            "correction_deg": 24.252229172021877,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 0.8678000012878329
+          },
+          {
+            "category": "release",
+            "wall_ms": 12.503601,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 7,
+            "raw_min_distance_mm": -0.3107988661256895,
+            "min_distance_mm": 0.5914875400479906,
+            "correction_deg": 6.204058625400947,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 12.48250100252335
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.9945,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.1606242892658334,
+            "min_distance_mm": 2.1606242892658334,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.9817000027396716
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.4741,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.719333265119168,
+            "min_distance_mm": 3.719333265119168,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.4668000001402106
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.4476,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.2430635365169165,
+            "min_distance_mm": 5.2430635365169165,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 0.44189999971422367
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.4572,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.50842226617017,
+            "min_distance_mm": 5.50842226617017,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.4518999994616024
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.4433,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.556599803452724,
+            "min_distance_mm": 4.556599803452724,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.43819999700644985
+          }
+        ]
+      },
+      "profile_baseline": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 1.1434005,
+          "p95_ms": 25.46985105,
+          "max_ms": 38.214003,
+          "mean_ms": 5.827992924999999,
+          "statuses": {
+            "clear": 27,
+            "limited": 5,
+            "held_distance_check": 8
+          },
+          "mean_iterations": 2.025
+        },
+        "by_category": {
+          "open": {
+            "calls": 8,
+            "p50_ms": 0.64245,
+            "p95_ms": 9.094225999999994,
+            "max_ms": 13.370001,
+            "mean_ms": 2.30740025,
+            "statuses": {
+              "clear": 7,
+              "limited": 1
+            },
+            "mean_iterations": 1.25
+          },
+          "flex": {
+            "calls": 8,
+            "p50_ms": 0.8896005,
+            "p95_ms": 14.514335649999989,
+            "max_ms": 21.648001,
+            "mean_ms": 3.53356275,
+            "statuses": {
+              "limited": 1,
+              "clear": 7
+            },
+            "mean_iterations": 1.5
+          },
+          "pinch_synthetic": {
+            "calls": 8,
+            "p50_ms": 1.4059,
+            "p95_ms": 26.074051649999998,
+            "max_ms": 26.426502,
+            "mean_ms": 9.937188125,
+            "statuses": {
+              "clear": 5,
+              "limited": 2,
+              "held_distance_check": 1
+            },
+            "mean_iterations": 3.125
+          },
+          "crossed": {
+            "calls": 8,
+            "p50_ms": 1.2046005,
+            "p95_ms": 22.829716349999998,
+            "max_ms": 24.741101,
+            "mean_ms": 7.339063125,
+            "statuses": {
+              "clear": 3,
+              "held_distance_check": 4,
+              "limited": 1
+            },
+            "mean_iterations": 2.875
+          },
+          "release": {
+            "calls": 8,
+            "p50_ms": 1.1697,
+            "p95_ms": 25.88805194999998,
+            "max_ms": 38.214003,
+            "mean_ms": 6.022750374999999,
+            "statuses": {
+              "held_distance_check": 3,
+              "clear": 5
+            },
+            "mean_iterations": 1.375
+          }
+        },
+        "ngeom": 15,
+        "nmesh": 5,
+        "pair_count": 90,
+        "trace_counts": {
+          "_update": 1392,
+          "mj_geomDistance": 68804,
+          "_distances": 80,
+          "_feasible": 1231,
+          "_path_feasible": 509,
+          "inequalities": 81,
+          "solve_qp": 81
+        },
+        "trace_inclusive_ms": {
+          "_update": 15.059600999999958,
+          "mj_geomDistance": 104.41180999998267,
+          "_distances": 12.364300000000002,
+          "_feasible": 179.7011139999999,
+          "_path_feasible": 188.3215140000001,
+          "inequalities": 16.970703000000004,
+          "solve_qp": 4.736799999999998
+        },
+        "rows": [
+          {
+            "category": "open",
+            "wall_ms": 0.8082,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.500778048643841,
+            "min_distance_mm": 4.500778048643841,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8012999969650991
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6583,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.413965086918796,
+            "min_distance_mm": 4.413965086918796,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6522000003315043
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6257,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.296212343933533,
+            "min_distance_mm": 4.296212343933533,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6203000011737458
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.5996,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.147685783818302,
+            "min_distance_mm": 4.147685783818302,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.5944000004092231
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6266,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.9686666469614367,
+            "min_distance_mm": 3.9686666469614367,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6219000024429988
+          },
+          {
+            "category": "open",
+            "wall_ms": 0.6173,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.759552657321476,
+            "min_distance_mm": 3.759552657321476,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.6124999999883585
+          },
+          {
+            "category": "open",
+            "wall_ms": 13.370001,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 0.0,
+            "min_distance_mm": 3.52123073489752,
+            "correction_deg": 0.003671909697799491,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 13.35830099924351
+          },
+          {
+            "category": "open",
+            "wall_ms": 1.153501,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.253224381517891,
+            "min_distance_mm": 3.253224381517891,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.1464010021882132
+          },
+          {
+            "category": "flex",
+            "wall_ms": 21.648001,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 12,
+            "raw_min_distance_mm": 3.3516298497871366,
+            "min_distance_mm": 3.3514865590287424,
+            "correction_deg": 0.008210160589922381,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 21.636900997691555
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.9372,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.451050740377744,
+            "min_distance_mm": 3.451050740377744,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.9325999999418855
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.8747,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.5487262687912917,
+            "min_distance_mm": 3.5487262687912917,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8703999992576428
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.891,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.6419374375281626,
+            "min_distance_mm": 3.6419374375281626,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8864999981597066
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.8836,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.728074455094618,
+            "min_distance_mm": 3.728074455094618,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8792999979050364
+          },
+          {
+            "category": "flex",
+            "wall_ms": 1.2661,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.804698361141926,
+            "min_distance_mm": 3.804698361141926,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.2610000012500677
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.888201,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.8695960555314106,
+            "min_distance_mm": 3.8695960555314106,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8835010012262501
+          },
+          {
+            "category": "flex",
+            "wall_ms": 0.8797,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.9208282822450045,
+            "min_distance_mm": 3.9208282822450045,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8754999980737921
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.1325,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.8695960555314035,
+            "min_distance_mm": 3.8695960555314035,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.1281999977654777
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.5276,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.804698361141926,
+            "min_distance_mm": 3.804698361141926,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.5210000019578729
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.2252,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.728074455094618,
+            "min_distance_mm": 3.728074455094618,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.2193000002298504
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.263,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.6419374375281626,
+            "min_distance_mm": 3.6419374375281626,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.2578000023495406
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 26.426502,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 3.5487262687912917,
+            "min_distance_mm": 3.5487262687912917,
+            "correction_deg": 0.003357174580841614,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 26.415901997097535
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 1.2842,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.451050740377744,
+            "min_distance_mm": 3.451050740377744,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 1.2793000023521017
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 21.219002,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 10,
+            "raw_min_distance_mm": 3.3516298497871366,
+            "min_distance_mm": 3.3516298497871366,
+            "correction_deg": 0.003357174580854336,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 21.205902001383947
+          },
+          {
+            "category": "pinch_synthetic",
+            "wall_ms": 25.419501,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 5,
+            "raw_min_distance_mm": 3.2532243815178874,
+            "min_distance_mm": 3.2532243815178874,
+            "correction_deg": 1.4370491934445138,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 25.40480099924025
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.0002,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.4623765343935355,
+            "min_distance_mm": 4.4623765343935355,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.9948000006261282
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.241701,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.396765553459369,
+            "min_distance_mm": 4.396765553459369,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.2371009979688097
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.1311,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.9226309734713163,
+            "min_distance_mm": 2.9226309734713163,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.1266000001342036
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 24.741101,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 5,
+            "raw_min_distance_mm": 1.4561818598072886,
+            "min_distance_mm": 1.4561818598072886,
+            "correction_deg": 1.43424792796023,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 24.72770099848276
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 19.280002,
+            "mode": "mink",
+            "status": "limited",
+            "pair_count": 90,
+            "iterations": 8,
+            "raw_min_distance_mm": -1.0582602713952727,
+            "min_distance_mm": 0.4999963687592861,
+            "correction_deg": 0.8278961392172361,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 19.26490199912223
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 9.0252,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 8,
+            "raw_min_distance_mm": -4.169578843969885,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 7.170924904684204,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 9.01499999963562
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.125701,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -7.387368860318844,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 15.765291831646561,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 1.1179009998159017
+          },
+          {
+            "category": "crossed",
+            "wall_ms": 1.1675,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -10.909358322482225,
+            "min_distance_mm": 0.49990006767207384,
+            "correction_deg": 24.359658758608905,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 1.141799999459181
+          },
+          {
+            "category": "release",
+            "wall_ms": 2.997,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 3,
+            "raw_min_distance_mm": -6.969149949122213,
+            "min_distance_mm": 0.49990002054900795,
+            "correction_deg": 24.252229172021877,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 2.9720999991695862
+          },
+          {
+            "category": "release",
+            "wall_ms": 1.1333,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 1,
+            "raw_min_distance_mm": -3.410475554298125,
+            "min_distance_mm": 0.49990002054900795,
+            "correction_deg": 24.252229172021877,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 1.1263000014878344
+          },
+          {
+            "category": "release",
+            "wall_ms": 38.214003,
+            "mode": "mink",
+            "status": "held_distance_check",
+            "pair_count": 90,
+            "iterations": 7,
+            "raw_min_distance_mm": -0.3107988661256895,
+            "min_distance_mm": 0.6225063501899206,
+            "correction_deg": 7.9229320107934145,
+            "closest_pair": [
+              "left_hand_mid_PIP_link_capsule",
+              "left_hand_ring_PIP_link_capsule"
+            ],
+            "solve_ms": 38.19720300089102
+          },
+          {
+            "category": "release",
+            "wall_ms": 1.2061,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 2.1606242892658334,
+            "min_distance_mm": 2.1606242892658334,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.1989000013272744
+          },
+          {
+            "category": "release",
+            "wall_ms": 1.6937,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 3.719333265119168,
+            "min_distance_mm": 3.719333265119168,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.683200000115903
+          },
+          {
+            "category": "release",
+            "wall_ms": 1.0938,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.2430635365169165,
+            "min_distance_mm": 5.2430635365169165,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_mid_swing_link_capsule",
+              "left_hand_ring_swing_link_capsule"
+            ],
+            "solve_ms": 1.0865000003832392
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.9045,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 5.50842226617017,
+            "min_distance_mm": 5.50842226617017,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.8987000001070555
+          },
+          {
+            "category": "release",
+            "wall_ms": 0.9396,
+            "mode": "mink",
+            "status": "clear",
+            "pair_count": 90,
+            "iterations": 0,
+            "raw_min_distance_mm": 4.556599803452724,
+            "min_distance_mm": 4.556599803452724,
+            "correction_deg": 0.0,
+            "closest_pair": [
+              "left_hand_ring_swing_link_capsule",
+              "left_hand_pinky_swing_link_capsule"
+            ],
+            "solve_ms": 0.933300001634052
+          }
+        ]
+      },
+      "max_joint_output_difference_rad": 0.02999999999999997
+    }
+  }
+}

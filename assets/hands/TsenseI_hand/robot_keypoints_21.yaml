@@ -1,0 +1,312 @@
+schema_version: 1
+source_skeleton: mediapipe_hands_21
+robot_name: left_hand
+urdf_path: urdf/TsenseI__hand_left_v1.urdf
+unit: meter
+base_link: base_link
+hand_side: left
+quality_status: Draft
+annotation_version: 2
+generated_by: TsenseI_retargeting Quest26->MediaPipe21 subset
+keypoints:
+- id: 0
+  source_name: Wrist
+  semantic: wrist
+  finger: palm
+  link: base_link
+  local_xyz:
+  - 0.016124420424268187
+  - -8.158764655430698e-05
+  - -6.738321915376237e-07
+  parent: null
+  child: null
+  type: root
+  weight: 0.5
+  annotation_status: manually_adjusted
+- id: 1
+  source_name: ThumbCMC
+  semantic: cmc
+  finger: thumb
+  link: left_hand_thumb_swing_link
+  local_xyz:
+  - 0.0016260920517402223
+  - 0.007642704856378068
+  - -0.02905053326127253
+  parent: Wrist
+  child: ThumbMCP
+  type: joint_proxy
+  weight: 0.7
+  annotation_status: manually_adjusted
+  note: Reparented upstream of MCP flexion; preserves the calibrated init position.
+- id: 2
+  source_name: ThumbMCP
+  semantic: mcp
+  finger: thumb
+  link: left_hand_thumb_MCP_link
+  local_xyz:
+  - 0.000746501508499333
+  - 0.004652203635844184
+  - 0.00254959722715814
+  parent: ThumbCMC
+  child: ThumbIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+  note: Reparented upstream of IP flexion; preserves the calibrated init position.
+- id: 3
+  source_name: ThumbIP
+  semantic: ip
+  finger: thumb
+  link: left_hand_thumb_PIP_link
+  local_xyz:
+  - 3.7438856268640075e-18
+  - -0.0002481262184007459
+  - -1.1824579943670033e-18
+  parent: ThumbMCP
+  child: ThumbTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 4
+  source_name: ThumbTip
+  semantic: tip
+  finger: thumb
+  link: left_hand_thumb_PIP_link
+  local_xyz:
+  - -0.000310565484867905
+  - -0.00422057021371209
+  - 0.03743173425809648
+  parent: ThumbIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: manually_adjusted
+  note: auto initial value; manually verify fingertip contact point
+- id: 5
+  source_name: IndexMCP
+  semantic: mcp
+  finger: index
+  link: left_hand_index_MCP_link
+  local_xyz:
+  - 0.0030187211241503413
+  - -0.002185935254957439
+  - 0.0007675485202416613
+  parent: Wrist
+  child: IndexPIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 6
+  source_name: IndexPIP
+  semantic: pip
+  finger: index
+  link: left_hand_index_PIP_link
+  local_xyz:
+  - 0.001097226023681726
+  - -4.0657581468206416e-19
+  - -0.0010000000474974556
+  parent: IndexMCP
+  child: IndexDIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 7
+  source_name: IndexDIP
+  semantic: dip
+  finger: index
+  link: left_hand_index_DIP_link
+  local_xyz:
+  - -0.00026064275325955353
+  - -7.326834993749698e-19
+  - -7.792703114739563e-20
+  parent: IndexPIP
+  child: IndexTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 8
+  source_name: IndexTip
+  semantic: tip
+  finger: index
+  link: left_hand_index_DIP_link
+  local_xyz:
+  - 0.00019724664146361689
+  - 0.0
+  - 0.03300000773742796
+  parent: IndexDIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: manually_adjusted
+  note: auto initial value; manually verify fingertip contact point
+- id: 9
+  source_name: MiddleMCP
+  semantic: mcp
+  finger: middle
+  link: left_hand_mid_MCP_link
+  local_xyz:
+  - -0.00035192796170426145
+  - -0.0017849322126981797
+  - 0.0011033518329221313
+  parent: Wrist
+  child: MiddlePIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 10
+  source_name: MiddlePIP
+  semantic: pip
+  finger: middle
+  link: left_hand_mid_PIP_link
+  local_xyz:
+  - -0.001746483421176274
+  - 8.944667923005412e-19
+  - 2.0667603913004928e-19
+  parent: MiddleMCP
+  child: MiddleDIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 11
+  source_name: MiddleDIP
+  semantic: dip
+  finger: middle
+  link: left_hand_mid_DIP_link
+  local_xyz:
+  - -0.0021157461802942252
+  - 2.168404344971009e-19
+  - 5.082197683525802e-20
+  parent: MiddlePIP
+  child: MiddleTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 12
+  source_name: MiddleTip
+  semantic: tip
+  finger: middle
+  link: left_hand_mid_DIP_link
+  local_xyz:
+  - -0.0021157458310482554
+  - 8.673617379884035e-19
+  - 0.03300000773742793
+  parent: MiddleDIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: manually_adjusted
+  note: auto initial value; manually verify fingertip contact point
+- id: 13
+  source_name: RingMCP
+  semantic: mcp
+  finger: ring
+  link: left_hand_ring_MCP_link
+  local_xyz:
+  - 0.0046274823479586094
+  - 2.168404344971009e-18
+  - 0.0050573954501099
+  parent: Wrist
+  child: RingPIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 14
+  source_name: RingPIP
+  semantic: pip
+  finger: ring
+  link: left_hand_ring_PIP_link
+  local_xyz:
+  - -0.0007851755247237498
+  - -4.946672411965114e-19
+  - -1.6432439176733427e-19
+  parent: RingMCP
+  child: RingDIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 15
+  source_name: RingDIP
+  semantic: dip
+  finger: ring
+  link: left_hand_ring_DIP_link
+  local_xyz:
+  - -0.004471562557822001
+  - -0.0022840523685671707
+  - -0.0026515342927764226
+  parent: RingPIP
+  child: RingTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 16
+  source_name: RingTip
+  semantic: tip
+  finger: ring
+  link: left_hand_ring_DIP_link
+  local_xyz:
+  - -0.0018151690725053114
+  - 5.204170427930421e-18
+  - 0.03300000773742794
+  parent: RingDIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: manually_adjusted
+  note: auto initial value; manually verify fingertip contact point
+- id: 17
+  source_name: PinkyMCP
+  semantic: mcp
+  finger: little
+  link: left_hand_pinky_MCP_link
+  local_xyz:
+  - 0.002036256100626306
+  - 8.673617379884035e-19
+  - 0.006715701565906974
+  parent: Wrist
+  child: PinkyPIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 18
+  source_name: PinkyPIP
+  semantic: pip
+  finger: little
+  link: left_hand_pinky_PIP_link
+  local_xyz:
+  - -0.0017683123309162048
+  - 1.991096511768758e-18
+  - -6.0567607332001966e-18
+  parent: PinkyMCP
+  child: PinkyDIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 19
+  source_name: PinkyDIP
+  semantic: dip
+  finger: little
+  link: left_hand_pinky_DIP_link
+  local_xyz:
+  - -0.002927870948157133
+  - -9.478978331433455e-18
+  - 1.6273269299560905e-17
+  parent: PinkyPIP
+  child: PinkyTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+- id: 20
+  source_name: PinkyTip
+  semantic: tip
+  finger: little
+  link: left_hand_pinky_DIP_link
+  local_xyz:
+  - -0.0009840932002858512
+  - -1.734723475976807e-18
+  - 0.03300000773742796
+  parent: PinkyDIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: manually_adjusted
+  note: auto initial value; manually verify fingertip contact point

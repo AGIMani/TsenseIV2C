@@ -1,0 +1,7 @@
+runtime/
+node_modules/
+.venv/
+dist/
+config.json
+access-password.txt
+!README.md

@@ -1,0 +1,68 @@
+{
+  "zero_pose_max_error_m": 6.938893903907228e-18,
+  "before_ip_sweep_deg": [
+    1.0912926948880501,
+    1.0912926948880501,
+    1.091292694887382,
+    1.0912926948880501
+  ],
+  "before_mcp_sweep_deg": [
+    18.450519144171217,
+    18.45051914417124,
+    18.45051914417124,
+    18.450519144171277
+  ],
+  "after_ip_sweep_deg": [
+    1.091292694887382,
+    27.55390889794665,
+    56.10644343306907,
+    84.63026721545481
+  ],
+  "after_mcp_sweep_deg": [
+    18.450519144171217,
+    8.297106957949214,
+    36.835965786745156,
+    67.67128556221964
+  ],
+  "before_synthetic": {
+    "thumb_joints": {
+      "left_hand_thumb_rota_joint": 0.36367782055546216,
+      "left_hand_thumb_swing_joint": 0.19777027886708304,
+      "left_hand_thumb_MCP_joint": 0.21881613782959877,
+      "left_hand_thumb_PIP_joint": 0.08837567772103548
+    },
+    "ip_error_deg": 37.81701527874759
+  },
+  "after_synthetic": {
+    "thumb_joints": {
+      "left_hand_thumb_rota_joint": 0.7968238094454718,
+      "left_hand_thumb_swing_joint": 1.593682526329644,
+      "left_hand_thumb_MCP_joint": 0.4808519371526705,
+      "left_hand_thumb_PIP_joint": 0.7184941111940707
+    },
+    "ip_error_deg": 1.7991745465851663
+  },
+  "replay": {
+    "source": "hand_control_20260917_182133_877882.jsonl",
+    "first_frame": 18211,
+    "last_frame": 18511,
+    "frames": 301,
+    "center": 18411,
+    "before": {
+      "bent_samples": 95,
+      "median_ip_error_deg": 20.325871314426696,
+      "median_physics_ip_error_deg": 20.314108106601935,
+      "median_model_tip_middle_mm": 24.247365921572026,
+      "median_physics_tip_middle_mm": 24.330716117219303,
+      "median_human_tip_middle_mm": 18.86923519513372
+    },
+    "after": {
+      "bent_samples": 95,
+      "median_ip_error_deg": 4.7118312601414445,
+      "median_physics_ip_error_deg": 4.699271297812857,
+      "median_model_tip_middle_mm": 20.770746345223035,
+      "median_physics_tip_middle_mm": 20.595162851548633,
+      "median_human_tip_middle_mm": 18.86923519513372
+    }
+  }
+}

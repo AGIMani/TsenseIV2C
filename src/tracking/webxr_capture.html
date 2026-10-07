@@ -1,0 +1,425 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111827" />
+  <title>Quest 3 WebXR Hand Skeleton</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+      background: #0b1020;
+      color: #eef2ff;
+    }
+    body { margin: 0; padding: 24px; min-height: 100vh; box-sizing: border-box; }
+    main { max-width: 760px; margin: 0 auto; }
+    h1 { margin: 0 0 8px; font-size: 1.65rem; }
+    p { line-height: 1.55; color: #c7d2fe; }
+    .actions { display: flex; flex-wrap: wrap; gap: 12px; margin: 20px 0; }
+    button {
+      border: 0; border-radius: 10px; padding: 13px 18px; font: inherit;
+      font-weight: 650; background: #4f46e5; color: white;
+    }
+    button.secondary { background: #374151; }
+    button:disabled { opacity: .45; }
+    pre {
+      white-space: pre-wrap; overflow-wrap: anywhere; background: #111827;
+      border: 1px solid #334155; border-radius: 10px; padding: 14px;
+      min-height: 150px; line-height: 1.45;
+    }
+    .ok { color: #86efac; }
+    .hint { color: #a5b4fc; font-size: .92rem; }
+    canvas { display: none; }
+  </style>
+</head>
+<body>
+  <main id="overlay-root">
+    <h1>Quest 3 WebXR 手骨架</h1>
+    <p>Quest 在本机完成手势识别，只向 Windows 发送 WebXR 原生 25 关节，不传输相机图像。</p>
+    <p class="hint">进入 XR 后请放下 Touch 控制器，并让双手保持在头显摄像头视野内。</p>
+    <div class="actions">
+      <button id="start">进入 XR 并开始采集</button>
+      <button id="stop" class="secondary" disabled>停止</button>
+      <button id="reconnect" class="secondary">重连 WSS</button>
+    </div>
+    <pre id="status">正在初始化…</pre>
+    <canvas id="xr-canvas"></canvas>
+  </main>
+
+  <script>
+    'use strict';
+
+    const SCHEMA = 'teleop.webxr.hand_skeleton.v1';
+    const JOINT_SET = 'webxr-hand-25';
+    const JOINT_NAMES = Object.freeze([
+      'wrist',
+      'thumb-metacarpal',
+      'thumb-phalanx-proximal',
+      'thumb-phalanx-distal',
+      'thumb-tip',
+      'index-finger-metacarpal',
+      'index-finger-phalanx-proximal',
+      'index-finger-phalanx-intermediate',
+      'index-finger-phalanx-distal',
+      'index-finger-tip',
+      'middle-finger-metacarpal',
+      'middle-finger-phalanx-proximal',
+      'middle-finger-phalanx-intermediate',
+      'middle-finger-phalanx-distal',
+      'middle-finger-tip',
+      'ring-finger-metacarpal',
+      'ring-finger-phalanx-proximal',
+      'ring-finger-phalanx-intermediate',
+      'ring-finger-phalanx-distal',
+      'ring-finger-tip',
+      'pinky-finger-metacarpal',
+      'pinky-finger-phalanx-proximal',
+      'pinky-finger-phalanx-intermediate',
+      'pinky-finger-phalanx-distal',
+      'pinky-finger-tip',
+    ]);
+
+    const statusEl = document.getElementById('status');
+    const startButton = document.getElementById('start');
+    const stopButton = document.getElementById('stop');
+    const reconnectButton = document.getElementById('reconnect');
+    const canvas = document.getElementById('xr-canvas');
+
+    let socket = null;
+    let reconnectTimer = null;
+    let drainTimer = null;
+    let pendingFrame = null;
+    let pendingEvents = [];
+    let xrSession = null;
+    let referenceSpace = null;
+    let referenceSpaceType = 'webxr_page';
+    let gl = null;
+    let sequence = 0;
+    let frameCount = 0;
+    let sentFrameCount = 0;
+    let droppedFrameCount = 0;
+    let lastRateAt = performance.now();
+    let lastRateFrames = 0;
+    let measuredFps = 0;
+    const trackedBySide = { left: false, right: false };
+
+    function round6(value) {
+      return Math.round(Number(value) * 1e6) / 1e6;
+    }
+
+    function websocketUrl() {
+      const scheme = location.protocol === 'https:' ? 'wss:' : 'ws:';
+      return `${scheme}//${location.host}/hand-skeleton`;
+    }
+
+    function socketState() {
+      if (!socket) return 'closed';
+      return ['connecting', 'open', 'closing', 'closed'][socket.readyState] || String(socket.readyState);
+    }
+
+    function updateStatus(extra = '') {
+      const elapsed = Math.max(0.001, (performance.now() - lastRateAt) / 1000);
+      if (elapsed >= 1) {
+        measuredFps = (frameCount - lastRateFrames) / elapsed;
+        lastRateAt = performance.now();
+        lastRateFrames = frameCount;
+      }
+      const buffered = socket && socket.readyState === WebSocket.OPEN ? socket.bufferedAmount : 0;
+      statusEl.textContent = [
+        extra,
+        `HTTPS origin: ${location.origin}`,
+        `WSS: ${websocketUrl()} (${socketState()})`,
+        `XR session: ${xrSession ? 'active' : 'inactive'}`,
+        `joint set: ${JOINT_SET} (${JOINT_NAMES.length})`,
+        `left=${trackedBySide.left ? 'tracked' : 'lost'}  right=${trackedBySide.right ? 'tracked' : 'lost'}`,
+        `XR frames=${frameCount}  rate=${measuredFps.toFixed(1)} Hz`,
+        `sent=${sentFrameCount}  replaced_latest=${droppedFrameCount}`,
+        `websocket_buffered=${buffered} bytes`,
+      ].filter(Boolean).join('\n');
+    }
+
+    function scheduleDrain() {
+      if (drainTimer !== null) return;
+      drainTimer = window.setTimeout(() => {
+        drainTimer = null;
+        flushOutbound();
+      }, 8);
+    }
+
+    function flushOutbound() {
+      if (!socket || socket.readyState !== WebSocket.OPEN) return;
+      while (pendingEvents.length && socket.bufferedAmount < 64 * 1024) {
+        socket.send(pendingEvents.shift());
+      }
+      if (pendingFrame !== null && socket.bufferedAmount < 128 * 1024) {
+        const latest = pendingFrame;
+        pendingFrame = null;
+        socket.send(latest);
+        sentFrameCount += 1;
+      }
+      if (pendingEvents.length || pendingFrame !== null) scheduleDrain();
+    }
+
+    function queueEvent(type, fields = {}) {
+      const message = JSON.stringify({
+        schema: SCHEMA,
+        type,
+        sequence: sequence++,
+        timestamp_ms: Date.now(),
+        client_perf_ms: performance.now(),
+        coordinate_space: referenceSpace ? referenceSpaceType : 'webxr_page',
+        connection_state: socketState(),
+        ...fields,
+      });
+      pendingEvents.push(message);
+      if (pendingEvents.length > 32) pendingEvents = pendingEvents.slice(-32);
+      flushOutbound();
+    }
+
+    function queueLatestFrame(frameMessage) {
+      const encoded = JSON.stringify(frameMessage);
+      if (pendingFrame !== null) droppedFrameCount += 1;
+      pendingFrame = encoded;
+      flushOutbound();
+    }
+
+    function closeSocket() {
+      if (reconnectTimer !== null) {
+        window.clearTimeout(reconnectTimer);
+        reconnectTimer = null;
+      }
+      const previous = socket;
+      socket = null;
+      if (previous) {
+        try { previous.close(1000, 'client reconnect'); } catch (_) {}
+      }
+    }
+
+    function connectSocket({ immediate = false } = {}) {
+      closeSocket();
+      updateStatus('正在连接同源 WSS…');
+      let candidate = null;
+      try {
+        candidate = new WebSocket(websocketUrl());
+        socket = candidate;
+      } catch (error) {
+        updateStatus(`创建 WebSocket 失败: ${error instanceof Error ? error.message : String(error)}`);
+        return;
+      }
+      candidate.addEventListener('open', () => {
+        if (socket !== candidate) return;
+        queueEvent('client_hello', {
+          user_agent: navigator.userAgent,
+          joint_set: JOINT_SET,
+          joint_names: JOINT_NAMES,
+        });
+        flushOutbound();
+        updateStatus('WSS 已连接');
+      });
+      candidate.addEventListener('message', (event) => {
+        if (socket !== candidate) return;
+        try {
+          const message = JSON.parse(String(event.data));
+          if (message.type === 'server_ready') updateStatus('Windows 接收服务已就绪');
+        } catch (_) {}
+      });
+      candidate.addEventListener('error', () => {
+        if (socket === candidate) updateStatus('WSS 连接错误');
+      });
+      candidate.addEventListener('close', (event) => {
+        if (socket !== candidate) return;
+        socket = null;
+        updateStatus(`WSS 已断开 code=${event.code}`);
+        if (xrSession || immediate) {
+          reconnectTimer = window.setTimeout(() => connectSocket({ immediate: true }), 1000);
+        }
+      });
+    }
+
+    function collectHand(frame, inputSource) {
+      const joints = [];
+      let validCount = 0;
+      for (const name of JOINT_NAMES) {
+        const jointSpace = inputSource.hand ? inputSource.hand.get(name) : null;
+        const pose = jointSpace && referenceSpace ? frame.getJointPose(jointSpace, referenceSpace) : null;
+        if (!pose) {
+          joints.push({ name, valid: false, position: null, orientation: null, radius: null });
+          continue;
+        }
+        const p = pose.transform.position;
+        const q = pose.transform.orientation;
+        validCount += 1;
+        joints.push({
+          name,
+          valid: true,
+          position: [round6(p.x), round6(p.y), round6(p.z)],
+          orientation: [round6(q.x), round6(q.y), round6(q.z), round6(q.w)],
+          radius: Number.isFinite(pose.radius) ? round6(pose.radius) : null,
+        });
+      }
+      return {
+        handedness: inputSource.handedness === 'right' ? 'right' : 'left',
+        tracked: validCount === JOINT_NAMES.length,
+        valid_joint_count: validCount,
+        joints,
+      };
+    }
+
+    function updateTrackingTransitions(hands) {
+      const bySide = new Map(hands.map(hand => [hand.handedness, hand]));
+      for (const side of ['left', 'right']) {
+        const nowTracked = Boolean(bySide.get(side) && bySide.get(side).tracked);
+        if (nowTracked !== trackedBySide[side]) {
+          trackedBySide[side] = nowTracked;
+          queueEvent(nowTracked ? 'tracking_restored' : 'tracking_lost', {
+            handedness: side,
+            reason: nowTracked ? 'all_25_joints_valid' : 'hand_or_joint_unavailable',
+          });
+        }
+      }
+    }
+
+    function onXRFrame(predictedDisplayTime, frame) {
+      if (!xrSession) return;
+      try {
+        const layer = xrSession.renderState.baseLayer;
+        if (layer && gl) {
+          gl.bindFramebuffer(gl.FRAMEBUFFER, layer.framebuffer);
+          gl.clearColor(0.02, 0.03, 0.06, 1.0);
+          gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+        }
+        if (referenceSpace) frame.getViewerPose(referenceSpace);
+
+        const hands = [];
+        for (const inputSource of xrSession.inputSources) {
+          if (inputSource.hand) hands.push(collectHand(frame, inputSource));
+        }
+        frameCount += 1;
+        updateTrackingTransitions(hands);
+        queueLatestFrame({
+          schema: SCHEMA,
+          type: 'hand_skeleton',
+          joint_set: JOINT_SET,
+          joint_names: JOINT_NAMES,
+          sequence: sequence++,
+          timestamp_ms: Date.now(),
+          client_perf_ms: performance.now(),
+          xr_predicted_display_time_ms: predictedDisplayTime,
+          coordinate_space: referenceSpaceType,
+          connection_state: socketState(),
+          session_state: xrSession.visibilityState || 'active',
+          hands,
+        });
+        if (frameCount % 30 === 0) updateStatus('正在采集 25 关节');
+      } catch (error) {
+        queueEvent('client_error', {
+          reason: 'xr_frame_failed',
+          message: error instanceof Error ? error.message : String(error),
+        });
+        updateStatus(`XR 帧处理失败: ${error instanceof Error ? error.message : String(error)}`);
+      }
+      if (xrSession) xrSession.requestAnimationFrame(onXRFrame);
+    }
+
+    async function startXR() {
+      if (xrSession) return;
+      if (!window.isSecureContext) {
+        updateStatus('页面不是安全上下文；必须使用 HTTPS 并接受证书');
+        return;
+      }
+      if (!navigator.xr) {
+        updateStatus('Quest Browser 未提供 navigator.xr');
+        return;
+      }
+      connectSocket({ immediate: true });
+      try {
+        const supported = await navigator.xr.isSessionSupported('immersive-vr');
+        if (!supported) throw new Error('immersive-vr unsupported');
+        xrSession = await navigator.xr.requestSession('immersive-vr', {
+          requiredFeatures: ['hand-tracking'],
+          optionalFeatures: ['local-floor', 'bounded-floor', 'dom-overlay'],
+          domOverlay: { root: document.getElementById('overlay-root') },
+        });
+        gl = canvas.getContext('webgl', { xrCompatible: true, alpha: false, antialias: false });
+        if (!gl) throw new Error('WebGL unavailable');
+        await gl.makeXRCompatible();
+        await xrSession.updateRenderState({ baseLayer: new XRWebGLLayer(xrSession, gl) });
+        try {
+          referenceSpace = await xrSession.requestReferenceSpace('local-floor');
+          referenceSpaceType = 'webxr_local_floor';
+        } catch (_) {
+          referenceSpace = await xrSession.requestReferenceSpace('local');
+          referenceSpaceType = 'webxr_local';
+        }
+        frameCount = 0;
+        sentFrameCount = 0;
+        droppedFrameCount = 0;
+        lastRateAt = performance.now();
+        lastRateFrames = 0;
+        measuredFps = 0;
+        trackedBySide.left = false;
+        trackedBySide.right = false;
+        xrSession.addEventListener('end', () => {
+          queueEvent('session_ended', { reason: 'xr_session_end' });
+          trackedBySide.left = false;
+          trackedBySide.right = false;
+          xrSession = null;
+          referenceSpace = null;
+          referenceSpaceType = 'webxr_page';
+          gl = null;
+          startButton.disabled = false;
+          stopButton.disabled = true;
+          updateStatus('XR 会话已结束');
+        }, { once: true });
+        queueEvent('session_started', {
+          mode: 'immersive-vr',
+          reference_space: referenceSpaceType,
+          joint_set: JOINT_SET,
+        });
+        startButton.disabled = true;
+        stopButton.disabled = false;
+        updateStatus('XR 会话已启动，请展示双手');
+        xrSession.requestAnimationFrame(onXRFrame);
+      } catch (error) {
+        const message = error instanceof Error ? error.message : String(error);
+        queueEvent('client_error', { reason: 'session_start_failed', message });
+        updateStatus(`启动 XR 失败: ${message}`);
+        if (xrSession) await xrSession.end().catch(() => {});
+        xrSession = null;
+        referenceSpace = null;
+        referenceSpaceType = 'webxr_page';
+        gl = null;
+      }
+    }
+
+    async function stopXR() {
+      if (xrSession) {
+        queueEvent('session_ended', { reason: 'user_stop_requested' });
+        await xrSession.end().catch(() => {});
+      }
+      updateStatus('已停止');
+    }
+
+    startButton.addEventListener('click', () => { void startXR(); });
+    stopButton.addEventListener('click', () => { void stopXR(); });
+    reconnectButton.addEventListener('click', () => connectSocket({ immediate: true }));
+    window.addEventListener('pagehide', () => {
+      if (socket && socket.readyState === WebSocket.OPEN) {
+        queueEvent('session_ended', { reason: 'page_hidden' });
+        flushOutbound();
+      }
+    });
+    window.addEventListener('error', event => queueEvent('client_error', {
+      reason: 'window_error', message: event.message || 'unknown',
+    }));
+    window.addEventListener('unhandledrejection', event => queueEvent('client_error', {
+      reason: 'unhandled_rejection',
+      message: event.reason instanceof Error ? event.reason.message : String(event.reason),
+    }));
+
+    connectSocket();
+    updateStatus('页面已就绪，等待进入 XR');
+  </script>
+</body>
+</html>

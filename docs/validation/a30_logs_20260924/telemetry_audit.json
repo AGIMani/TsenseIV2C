@@ -1,0 +1,311 @@
+[
+  {
+    "file": "hand_control_20260924_142150_088000.jsonl",
+    "counts": {
+      "frames": 8750,
+      "crc_ok": 8750,
+      "frames_with_decode_issues": 8749
+    },
+    "issues_by_joint": {
+      "index_MCP_joint": 8730,
+      "mid_MCP_joint": 8729,
+      "pinky_MCP_joint": 8732,
+      "index_PIP_joint": 8735,
+      "thumb_MCP_joint": 8723,
+      "ring_MCP_joint": 8739,
+      "mid_PIP_joint": 8720,
+      "ring_PIP_joint": 8692
+    },
+    "example": {
+      "t": 5.84859999999404,
+      "payload_hex": "bc160300ffe30000fffb02000000000021ea24be35150f41de410141000000000000d50b00000000003069bd585c4441f849bb400000000000009b0b00000000be37e03c6ad8c9c0c6aebbbf0000000000002e0c000000004ac9603e78f3c5c1cf5fb0c1000000000000b80b0000000035d3773f64c480c000000000000000000000800c5524143e0000000024012d016dff02000000f8ffade253d2bff42d3d000000002f001f00d6ffffff0000250023e353d2ed9147bd00000000cfffdcff2700fbff00001400c0e253d200000000e7bc293d4a3c18c01925fabf0000000000007e0b00000000d73a533d984ba9c01e6759c0000000000000c10c00000000000000000000000000000000000000000000000000000000d7e48f3ee40a8ec1245660c10000000000009b0b676cf83c000000005e005c00e2ff0000000009009ee253d2c2a528bd000000001c0011002a00000000000000cbe253d25efafabc0000000099009c001e0002000000ccff73e253d2cbbbcebd000000004f003c006c0002000000f6ff7ce253d2000000000000000000000000000000000000000000000000934a6dbc0000000005000f000e0000000000f4ff8ee211d2050500f1ff7f0080018077000000000004000006090500f8ff7ff77ff77f78000000000004000006",
+      "wire_info": {
+        "header_hex": "aa55e4010302",
+        "crc16": 7790,
+        "crc_verified": true,
+        "payload_bytes": 484,
+        "extension_hex": ""
+      },
+      "decode_issues": [
+        {
+          "slot": 5,
+          "joint_suffix": "pinky_MCP_joint",
+          "field": "pos_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 5,
+          "joint_suffix": "pinky_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 6,
+          "joint_suffix": "ring_PIP_joint",
+          "field": "iq_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 6,
+          "joint_suffix": "ring_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 7,
+          "joint_suffix": "ring_MCP_joint",
+          "field": "iq",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 7,
+          "joint_suffix": "ring_MCP_joint",
+          "field": "iq_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 7,
+          "joint_suffix": "ring_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 12,
+          "joint_suffix": "mid_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 13,
+          "joint_suffix": "mid_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 14,
+          "joint_suffix": "index_PIP_joint",
+          "field": "pos_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 14,
+          "joint_suffix": "index_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 15,
+          "joint_suffix": "index_MCP_joint",
+          "field": "pos_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 15,
+          "joint_suffix": "index_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 17,
+          "joint_suffix": "thumb_MCP_joint",
+          "field": "pos_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 17,
+          "joint_suffix": "thumb_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        }
+      ]
+    }
+  },
+  {
+    "file": "hand_control_20260924_142624_430000.jsonl",
+    "counts": {
+      "frames": 8784,
+      "crc_ok": 8784,
+      "frames_with_decode_issues": 8784
+    },
+    "issues_by_joint": {
+      "index_MCP_joint": 8742,
+      "mid_MCP_joint": 8764,
+      "pinky_MCP_joint": 8548,
+      "index_PIP_joint": 8703,
+      "thumb_MCP_joint": 8500,
+      "ring_MCP_joint": 8764,
+      "mid_PIP_joint": 8691,
+      "ring_PIP_joint": 8779
+    },
+    "example": {
+      "t": 4.2365,
+      "payload_hex": "46810300630d0500fffb020000000000293125bec8f31f3e0000000029a520be0000770e000000009d4365bd4305754100000000df6b6ebd0000e41800000000214c6f3db5957a4000000000b6ce583d000076130000000042029bc0a5997dc000000000eee99ac0000058130000000083bb94bd00000080000000000000faa6000094116276abbe04007aa70000000043000100000000006e0a11d29a2d0cbf040000800000000000000000000000009f1000d21a70f3bd04409ca72d002b007300ffff00000600ec0c53d2000000000074573d6a72bfbe000000003a7b3b3d00003d0e000000003279b73f584cb03f00000000f41baa3f00000e12000000000000000000000000000000000000000000000000000000006b65e43f43e3b9c0000000005776d13f00001a11cdee48bfe49a3aa9010000000000000000000000470c00d225631abe961d17a975007b00930000000000feffd90d53d24f9bcdbe6be8a6b8030000000000000000000000510b00d2380a3abe04409ca778007a00af00feff00000900c30d53d2000000000000000000000000000000000000000000000000a1c2dabe9f0762a7000000000000000000000000cc0a00d20505404100800080e37f77000000000004000006090580ffff7fad7ffd7f79000000000004000006",
+      "wire_info": {
+        "header_hex": "aa55e4010302",
+        "crc16": 42422,
+        "crc_verified": true,
+        "payload_bytes": 484,
+        "extension_hex": ""
+      },
+      "decode_issues": [
+        {
+          "slot": 5,
+          "joint_suffix": "pinky_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 6,
+          "joint_suffix": "ring_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 7,
+          "joint_suffix": "ring_MCP_joint",
+          "field": "iq_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 7,
+          "joint_suffix": "ring_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 12,
+          "joint_suffix": "mid_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 13,
+          "joint_suffix": "mid_MCP_joint",
+          "field": "pos_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 13,
+          "joint_suffix": "mid_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 14,
+          "joint_suffix": "index_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 15,
+          "joint_suffix": "index_MCP_joint",
+          "field": "iq_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 15,
+          "joint_suffix": "index_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 17,
+          "joint_suffix": "thumb_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        }
+      ]
+    }
+  },
+  {
+    "file": "hand_control_20260924_142855_172000.jsonl",
+    "counts": {
+      "frames": 9416,
+      "crc_ok": 9416,
+      "frames_with_decode_issues": 9416
+    },
+    "issues_by_joint": {
+      "index_MCP_joint": 9395,
+      "mid_MCP_joint": 9312,
+      "pinky_MCP_joint": 9379,
+      "index_PIP_joint": 9303,
+      "thumb_MCP_joint": 9117,
+      "ring_MCP_joint": 9412,
+      "mid_PIP_joint": 9325,
+      "ring_PIP_joint": 9262
+    },
+    "example": {
+      "t": 8.8325,
+      "payload_hex": "f4bd03002f6c0700fffb02000000000032a66fbc2638c14100000000eb8a6d410000620f00000000630c88bb78f8d23e00000000203ca0c10000341800000000532abf3c7c41f141000000007891e2400000c4120000000008c1d4bc728078c000000000890312400000e31500000000a9752fbdc49e73c000000000733681bf0000c012ebe9e7be04007aa7000000004300010000000000746811d29a2d0cbf04000080040000000000000000000000c77101d2628a42c08cf042c0f300e400000004000000edff876b53d200000000e79c92bbd6c2cdc00000000016c8f23f0000d70f0000000019c3663dff4cfe3f000000008e65f2400000211400000000000000000000000000000000000000000000000000000000ad55ae3d74b52fc000000000c3ad3c4100000c1395b255c1e49a3aa90200000000000000000000006b6b01d2afd744bfe33742bf5100580005000000000001005c6d53d209e6aac06be8a6b8feff00000000000000000000ea6901d229b0f3bd3796e9bdd000df000000f9ff00001d00e16d53d2000000000000000000000000000000000000000000000000f10e0abf9f0762a7030000000000000000000000df6801d20505c033fa800080df7f770000000000040000060905c0c4c3800080198079000000000004000006",
+      "wire_info": {
+        "header_hex": "aa55e4010302",
+        "crc16": 62377,
+        "crc_verified": true,
+        "payload_bytes": 484,
+        "extension_hex": ""
+      },
+      "decode_issues": [
+        {
+          "slot": 5,
+          "joint_suffix": "pinky_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 6,
+          "joint_suffix": "ring_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 7,
+          "joint_suffix": "ring_MCP_joint",
+          "field": "pos_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 7,
+          "joint_suffix": "ring_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 12,
+          "joint_suffix": "mid_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 13,
+          "joint_suffix": "mid_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 14,
+          "joint_suffix": "index_PIP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 15,
+          "joint_suffix": "index_MCP_joint",
+          "field": "iq_ref",
+          "reason": "nonfinite_wire_value"
+        },
+        {
+          "slot": 15,
+          "joint_suffix": "index_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        },
+        {
+          "slot": 17,
+          "joint_suffix": "thumb_MCP_joint",
+          "field": "mcu_temp_c",
+          "reason": "unusual_wire_value"
+        }
+      ]
+    }
+  }
+]

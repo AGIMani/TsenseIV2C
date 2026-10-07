@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TsenseI · 动态标定</title>
+  <link rel="icon" href="/brand/tsensei-favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css"><link rel="stylesheet" href="/calibration.css">
+  <script type="importmap">{"imports":{"three":"/vendor/three/build/three.module.js","three/addons/":"/vendor/three/examples/jsm/"}}</script>
+  <script type="module" src="/calibration.js"></script>
+  <script type="module" src="/shared/ui-language.js"></script>
+</head>
+<body><div class="app-shell calibration-shell">
+  <header class="topbar">
+    <a class="brand" href="/"><img class="brand-logo" src="/brand/tsensei-logo.png?v=943c7fd00210" alt="TsenseI"></a>
+    <div class="topbar-right"><nav class="workspace-nav" aria-label="工作页面"><a id="tracking-link" href="/">手势跟踪</a><a href="/calibration" aria-current="page">动态标定</a></nav><button id="language-toggle" class="language-toggle" type="button" translate="no" aria-label="Switch to English" title="Switch to English">EN</button></div>
+  </header>
+  <main>
+    <div class="cal-intro"><div><p class="eyebrow">LIVE CALIBRATION</p><h1>动态标定<span class="title-dot">.</span></h1><p>调整 21 点骨架与模型标定，实时查看 Retarget 求解结果。</p></div><span id="draft-state" class="cal-chip">正在加载</span></div>
+    <section class="cal-controls" aria-label="标定与输入设置">
+      <label>手型<select id="hand-model"><option value="TsenseI_v3_2">A3.2</option><option value="TsenseI_v3_2_withid" selected>A3.2 with ID</option><option value="TsenseI_v3_0">A3.0</option><option value="TsenseI_v3_0_withid">A3.0 with ID</option></select></label>
+      <label>模型手别<select id="side"><option value="left">左手模型</option><option value="right">右手模型</option></select></label>
+      <label>关键点来源<select id="input-source"><option value="mediapipe">MediaPipe · 相机</option><option value="webxr">Quest 3 · WebXR</option><option value="wuji_glove">Wuji · 数据手套</option><option value="leapmotion">Leap Motion 2 · 红外追踪</option></select></label>
+      <label>采集手别<select id="input-side"><option value="left">识别左手</option><option value="right">识别右手</option></select></label>
+      <label id="camera-control">视频来源<select id="camera"><option value="">默认摄像头</option></select></label>
+      <button id="start" class="cal-primary" disabled>接入实时输入</button><button id="reset-views">重置视角</button>
+    </section>
+    <div id="notice" class="cal-notice" role="status" hidden></div>
+    <section class="cal-source-panel" aria-label="输入状态">
+      <div><strong id="input-status" role="status">加载标定与模型…</strong><p id="source-help">相机由当前浏览器直接采集；冻结后可拖动输入关键点。</p></div>
+      <div id="quest-pairing" hidden><label>Quest 地址<input id="quest-link" readonly></label><span>配对码 <strong id="quest-code"></strong></span><button id="quest-renew">更新配对码</button><a id="quest-open" href="/q" target="_blank" rel="noopener">打开 Quest 页面 ↗</a></div>
+      <video id="video" autoplay muted playsinline hidden></video>
+    </section>
+    <section class="cal-views" aria-label="三栏标定预览">
+      <article class="cal-card"><header><div><span class="cal-number">01</span><h2>输入骨架</h2></div><span id="input-mode">可拖动 · 21 点</span></header>
+        <div id="input-stage" class="cal-stage" aria-label="可拖动输入骨架"></div>
+        <div class="cal-editor"><label>关键点<select id="input-point"></select></label><div class="cal-xyz"><label>X / mm<input id="input-x" type="number" step="0.1"></label><label>Y / mm<input id="input-y" type="number" step="0.1"></label><label>Z / mm<input id="input-z" type="number" step="0.1"></label></div><p>URDF 基坐标 · 拖动点或坐标轴调整</p><button id="reset-input">使用当前标定骨架</button></div>
+      </article>
+      <article class="cal-card"><header><div><span class="cal-number">02</span><h2>静态标定</h2></div><span>URDF 零位</span></header>
+        <div id="calibration-stage" class="cal-stage" aria-label="可拖动静态标定"></div>
+        <div class="cal-editor"><label>标定点<select id="calibration-point"></select></label><label>所属连杆<select id="point-link"></select></label><div class="cal-xyz"><label>X / mm<input id="calibration-x" type="number" step="0.1"></label><label>Y / mm<input id="calibration-y" type="number" step="0.1"></label><label>Z / mm<input id="calibration-z" type="number" step="0.1"></label></div><p>连杆局部坐标 · 修改后立即参与求解</p><div class="cal-inline"><label><input id="surface-snap" type="checkbox"> 拖点吸附所属连杆表面</label><button id="reset-point">还原此点</button></div></div>
+      </article>
+      <article class="cal-card"><header><div><span class="cal-number">03</span><h2>模型跟随</h2></div><span id="solve-ms">等待求解</span></header>
+        <div id="result-stage" class="cal-stage" aria-label="实时求解模型"></div>
+        <div class="cal-editor"><strong id="solve-status" role="status">正在初始化求解器</strong><p>与静态标定使用相同 URDF 和当前标定点。</p><label class="cal-inline"><input id="result-points" type="checkbox" checked> 显示求解后的 21 个关键点</label><details><summary>关节角度</summary><div id="joint-values" class="cal-joints"></div></details></div>
+      </article>
+    </section>
+    <section class="cal-bottom">
+      <article class="cal-card cal-presets"><h2>常用标定姿态</h2><p>以当前静态标定生成输入骨架；冻结实时输入后可使用。</p><div id="common-presets" class="cal-buttons"></div><h3>Kapandji · 拇指对掌</h3><div id="kapandji-presets" class="cal-buttons"></div><p id="preset-detail">紫色标记为对指目标。掌纹与指侧位置由骨架估算，用于调试标定。</p></article>
+      <article class="cal-card cal-files"><h2>标定文件</h2><p id="calibration-path"></p><p>拖点修改保留在当前页面。保存后，新建的手势跟踪会话使用新标定。</p><div class="cal-buttons"><button id="save" class="cal-primary" disabled>保存标定 · 自动备份</button><button id="export" disabled>导出 YAML</button><button id="reload" disabled>重新加载标定</button></div><p id="save-status">输入骨架与预设姿态不写入标定文件。</p><p class="cal-footnote">鼠标左键旋转空白区域，滚轮缩放，右键平移；点击点后可沿 XYZ 轴拖动。实时输入按掌宽缩放，并对齐当前模型腕部。</p></article>
+    </section>
+  </main>
+</div></body>
+</html>

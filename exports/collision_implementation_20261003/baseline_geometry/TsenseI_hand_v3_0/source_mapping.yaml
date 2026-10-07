@@ -1,0 +1,16 @@
+source: TsenseI_A3.0_hand/urdf/V6 26.8.4.urdf
+renames: {}
+source_urdf_sha256: cfe104bed1b44fc2d5effa4a1bdc4907504b29ffd97643f960ae0a77b2f7a13b
+source_package_sha256: d0975615466e3a81e8b1dcb3d287bd03355a8e3a1f8f0a350ca33f9123728e64
+geometry_changed: false
+right_mirror: 'XZ: M=diag(1,-1,1), rotation axes -M; equal q'
+historical_renames:
+  left_hand_pinky_rotaback_joint: left_hand_pinky_MCP_joint
+  left_hand_pinky_rotaback_link: left_hand_pinky_MCP_link
+  left_hand_pinky_MCP_joint: left_hand_pinky_swing_joint
+  left_hand_pinky_MCP_link: left_hand_pinky_swing_link
+  left_hand_pinky_swing_joint: left_hand_pinky_PIP_joint
+  left_hand_pinky_swing_link: left_hand_pinky_PIP_link
+  left_hand_pinky_PIP_joint: left_hand_pinky_DIP_joint
+  left_hand_pinky_PIP_link: left_hand_pinky_DIP_link
+naming: canonical names stored in source URDF; meshes unchanged

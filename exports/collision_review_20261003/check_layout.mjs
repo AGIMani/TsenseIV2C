@@ -1,0 +1,15 @@
+import {chromium} from '/home/onkiall/projects/hand/online_control/online_motion_track/node_modules/@playwright/test/index.mjs';
+const browser=await chromium.launch({headless:true,args:['--no-sandbox']});
+const page=await browser.newPage({viewport:{width:380,height:1100},deviceScaleFactor:1});
+const errors=[];page.on('pageerror',e=>errors.push(e.message));
+await page.goto('file:///home/onkiall/projects/hand/exports/collision_review_20261003/viewer-preview.html',{waitUntil:'domcontentloaded'});
+const frame=page.frameLocator('iframe');
+await frame.locator('[data-field="summary"]').filter({hasText:'启用检测'}).waitFor();
+await frame.locator('[data-field="model"]').selectOption('3');
+await frame.locator('[data-field="geom"]').selectOption('0');
+const area=await frame.locator('canvas').boundingBox();
+await page.mouse.move(area.x+area.width/2,area.y+area.height/2);await page.mouse.down();await page.mouse.move(area.x+area.width/2+100,area.y+area.height/2+40,{steps:6});await page.mouse.up();
+await page.screenshot({path:'/home/onkiall/projects/hand/exports/collision_review_20261003/viewer-mobile.png',fullPage:true});
+await page.emulateMedia({colorScheme:'dark'});
+await page.screenshot({path:'/home/onkiall/projects/hand/exports/collision_review_20261003/viewer-dark.png',fullPage:true});
+console.log(JSON.stringify({errors}));await browser.close();if(errors.length)process.exit(1);

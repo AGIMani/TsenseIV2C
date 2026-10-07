@@ -1,0 +1,6 @@
+# Pure Python web playback service; Qt is not required.
+numpy==2.2.6
+pyserial==3.5
+ruckig==0.17.3
+scipy==1.15.3
+PyYAML==6.0.3

@@ -1,0 +1,22 @@
+{
+  "environment": "WSL cached Chromium, isolated loopback server, in-memory WebSerial; SDK connections forbidden",
+  "rendering": "The unmodified full-raster smoke exceeded stream watchdog deadlines in software WebGL. Successful runs intercepted only viewer.js raster render; model loading, pose updates, UI, actual HTTP solve/stream, telemetry and recording remained active.",
+  "models": {
+    "TsenseI_v3_0": {
+      "collision_mode": "off",
+      "browser_test": "passed full existing lifecycle assertions",
+      "sent_mock_downlink_frames": 1020,
+      "control_arm_events": 2,
+      "recorded_h7_samples": 1018,
+      "session_log": "/home/onkiall/projects/hand/exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0/session.jsonl"
+    },
+    "TsenseI_v3_0_withid": {
+      "collision_mode": "off",
+      "browser_test": "passed full existing lifecycle assertions",
+      "sent_mock_downlink_frames": 1031,
+      "control_arm_events": 2,
+      "recorded_h7_samples": 1029,
+      "session_log": "/home/onkiall/projects/hand/exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0_withid/session.jsonl"
+    }
+  }
+}

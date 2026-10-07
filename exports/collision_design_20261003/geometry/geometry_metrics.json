@@ -1,0 +1,103 @@
+{
+  "method": "Outer polytope from exact input hull support planes; candidate containment verified on all source vertices.",
+  "caution": "Error is Euclidean excess beyond convex hull, not beyond concave visual shell. Geometry metrics do not establish runtime or hardware clearance.",
+  "thumb": {
+    "source": "TsenseI_A3.2_hand/meshes/left_hand_thumb_rotaback_link2.STL",
+    "source_vertices": 83714,
+    "source_triangles": 146161,
+    "full_hull_vertices": 224,
+    "full_hull_triangles": 444,
+    "full_hull_volume_mm3": 24475.680546887095,
+    "candidates": [
+      {
+        "support_planes": 32,
+        "vertices": 60,
+        "triangles": 116,
+        "volume_mm3": 25643.23416277995,
+        "max_outward_distance_to_full_hull_mm": 1.2507230171329156,
+        "max_source_vertex_violation_mm": 1.3877787807814457e-14,
+        "source_vertices_contained": true,
+        "file": "a32_thumb_root_outer_32.stl"
+      },
+      {
+        "support_planes": 64,
+        "vertices": 117,
+        "triangles": 232,
+        "volume_mm3": 24655.33538665976,
+        "max_outward_distance_to_full_hull_mm": 0.3555173527250009,
+        "max_source_vertex_violation_mm": 9.367506770274758e-14,
+        "source_vertices_contained": true,
+        "file": "a32_thumb_root_outer_64.stl"
+      },
+      {
+        "support_planes": 96,
+        "vertices": 175,
+        "triangles": 346,
+        "volume_mm3": 24544.441103346096,
+        "max_outward_distance_to_full_hull_mm": 0.18569568137825845,
+        "max_source_vertex_violation_mm": 6.245004513516506e-14,
+        "source_vertices_contained": true,
+        "file": "a32_thumb_root_outer_96.stl"
+      }
+    ],
+    "current_capsule": {
+      "radius_mm": 23.2149646617472,
+      "axis_length_mm": 14.7090228274464,
+      "exact_volume_mm3": 77311.4458834596,
+      "source_vertices_outside": 768,
+      "source_vertices_total": 83714,
+      "maximum_source_vertex_protrusion_mm": 6.467921715813011,
+      "maximum_capsule_sample_outward_distance_to_full_hull_mm": 15.72339220210281
+    }
+  },
+  "withid_fingertip": {
+    "source": "assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_hand_index_DIP_link.stl",
+    "source_vertices": 1073,
+    "source_triangles": 2144,
+    "full_hull_vertices": 1073,
+    "full_hull_triangles": 2142,
+    "full_hull_volume_mm3": 4212.3320930146865,
+    "candidates": [
+      {
+        "support_planes": 32,
+        "vertices": 60,
+        "triangles": 116,
+        "volume_mm3": 4479.494993563746,
+        "max_outward_distance_to_full_hull_mm": 1.1558901127559964,
+        "max_source_vertex_violation_mm": 1.214306433183765e-14,
+        "source_vertices_contained": true,
+        "file": "a32_withid_index_tip_outer_32.stl"
+      },
+      {
+        "support_planes": 64,
+        "vertices": 124,
+        "triangles": 244,
+        "volume_mm3": 4313.311726055824,
+        "max_outward_distance_to_full_hull_mm": 0.41088603038472993,
+        "max_source_vertex_violation_mm": 5.941427905220564e-14,
+        "source_vertices_contained": true,
+        "file": "a32_withid_index_tip_outer_64.stl"
+      },
+      {
+        "support_planes": 96,
+        "vertices": 187,
+        "triangles": 370,
+        "volume_mm3": 4262.571509916965,
+        "max_outward_distance_to_full_hull_mm": 0.2701127445174486,
+        "max_source_vertex_violation_mm": 1.8214596497756474e-14,
+        "source_vertices_contained": true,
+        "file": "a32_withid_index_tip_outer_96.stl"
+      },
+      {
+        "support_planes": 128,
+        "vertices": 250,
+        "triangles": 498,
+        "volume_mm3": 4246.389912796227,
+        "max_outward_distance_to_full_hull_mm": 0.2567853551420294,
+        "max_source_vertex_violation_mm": 3.8163916471489756e-14,
+        "source_vertices_contained": true,
+        "file": "a32_withid_index_tip_outer_128.stl"
+      }
+    ]
+  }
+}

@@ -1,0 +1,328 @@
+schema_version: 1
+source_skeleton: mediapipe_hands_21
+robot_name: TsenseI_V3.2
+urdf_path: urdf/TsenseI_hand_right_v3_2.urdf
+unit: meter
+base_link: base_link
+hand_side: right
+quality_status: Draft
+annotation_version: 1
+generated_by: tools/prepare_hand_v3_2.py (wrist mesh + URDF joint centers + mesh tips)
+keypoints:
+- id: 0
+  source_name: Wrist
+  semantic: wrist
+  finger: palm
+  link: base_link
+  local_xyz:
+  - -0.0053680450086879584
+  - 0.016356861970788998
+  - -0.09304122284042472
+  parent: null
+  child: null
+  type: root
+  weight: 0.5
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 1
+  source_name: ThumbCMC
+  semantic: cmc
+  finger: thumb
+  link: right_hand_thumb_rotaback_link2
+  local_xyz:
+  - -0.012730077430556114
+  - 0.012132303309026458
+  - -0.0016805092863569201
+  parent: Wrist
+  child: ThumbMCP
+  type: joint_proxy
+  weight: 0.7
+  annotation_status: manually_adjusted
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 2
+  source_name: ThumbMCP
+  semantic: mcp
+  finger: thumb
+  link: right_hand_thumb_MCP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: ThumbCMC
+  child: ThumbIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 3
+  source_name: ThumbIP
+  semantic: ip
+  finger: thumb
+  link: right_hand_thumb_PIP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: ThumbMCP
+  child: ThumbTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 4
+  source_name: ThumbTip
+  semantic: tip
+  finger: thumb
+  link: right_hand_thumb_PIP_link
+  local_xyz:
+  - 0.002648000020518261
+  - -9.635786525905132e-05
+  - 0.015592995081096888
+  parent: ThumbIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 5
+  source_name: IndexMCP
+  semantic: mcp
+  finger: index
+  link: right_hand_index_swing_link
+  local_xyz:
+  - -0.013400000000000002
+  - 0.0
+  - -0.009999999999999998
+  parent: Wrist
+  child: IndexPIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 6
+  source_name: IndexPIP
+  semantic: pip
+  finger: index
+  link: right_hand_index_PIP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: IndexMCP
+  child: IndexDIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 7
+  source_name: IndexDIP
+  semantic: dip
+  finger: index
+  link: right_hand_index_DIP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: IndexPIP
+  child: IndexTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 8
+  source_name: IndexTip
+  semantic: tip
+  finger: index
+  link: right_hand_index_DIP_link
+  local_xyz:
+  - -0.003758744847073103
+  - -0.00010974690085276961
+  - 0.021506644575856625
+  parent: IndexDIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 9
+  source_name: MiddleMCP
+  semantic: mcp
+  finger: middle
+  link: right_hand_mid_swing_link
+  local_xyz:
+  - -0.014875000000000003
+  - 8.271806125530277e-24
+  - -0.010000000000000002
+  parent: Wrist
+  child: MiddlePIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 10
+  source_name: MiddlePIP
+  semantic: pip
+  finger: middle
+  link: right_hand_mid_PIP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: MiddleMCP
+  child: MiddleDIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 11
+  source_name: MiddleDIP
+  semantic: dip
+  finger: middle
+  link: right_hand_mid_DIP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: MiddlePIP
+  child: MiddleTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 12
+  source_name: MiddleTip
+  semantic: tip
+  finger: middle
+  link: right_hand_mid_DIP_link
+  local_xyz:
+  - 0.0008306692646902387
+  - -0.00010945892204666972
+  - 0.022490842208550993
+  parent: MiddleDIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 13
+  source_name: RingMCP
+  semantic: mcp
+  finger: ring
+  link: right_hand_ring_swing_link
+  local_xyz:
+  - -0.0149
+  - -3.469446951953614e-18
+  - -0.01
+  parent: Wrist
+  child: RingPIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 14
+  source_name: RingPIP
+  semantic: pip
+  finger: ring
+  link: right_hand_ring_PIP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: RingMCP
+  child: RingDIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 15
+  source_name: RingDIP
+  semantic: dip
+  finger: ring
+  link: right_hand_ring_DIP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: RingPIP
+  child: RingTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 16
+  source_name: RingTip
+  semantic: tip
+  finger: ring
+  link: right_hand_ring_DIP_link
+  local_xyz:
+  - -0.003758744847073103
+  - -0.00010974690085276961
+  - 0.021506644575856625
+  parent: RingDIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 17
+  source_name: PinkyMCP
+  semantic: mcp
+  finger: little
+  link: right_hand_pinky_MCP_link
+  local_xyz:
+  - -0.016925000000000003
+  - 0.0
+  - -0.009999999999999998
+  parent: Wrist
+  child: PinkyPIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 18
+  source_name: PinkyPIP
+  semantic: pip
+  finger: little
+  link: right_hand_pinky_PIP_link
+  local_xyz:
+  - 0.0
+  - 0.0
+  - 0.0
+  parent: PinkyMCP
+  child: PinkyDIP
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 19
+  source_name: PinkyDIP
+  semantic: dip
+  finger: little
+  link: right_hand_pinky_DIP_link
+  local_xyz:
+  - -0.0023511931628285845
+  - 2.7447705609081577e-18
+  - 3.1339412547311873e-19
+  parent: PinkyPIP
+  child: PinkyTip
+  type: joint_proxy
+  weight: 1.0
+  annotation_status: manually_adjusted
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+- id: 20
+  source_name: PinkyTip
+  semantic: tip
+  finger: little
+  link: right_hand_pinky_DIP_link
+  local_xyz:
+  - -0.003576980972662568
+  - -6.776672136038542e-05
+  - 0.014245535667985677
+  parent: PinkyDIP
+  child: null
+  type: fingertip
+  weight: 2.0
+  annotation_status: auto_initialized
+  note: V3.2 geometry seed; manually calibrate before retarget evaluation.
+mirrored_from: robot_keypoints_21.yaml
+mirror_plane: YZ

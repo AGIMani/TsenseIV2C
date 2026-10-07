@@ -1,0 +1,18 @@
+来源: E:\URDF\A3-2691-1053yw1
+输出: E:\URDF\AIgei\G1
+
+问题: 中指关节32（坐标系32）rpy 多了 pi，Empty_Link32 的 Y 朝向 -Z，
+      远端折进掌心。其他手指未改 rpy/xyz。
+
+修改:
+  - joint 32 rpy: (3.14159265358979 -1.5707963267949 0.0) -> (0 -1.5707963267949 0)  # remove extra pi
+  - joint 34 axis sign flipped to match ring DIP
+  - 全部关节补充可用 limit（原导出多为 0..0）
+
+仿真: python mujoco\simulate.py --seconds 0
+MuJoCo ˵��:
+  base_link.STL ԭ���� 223826 > MuJoCo ���� 200000��G1/meshes ���Ѽ��浽Լ 11 ����ڷ��档
+  ԭʼ������������ E:\URDF\A3-2691-1053yw1\meshes\base_link.STL
+
+Сָ54 axis ����53ͬ�򣻷���Ϊ��Ȼץ�գ��޶���/�޲��/����ײ����
+

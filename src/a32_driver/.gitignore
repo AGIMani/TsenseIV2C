@@ -1,0 +1,7 @@
+/build/
+/bin/*.lib
+/bin/*.exp
+/bin/*.pdb
+/bin/lowlatency/
+/bin/staged/
+/bin/*.before-*

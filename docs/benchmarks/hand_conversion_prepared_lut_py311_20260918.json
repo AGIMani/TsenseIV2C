@@ -1,0 +1,86 @@
+{
+  "python": "3.11.15",
+  "platform": "Windows-10-10.0.22000-SP0",
+  "v2_fit_enabled": true,
+  "scope": "warm conversion only; varying angles; no USB, retarget or motion interpolation",
+  "benchmarks": {
+    "v2_before_14_linear": {
+      "n": 10000,
+      "mean_us": 67.59972,
+      "median_us": 63.7,
+      "p95_us": 97.6,
+      "p99_us": 115.1,
+      "throughput_hz": 14792.960680902228
+    },
+    "v2_before_21_conversion": {
+      "n": 10000,
+      "mean_us": 76.26513,
+      "median_us": 75.7,
+      "p95_us": 77.5,
+      "p99_us": 94.2,
+      "throughput_hz": 13112.152303418352
+    },
+    "v2_14_linear": {
+      "n": 10000,
+      "mean_us": 34.94465,
+      "median_us": 27.8,
+      "p95_us": 53.0,
+      "p99_us": 63.0,
+      "throughput_hz": 28616.683812829717
+    },
+    "v2_21_conversion": {
+      "n": 10000,
+      "mean_us": 43.53709,
+      "median_us": 36.3,
+      "p95_us": 73.5,
+      "p99_us": 82.1,
+      "throughput_hz": 22968.921441465198
+    },
+    "v2_21_cached": {
+      "n": 10000,
+      "mean_us": 5.64057,
+      "median_us": 5.4,
+      "p95_us": 6.7,
+      "p99_us": 10.9,
+      "throughput_hz": 177287.04723104223
+    },
+    "a32_20_exact": {
+      "n": 10000,
+      "mean_us": 82.34041,
+      "median_us": 81.5,
+      "p95_us": 86.6,
+      "p99_us": 98.3,
+      "throughput_hz": 12144.705133238953
+    },
+    "a32_20_core_exact": {
+      "n": 10000,
+      "mean_us": 53.78292,
+      "median_us": 52.8,
+      "p95_us": 54.9,
+      "p99_us": 94.5,
+      "throughput_hz": 18593.26343753742
+    },
+    "a32_20_lut": {
+      "n": 10000,
+      "mean_us": 57.39438,
+      "median_us": 56.1,
+      "p95_us": 62.7,
+      "p99_us": 81.7,
+      "throughput_hz": 17423.30869329018
+    },
+    "a32_20_core_lut": {
+      "n": 10000,
+      "mean_us": 29.59659,
+      "median_us": 29.3,
+      "p95_us": 30.9,
+      "p99_us": 36.1,
+      "throughput_hz": 33787.67621540184
+    }
+  },
+  "v2_initialization_ms": 75.1434000012523,
+  "v2_equivalence": {
+    "poses": 2004,
+    "max_difference_mm": 5.09992042374563e-06,
+    "allowed_difference_mm": 1e-05
+  }
+}

@@ -1,0 +1,16 @@
+TsenseI hand web runtime
+
+Three.js 0.186.0 - MIT License (LICENSE included alongside runtime).
+https://github.com/mrdoob/three.js
+
+MediaPipe Tasks Vision 1.0.1 - Apache License 2.0.
+Full license text is included in APACHE-2.0.txt.
+Copyright The MediaPipe Authors. Runtime license notices retained in scripts.
+https://github.com/google-ai-edge/mediapipe
+https://www.apache.org/licenses/LICENSE-2.0
+
+The active TsenseI logo (static/brand/tsensei-logo.png) is the user-supplied
+PNG, copied without modification. It is used for the header. The favicon
+(static/brand/tsensei-favicon.svg) embeds the same PNG and clips its viewport
+to the blue mark, preserving transparency without redrawing the artwork.
+The legacy SVG files are reconstructions and are no longer used by the page.

@@ -1,0 +1,24 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______________ test_keypoint_mirroring_and_no_v2_state_mutation _______________
+tests/test_hand_profile_v3_2.py:135: in test_keypoint_mirroring_and_no_v2_state_mutation
+    np.testing.assert_allclose(b.compute({right_name(k): v for k, v in q.items()}),
+E   AssertionError: 
+E   Not equal to tolerance rtol=1e-07, atol=1e-12
+E   
+E   Mismatched elements: 3 / 63 (4.76%)
+E   Mismatch at indices:
+E    [1, 0]: 0.023697566108829827 (ACTUAL), 0.021886512107268094 (DESIRED)
+E    [1, 1]: -0.0006220892248084819 (ACTUAL), -0.0018314282013627316 (DESIRED)
+E    [1, 2]: -0.06503603773398306 (ACTUAL), -0.06810295692389248 (DESIRED)
+E   Max absolute difference among violations: 0.00306692
+E   Max relative difference among violations: 0.66032563
+E    ACTUAL: array([[-0.005368,  0.016357, -0.093041],
+E          [ 0.023698, -0.000622, -0.065036],
+E          [ 0.06059 ,  0.015316, -0.021789],...
+E    DESIRED: array([[-0.005368,  0.016357, -0.093041],
+E          [ 0.021887, -0.001831, -0.068103],
+E          [ 0.06059 ,  0.015316, -0.021789],...
+=========================== short test summary info ============================
+FAILED tests/test_hand_profile_v3_2.py::test_keypoint_mirroring_and_no_v2_state_mutation
+1 failed in 0.96s

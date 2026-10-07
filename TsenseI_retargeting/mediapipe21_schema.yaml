@@ -1,0 +1,28 @@
+schema_version: 1
+source: mediapipe_hands_21
+unit: meter
+keypoints:
+  - {id: 0, name: Wrist, finger: palm, semantic: wrist, parent: null, child: null, type: root, weight: 0.5}
+  - {id: 1, name: ThumbCMC, finger: thumb, semantic: cmc, parent: Wrist, child: ThumbMCP, type: joint_proxy, weight: 0.7}
+  - {id: 2, name: ThumbMCP, finger: thumb, semantic: mcp, parent: ThumbCMC, child: ThumbIP, type: joint_proxy, weight: 1.0}
+  - {id: 3, name: ThumbIP, finger: thumb, semantic: ip, parent: ThumbMCP, child: ThumbTip, type: joint_proxy, weight: 1.0}
+  - {id: 4, name: ThumbTip, finger: thumb, semantic: tip, parent: ThumbIP, child: null, type: fingertip, weight: 2.0}
+  - {id: 5, name: IndexMCP, finger: index, semantic: mcp, parent: Wrist, child: IndexPIP, type: joint_proxy, weight: 1.0}
+  - {id: 6, name: IndexPIP, finger: index, semantic: pip, parent: IndexMCP, child: IndexDIP, type: joint_proxy, weight: 1.0}
+  - {id: 7, name: IndexDIP, finger: index, semantic: dip, parent: IndexPIP, child: IndexTip, type: joint_proxy, weight: 1.0}
+  - {id: 8, name: IndexTip, finger: index, semantic: tip, parent: IndexDIP, child: null, type: fingertip, weight: 2.0}
+  - {id: 9, name: MiddleMCP, finger: middle, semantic: mcp, parent: Wrist, child: MiddlePIP, type: joint_proxy, weight: 1.0}
+  - {id: 10, name: MiddlePIP, finger: middle, semantic: pip, parent: MiddleMCP, child: MiddleDIP, type: joint_proxy, weight: 1.0}
+  - {id: 11, name: MiddleDIP, finger: middle, semantic: dip, parent: MiddlePIP, child: MiddleTip, type: joint_proxy, weight: 1.0}
+  - {id: 12, name: MiddleTip, finger: middle, semantic: tip, parent: MiddleDIP, child: null, type: fingertip, weight: 2.0}
+  - {id: 13, name: RingMCP, finger: ring, semantic: mcp, parent: Wrist, child: RingPIP, type: joint_proxy, weight: 1.0}
+  - {id: 14, name: RingPIP, finger: ring, semantic: pip, parent: RingMCP, child: RingDIP, type: joint_proxy, weight: 1.0}
+  - {id: 15, name: RingDIP, finger: ring, semantic: dip, parent: RingPIP, child: RingTip, type: joint_proxy, weight: 1.0}
+  - {id: 16, name: RingTip, finger: ring, semantic: tip, parent: RingDIP, child: null, type: fingertip, weight: 2.0}
+  - {id: 17, name: PinkyMCP, finger: little, semantic: mcp, parent: Wrist, child: PinkyPIP, type: joint_proxy, weight: 1.0}
+  - {id: 18, name: PinkyPIP, finger: little, semantic: pip, parent: PinkyMCP, child: PinkyDIP, type: joint_proxy, weight: 1.0}
+  - {id: 19, name: PinkyDIP, finger: little, semantic: dip, parent: PinkyPIP, child: PinkyTip, type: joint_proxy, weight: 1.0}
+  - {id: 20, name: PinkyTip, finger: little, semantic: tip, parent: PinkyDIP, child: null, type: fingertip, weight: 2.0}
+notes:
+  - Palm width / scale uses IndexMCP (5) to PinkyMCP (17).
+  - MediaPipe has no separate Palm or non-thumb metacarpal landmarks.

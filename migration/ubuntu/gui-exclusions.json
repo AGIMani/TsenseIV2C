@@ -1,0 +1,607 @@
+{
+  "scope": "Ubuntu web-only migration staging; original project untouched",
+  "removed_file_count": 75,
+  "removed_files": [
+    {
+      "path": "ui_form2.py",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "39df2501870449b631e40a683b27993b0cca35730d95422048cb24a06629cba8",
+      "bytes": 50144
+    },
+    {
+      "path": "ui_form3.py",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "21bce524c25ceb30aae64ddc10b4af9bd474edec708cb60fa3827085c313e037",
+      "bytes": 54217
+    },
+    {
+      "path": "ui_form.py",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "492c4ebbe5f2ae35fe3e81a8029e238986feda3236ecd3088da83d8b7072c018",
+      "bytes": 16413
+    },
+    {
+      "path": "ui_form5.py",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "db03dda2acee1da34e390a879531cf2f9cf04f18166d312d718061b57be5062a",
+      "bytes": 114829
+    },
+    {
+      "path": "form_display.ui",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "a88ecd33ed14ef6e035e0e44a83119bedabbcd6d1014d84ce7e119df15ad0317",
+      "bytes": 2775
+    },
+    {
+      "path": "form3.ui",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "8372e231312203d336fee97b48681fe39f9ce69e370b6cf74c6431c7fed32021",
+      "bytes": 37882
+    },
+    {
+      "path": "form2.ui",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "26d09764763a3ebccb5e7c60039de691bf9d3e7be6e97409fc62f571a0fad703",
+      "bytes": 57495
+    },
+    {
+      "path": "form.ui",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "6be3855b2bc100320dd482afeb9240efa6dd609462766c636835a181de12be38",
+      "bytes": 14047
+    },
+    {
+      "path": "form5.ui",
+      "reason": "Unmaintained desktop Qt interface",
+      "sha256": "7db247dbae420800feaca14d664c00e0dddcb890e9c349e525d23aa8c70e9fe6",
+      "bytes": 126760
+    },
+    {
+      "path": "rsc.qrc",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "99e26727508d6fee9d173b304bcdc5c9045ef292d01ee60f24cbb1fb6c1a24c1",
+      "bytes": 159
+    },
+    {
+      "path": "rc_rsc.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "fb68a5211337f4ce7eb244d6cc9225949303e0b9f76185d9e8f88a124562a98e",
+      "bytes": 141151
+    },
+    {
+      "path": "rsc_rc.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "2b598ae25f6dedce7bca78aa26fa2863503aeaa8d8e7f4ec841ec0b764f18757",
+      "bytes": 158494
+    },
+    {
+      "path": "A3_USB_Downlink.pyw",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "6bd13249664fbf398a5ecfba11b77b177befea6b3722f1428bf3c29db1967589",
+      "bytes": 126044
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_10_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "5f443188e308eb2ba4bc7907c66bb68da4c2f7b4e8182041677e59ede75e3bae",
+      "bytes": 197465
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_7_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "770ca8775ddb487a2b69582132b4545f5e94a69c7a52da7a8b4068882ba793a3",
+      "bytes": 228657
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_20_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "412cde5fb9579b08db4563039d73cbf43a5d2f52f46fc8410decce949282b2e4",
+      "bytes": 149558
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_6_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "6a15b93c5fc5b35cd833542b78ea424549226d92dd52b8ac62c082bcd7efd371",
+      "bytes": 211837
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_12_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "9564456de66621bfac84f34db3bc379643866e970c2f13a9473a17dfedd137ff",
+      "bytes": 194411
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_19_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "e62aa409ead4481faea721bd5e0a4f4ca64e9f762df894e95fc459871a6c1f9b",
+      "bytes": 168379
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_15_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "429e92fa630ab36abb8bf5049530f0bea43442e8952053f0567855733e9b32ff",
+      "bytes": 159600
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_17_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "f65463eb2e78344a67fab05987728136e12293e70c2ebf427f80e79811389b34",
+      "bytes": 173770
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_18_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "b8e78ad677c180efe39a5f166205f3dcfb17822f00a2fe1005a912cf84ec258e",
+      "bytes": 206326
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_22_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "e733977753832db3d1a619e09af962c549e5b339388a57ac26c916b22810ec38",
+      "bytes": 198877
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_14_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "9b82a0afd7f04eebb92510e281aed16b71523ee929f635fcdab33fb3d5816277",
+      "bytes": 156846
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_16_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "690b6eece10c8143a7e6829ff00a38e8905a9e4ec85fe6a528383c98f61f639d",
+      "bytes": 180187
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_5_944_抠图.png",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "83a0619bb5273551673ee5d943da1c00477ac4082bca2f12b06c4b79d67cd000",
+      "bytes": 1092158
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_21_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "7bd2925721b91ca82412ba0f26d231cee9c6cc38c559c5ad372353880146fbce",
+      "bytes": 183445
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_8_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "34803d9c60b6d73524f918d4a5d4405a8b773193c64c7aa263272a7500ecb65f",
+      "bytes": 192515
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_11_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "7310064af419cb267892226f938634f6e567f9a8888f093c87e46b3ee495e3e3",
+      "bytes": 173087
+    },
+    {
+      "path": "picture/a30/Codex 图像 2026年9月23日 19_29_41.png",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "cc494bce014c5ad335eb1993671eddf547799d3803c3ab28d4aec6db6d77c320",
+      "bytes": 3161627
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_9_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "be554ff088e3dfc1f2efefd5f3bb2e30143d6dccf9c0bf76373091a4003db251",
+      "bytes": 198450
+    },
+    {
+      "path": "picture/a30/A30_灵巧手抓取展示.png",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "884331388220327b229ae4bb1d2bcd63b8594b01b5bd6b6103c5b4cf80c320a2",
+      "bytes": 1757512
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_13_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "e4cfe4a89caf37f386330e612d7610d55fb73bfb6ba0b5f8f12692f9cbc6ddd4",
+      "bytes": 279142
+    },
+    {
+      "path": "picture/a30/微信图片_20260923172646_5_944.jpg",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "ee749f558bf24fdc54b97101d21b79600d150eb5b5de9f846158e5fefd4a8215",
+      "bytes": 167004
+    },
+    {
+      "path": "func/kapandji.txt",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "61557d49ead0baf0bcb362402d93a75a8e5e57b5f90969a63d50f45777541d19",
+      "bytes": 9361
+    },
+    {
+      "path": "func/20260624_105154.mp4",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "f223928143cc1df96935282892966ceb78f68a0ed18a0602c1c289e879d5586a",
+      "bytes": 2323089
+    },
+    {
+      "path": "func/talk.txt",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "6847cf76c7bf21c0d05729882edd666ebdf268dd9121a383e6b83a5b179ee502",
+      "bytes": 1805
+    },
+    {
+      "path": "func/20260624_111410.mp4",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "ae7e9517b6458bb8589df6d5c5e1c2c082995caede7e5229506e7338a6a905b4",
+      "bytes": 914847
+    },
+    {
+      "path": "func/新建 文本文档.txt",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "89fdd298873a60095f288ccad2e2944fd2ad2148ba49b0770b39dddf83b40d56",
+      "bytes": 4522
+    },
+    {
+      "path": "func/motion.txt",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "d167375e0ba35ac2f9148fd60728f386da2108c379769ce0d164554c68b4c263",
+      "bytes": 10286
+    },
+    {
+      "path": "func/test.txt",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "1441d47c7ec3ee9e78dbd972767d64ebe1a1f19308462b0fcea1e75e25fa26be",
+      "bytes": 1689
+    },
+    {
+      "path": "func/gitcommand.txt",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "8354ceeb83cf90e244cf2c4d87855b833c1938cb740a91a4370e0b9aaa33367a",
+      "bytes": 1334
+    },
+    {
+      "path": "func/urdf问题.md",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "bytes": 0
+    },
+    {
+      "path": "func/20260618_145457.mp4",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "699c14463130213d8584edb44f38e8ece281fcd736af1607bdf3f93710425417",
+      "bytes": 4716839
+    },
+    {
+      "path": "example/display.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "475f835e2c3305422842557cdd742715449b20f7d32bee8acc861767a9d333a8",
+      "bytes": 2858
+    },
+    {
+      "path": "example/main.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "6bcb1d6be4e49554f4d57bae10302f8699aad23b4b99d45136f094c29fb53350",
+      "bytes": 2633
+    },
+    {
+      "path": "src/app/widget.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "b4009f50b2a4b414fbe3bd72ab0a67fd743bb986ad8c4907076e242d117c150b",
+      "bytes": 119312
+    },
+    {
+      "path": "src/app/__init__.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "a74af126dc6c65ad7549f0210a2704172328336983413d80c18d0df353c9d824",
+      "bytes": 113
+    },
+    {
+      "path": "src/camera/__init__.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "4a1ff31c046fcc58a0d638b790d1500d9b829e4221aa475e05d8a9997038d1b9",
+      "bytes": 295
+    },
+    {
+      "path": "src/camera/camera.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "3dd4b181a55dd78583b5ab0ec7d86d0630c00b4620165bb7544ef276d385ac61",
+      "bytes": 46270
+    },
+    {
+      "path": "src/skeleton/display.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "27b0b228708cf79a78fa3e8c725287fb5618b638089fd5fecb92039dce847676",
+      "bytes": 14433
+    },
+    {
+      "path": "src/skeleton/__init__.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "03f360ba79edec257c5923a61ad31c164ca5d1d134297cc2e71a001fe162b9cd",
+      "bytes": 542
+    },
+    {
+      "path": "src/skeleton/tracker.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "e3ed39ad763c1cd384119ce21492c7d86457fb0654cb9601412480c9683bf8a3",
+      "bytes": 92156
+    },
+    {
+      "path": "src/urdf/display.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "325d2c33ef1e4c893a4ff3226c97e54303770d8875f29ad897b1fd8864c0ead1",
+      "bytes": 41902
+    },
+    {
+      "path": "src/urdf/__init__.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "ab18091a99b6fa67cdc1c1b1b4bc93ed9e323e55fb3ef3f0a98bc638b2c1ac95",
+      "bytes": 228
+    },
+    {
+      "path": "src/urdf/gl_widget.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "d134d20588c63b8b05cf77f08b7340991316cccde806930f5ecb87f0ae7906d0",
+      "bytes": 33636
+    },
+    {
+      "path": "src/metal_studio/renderer.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "9bf997e82f52ccddf41ef4524784ace3fe1cbedef5ac81250a6020156bda6450",
+      "bytes": 11015
+    },
+    {
+      "path": "src/metal_studio/__init__.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "235bbfceca5086df31a6fec72d20f8ad4a3a041762e8cd507e6274a19bdf88fd",
+      "bytes": 62
+    },
+    {
+      "path": "src/metal_studio/model.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "e84e5469d0197872547fdd9ebc1890781f9c4354771b61e71a12bd1b4cd4a049",
+      "bytes": 7635
+    },
+    {
+      "path": "src/metal_studio/scene.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "405bb9041e4f2f7ae09f75d15251879947e052e47b90bcbbeaf38d618a421b28",
+      "bytes": 4322
+    },
+    {
+      "path": "src/metal_studio/shaders.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "9c52ef137ede705470153a5a78520f3a15ea05ba737d39b4419b04a8cb7e3233",
+      "bytes": 5263
+    },
+    {
+      "path": "src/metal_studio/ui.py",
+      "reason": "Unmaintained desktop interface; web dependencies retained separately",
+      "sha256": "e530b00ac822990bf512d6a46ba2c83e65a149f51d31e27f105428060952572d",
+      "bytes": 28722
+    },
+    {
+      "path": "src/ui/form5_window.py",
+      "reason": "Desktop-only UI; not imported by web Form2 adapter",
+      "sha256": "4dc59814c1e184c2040c2d61c470f9c589a7b384a1a7fe0761422b43e2f9230c",
+      "bytes": 18587
+    },
+    {
+      "path": "src/ui/display_window.py",
+      "reason": "Desktop-only UI; not imported by web Form2 adapter",
+      "sha256": "8a4db19f55df1456d95fea2331db6ba65f93454511aeb3b30f1ba4823eacb42c",
+      "bytes": 23576
+    },
+    {
+      "path": "src/ui/form3.py",
+      "reason": "Desktop-only UI; not imported by web Form2 adapter",
+      "sha256": "21bce524c25ceb30aae64ddc10b4af9bd474edec708cb60fa3827085c313e037",
+      "bytes": 54217
+    },
+    {
+      "path": "src/ui/form_display.py",
+      "reason": "Desktop-only UI; not imported by web Form2 adapter",
+      "sha256": "2ebacf0b01b1d8fe46aa81306771af48d7d489ef04a68ca1b598b7fa0537c8f7",
+      "bytes": 4187
+    },
+    {
+      "path": "src/ui/form3_window.py",
+      "reason": "Desktop-only UI; not imported by web Form2 adapter",
+      "sha256": "b69fefd28856f28cdf38561f7e0b0e6c20793d94a4c8cb5e8840a61b16d6b204",
+      "bytes": 16292
+    },
+    {
+      "path": "src/ui/form.py",
+      "reason": "Desktop-only UI; not imported by web Form2 adapter",
+      "sha256": "31024d691b65ad7f8fc4c1aee7d1cbd59fb12e752a8025c81c9a4ff885f48e41",
+      "bytes": 17550
+    },
+    {
+      "path": "src/ui/form5.py",
+      "reason": "Desktop-only UI; not imported by web Form2 adapter",
+      "sha256": "ca5844f6e6f9ac07df2921c0589b1e42c56c2b20dba43cf5241d7b1e7c3753ee",
+      "bytes": 113402
+    },
+    {
+      "path": "src/ui/form4.py",
+      "reason": "Desktop-only UI; not imported by web Form2 adapter",
+      "sha256": "b6acc0501eddac499c3cc82224b023aa24308c5ea6f543e2d157bc28aad30c89",
+      "bytes": 3863
+    },
+    {
+      "path": "tests/test_recording_serial_lifecycle.py",
+      "reason": "Tests only for removed desktop windows/reference GUI",
+      "sha256": "00d89752223041eb1ae50eddb1b0a22a3b8405acb1df06f413b394d8987f9076",
+      "bytes": 4320
+    },
+    {
+      "path": "tests/test_metal_studio.py",
+      "reason": "Tests only for removed desktop windows/reference GUI",
+      "sha256": "3732099e8351e92fef2b644edf490e3af54f214eebd14f97af6eed0e43b55b84",
+      "bytes": 5186
+    },
+    {
+      "path": "tests/test_form5_ui_refresh_efficiency.py",
+      "reason": "Tests only for removed desktop windows/reference GUI",
+      "sha256": "56f0422843406825b3c634e4df1289d4383efbd5dae4bdabe0a7af9b99128ca8",
+      "bytes": 2139
+    },
+    {
+      "path": "tests/test_light_test_viewer.py",
+      "reason": "Tests only for removed desktop windows/reference GUI",
+      "sha256": "09c0f957b2104896b7b222986a1246a448ba73006e0741616d970a26e39143dd",
+      "bytes": 1431
+    },
+    {
+      "path": "tests/test_record_a30_reference.py",
+      "reason": "Tests only for removed desktop windows/reference GUI",
+      "sha256": "2c467f31cff9d0a82852fbb3b397ea192580f0324004a8ae0521f31fe6228cdb",
+      "bytes": 1751
+    }
+  ],
+  "test_adjustments": [
+    {
+      "path": "tests/test_a30_downlink.py",
+      "change": "Read the retained pure protocol fixture instead of the removed GUI application."
+    },
+    {
+      "path": "online_control/online_motion_play/test_a30.py",
+      "change": "Read the retained pure protocol fixture instead of the removed GUI application."
+    },
+    {
+      "path": "tests/test_init_pose.py",
+      "change": "Removed two desktop renderer/studio cases; retained shared init/solver/Ruckig checks."
+    },
+    {
+      "path": "tests/test_light_test_v3_2.py",
+      "change": "Removed desktop URDF renderer case only."
+    }
+  ],
+  "retained_protocol_fixture": "tests/fixtures/a30_protocol_reference.py",
+  "retained_shared_qt": [
+    "src/ui/__init__.py",
+    "src/ui/form2.py",
+    "src/ui/form2_window.py",
+    "src/ui/scalable_layout.py"
+  ],
+  "post_refactor_removed": [
+    {
+      "path": "src/ui/__init__.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "src/ui/form2.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "src/ui/form2_window.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "src/ui/scalable_layout.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "online_control/online_motion_track/pipeline_v2/main.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "online_control/online_motion_track/pipeline_v2/skeleton_3d.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "online_control/online_motion_track/pipeline_v3_2/main.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "online_control/online_motion_track/pipeline_v3_2/worker.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tools/edit_robot_keypoints_21.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tools/keypoint_view3d.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tools/keypoint_mesh_renderer.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tools/keypoint_retarget_preview.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tools/bench_motion_playback.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tools/view_hand_profile.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tools/metal_studio.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tools/metal_studio_requirements.txt",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand.scene1.json",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand_20260911_114035.png",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand_20260911_114035.scene.json",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand_20260911_114354.png",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand_20260911_114354.scene.json",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand_20260911_115110.png",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand_20260911_115110.scene.json",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand_dof.png",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/hand_dof.scene.json",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/v2_copper_opposition.png",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "renders/metal_studio/v2_copper_opposition.scene.json",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tests/test_form2_motion_timeline.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tests/test_form2_onekey_zero_v3_sync.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tests/test_form2_ruckig_downlink.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    },
+    {
+      "path": "tests/test_keypoint_editor_3d.py",
+      "reason": "Retired Qt desktop implementation; web backend has pure Python equivalent"
+    }
+  ]
+}

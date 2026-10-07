@@ -1,0 +1,4 @@
+# Native Ubuntu web runtime with direct Wuji SDK acquisition.
+-r requirements-full.txt
+wuji-sdk==2026.9.22
+cryptography==49.0.0

@@ -1,0 +1,105 @@
+{
+  "model_name": "TsenseI_A3.2",
+  "vendor_robot_name": "A3.1V6 26.9.27(6)",
+  "source_joint_schema": "a32_with_id_semantic_chain",
+  "left_source": "source/left_original.urdf",
+  "left_source_sha256": "64129ebbbad4f90b9ed8bd2a9322e1b4524399b695be66ddf934857e685078bc",
+  "left_source_name_map": {
+    "left_hand_pinky_SWING_joint": "left_hand_pinky_swing_joint",
+    "left_hand_pinky_SWING_link": "left_hand_pinky_swing_link"
+  },
+  "mesh_unit_corrections": [
+    {
+      "link": "base_link",
+      "mesh": "base_link.STL",
+      "scale_multiplier": [
+        0.001,
+        0.001,
+        0.001
+      ],
+      "source_span": [
+        50.91058349609375,
+        99.00718688964844,
+        105.30592346191406
+      ],
+      "reason": "This STL uses millimetres; the remaining vendor meshes and URDF use metres",
+      "source_mesh_sha256": "c753d840a6f190a5256552646a2f9811eec7f43ef66392fe84369313a3d487a3"
+    }
+  ],
+  "canonical_from_source_root": [
+    [
+      1.0,
+      0.0,
+      0.0,
+      0.014699999999839869
+    ],
+    [
+      0.0,
+      1.0,
+      0.0,
+      -0.001499999999776091
+    ],
+    [
+      0.0,
+      0.0,
+      1.0,
+      -2.983724378680108e-16
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "canonical_palm_position": [
+    0.0237,
+    0.0065,
+    0.0441380069844
+  ],
+  "right_hand_is_provisional_mirror": true,
+  "reflection": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "oversized_stl_conversions": [],
+  "generated_sha256": {
+    "meshes_right/Right_hand_palm_link.STL": "b0d11caccbfeb5b80881f59d4361527d15f1775fdb470b33c4707d09add31805",
+    "meshes_right/base_link.STL": "f5068c3d98ac5580f1c90250f229ea88e35b977919c929ced3ea7186b8d0d79c",
+    "meshes_right/right_hand_index_DIP_link.STL": "a67f9d5c243dc5e9d9dacfd164cb10f2a1284ba8b06de9b398253417470036b0",
+    "meshes_right/right_hand_index_MCP_link.STL": "dfa8aea8374cf8212b2d6179964f413aefeb9394dc2026fba94c21eacc690273",
+    "meshes_right/right_hand_index_PIP_link.STL": "5740c195666a93d35d128f60e4c6ee347ac925f0f415c8d7a55d9023c5a6c0b4",
+    "meshes_right/right_hand_index_swing_link.STL": "d63a4122aec4e3f1c476843378e87275e19ee2a236a82e18a21ef32e0fa469a6",
+    "meshes_right/right_hand_mid_DIP_link.STL": "8331b40b725f72e629f26f239379ff3a38cb440ed484e3d066140bc66b4dc8a9",
+    "meshes_right/right_hand_mid_MCP_link.STL": "cce658b07646cf05ba85f987f6d17cfd01c713614c5375533066118aa95c108b",
+    "meshes_right/right_hand_mid_PIP_link.STL": "c1f50571b0ef55f3cf580d1bd844902c2796fa249dd03a8f2a54196872029ae4",
+    "meshes_right/right_hand_mid_swing_link.STL": "c717fb76bd3a26b726e415729af9ddf0d260d71668ae628c919d46cb544986fa",
+    "meshes_right/right_hand_pinky_DIP_link.STL": "f4a1e38d4d82ffd1c110b63c0a5b6270645fa1b04a12fe96f789997ad87c95bf",
+    "meshes_right/right_hand_pinky_MCP_link.STL": "b062662f397526fb9dbff41628d608ab114bddc2f1f3948542b2db9a147e98a3",
+    "meshes_right/right_hand_pinky_PIP_link.STL": "191dcef38b55a76088c7424f55683773e487d8c70c0df70ec1c46a346dd1099f",
+    "meshes_right/right_hand_pinky_SWING_link.STL": "e9bf1f3e834f71f5484b099fec868535d380bf125b38f319a5cbe5f86f00aa38",
+    "meshes_right/right_hand_ring_DIP_link.STL": "dedfcc2e674b81a39c38557649fc934fbce3e00fa30393d1bf196f943d474e4d",
+    "meshes_right/right_hand_ring_MCP_link.STL": "de3d8df18086569a045632a7a85b3e8a2890c9e6bd6d525b6560abe3591453bc",
+    "meshes_right/right_hand_ring_PIP_link.STL": "d8fc9a5e2bd7b1f95c576d1e55b19e46c797d6a8b2e0538f7a9e5aca183ef2a7",
+    "meshes_right/right_hand_ring_swing_link.STL": "647de53ae285fe0c45d4bec9b3e4477e9be996bfe99dd302c4173d2cec52eefa",
+    "meshes_right/right_hand_thumb_MCP_link.STL": "57e145a93222fdc65774403c47fff6c0eafabf17828dc659c22765b00f90396c",
+    "meshes_right/right_hand_thumb_PIP_link.STL": "e00e81da98e65f4418b7b2030877de754ce686eceae1cfb423931f480eb8b60f",
+    "meshes_right/right_hand_thumb_rota_block_link.STL": "1da15e34b7d84e0e58c50e86649458192ee3e955bbfdaa13482e9142be59684a",
+    "meshes_right/right_hand_thumb_rotaback_link2.STL": "9f854fdadbd7c12a9ff99970a3376e4ad523c41fcd84a5cd374106b61e24e543",
+    "urdf/TsenseI_left.urdf": "aa59539b5c9d209d5156cedb78cd50e68d856c000c4718edd9b5bde72173271d",
+    "urdf/TsenseI_right.urdf": "f762a192cd5f81c2715a07e9bcffebe0e3e3d6c78e6cecef90e6d292b23b7221"
+  }
+}

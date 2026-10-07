@@ -1,0 +1,33 @@
+<!doctype html><html lang="zh"><meta charset="utf-8"><title>Worker 本机模拟串口验收</title>
+<style>body{font:16px system-ui;margin:25px}button{margin:8px;padding:12px}pre{white-space:pre-wrap}canvas{width:250px;height:150px}</style>
+<h1>Worker 本机模拟串口验收</h1><p>只连接内存模拟H7，不申请或使用任何真实USB串口。</p>
+<button id="probe">检查 Worker 串口支持</button><button id="normal">Worker 正常负载</button><button id="busy">Worker + 主线程繁忙</button><button id="main">主线程对照 + 繁忙</button>
+<canvas id="canvas" width="500" height="300"></canvas><pre id="result">等待测试</pre>
+<script type="module">
+import {runBenchmark} from './bench-worker-core.js';
+const output=document.querySelector('#result');
+document.querySelector('#probe').onclick=()=>{
+ const w=new Worker('/serial-worker.js',{type:'module'});w.onmessage=e=>{output.textContent=JSON.stringify(e.data,null,2);w.terminate();};w.postMessage({type:'probe',id:1});
+};
+let load;
+function stress(){const ctx=document.querySelector('canvas').getContext('2d');load=setInterval(()=>{const end=performance.now()+40;while(performance.now()<end){ctx.fillStyle=`hsl(${Math.random()*360},50%,50%)`;ctx.fillRect(Math.random()*500,Math.random()*300,30,30);}},100);}
+async function start(mode){
+ document.querySelectorAll('button').forEach(b=>b.disabled=true);output.textContent='准备模拟设备…';
+ const data={seconds:10,mode,clientId:crypto.randomUUID()};let worker;
+ try{
+  let result;
+  if(mode==='main_busy'){
+   result=await runBenchmark({...data,onProgress:()=>{stress();output.textContent='主线程40ms/100ms压力测试中…';}});
+  }else{
+   worker=new Worker('/bench-worker.js',{type:'module'});
+   result=await new Promise((resolve,reject)=>{
+    worker.onmessage=({data:r})=>{if(r.phase==='sampling'){if(mode==='worker_busy')stress();output.textContent='采样10秒…';}
+     else if(r.result)resolve(r.result);else if(r.error)reject(Error(r.error));};
+    worker.onerror=e=>reject(Error(e.message));worker.postMessage(data);
+   });
+  }
+  output.textContent=JSON.stringify(result,null,2);
+ }catch(e){output.textContent=e.stack;}finally{clearInterval(load);worker?.terminate();document.querySelectorAll('button').forEach(b=>b.disabled=false);}
+}
+document.querySelector('#normal').onclick=()=>start('worker_normal');document.querySelector('#busy').onclick=()=>start('worker_busy');document.querySelector('#main').onclick=()=>start('main_busy');
+</script></html>

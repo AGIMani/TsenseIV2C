@@ -1,0 +1,9 @@
+UI STATE A3.2 控制连接中断：会话已失效，请重新开始 输入接收中断，正在重试 []
+file:///tmp/hand-ubuntu-20261006/browser-qa/webxr-source.mjs:51
+  assert(token.length>=32);
+               ^
+
+TypeError: Cannot read properties of undefined (reading 'length')
+    at file:///tmp/hand-ubuntu-20261006/browser-qa/webxr-source.mjs:51:16
+
+Node.js v24.21.0

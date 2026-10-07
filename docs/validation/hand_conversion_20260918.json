@@ -1,0 +1,40 @@
+{
+  "python": "3.11.15",
+  "seed": 32020918,
+  "scope": "Default bundled geometry; finite in-range poses; malformed inputs covered separately by pytest",
+  "v2": {
+    "random_poses": 50000,
+    "dense_motor_samples": 57484,
+    "max_roundtrip_error_deg": 0.00043833353839772826,
+    "fallback_events": 0,
+    "unexpected_failures": 0,
+    "nonfinite_outputs": 0,
+    "out_of_range_outputs": 0
+  },
+  "a32_left": {
+    "method": "lut",
+    "random_poses": 50000,
+    "dense_motor_samples": 491580,
+    "max_lut_vs_exact_error_mm": 6.869901002237722e-07,
+    "unexpected_failures": 0,
+    "nonfinite_outputs": 0,
+    "out_of_range_outputs": 0
+  },
+  "a32_right": {
+    "method": "lut",
+    "random_poses": 50000,
+    "dense_motor_samples": 491580,
+    "max_lut_vs_exact_error_mm": 6.869901002237722e-07,
+    "unexpected_failures": 0,
+    "nonfinite_outputs": 0,
+    "out_of_range_outputs": 0
+  },
+  "sha256": {
+    "src/kinematics/finger_linkage.py": "e0589c084708ddad2eb07a6e5ab2e2a86cec2326e43c4cf2450b5b73d034c4e9",
+    "src/usb/offline.py": "9428ad94439acb45b41f5a78d8f9247e49189a5cf23afc3d22668184983cf0e0",
+    "src/a32_kinematics/mapper.py": "fd2195b17205c17adce0c08bcf28da06be7926c92dc0a1269c7a502877ac6bb3",
+    "src/a32_kinematics/a32_fast.py": "c7320bb5199bdfecef27d32a898889fa6b66680afff8931448575c7604461ca1",
+    "src/a32_kinematics/model/geometry_inferred.mat": "3fe5f224c23458f0303809eb3f71bb38b6122c15038b79632f89bbd420589143"
+  },
+  "elapsed_s": 12.929916900000535
+}

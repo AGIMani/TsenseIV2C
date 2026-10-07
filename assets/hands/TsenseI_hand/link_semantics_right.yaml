@@ -1,0 +1,28 @@
+robot_name: Right hand URDF model
+base_link: base_link
+links:
+  palm: base_link
+  thumb:
+    metacarpal: right_hand_thumb_MCP_link
+    proximal: right_hand_thumb_PIP_link
+    distal: right_hand_thumb_PIP_link
+  index:
+    metacarpal: base_link
+    proximal: right_hand_index_MCP_link
+    intermediate: right_hand_index_PIP_link
+    distal: right_hand_index_DIP_link
+  middle:
+    metacarpal: base_link
+    proximal: right_hand_mid_MCP_link
+    intermediate: right_hand_mid_PIP_link
+    distal: right_hand_mid_DIP_link
+  ring:
+    metacarpal: base_link
+    proximal: right_hand_ring_MCP_link
+    intermediate: right_hand_ring_PIP_link
+    distal: right_hand_ring_DIP_link
+  little:
+    metacarpal: base_link
+    proximal: right_hand_pinky_MCP_link
+    intermediate: right_hand_pinky_PIP_link
+    distal: right_hand_pinky_DIP_link

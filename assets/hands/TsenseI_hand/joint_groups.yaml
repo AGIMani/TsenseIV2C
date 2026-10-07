@@ -1,0 +1,55 @@
+robot_name: Left hand URDF model
+active_joints:
+- left_hand_thumb_rota_joint
+- left_hand_thumb_swing_joint
+- left_hand_thumb_MCP_joint
+- left_hand_thumb_PIP_joint
+- left_hand_index_swing_joint
+- left_hand_index_MCP_joint
+- left_hand_index_PIP_joint
+- left_hand_index_DIP_joint
+- left_hand_mid_swing_joint
+- left_hand_mid_MCP_joint
+- left_hand_mid_PIP_joint
+- left_hand_mid_DIP_joint
+- left_hand_ring_swing_joint
+- left_hand_ring_MCP_joint
+- left_hand_ring_PIP_joint
+- left_hand_ring_DIP_joint
+- left_hand_pinky_rota_joint
+- left_hand_pinky_swing_joint
+- left_hand_pinky_MCP_joint
+- left_hand_pinky_PIP_joint
+- left_hand_pinky_DIP_joint
+fingers:
+  thumb:
+    joints:
+    - left_hand_thumb_rota_joint
+    - left_hand_thumb_swing_joint
+    - left_hand_thumb_MCP_joint
+    - left_hand_thumb_PIP_joint
+  index:
+    joints:
+    - left_hand_index_swing_joint
+    - left_hand_index_MCP_joint
+    - left_hand_index_PIP_joint
+    - left_hand_index_DIP_joint
+  middle:
+    joints:
+    - left_hand_mid_swing_joint
+    - left_hand_mid_MCP_joint
+    - left_hand_mid_PIP_joint
+    - left_hand_mid_DIP_joint
+  ring:
+    joints:
+    - left_hand_ring_swing_joint
+    - left_hand_ring_MCP_joint
+    - left_hand_ring_PIP_joint
+    - left_hand_ring_DIP_joint
+  little:
+    joints:
+    - left_hand_pinky_rota_joint
+    - left_hand_pinky_swing_joint
+    - left_hand_pinky_MCP_joint
+    - left_hand_pinky_PIP_joint
+    - left_hand_pinky_DIP_joint

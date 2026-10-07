@@ -1,0 +1,832 @@
+{
+  "global_shell_to_reference": [
+    [
+      0.0,
+      -1.0000000000000002,
+      0.0,
+      -3.037084472801155e-13
+    ],
+    [
+      1.0000000000000002,
+      0.0,
+      0.0,
+      -0.012000000000042301
+    ],
+    [
+      0.0,
+      0.0,
+      1.0000000000000002,
+      -0.0040000069847429265
+    ],
+    [
+      0.0,
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "joints": {
+    "left_hand_thumb_rota_block_joint": {
+      "source_angle_sign": -1,
+      "source_zero_offset_rad": -0.13618313107341123,
+      "lower": 0.0,
+      "upper": 2.09
+    },
+    "left_hand_thumb_rotaback_joint2": {
+      "source_angle_sign": -1,
+      "source_zero_offset_rad": 0.3658205435503538,
+      "lower": 0.0,
+      "upper": 1.74
+    },
+    "left_hand_thumb_MCP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": -4.811422605390173e-07,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_thumb_PIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 0.0,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_index_MCP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": -2.3303997767635433e-16,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_index_swing_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 2.5085386036069588e-12,
+      "lower": -0.35,
+      "upper": 0.35
+    },
+    "left_hand_index_PIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 9.910638524100996e-06,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_index_DIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 0.0,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_mid_MCP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": -1.1102230246251563e-16,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_mid_swing_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 0.0,
+      "lower": -0.35,
+      "upper": 0.35
+    },
+    "left_hand_mid_PIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 3.117846262143579e-12,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_mid_DIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 0.0,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_ring_MCP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 3.1278006001501253e-16,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_ring_swing_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 2.5176142469508453e-12,
+      "lower": -0.35,
+      "upper": 0.35
+    },
+    "left_hand_ring_PIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": -1.2984329952318162e-09,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_ring_DIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 0.0,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_pinky_MCP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 4.0262923434985125e-16,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_pinky_swing_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 2.5233478851527895e-12,
+      "lower": -0.35,
+      "upper": 0.35
+    },
+    "left_hand_pinky_PIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 5.086121600914783e-13,
+      "lower": 0.0,
+      "upper": 1.57
+    },
+    "left_hand_pinky_DIP_joint": {
+      "source_angle_sign": 1,
+      "source_zero_offset_rad": 0.0,
+      "lower": 0.0,
+      "upper": 1.57
+    }
+  },
+  "assembly_residual_mm": {
+    "left_hand_thumb_rotaback_link2": [
+      0.04756931972881365,
+      0.03407504588482822,
+      0.0
+    ],
+    "left_hand_thumb_MCP_link": [
+      0.04061869849952479,
+      0.04500565781565284,
+      -0.14651204282349395
+    ],
+    "left_hand_thumb_PIP_link": [
+      5.551115123125783e-14,
+      0.0,
+      -1.5612511283791264e-13
+    ],
+    "left_hand_index_swing_link": [
+      5.448766438043151e-12,
+      0.0,
+      0.00010495073910106456
+    ],
+    "left_hand_index_PIP_link": [
+      5.450501161519128e-12,
+      -1.3010426069826053e-15,
+      -0.00010495072207822309
+    ],
+    "left_hand_index_DIP_link": [
+      -5.899657698482663e-05,
+      1.734723475976807e-15,
+      0.00018331079277428275
+    ],
+    "left_hand_mid_swing_link": [
+      1.7198915902572054e-11,
+      0.0,
+      0.00010495074770008883
+    ],
+    "left_hand_mid_PIP_link": [
+      1.720065062604803e-11,
+      0.0,
+      -0.00010495073440169866
+    ],
+    "left_hand_mid_DIP_link": [
+      -8.15493506056697e-12,
+      3.469446951953614e-15,
+      3.309852392163748e-11
+    ],
+    "left_hand_ring_swing_link": [
+      5.398459457239824e-12,
+      0.0,
+      0.0001049507390004506
+    ],
+    "left_hand_ring_PIP_link": [
+      5.401928904191777e-12,
+      -6.505213034913027e-16,
+      -0.00010495072234883995
+    ],
+    "left_hand_ring_DIP_link": [
+      5.7870375158586285e-12,
+      1.734723475976807e-15,
+      -1.7982143551975582e-11
+    ],
+    "left_hand_pinky_swing_link": [
+      6.496539417533143e-13,
+      0.0,
+      0.00010495073790063592
+    ],
+    "left_hand_pinky_PIP_link": [
+      6.513886652292911e-13,
+      -6.505213034913027e-16,
+      -0.0001049507135295058
+    ],
+    "left_hand_pinky_DIP_link": [
+      6.147859998861804e-12,
+      1.734723475976807e-15,
+      -1.683722605783089e-11
+    ]
+  },
+  "max_assembly_residual_mm": 0.15855966257383453,
+  "reference": "TsenseI_A3.0_hand\\urdf\\V6 26.8.4.urdf",
+  "reference_sha256": "cfe104bed1b44fc2d5effa4a1bdc4907504b29ffd97643f960ae0a77b2f7a13b",
+  "mesh_frame_transforms": {
+    "left_hand_thumb_rota_block_link": [
+      [
+        0.6064646040332904,
+        0.7951104854388128,
+        0.0,
+        0.0
+      ],
+      [
+        -0.7951104854388129,
+        0.6064646040332904,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0111957405286414
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_thumb_rotaback_link2": [
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.011508221977217577
+      ],
+      [
+        0.8318063299251212,
+        0.555065968598779,
+        0.0,
+        0.0
+      ],
+      [
+        -0.5550659685987791,
+        0.8318063299251212,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_thumb_MCP_link": [
+      [
+        -0.7433372078837409,
+        0.6689168822623661,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0008218159675919207
+      ],
+      [
+        0.6689168822623661,
+        0.7433372078837409,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_thumb_PIP_link": [
+      [
+        0.743337207883743,
+        0.6689168822623637,
+        -2.161330079770646e-15,
+        -0.0
+      ],
+      [
+        0.0,
+        -3.2310891488651735e-15,
+        -1.0,
+        -0.008473184032408538
+      ],
+      [
+        -0.6689168822623637,
+        0.743337207883743,
+        -2.401788786340898e-15,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_index_MCP_link": [
+      [
+        -1.0,
+        9.020562075079394e-17,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.00100245305674124
+      ],
+      [
+        9.020562075079394e-17,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_index_swing_link": [
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.009099999999992649
+      ],
+      [
+        0.9940468340104585,
+        0.10895362221506937,
+        0.0,
+        -0.0
+      ],
+      [
+        -0.10895362221506937,
+        0.9940468340104585,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_index_PIP_link": [
+      [
+        -0.9999999999509057,
+        9.909014988953581e-06,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0010024530567144857
+      ],
+      [
+        9.909014988926678e-06,
+        0.9999999999509057,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_index_DIP_link": [
+      [
+        -0.9999999999509057,
+        9.909014988953581e-06,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.008292546943526175
+      ],
+      [
+        9.909014988926678e-06,
+        0.9999999999509057,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_mid_MCP_link": [
+      [
+        -1.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.00100245305673891
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_mid_swing_link": [
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.007624999999999699
+      ],
+      [
+        1.0,
+        0.0,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        1.0,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_mid_PIP_link": [
+      [
+        -1.0000000000000002,
+        3.1178429765458068e-12,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0010024530568153
+      ],
+      [
+        3.1178495477413513e-12,
+        1.0000000000000002,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_mid_DIP_link": [
+      [
+        -1.0000000000000002,
+        3.1178429765458068e-12,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.008292546943405175
+      ],
+      [
+        3.1178495477413513e-12,
+        1.0000000000000002,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_ring_MCP_link": [
+      [
+        -1.0,
+        -1.3877787807814454e-17,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0010024530567412
+      ],
+      [
+        -1.3877787807814454e-17,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_ring_swing_link": [
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.0075999999999923976
+      ],
+      [
+        0.9961946980915479,
+        -0.08715574274991748,
+        0.0,
+        -0.0
+      ],
+      [
+        0.08715574274991748,
+        0.9961946980915479,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_ring_PIP_link": [
+      [
+        -0.9999999999999999,
+        2.8837822838882413e-13,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0010024530567147231
+      ],
+      [
+        2.8837976793850583e-13,
+        0.9999999999999999,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_ring_DIP_link": [
+      [
+        -0.9999999999999999,
+        2.8837822838882413e-13,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.008292546943526168
+      ],
+      [
+        2.8837976793850583e-13,
+        0.9999999999999999,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_pinky_MCP_link": [
+      [
+        -1.0,
+        -3.4694469519536136e-17,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.00100245305674
+      ],
+      [
+        -3.4694469519536136e-17,
+        1.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_pinky_swing_link": [
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.007624999999987549
+      ],
+      [
+        0.9926286259136612,
+        -0.12119575494528287,
+        0.0,
+        -0.0
+      ],
+      [
+        0.12119575494528287,
+        0.9926286259136612,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_pinky_PIP_link": [
+      [
+        -1.0,
+        5.081806764761781e-13,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        0.0010024530566990087
+      ],
+      [
+        5.082172906106438e-13,
+        0.9999999999999999,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "left_hand_pinky_DIP_link": [
+      [
+        -1.0,
+        5.081806764761781e-13,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.0,
+        -0.008292546943410393
+      ],
+      [
+        5.082172906106438e-13,
+        0.9999999999999999,
+        0.0,
+        -0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "base_link": [
+      [
+        0.0,
+        -1.0000000000000002,
+        0.0,
+        -3.037084472801155e-13
+      ],
+      [
+        1.0000000000000002,
+        0.0,
+        0.0,
+        -0.012000000000042301
+      ],
+      [
+        0.0,
+        0.0,
+        1.0000000000000002,
+        -0.0040000069847429265
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ],
+    "Left_hand_palm_link": [
+      [
+        0.0,
+        -1.0000000000000002,
+        0.0,
+        -0.02370000000060591
+      ],
+      [
+        1.0000000000000002,
+        0.0,
+        0.0,
+        -0.018500000000042323
+      ],
+      [
+        0.0,
+        0.0,
+        1.0000000000000002,
+        -0.048138013969143224
+      ],
+      [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+      ]
+    ]
+  },
+  "mesh_sha256": {
+    "meshes\\base_link.STL": "28e8f15af772ff6dea640712fae0846120ec4babca7facd34878e05e7e266e00",
+    "meshes\\Empty_Link11.STL": "6ea3791abbba38c6e6b5cc504e8ddaa19405e35505b97071e31f5dc3387a12d6",
+    "meshes\\Empty_Link12.STL": "a20c5aa063ed8a88908771d262c4e0fd271840f5d156e55c2b071bde89b792a4",
+    "meshes\\Empty_Link13.STL": "f9369236007ca8470e26ca4a5f66b47e4f72afd4be8a6cc5200b299987e32345",
+    "meshes\\Empty_Link14.STL": "c80ebaae3ca10762b009e380f9d9e3f85eb6f10c200091459a905eebb5583074",
+    "meshes\\Empty_Link21.STL": "a7b8bb5f4ee24317b18f42d4f80ea039b0882be265eaef5b4a06cdaec5ae8b0e",
+    "meshes\\Empty_Link22.STL": "dbec01a4cb083ede843ea830bb7cce2c12403037c47932a14396fe53bfd3d95a",
+    "meshes\\Empty_Link23.STL": "9e58cebd21cb34d8ae5b6e92704fae3a2def828d4729e3ccbb064d9322dba1c9",
+    "meshes\\Empty_Link24.STL": "a32c2a7b693ecc70ba267dac8ca58f5e6866c6279027e7c830644338c2e995e5",
+    "meshes\\Empty_Link31.STL": "4e4ff48d44a37016be6df5e8aca00a2c903798557e1c07bbe2b695b90d15ca2d",
+    "meshes\\Empty_Link32.STL": "7f90e5506d32b58369d8c63da6bcb13e4e6b1c4c2cc6fc59090f82aba147a527",
+    "meshes\\Empty_Link33.STL": "4580f911c97d93988d75c47488fdf4f4b6436ce766b3fbfd2c08dbfd0bb89ba2",
+    "meshes\\Empty_Link34.STL": "913651a5ff28cf81779fb81fedf2983c6af85211d06ff44d34e5a0ac9094550f",
+    "meshes\\Empty_Link41.STL": "5c6af242395da730db2ca3adff87efe06a46065f2759389ba0e96fae16be9971",
+    "meshes\\Empty_Link42.STL": "a6a7cf286a263773d6ce1e90ea06e4e581b2b495315a34b17afdfeedabd71617",
+    "meshes\\Empty_Link43.STL": "735916aadd2744ed2fa9c1629639a69a5379914488da43a89ed406a64186626f",
+    "meshes\\Empty_Link44.STL": "3168032b0d674b4217e306e48fd0f732599251fa2fa7968489b9f095df006ca2",
+    "meshes\\Empty_Link51.STL": "5604cfe84e9e962b22dbae729bdab0e2a5994ed08d57c612bee1cd36e915a50a",
+    "meshes\\Empty_Link52.STL": "0b3f0ab556b014124731a51dbd7c89a307ec0fc61e48ada29488a0702f98264d",
+    "meshes\\Empty_Link53.STL": "c2e37125b29ac1b0bab9f4af9457ff6179691a34d9c051833e397a3a8bad0b50",
+    "meshes\\Empty_Link54.STL": "7c354fa4d2fa92f803cf5fc48e42526ed04dede2c2394abf59ac31ad530be2dd",
+    "meshes\\Left_hand_palm_reconstructed.STL": "a57749c2a1d4fb576f3de8ad27aff8d1fffbf76fee7c9e2a6e6274a6fb2ad56e",
+    "meshes\\Left_hand_palm_reconstructed_part1.STL": "9ca7aa309bc67dc03e6f5283389c5815d517386d0611d2a8ffb2c5d25b25331f",
+    "meshes\\Left_hand_palm_reconstructed_part2.STL": "2c4b8c8d429cdd8e629d5da783d4feb86c3ca03c0a387fadcd0bffd228946d78"
+  },
+  "method": "Hinge-axis/inter-joint-vector alignment with hinge-line translation constraints",
+  "note": "Origin/axis/topology/lower/upper follow functionally mapped bare CAD. STL data, removed tab, masses and inertial-frame tensors are retained."
+}

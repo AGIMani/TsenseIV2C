@@ -1,0 +1,19 @@
+UI STATE  未检测到所选手，保持上一姿态 []
+node:internal/modules/run_main:107
+    triggerUncaughtException(
+    ^
+
+AssertionError [ERR_ASSERTION]: The expression evaluated to a falsy value:
+
+  assert(responses.some(r=>!r.tracking&&r.source==='webxr'))
+
+    at file:///tmp/hand-ubuntu-20261006/browser-qa/webxr-browser.mjs:105:3 {
+  generatedMessage: true,
+  code: 'ERR_ASSERTION',
+  actual: false,
+  expected: true,
+  operator: '==',
+  diff: 'simple'
+}
+
+Node.js v24.21.0

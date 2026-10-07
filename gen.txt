@@ -1,0 +1,94 @@
+import json, math
+
+SPEED = 2.0
+RETURN_S = 0.45
+FRAME_TRANS = 0.05
+WAVE_INTERVAL = 0.01
+ORIGIN_HOLD = 0.014
+# 加大弯曲幅度（原 0.436 / 0.282 / 0.206 rad）
+TARGETS = (0.65, 0.48, 0.40)
+
+ORIGIN = {
+    'left_hand_thumb_rota_joint': 0.0, 'left_hand_thumb_swing_joint': 0.0,
+    'left_hand_thumb_MCP_joint': 0.0, 'left_hand_thumb_PIP_joint': 0.0,
+    'left_hand_index_swing_joint': 0.05,
+    'left_hand_index_MCP_joint': 0.0, 'left_hand_index_PIP_joint': 0.0, 'left_hand_index_DIP_joint': 0.0,
+    'left_hand_mid_swing_joint': 0.111,
+    'left_hand_mid_MCP_joint': 0.0, 'left_hand_mid_PIP_joint': 0.0, 'left_hand_mid_DIP_joint': 0.0,
+    'left_hand_ring_swing_joint': 0.174,
+    'left_hand_ring_MCP_joint': 0.0, 'left_hand_ring_PIP_joint': 0.0, 'left_hand_ring_DIP_joint': 0.0,
+    'left_hand_pinky_rota_joint': 0.0, 'left_hand_pinky_swing_joint': 0.262,
+    'left_hand_pinky_MCP_joint': 0.0, 'left_hand_pinky_PIP_joint': 0.0, 'left_hand_pinky_DIP_joint': 0.0,
+}
+JOINTS = list(ORIGIN.keys())
+FINGERS = [
+    (['left_hand_index_MCP_joint','left_hand_index_PIP_joint','left_hand_index_DIP_joint'], TARGETS),
+    (['left_hand_mid_MCP_joint','left_hand_mid_PIP_joint','left_hand_mid_DIP_joint'], TARGETS),
+    (['left_hand_ring_MCP_joint','left_hand_ring_PIP_joint','left_hand_ring_DIP_joint'], TARGETS),
+    (['left_hand_pinky_MCP_joint','left_hand_pinky_PIP_joint','left_hand_pinky_DIP_joint'], TARGETS),
+]
+STAGGER_S = 0.5 / SPEED
+ROUND_TRIP_S = 2.0 / SPEED
+DT = 0.05 / SPEED
+T_WAVE_END = (len(FINGERS) - 1) * STAGGER_S + ROUND_TRIP_S
+
+def r(v):
+    return round(float(v), 4)
+
+def sine_sweep(elapsed, v0, v1, period):
+    if elapsed < 0:
+        return v0
+    t = elapsed % period
+    blend = (1.0 - math.cos(2.0 * math.pi * t / period)) * 0.5
+    return v0 + (v1 - v0) * blend
+
+def pose_at(t):
+    cfg = dict(ORIGIN)
+    for i, (joints, targets) in enumerate(FINGERS):
+        local = t - i * STAGGER_S
+        for j, v1 in zip(joints, targets):
+            cfg[j] = r(sine_sweep(local, 0.0, v1, ROUND_TRIP_S))
+    return cfg
+
+def lerp_pose(a, b, blend):
+    blend = max(0.0, min(1.0, blend))
+    return {k: r(a[k] + (b[k] - a[k]) * blend) for k in JOINTS}
+
+def sine_blend01(t):
+    t = max(0.0, min(1.0, t))
+    return (1.0 - math.cos(math.pi * t)) * 0.5
+
+motions = {}
+start = dict(ORIGIN)
+start['_transition_s'] = FRAME_TRANS
+start['_interval_s'] = ORIGIN_HOLD
+motions['00_origin'] = start
+
+n_wave = int(round(T_WAVE_END / DT))
+for k in range(1, n_wave + 1):
+    t = round(k * DT, 4)
+    m = pose_at(t)
+    m['_transition_s'] = FRAME_TRANS
+    m['_interval_s'] = WAVE_INTERVAL
+    motions[f'{k:02d}_t{t:.2f}'] = m
+
+end_pose = pose_at(T_WAVE_END)
+n_ret = max(2, int(round(RETURN_S / DT)))
+for k in range(1, n_ret + 1):
+    m = lerp_pose(end_pose, ORIGIN, sine_blend01(k / n_ret))
+    m['_transition_s'] = FRAME_TRANS
+    m['_interval_s'] = WAVE_INTERVAL
+    motions[f'R{k:02d}_return'] = m
+
+final = dict(ORIGIN)
+final['_transition_s'] = FRAME_TRANS
+final['_interval_s'] = ORIGIN_HOLD
+motions['99_origin'] = final
+
+path = r'd:\Qtworks\hand\wave.txt'
+with open(path, 'w', encoding='utf-8') as f:
+    json.dump(motions, f, ensure_ascii=False, indent=2)
+print('targets MCP/PIP/DIP (rad):', TARGETS)
+print('targets (deg):', tuple(round(x*57.3, 1) for x in TARGETS))
+print('frames', len(motions), 'peak mid MCP', max(m['left_hand_mid_MCP_joint'] for n,m in motions.items() if '_t' in n))
+"

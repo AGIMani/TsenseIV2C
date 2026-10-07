@@ -1,0 +1,186 @@
+{
+  "kind": "synthetic offline solver, no camera/USB/collision/trajectory measurements",
+  "equivalence_max_joint_error_rad": {
+    "disabled": 0.0,
+    "index_only": 0.0,
+    "open": 0.0
+  },
+  "timing_model": "TsenseI_v3_2_withid / left / numpy",
+  "timing": {
+    "open": {
+      "before": {
+        "median_ms": 12.4306,
+        "p95_ms": 16.944405
+      },
+      "after": {
+        "median_ms": 12.45295,
+        "p95_ms": 16.936535
+      },
+      "p95_change_percent": -0.046446009759570916
+    },
+    "index_only": {
+      "before": {
+        "median_ms": 12.4558,
+        "p95_ms": 17.051409999999997
+      },
+      "after": {
+        "median_ms": 12.51765,
+        "p95_ms": 16.870769999999997
+      },
+      "p95_change_percent": -1.0593845318363715
+    },
+    "all_pairs": {
+      "before": {
+        "median_ms": 11.3931,
+        "p95_ms": 15.048379999999995
+      },
+      "after": {
+        "median_ms": 11.32405,
+        "p95_ms": 15.393955
+      },
+      "p95_change_percent": 2.296426592098322
+    }
+  },
+  "geometry": [
+    {
+      "model": "TsenseI_v2",
+      "side": "left",
+      "finger": "index",
+      "off_gap_mm": 13.20172483134363,
+      "on_gap_mm": 0.404311806012202
+    },
+    {
+      "model": "TsenseI_v2",
+      "side": "left",
+      "finger": "middle",
+      "off_gap_mm": 85.48215391782725,
+      "on_gap_mm": 0.704044512661067
+    },
+    {
+      "model": "TsenseI_v2",
+      "side": "left",
+      "finger": "ring",
+      "off_gap_mm": 85.61566594476076,
+      "on_gap_mm": 1.212872948580409
+    },
+    {
+      "model": "TsenseI_v2",
+      "side": "left",
+      "finger": "pinky",
+      "off_gap_mm": 64.65964077599246,
+      "on_gap_mm": 1.3594234767625375
+    },
+    {
+      "model": "TsenseI_v3_0",
+      "side": "left",
+      "finger": "index",
+      "off_gap_mm": 70.46639765176877,
+      "on_gap_mm": 0.5469267581138888
+    },
+    {
+      "model": "TsenseI_v3_0",
+      "side": "left",
+      "finger": "middle",
+      "off_gap_mm": 81.71885374850328,
+      "on_gap_mm": 0.4559310949734191
+    },
+    {
+      "model": "TsenseI_v3_0",
+      "side": "left",
+      "finger": "ring",
+      "off_gap_mm": 76.7149702739595,
+      "on_gap_mm": 0.6393672910750574
+    },
+    {
+      "model": "TsenseI_v3_0",
+      "side": "left",
+      "finger": "pinky",
+      "off_gap_mm": 68.67914114165102,
+      "on_gap_mm": 1.6632523197593914
+    },
+    {
+      "model": "TsenseI_v3_0_withid",
+      "side": "left",
+      "finger": "index",
+      "off_gap_mm": 74.05435017972052,
+      "on_gap_mm": 1.327298715690615
+    },
+    {
+      "model": "TsenseI_v3_0_withid",
+      "side": "left",
+      "finger": "middle",
+      "off_gap_mm": 78.23554071513168,
+      "on_gap_mm": 0.8824411763165367
+    },
+    {
+      "model": "TsenseI_v3_0_withid",
+      "side": "left",
+      "finger": "ring",
+      "off_gap_mm": 73.51893626366738,
+      "on_gap_mm": 1.0384381412405987
+    },
+    {
+      "model": "TsenseI_v3_0_withid",
+      "side": "left",
+      "finger": "pinky",
+      "off_gap_mm": 72.34600385100737,
+      "on_gap_mm": 1.909889718187035
+    },
+    {
+      "model": "TsenseI_v3_2",
+      "side": "left",
+      "finger": "index",
+      "off_gap_mm": 71.79143820059836,
+      "on_gap_mm": 1.3861666099281438
+    },
+    {
+      "model": "TsenseI_v3_2",
+      "side": "left",
+      "finger": "middle",
+      "off_gap_mm": 78.75060067201117,
+      "on_gap_mm": 1.323904047571571
+    },
+    {
+      "model": "TsenseI_v3_2",
+      "side": "left",
+      "finger": "ring",
+      "off_gap_mm": 78.19567990656353,
+      "on_gap_mm": 1.3333180147203598
+    },
+    {
+      "model": "TsenseI_v3_2",
+      "side": "left",
+      "finger": "pinky",
+      "off_gap_mm": 74.12454216822357,
+      "on_gap_mm": 2.098455098730433
+    },
+    {
+      "model": "TsenseI_v3_2_withid",
+      "side": "left",
+      "finger": "index",
+      "off_gap_mm": 81.36958515027146,
+      "on_gap_mm": 0.5194834207427369
+    },
+    {
+      "model": "TsenseI_v3_2_withid",
+      "side": "left",
+      "finger": "middle",
+      "off_gap_mm": 90.60010552211044,
+      "on_gap_mm": 0.3547545814415955
+    },
+    {
+      "model": "TsenseI_v3_2_withid",
+      "side": "left",
+      "finger": "ring",
+      "off_gap_mm": 90.1274553227594,
+      "on_gap_mm": 0.6799746229586789
+    },
+    {
+      "model": "TsenseI_v3_2_withid",
+      "side": "left",
+      "finger": "pinky",
+      "off_gap_mm": 73.89017496797135,
+      "on_gap_mm": 1.2443689702735306
+    }
+  ]
+}

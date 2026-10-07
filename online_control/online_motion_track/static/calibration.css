@@ -1,0 +1,47 @@
+.calibration-shell {max-width:1920px;padding:0 30px 32px}
+.cal-intro {display:flex;justify-content:space-between;align-items:center;margin:26px 0 22px;gap:16px}
+.cal-intro h1 {font-size:28px;margin:6px 0}
+.cal-intro p {margin:6px 0;color:#63777d}
+.cal-chip {padding:8px 14px;border-radius:20px;background:#e0edf0;white-space:nowrap;color:#395f69}
+.cal-chip.dirty {background:#fff0d8;color:#926119}
+.cal-controls {display:flex;flex-wrap:wrap;align-items:end;gap:12px;padding:18px;background:white;border:1px solid var(--border);border-radius:12px}
+.calibration-shell label {display:flex;flex-direction:column;gap:6px;color:#607279;font-size:12px;min-width:0}
+.calibration-shell select,.calibration-shell input:not([type=checkbox]) {min-width:0;width:100%;border:1px solid #d6e0e3;border-radius:6px;background:#f9fbfc;padding:8px;color:#273f47}
+.calibration-shell button {padding:9px 12px;border-radius:6px;background:#e7eff2;color:#325661;line-height:1.4}
+.calibration-shell button.cal-primary {background:#3f7788;color:white}
+.cal-controls>label {flex:1;min-width:115px}
+.cal-controls>label:nth-child(3) {flex:1.4;min-width:160px}
+.cal-source-panel {display:flex;align-items:center;gap:22px;justify-content:space-between;min-height:82px;padding:16px 4px}
+.cal-source-panel p {margin:6px 0 0;color:#71838a;font-size:12px}
+.cal-source-panel #video {width:160px;height:104px;object-fit:contain;background:#203038;border-radius:8px;transform:scaleX(-1)}
+#quest-pairing {display:flex;align-items:center;gap:14px;flex-wrap:wrap;max-width:650px}
+#quest-link {width:250px}
+#quest-code {letter-spacing:3px;font-size:20px;color:#356d7e}
+.cal-notice {background:#fff4dc;border:1px solid #edd7a9;padding:12px 16px;margin-top:12px;border-radius:8px;color:#7c5923;overflow-wrap:anywhere}
+.cal-views {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.cal-card {background:#fff;border:1px solid var(--border);border-radius:12px;overflow:hidden;min-width:0}
+.cal-card>header {display:flex;align-items:center;justify-content:space-between;padding:16px;gap:8px;border-bottom:1px solid #e7edf0;flex-wrap:wrap}
+.cal-card>header>div {display:flex;align-items:center;gap:10px}
+.cal-card h2 {font-size:16px;margin:0}
+.cal-card h3 {font-size:14px;margin:18px 0 10px}
+.cal-card>header>span {font-size:11px;color:#7b8c91}
+.cal-number {color:#68a3b1;font-size:12px;font-weight:600;letter-spacing:1px}
+.cal-stage {position:relative;height:clamp(320px,42vh,510px);background:linear-gradient(145deg,#edf5f7,#f8fbfc);touch-action:none}
+.cal-stage>canvas {display:block;width:100%;height:100%}
+.cal-editor {padding:14px 16px;display:flex;flex-direction:column;gap:10px}
+.cal-editor p {font-size:11px;margin:0;color:#819097}
+.cal-xyz {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.cal-inline,.calibration-shell label.cal-inline,.cal-inline>label {display:flex;flex-direction:row;align-items:center;gap:8px;flex-wrap:wrap}
+.calibration-shell input[type=checkbox] {accent-color:#408da4}
+.cal-joints {max-height:220px;overflow:auto;font-size:11px;line-height:1.8;font-variant-numeric:tabular-nums}
+.cal-joints div {display:flex;gap:8px;justify-content:space-between;overflow-wrap:anywhere}
+.cal-bottom {display:grid;grid-template-columns:1.65fr 1fr;gap:16px;margin-top:16px}
+.cal-presets,.cal-files {padding:20px}
+.cal-bottom p {font-size:12px;line-height:1.7;color:#71838a}
+.cal-buttons {display:flex;flex-wrap:wrap;gap:7px}
+.cal-buttons button {font-size:12px}
+.cal-buttons button.selected {background:#3f7788;color:#fff}
+#calibration-path {font-family:monospace;overflow-wrap:anywhere;color:#526c77}
+.cal-files .cal-footnote {margin-top:22px}
+@media(max-width:1050px) {.calibration-shell{padding:0 16px 24px}.cal-views{gap:8px}.cal-card>header{padding:12px}.cal-editor{padding:12px}.cal-stage{height:330px}}
+@media(max-width:760px) {.cal-views,.cal-bottom{grid-template-columns:1fr}.cal-stage{height:390px}.cal-intro{align-items:flex-start}.cal-intro h1{font-size:24px}.cal-source-panel{flex-wrap:wrap}.calibration-shell .topbar{height:auto;min-height:80px;gap:16px;flex-wrap:wrap;padding:16px 0}.calibration-shell .brand-logo{max-width:150px}#quest-link{width:100%}.calibration-shell label{font-size:13px}}

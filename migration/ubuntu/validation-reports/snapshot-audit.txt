@@ -1,0 +1,50 @@
+{
+  "changed_from_source": [
+    "AGENTS.md",
+    "README.md",
+    "assets/hands/TsenseI_hand_v3_2/sdk_source_mapping.yaml",
+    "assets/hands/TsenseI_hand_v3_2/source_mapping.yaml",
+    "online_control/online_motion_play/README.md",
+    "online_control/online_motion_play/a30_session.py",
+    "online_control/online_motion_play/browser_serial.py",
+    "online_control/online_motion_play/deploy.sh",
+    "online_control/online_motion_play/generate_joint_ranges.py",
+    "online_control/online_motion_play/joint_ranges.md",
+    "online_control/online_motion_play/package.py",
+    "online_control/online_motion_play/requirements-server.txt",
+    "online_control/online_motion_play/server.py",
+    "online_control/online_motion_play/test_a30.py",
+    "online_control/online_motion_play/test_a32.py",
+    "online_control/online_motion_play/test_a32_lifecycle_browser.mjs",
+    "online_control/online_motion_play/test_a32_recording.py",
+    "online_control/online_motion_play/test_browser_serial.py",
+    "online_control/online_motion_play/test_deployment.py",
+    "online_control/online_motion_play/test_downlink_policy.py",
+    "online_control/online_motion_play/test_fast_serial.py",
+    "online_control/online_motion_play/test_server.py",
+    "online_control/online_motion_track/package.py",
+    "online_control/online_motion_track/tests/a30-serial.test.mjs",
+    "online_control/online_motion_track/tests/joint-enable.test.mjs",
+    "requirements.txt",
+    "src/tracking/__init__.py",
+    "tests/test_a30_downlink.py",
+    "tests/test_a32_joint_ranges.py",
+    "tests/test_hand_v3_0.py",
+    "tests/test_init_pose.py",
+    "tests/test_keypoint_mediapipe_input.py",
+    "tests/test_keypoint_retarget_preview.py",
+    "tests/test_light_test_v3_2.py",
+    "tests/test_v3_2_recording.py",
+    "tests/test_webxr_online_pipeline.py",
+    "tests/test_wuji_mediapipe_module.py",
+    "tools/prepare_hand_v3_2.py",
+    "tools/prepare_hand_v3_2_withid.py"
+  ],
+  "removed_count": 115,
+  "source_changed_since_snapshot": []
+}
+archive TsenseI_A3.2__hand_withid.zip members 36 Windows/Qt programs []
+archive TsenseI_A3.2_hand_withid_fixed.zip members 38 Windows/Qt programs []
+archive URDF A3.0带外壳.zip members 42 Windows/Qt programs []
+archive exports/TsenseI_A3.2_hand_left_right_20260930.zip members 48 Windows/Qt programs []
+archive exports/TsenseI_A3.2_hand_withID_952g_left_right_20260930.zip members 57 Windows/Qt programs []

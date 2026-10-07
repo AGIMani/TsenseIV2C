@@ -1,0 +1,92 @@
+{
+  "target": {
+    "left_hand_thumb_rota_block_joint": 1.5648755431926709,
+    "left_hand_thumb_rotaback_joint2": 0.009268586544326354,
+    "left_hand_thumb_MCP_joint": 0.0449213929133806,
+    "left_hand_thumb_PIP_joint": 0.11128156333299014,
+    "left_hand_index_MCP_joint": 0.005,
+    "left_hand_index_swing_joint": 0.0,
+    "left_hand_index_PIP_joint": 0.005,
+    "left_hand_index_DIP_joint": 0.005,
+    "left_hand_mid_MCP_joint": 0.005,
+    "left_hand_mid_swing_joint": 0.0,
+    "left_hand_mid_PIP_joint": 0.005,
+    "left_hand_mid_DIP_joint": 0.005,
+    "left_hand_ring_MCP_joint": 0.005,
+    "left_hand_ring_swing_joint": 0.0,
+    "left_hand_ring_PIP_joint": 0.005,
+    "left_hand_ring_DIP_joint": 0.005,
+    "left_hand_pinky_MCP_joint": 0.005,
+    "left_hand_pinky_swing_joint": 0.0,
+    "left_hand_pinky_PIP_joint": 0.005,
+    "left_hand_pinky_DIP_joint": 0.005
+  },
+  "result": {
+    "left_hand_thumb_rota_block_joint": 1.4182124270544758,
+    "left_hand_thumb_rotaback_joint2": 0.008399916961814973,
+    "left_hand_thumb_MCP_joint": 0.04117988394116659,
+    "left_hand_thumb_PIP_joint": 0.10132065280929868,
+    "left_hand_index_MCP_joint": 0.005,
+    "left_hand_index_swing_joint": 0.0,
+    "left_hand_index_PIP_joint": 0.005,
+    "left_hand_index_DIP_joint": 0.005,
+    "left_hand_mid_MCP_joint": 0.005,
+    "left_hand_mid_swing_joint": 0.0,
+    "left_hand_mid_PIP_joint": 0.005,
+    "left_hand_mid_DIP_joint": 0.005,
+    "left_hand_ring_MCP_joint": 0.005,
+    "left_hand_ring_swing_joint": 0.0,
+    "left_hand_ring_PIP_joint": 0.005,
+    "left_hand_ring_DIP_joint": 0.005,
+    "left_hand_pinky_MCP_joint": 0.005,
+    "left_hand_pinky_swing_joint": 0.0,
+    "left_hand_pinky_PIP_joint": 0.005,
+    "left_hand_pinky_DIP_joint": 0.005
+  },
+  "contact": [
+    [
+      "Left_hand_palm_link_collision",
+      "left_hand_thumb_MCP_link_collision",
+      -0.0010727606691461331
+    ]
+  ],
+  "diagnostics": {
+    "enabled": true,
+    "strategy": "stop",
+    "limited": true,
+    "avoided": false,
+    "resolution": "stop",
+    "safe_fraction": 0.906278,
+    "path_steps": 63,
+    "allowed_penetration_mm": 0.0,
+    "target_max_penetration_mm": 2.918571,
+    "output_max_penetration_mm": 0.0,
+    "max_joint_correction_rad": 0.14666312,
+    "contacts": [
+      {
+        "g1": "Left_hand_palm_link_collision",
+        "g2": "left_hand_thumb_MCP_link_collision",
+        "dist_mm": -0.21926614251408882,
+        "pen_mm": 0.21926614251408882,
+        "force_n": 0.0
+      }
+    ],
+    "avoidance_active": false,
+    "avoidance_phase": null,
+    "avoidance_plan_id": 0,
+    "avoidance_drive_step_rad": 0.035,
+    "avoidance_driven_joints": [],
+    "avoidance_waypoint_distance_rad": null,
+    "avoidance_goal_distance_rad": null,
+    "fixed_pinky_rota_rad": 0.0,
+    "search_evaluations": 0,
+    "contact_fingers": [],
+    "stop_target_error": 0.0,
+    "avoid_target_error": null,
+    "mode": "stop",
+    "solve_ms": 2.876701000786852,
+    "kinematics_calls": 73,
+    "collision_calls": 73,
+    "cache_hits": 1
+  }
+}

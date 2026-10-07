@@ -1,0 +1,242 @@
+{
+  "source": "D:/Qtworks/a3-cpp-sdk",
+  "purpose": "Original A3.2 bare CAD used by retained model preparation and provenance verification tools; browser runtime uses assets/hands.",
+  "scope": "Original left/right URDF, referenced STL meshes and SDK license only.",
+  "files": [
+    {
+      "path": "vendor/a3-cpp-sdk/LICENSE",
+      "bytes": 1064,
+      "sha256": "39adb464062003b05741228dc89ebdd144d5234bbc22993ca83439f6e7ec5f52"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/Left_hand_palm_link.STL",
+      "bytes": 9393284,
+      "sha256": "b84938eba0dd23e5539da240f6685ef3ed1aaf1d1c07f389dd16f1e7b483c183"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/Right_hand_palm_link.STL",
+      "bytes": 9393284,
+      "sha256": "1ee9d51390d44b166d3a2a4d60d973f90f7b3aba81c63ec32a4275c277d96682"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/base_link.STL",
+      "bytes": 374984,
+      "sha256": "04086a771b4e891d253ddb525eb4fba59887caeaeafa3330079f63120581e384"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_index_DIP_link.STL",
+      "bytes": 92884,
+      "sha256": "d20edba81517ee6169d6fadead9989f96d9b255ddd54bb71776adaa4b74c9810"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_index_MCP_link.STL",
+      "bytes": 10407784,
+      "sha256": "c62bbe4729ce06c5e07861291c07c18c3948bb1b3f0feb3b02cc8da2f11d7e34"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_index_PIP_link.STL",
+      "bytes": 1126184,
+      "sha256": "67418ad6f0731a277ced5b8c10cbd65be5c1d12331b9aac6dafa5b94752e2818"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_index_swing_link.STL",
+      "bytes": 2352084,
+      "sha256": "1a2a075f558e2f8f48cf778d0ae3acc531b0a06a85335d6b08a794a646654ad0"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_mid_DIP_link.STL",
+      "bytes": 91084,
+      "sha256": "b9b0659738488619111a091711b41481e74d11e322a488850ed92e1936b70e4c"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_mid_MCP_link.STL",
+      "bytes": 9549584,
+      "sha256": "30990863fbe224b599242b88a58ccd77d544e45703dcbb589dbfbe8c30fd35fa"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_mid_PIP_link.STL",
+      "bytes": 1121184,
+      "sha256": "fca9cd356a365efac1448c03de7dd72dcaa0b33fabcd147ff99d9838302bdbeb"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_mid_swing_link.STL",
+      "bytes": 2357884,
+      "sha256": "c69f84e2dfba7c408a6f5ca5d5619ea8e07bcb930f9b48b1b0592b18bcd91db5"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_pinky_DIP_link.STL",
+      "bytes": 83284,
+      "sha256": "a42b8e36a1d89e1ed0648ab9bceb865882d81a4a836e9a35ba1bac1673f0c5cc"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_pinky_MCP_link.STL",
+      "bytes": 748484,
+      "sha256": "4daecb15e3e967fe1bc055ff7ee73c4b8e836e0864305dce06a49508b5b5ff82"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_pinky_PIP_link.STL",
+      "bytes": 1088084,
+      "sha256": "3d109eb6cc59cce0467c05177271890c4a2141ee95a7b9cf15cb9a0a347ba2f1"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_pinky_swing_link.STL",
+      "bytes": 9549584,
+      "sha256": "0d22744095cde94fc95b14fbb917aae58c8d57573a7583a0f673b4071898e837"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_ring_DIP_link.STL",
+      "bytes": 92884,
+      "sha256": "4cb5749a8ef0e94706ae92f789a1c1038b237aa10735bbd0a529f56e7aec1dc5"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_ring_MCP_link.STL",
+      "bytes": 10407784,
+      "sha256": "cf945a3c6185596ac60e2192fd934184057f41b07e2f3bfffa729ca1fa9f31f2"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_ring_PIP_link.STL",
+      "bytes": 1126184,
+      "sha256": "9cd79c174a18d05cd43e0e62653b84c51b89f58f4b4ad2882b5a19abe90bd2e0"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_ring_swing_link.STL",
+      "bytes": 2342484,
+      "sha256": "5b656d68d45b113f8ab1ee8b69fdc8b3ae81fc1214beed42f3cf046d4533ac98"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_thumb_MCP_link.STL",
+      "bytes": 1110784,
+      "sha256": "f569e94fdd3d15e5f384bf240b4e8e44554b4bffbec8730d7a1a9e3f770bbe20"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_thumb_PIP_link.STL",
+      "bytes": 53584,
+      "sha256": "7eacbef84aa9080fc9eded2a18fb9fecdf4b8b8ad71cc2477f0443f3b0f0f23f"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_thumb_rota_block_link.STL",
+      "bytes": 1737384,
+      "sha256": "f9062a7b51577da5b074cda2b98140bc75e46f9de369b6346efce7dc57b1284b"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/left_hand_thumb_rotaback_link2.STL",
+      "bytes": 7308134,
+      "sha256": "1a3e12b8a5ed5800de217658d3173605ff68b57eea143bb9fc05669c55236332"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_base_link.STL",
+      "bytes": 374984,
+      "sha256": "a1cf2fc192b17af8917ee2355041a1fa0f974fc3747179f5eb622d1a76246060"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_index_DIP_link.STL",
+      "bytes": 92884,
+      "sha256": "cf68d34ed1f41a376ba6a1e401515815e86d9506e0e2aa4e93fdb7f5f67661aa"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_index_MCP_link.STL",
+      "bytes": 10407784,
+      "sha256": "8ec8f98f5bc2e374eb055efa6d2eafd858dbe3699c23a44f93fa1fd5e8796c5b"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_index_PIP_link.STL",
+      "bytes": 1126184,
+      "sha256": "64c14b00d6cd750d1a24d04d639689a391e7173497e9924b4db95f1ff5789080"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_index_swing_link.STL",
+      "bytes": 2352084,
+      "sha256": "4e0a0434f30bbf3fa7434a387f63600ab49b38f841a4d45d1bb48eee947623a5"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_mid_DIP_link.STL",
+      "bytes": 91084,
+      "sha256": "382d418a30dfd1e64559c1a8531db82d9b794b3f79c4db567ae5f81a60208be0"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_mid_MCP_link.STL",
+      "bytes": 9549584,
+      "sha256": "a9919c8d7dbabb03a08791e29e81fe63b9d4a1dd6dbf473cb0b1ddfede3bab37"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_mid_PIP_link.STL",
+      "bytes": 1121184,
+      "sha256": "7df186b9043ff114b692c7fa76147ef8a686798f493a5c232449e32c60dc849a"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_mid_swing_link.STL",
+      "bytes": 2357884,
+      "sha256": "06d330c94b4a5a9ba8df3a6db46c046b305ade7feef019691d13cba4851877fd"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_pinky_DIP_link.STL",
+      "bytes": 83284,
+      "sha256": "738472fdb2b36008ce72645af829d4b6649df990d4f381eaf6caf227565f79ae"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_pinky_MCP_link.STL",
+      "bytes": 748484,
+      "sha256": "bb9c340a5551c1f9c59fc8f52f0409d36a9186ae4b0ee9739a5b91baea594200"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_pinky_PIP_link.STL",
+      "bytes": 1088084,
+      "sha256": "9224a97a3ef9f3406c307ffd5f3153ce2dc2651677a1db98b5e609f4fbe4f457"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_pinky_swing_link.STL",
+      "bytes": 9549584,
+      "sha256": "2838637d6f26a33c837a9c48e93fe9eda546c9f0cfab0ffe544ba5a22689457a"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_ring_DIP_link.STL",
+      "bytes": 92884,
+      "sha256": "0365f28f7974e752d1691d6d5c20ad81ef9a611ca6ac3bd6a373b8edde7530ee"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_ring_MCP_link.STL",
+      "bytes": 10407784,
+      "sha256": "90594ef08a1b82ef040931eef7838214c7e4d659ede3ba56b203c90d117ce2d9"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_ring_PIP_link.STL",
+      "bytes": 1126184,
+      "sha256": "f61f2d09adb5eedb192e6c97470cbaff2bc57d274c51b8b901f734a8afc2707a"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_ring_swing_link.STL",
+      "bytes": 2342484,
+      "sha256": "8d0b65b93f8a7801c25de8d0ab34e94f18edae86ecf1f4d61bbbf0ac12c57fc4"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_thumb_MCP_link.STL",
+      "bytes": 1110784,
+      "sha256": "97ef7f3ea4cf82789de6d5a4d99488297b725d7525d99dcc98ab948042b1c648"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_thumb_PIP_link.STL",
+      "bytes": 53584,
+      "sha256": "7f61895e7968ccc589889d9c73c8c6225dacda0f02b05092a35af437c79aceb0"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_thumb_rota_block_link.STL",
+      "bytes": 1737384,
+      "sha256": "a74e0145189de0d0be37765a1f6f0bfe785121116db34592b87b8e17b42cf8f4"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/meshes/right_hand_thumb_rotaback_link2.STL",
+      "bytes": 7308134,
+      "sha256": "1c3227705c07a51f08cf938d2fad0391decb1a7932d74ceb13997a79d2ed8d4c"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf",
+      "bytes": 25689,
+      "sha256": "86098a5c1b6de17a4b7cabe7a6c21edd2df5f6cbe31417de080e14bff4c40c45"
+    },
+    {
+      "path": "vendor/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_right_v3_2.urdf",
+      "bytes": 25894,
+      "sha256": "f9b3479a5dec9e40f6e7175d59d9c4b66c1a7de0d6deb449bf4db47ef9a03b05"
+    }
+  ]
+}

@@ -1,0 +1,1311 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>手部控制链数据查看器</title>
+  <style>
+    :root { color-scheme: dark; --bg:#08111f; --panel:#101c2e; --line:#26364d; --text:#e8eef8; --muted:#91a4be; --accent:#54d4a0; }
+    * { box-sizing: border-box; }
+    body { margin:0; font:14px/1.45 system-ui,"Microsoft YaHei",sans-serif; background:var(--bg); color:var(--text); }
+    main { max-width:1500px; margin:auto; padding:24px; }
+    h1 { margin:0 0 6px; font-size:24px; }
+    h2 { margin:0 0 12px; font-size:16px; }
+    .hint,.status { color:var(--muted); }
+    .toolbar,.panel { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:16px; margin-top:16px; }
+    .toolbar { display:flex; flex-wrap:wrap; align-items:center; gap:14px 22px; }
+    .chart-tools { display:flex; flex-wrap:wrap; align-items:center; gap:7px; margin-bottom:9px; }
+    .chart-tools button { padding:5px 9px; cursor:pointer; }
+    .chart-tools button:hover { border-color:var(--accent); }
+    .range-label { margin-left:auto; color:var(--muted); font:12px ui-monospace,SFMono-Regular,Consolas,monospace; }
+    label { display:inline-flex; align-items:center; gap:7px; }
+    input,select,button { font:inherit; color:var(--text); background:#15243a; border:1px solid #40536d; border-radius:7px; padding:7px 9px; }
+    input[type=checkbox] { accent-color:var(--accent); padding:0; }
+    input[type=file] { max-width:410px; }
+    .grid { display:grid; grid-template-columns:minmax(260px,360px) 1fr; gap:16px; margin-top:16px; }
+    .controls { display:grid; gap:13px; align-content:start; }
+    .checks { display:flex; flex-wrap:wrap; gap:8px 14px; }
+    .chart { min-width:0; }
+    .canvas-wrap { position:relative; width:100%; height:360px; }
+    .canvas-wrap.mp { height:280px; }
+    .canvas-wrap canvas { position:absolute; inset:0; display:block; width:100%; height:100%; border-radius:9px; }
+    .plot-base { background:#0a1525; border:1px solid var(--line); }
+    .crosshair-layer { background:transparent; cursor:crosshair; touch-action:none; }
+    .chart-tooltip { position:absolute; z-index:3; display:none; min-width:210px; max-width:340px; padding:8px 10px; pointer-events:none; background:rgba(5,12,22,.94); border:1px solid #526a89; border-radius:7px; box-shadow:0 8px 22px rgba(0,0,0,.35); font:12px/1.55 ui-monospace,SFMono-Regular,Consolas,monospace; white-space:nowrap; }
+    .chart-tooltip .tip-title { color:#fff; font-weight:700; }
+    .chart-tooltip .tip-help { color:var(--muted); margin-top:3px; }
+    .metrics { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:8px; margin-top:12px; }
+    .metric { background:#0a1525; border:1px solid var(--line); border-radius:8px; padding:9px 11px; }
+    .metric b { display:block; font-size:17px; margin-top:2px; }
+    summary { cursor:pointer; font-size:16px; font-weight:650; }
+    .fold-body { margin-top:14px; }
+    .fold-body.toolbar { margin:14px 0 0; padding:0; border:0; }
+    details.panel { min-width:0; align-self:start; }
+    .table-scroll { overflow:auto; margin-top:14px; max-height:460px; }
+    table { width:100%; border-collapse:collapse; white-space:nowrap; }
+    th,td { text-align:left; border-bottom:1px solid var(--line); padding:9px; }
+    th { color:var(--muted); }
+    td input { width:150px; }
+    #usageParentPath { width:min(490px,70vw); }
+    .warn { color:#ffbe76; }
+    @media (max-width:900px) { .grid { grid-template-columns:1fr; } main { padding:14px; } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>手部控制全链路数据查看器</h1>
+  <div class="hint">本页完全本地运行。选择 <code>E:\TsenseI_hand_logs\A30、A32、V2</code> 中的日志（可多选），文件不会上传。</div>
+
+  <details class="panel " open data-fold="section-1"><summary>日志选择与视图设置</summary><div class="fold-body toolbar">
+    <label>数据文件 <input id="file" type="file" multiple accept=".jsonl,.json,text/plain"></label>
+    <label>手侧 <select id="handSide"><option value="left">左手</option><option value="right">右手</option></select></label>
+    <label><input id="linkTimeZoom" type="checkbox" checked>所有图表时间轴联动</label>
+    <label><input id="autoFitY" type="checkbox" checked>纵轴跟随当前时间范围</label>
+    <button id="resetAllZoom" type="button">复位全部视图</button>
+    <label>时间范围 / s <input id="viewStart" type="number" min="0" step="0.001" placeholder="开始" style="width:105px"></label>
+    <label>至 <input id="viewEnd" type="number" min="0" step="0.001" placeholder="结束" style="width:105px"></label>
+    <button id="applyTimeRange" type="button">应用时间范围</button>
+    <span id="status" class="status">尚未加载数据</span>
+    <span id="sessionTimeRange" class="hint"></span>
+  </div></details>
+
+  <details class="panel" open data-fold="notice"><summary>数据完整性说明</summary><div id="dataNotice" class="hint fold-body" role="status" hidden></div></details>
+
+
+  <details class="panel" open data-fold="usage">
+    <summary>使用过程记录</summary>
+    <div class="fold-body">
+      <p class="hint">导入全链路日志后自动登记；可多选文件累计，重复导入及分段不会重复计时。时长为记录会话的覆盖时段，包含预览和暂停，不代表电机通电时长。设备名称可区分同型号的实物。</p>
+      <div class="chart-tools">
+        <button id="usageRefreshFolder" type="button">刷新 A30 文件夹</button>
+        <label>查看单份日志曲线 <select id="usageLogFile"><option value="">选择 A30 日志</option></select></label>
+        <button id="usageOpenLog" type="button">打开所选日志</button>
+      </div>
+      <div class="chart-tools">
+        <label>日志父目录 <input id="usageParentPath" type="text" autocomplete="off" placeholder="例如 E:\TsenseI_hand_logs"></label>
+        <button id="usageSaveParent" type="button">确认并创建 A30 / A32 / V2</button>
+        <span id="usageLogParent" class="hint"></span>
+      </div>
+      <div class="chart-tools">
+        <label>型号 <select id="usageModel"><option value="A30">A30</option><option value="A32">A32</option><option value="V2">V2</option></select></label>
+        <label>手侧 <select id="usageSide"><option value="left">左手</option><option value="right">右手</option></select></label>
+        <label>设备名称 <input id="usageName" maxlength="80" placeholder="可选，如样机 01"></label>
+        <label>开始 <input id="usageStart" type="datetime-local" step="1"></label>
+        <label>结束 <input id="usageEnd" type="datetime-local" step="1"></label>
+        <button id="usageAdd" type="button">添加使用记录</button>
+        <button id="usageExport" type="button">备份使用记录</button>
+        <label>恢复备份 <input id="usageImport" type="file" accept=".json"></label>
+      </div>
+      <div id="usageStatus" class="hint" role="status">记录保存在当前浏览器；可备份后在另一台电脑恢复。</div>
+      <div id="usageTotals" class="metrics"></div>
+      <div class="table-scroll"><table><thead><tr><th>手的名称</th><th>型号 / 手侧</th><th>开始时间</th><th>结束时间</th><th>使用时长</th><th>来源 / 完整性</th><th>操作</th></tr></thead><tbody id="usageRows"></tbody></table></div>
+    </div>
+  </details>
+  <div class="grid">
+    <details class="panel " open data-fold="section-2"><summary>关节曲线</summary><div class="fold-body controls">
+
+      <label>手指
+        <select id="finger">
+          <option value="thumb">拇指</option><option value="index">食指</option>
+          <option value="mid">中指</option><option value="ring">无名指</option><option value="pinky">小指</option>
+        </select>
+      </label>
+      <div><div class="hint">阶段</div><div class="checks">
+        <label><input id="stageRetarget" type="checkbox" checked>Retarget 原始输出</label>
+        <label><input id="stageH7" type="checkbox" checked><span id="h7StageLabel">H7 下发（UI 空间）</span></label>
+        <label><input id="stageControl" type="checkbox">物理处理后控制目标</label>
+        <label><input id="stageRuckig" type="checkbox">Ruckig 输出（限幅前）</label>
+        <label><input id="stageDirectFilter" type="checkbox" checked>直接滤波输出（碰撞后）</label>
+        <label><input id="stageFilterCandidate" type="checkbox">滤波候选（碰撞前，状态采样）</label>
+        <label><input id="stageConversion" type="checkbox">角度转换输入（HW 空间）</label>
+        <label title="正常屈曲为正，反向伸展为负"><input id="stageMediaPipeAngle" type="checkbox">输入骨架带符号角</label>
+      </div></div>
+      <div><div class="hint">关节（可多选）</div><div id="jointChecks" class="checks"></div></div>
+      <div id="jointStats" class="metrics"></div>
+    </div></details>
+    <details class="panel chart" open data-fold="section-3"><summary>关节角 / rad</summary><div class="fold-body ">
+
+      <div class="chart-tools">
+        <button id="jointZoomIn" type="button">横轴＋ 放大</button>
+        <button id="jointZoomOut" type="button">横轴－ 缩小</button>
+        <button id="jointZoomReset" type="button">复位</button>
+        <span id="jointRange" class="range-label">全范围</span>
+      </div>
+      <div class="canvas-wrap">
+        <canvas id="jointCanvas" class="plot-base"></canvas>
+        <canvas id="jointCrosshair" class="crosshair-layer"></canvas>
+        <div id="jointTooltip" class="chart-tooltip"></div>
+      </div>
+      <div class="hint">横轴/绘图区滚轮缩放时间，纵轴默认跟随当前曲线的最小值和最大值；左侧纵轴可手动缩放，下次横轴操作恢复自动适配。</div>
+    </div></details>
+  </div>
+
+  <div class="grid">
+    <details class="panel " open data-fold="section-4"><summary>关键点输入</summary><div class="fold-body controls">
+
+      <label>数据阶段 <select id="mpSource"><option value="input">Retarget 输入（21 点腕坐标）</option><option value="world">MediaPipe 原始 world</option><option value="normalized">MediaPipe 原始归一化</option><option value="webxr_world">WebXR 原始 world（25 关节 / 米）</option><option value="wuji_world">Wuji 手套原始骨架（21 点 / 米）</option></select></label>
+      <label>原始检测手序号 <select id="mpHand"><option value="0">0</option><option value="1">1</option></select></label>
+      <label>关键点 <select id="landmark"></select></label>
+      <div class="checks">
+        <label><input class="coord" value="0" type="checkbox" checked>X</label>
+        <label><input class="coord" value="1" type="checkbox" checked>Y</label>
+        <label><input class="coord" value="2" type="checkbox" checked>Z</label>
+      </div>
+      <div id="sessionStats" class="metrics"></div>
+    </div></details>
+    <details class="panel chart" open data-fold="section-5"><summary id="mpTitle">关键点坐标 / m</summary><div class="fold-body ">
+
+      <div class="chart-tools">
+        <button id="mpZoomIn" type="button">横轴＋ 放大</button>
+        <button id="mpZoomOut" type="button">横轴－ 缩小</button>
+        <button id="mpZoomReset" type="button">复位</button>
+        <span id="mpRange" class="range-label">全范围</span>
+      </div>
+      <div class="canvas-wrap mp">
+        <canvas id="mpCanvas" class="plot-base"></canvas>
+        <canvas id="mpCrosshair" class="crosshair-layer"></canvas>
+        <div id="mpTooltip" class="chart-tooltip"></div>
+      </div>
+      <div class="hint">十字轴显示精确值；横轴缩放或拖动时纵轴自动适配可见曲线，左侧纵轴仍可手动缩放。</div>
+    </div></details>
+  </div>
+  <details class="panel " open data-fold="section-6"><summary>电机选择与回传设置</summary><div class="fold-body toolbar">
+    <label>电机 <select id="motor"></select></label>
+    <label><input id="includeRejected" type="checkbox">包括重复 / 旧回传帧</label>
+    <span id="writeSemantics" class="hint">回传目标来自 pos_ref；成功下发表示串口写入成功。回传关联为接收前最近的主机写入，不是固件逐条确认。</span>
+  </div></details>
+  <div id="motorCharts"></div>
+  <details class="panel " open data-fold="section-7"><summary>逐帧数据</summary><div class="fold-body ">
+
+    <div class="chart-tools">
+      <label>时间 / s <input id="inspectTime" type="number" min="0" step="0.001" value="0"></label>
+      <button id="inspect" type="button">查看此时数据</button>
+      <button id="exportMotor" type="button">导出所选电机 CSV</button>
+    </div>
+    <pre id="frameDetail" style="white-space:pre-wrap;max-height:420px;overflow:auto">加载日志后可检查识别帧、转换、下发和回传原始字段。</pre>
+  </div></details>
+</main>
+
+<script>
+"use strict";
+// BEGIN GENERATED A3 TELEMETRY DECODER
+const A3Telemetry = (() => {
+// Shared telemetry decoder. Layout follows A3_USB_Downlink.pyw (<HHII>, 18 x <5f2h>, 2 x 20B).
+const SELF = ["pinky_DIP", "pinky_swing", "ring_DIP", "ring_swing", "pinky_PIP", "pinky_MCP", "ring_PIP", "ring_MCP",
+  "mid_DIP", "mid_swing", "index_DIP", "index_swing", "mid_PIP", "mid_MCP", "index_PIP", "index_MCP", "thumb_PIP", "thumb_MCP"];
+const EXTERNAL = ["thumb_rotaback_joint2", "thumb_rota_block_joint"];
+const MIT_GEAR_RATIOS = Object.freeze([50, 30]); // ROTABACK / ROTA_BLOCK
+const ROTARY = new Set([0,1,2,3,8,9,10,11,16]);
+const TELEMETRY_FORMAT = "a3-usb-5f2h/v1";
+function telemetryMetadata(side="left") {
+  const linear=SELF.filter((_,i)=>!ROTARY.has(i)).map(n=>n+"_joint");
+  const rotary=[...SELF.filter((_,i)=>ROTARY.has(i)).map(n=>n+"_joint"),...EXTERNAL];
+  return {model_id:"TsenseI_v3_0",telemetry_format:TELEMETRY_FORMAT,
+    slot_maps:Object.fromEntries(Object.entries({linear,rotary}).map(([kind,names])=>
+      [kind,Object.fromEntries(names.map((n,i)=>[`${side}_hand_${n}`,i]))])),
+    telemetry_units:{self_position:"mm or deg by slot",self_current:"firmware_native",
+      gravity_current:"A",external_current:"A",external_velocity:"output rpm"},
+    linear_feedback_sign:-1,external_gear_ratios:[...MIT_GEAR_RATIOS]};
+}
+const selfFeedbackValid = s => !!(s?.online && Number.isFinite(s.position));
+// The source accepts an online-mask bit even if the cached status identifier differs.
+// Identifier-only packets may be displayed, but remain stale for motion startup.
+const externalFeedbackValid = s => !!(s?.online && !s.fault && s.state!==5 && Number.isFinite(s.position));
+function boardTelemetry(p){
+  if(p.length<8)return null;
+  const v=new DataView(p.buffer,p.byteOffset,p.byteLength),temp=o=>v.getInt16(o,true)===0x7fff?null:v.getInt16(o,true)/100;
+  return {telemetry_seq:v.getUint16(0,true),ntc_c:temp(2),ntc_b:temp(4),vin_v:v.getUint16(6,true)===0xffff?null:v.getUint16(6,true)/1000};
+}
+function telemetry(p){
+  if(![444,484].includes(p.length))return null;
+  if(p.length===444){
+    const full=new Uint8Array(484);full.set(p);full[2]=full[3]=0;
+    return {...telemetry(full),payload_bytes:444};
+  }
+  const v=new DataView(p.buffer,p.byteOffset,p.byteLength),mask=v.getUint32(8,true),mitMask=v.getUint16(2,true);
+  const self=SELF.map((_,i)=>{
+    const o=12+i*24,spin=p[o]>=1&&p[o]<=4,home=p[o]===0&&p[o+1]===0&&p[o+2]===0;
+    return {slot:i,joint_suffix:SELF[i]+"_joint",position_unit:ROTARY.has(i)?"deg":"mm",
+      online:!!(mask&(1<<i)),home_state:home?p[o+3]:null,
+      theta_rad:!spin&&!home?v.getFloat32(o,true):null,
+      open_spin_state:spin?p[o]:null,open_spin_remaining_ms:spin?v.getUint16(o+1,true):null,
+      open_spin_frequency_hz:spin?v.getFloat32(o+20,true):null,
+      position:v.getFloat32(o+4,true),iq:v.getFloat32(o+8,true),iq_ref:v.getFloat32(o+12,true),pos_ref:v.getFloat32(o+16,true),
+      grav_iq:spin?null:v.getInt16(o+20,true)/1000,mcu_temp_c:spin||v.getInt16(o+22,true)===0x7fff?null:v.getInt16(o+22,true)/100};
+  });
+  const external=EXTERNAL.map((_,i)=>{
+    const o=444+i*20,online=!!(mitMask&(1<<i)),ident_ok=p[o]===5+4*i&&p[o+1]===5,fault=v.getUint32(o+12,true);
+    return {slot:i,joint_suffix:EXTERNAL[i],position_unit:"deg",gear_ratio:MIT_GEAR_RATIOS[i],
+      online,ident_ok,valid:online||ident_ok,ident0:p[o],ident1:p[o+1],
+      motor_position_deg:(v.getUint32(o+2,true)-0x80000000)/2097152*360,
+      motor_velocity_rpm:(v.getUint16(o+6,true)-0x8000)/10,
+      position:(v.getUint32(o+2,true)-0x80000000)/2097152*360/MIT_GEAR_RATIOS[i],
+      velocity:(v.getUint16(o+6,true)-0x8000)/10/MIT_GEAR_RATIOS[i],iq:(v.getUint16(o+8,true)-0x8000)*11/4096,
+      vbus_v:v.getUint16(o+10,true)/10,fault,faults:["驱动","过压","欠压","过流","编码器"].filter((_,bit)=>fault&(1<<bit)),
+      state:p[o+16],calib:p[o+17],mode:p[o+18],mtype:p[o+19]};
+  });
+  // The reference UI shows no measurement for absent/unidentified MIT packets.
+  for(const s of external)if(!s.valid)
+    for(const key of ["position","velocity","iq","vbus_v"])s[key]=null;
+  const linear=self.filter((_,i)=>!ROTARY.has(i)).map(s=>({...s,pos_act_mm:-s.position,pos_ref_mm:-s.pos_ref,iq_meas:s.iq,mech_home_state:s.home_state}));
+  const rotary=[...self.filter((_,i)=>ROTARY.has(i)).map(s=>({...s,pos_actual_mm:s.position,pos_ref_mm:s.pos_ref,home_label:s.home_state})),
+    ...external.map(s=>({...s,pos_actual_mm:s.position}))];
+  const decode_issues=[];
+  self.forEach((s,i)=>{
+    if(!s.online)return;
+    for(const field of ["position","pos_ref","iq","iq_ref"])
+      if(!Number.isFinite(s[field]))decode_issues.push({slot:i,joint_suffix:s.joint_suffix,field,reason:"nonfinite_wire_value"});
+    if(s.mcu_temp_c!==null&&(s.mcu_temp_c < -50 || s.mcu_temp_c > 150))
+      decode_issues.push({slot:i,joint_suffix:s.joint_suffix,field:"mcu_temp_c",reason:"unusual_wire_value"});
+  });
+  return {telemetry_format:TELEMETRY_FORMAT,telemetry_seq:v.getUint16(0,true),tick_ms:v.getUint32(4,true),
+    self_online_mask:mask,external_online_mask:mitMask,payload_bytes:484,self,external,linear,rotary,decode_issues,
+    all_online:self.every(selfFeedbackValid)&&external.every(externalFeedbackValid)};
+}
+
+return {telemetry,boardTelemetry,telemetryMetadata};
+})();
+// END GENERATED A3 TELEMETRY DECODER
+const FINGERS = {
+  thumb: [["thumb_rota","旋转 rota"],["thumb_swing","摆动 swing"],["thumb_MCP","MCP"],["thumb_PIP","PIP"]],
+  index: [["index_swing","摆动 swing"],["index_MCP","MCP"],["index_PIP","PIP"],["index_DIP","DIP"]],
+  mid:   [["mid_swing","摆动 swing"],["mid_MCP","MCP"],["mid_PIP","PIP"],["mid_DIP","DIP"]],
+  ring:  [["ring_swing","摆动 swing"],["ring_MCP","MCP"],["ring_PIP","PIP"],["ring_DIP","DIP"]],
+  pinky: [["pinky_rota","旋转 rota"],["pinky_swing","摆动 swing"],["pinky_MCP","MCP"],["pinky_PIP","PIP"],["pinky_DIP","DIP"]]
+};
+const MP_ANGLE_TRIPLETS = {
+  thumb_MCP:[1,2,3], thumb_PIP:[2,3,4],
+  index_MCP:[0,5,6], index_PIP:[5,6,7], index_DIP:[6,7,8],
+  mid_MCP:[0,9,10], mid_PIP:[9,10,11], mid_DIP:[10,11,12],
+  ring_MCP:[0,13,14], ring_PIP:[13,14,15], ring_DIP:[14,15,16],
+  pinky_MCP:[0,17,18], pinky_PIP:[17,18,19], pinky_DIP:[18,19,20]
+};
+const MP_NAMES = ["腕 wrist","拇指 CMC","拇指 MCP","拇指 IP","拇指指尖","食指 MCP","食指 PIP","食指 DIP","食指指尖","中指 MCP","中指 PIP","中指 DIP","中指指尖","无名指 MCP","无名指 PIP","无名指 DIP","无名指指尖","小指 MCP","小指 PIP","小指 DIP","小指指尖"];
+const WEBXR_NAMES = ["wrist", "thumb-metacarpal", "thumb-phalanx-proximal", "thumb-phalanx-distal", "thumb-tip",
+  ...["index-finger", "middle-finger", "ring-finger", "pinky-finger"].flatMap(finger=>
+    ["metacarpal", "phalanx-proximal", "phalanx-intermediate", "phalanx-distal", "tip"].map(joint=>`${finger}-${joint}`))];
+const COLORS = ["#54d4a0","#ffbe76","#74b9ff","#ff7675","#a29bfe","#00cec9","#fd79a8","#ffeaa7","#81ecec","#fab1a0"];
+const state = { meta:null, retarget:[], skipped:[], planner:[], h7:[], mp:[], raw:[], control:[], filtered:[], filterDetail:[], conversion:[], downlink:[], telemetry:[], board:[], sdk:[], sdkEvents:[], events:[], end:null, counts:{}, inferredModel:null };
+const chartModels = new WeakMap();
+const chartViews = new WeakMap();
+const interactionControllers = new WeakMap();
+const $ = id => document.getElementById(id);
+const CHART_IDS = ["joint", "mp", "position", "current", "temperature", "controlPeriod"];
+const DEFAULT_SLOTS = {
+  linear:["ring_MCP","ring_PIP","ring_DIP","pinky_MCP","pinky_PIP","pinky_DIP","index_MCP","index_PIP","index_DIP","mid_MCP","mid_PIP","mid_DIP","thumb_MCP","thumb_PIP"],
+  rotary:["index_swing","mid_swing","ring_swing","pinky_swing","thumb_rota","thumb_swing","pinky_rota"]
+};
+// Default browser A3.2 layout from src/a32_driver/a32_hardware.json.
+const A32_CHANNELS = [
+  {"joint":"left_hand_pinky_DIP_joint","channel":"self","index":0,"unit":"mm"},
+  {"joint":"left_hand_pinky_PIP_joint","channel":"self","index":1,"unit":"mm"},
+  {"joint":"left_hand_pinky_MCP_joint","channel":"self","index":2,"unit":"mm"},
+  {"joint":"left_hand_ring_DIP_joint","channel":"self","index":3,"unit":"mm"},
+  {"joint":"left_hand_ring_PIP_joint","channel":"self","index":4,"unit":"mm"},
+  {"joint":"left_hand_ring_MCP_joint","channel":"self","index":5,"unit":"mm"},
+  {"joint":"left_hand_pinky_swing_joint","channel":"self","index":6,"unit":"deg"},
+  {"joint":"left_hand_ring_swing_joint","channel":"self","index":7,"unit":"deg"},
+  {"joint":"left_hand_mid_DIP_joint","channel":"self","index":8,"unit":"mm"},
+  {"joint":"left_hand_mid_PIP_joint","channel":"self","index":9,"unit":"mm"},
+  {"joint":"left_hand_mid_MCP_joint","channel":"self","index":10,"unit":"mm"},
+  {"joint":"left_hand_index_DIP_joint","channel":"self","index":11,"unit":"mm"},
+  {"joint":"left_hand_index_PIP_joint","channel":"self","index":12,"unit":"mm"},
+  {"joint":"left_hand_index_MCP_joint","channel":"self","index":13,"unit":"mm"},
+  {"joint":"left_hand_mid_swing_joint","channel":"self","index":14,"unit":"deg"},
+  {"joint":"left_hand_index_swing_joint","channel":"self","index":15,"unit":"deg"},
+  {"joint":"left_hand_thumb_PIP_joint","channel":"self","index":16,"unit":"mm"},
+  {"joint":"left_hand_thumb_MCP_joint","channel":"self","index":17,"unit":"mm"},
+  {"joint":"left_hand_thumb_rotaback_joint2","channel":"mit","index":0,"unit":"deg"},
+  {"joint":"left_hand_thumb_rota_block_joint","channel":"mit","index":1,"unit":"deg"}
+];
+for(const [id,title] of [["position","转换 → 下发 → 回传目标 / 实际位置"],["current","电流：实测 / 目标 / 重力补偿（协议原值）"],["temperature","直线电机 MCU 温度 / °C"],["controlPeriod","控制周期 / ms（成功写入间隔包含暂停时间）"]]) {
+  const section=document.createElement("details");section.className="panel chart";section.open=true;section.dataset.fold=id;
+  section.innerHTML=`<summary>${title}</summary><div class="fold-body"><div class="chart-tools"><button id="${id}ZoomIn">横轴＋ 放大</button><button id="${id}ZoomOut">横轴－ 缩小</button><button id="${id}ZoomReset">复位</button><span id="${id}Range" class="range-label"></span></div><div class="canvas-wrap"><canvas id="${id}Canvas" class="plot-base"></canvas><canvas id="${id}Crosshair" class="crosshair-layer"></canvas><div id="${id}Tooltip" class="chart-tooltip"></div></div></div>`;
+  $("motorCharts").append(section);
+}
+const USAGE_KEY='tsensei-hand-usage-v1';
+let usageRecords=[],usageScan={min:Infinity,max:0,sides:new Set()};
+function usageModel(value){
+  if(/v3[_\. ]?0|a3\.?0/i.test(value||''))return 'A30';
+  if(/v3[_\. ]?2|a3\.?2/i.test(value||''))return 'A32';
+  return /v2/i.test(value||'')?'V2':null;
+}
+function unionRanges(ranges){
+  const result=[];
+  for(const [start,end] of ranges.filter(([a,b])=>Number.isFinite(a)&&Number.isFinite(b)&&b>=a).sort((a,b)=>a[0]-b[0])){
+    const last=result.at(-1);
+    if(last&&start<=last[1])last[1]=Math.max(last[1],end);else result.push([start,end]);
+  }
+  return result;
+}
+function usageComplete(record){
+  const last=record.parts.filter(p=>p.closed).sort((a,b)=>b.index-a.index)[0];
+  if(!last)return false;
+  const count=last.count||last.index;
+  return record.parts.length>=count&&Array.from({length:count},(_,i)=>i+1).every(n=>record.parts.some(p=>p.index===n));
+}
+function usageRanges(record){
+  if(usageComplete(record))return [[record.start,Math.max(...record.parts.map(p=>p.end))]];
+  return unionRanges(record.parts.map(p=>[p.start,p.end]));
+}
+function durationText(ms){
+  const seconds=Math.floor(Math.max(0,ms)/1000);
+  return `${Math.floor(seconds/3600)} 时 ${Math.floor(seconds%3600/60)} 分 ${seconds%60} 秒`;
+}
+function usageDuration(record){return usageRanges(record).reduce((sum,[a,b])=>sum+b-a,0);}
+function validUsage(record){
+  return record&&typeof record.id==='string'&&record.id.length<=500&&['A30','A32','V2'].includes(record.model)
+    &&['left','right'].includes(record.side)&&typeof record.name==='string'&&record.name.length<=80
+    &&Number.isFinite(record.start)&&Math.abs(record.start)<8.64e15&&Array.isArray(record.parts)&&record.parts.length>0&&record.parts.length<=10000
+    &&record.parts.every(p=>Number.isInteger(p.index)&&p.index>0&&p.index<=10000&&Number.isFinite(p.start)&&Number.isFinite(p.end)
+      &&p.start>=record.start&&p.end>=p.start&&p.end<8.64e15&&typeof p.closed==='boolean'
+      &&(p.count==null||Number.isInteger(p.count)&&p.count>0&&p.count<=10000));
+}
+function persistUsage(){
+  try{window.localStorage.setItem(USAGE_KEY,JSON.stringify(usageRecords));}
+  catch{$('usageStatus').textContent='浏览器未能保存使用记录，请点击“备份使用记录”保存到文件。';}
+}
+function mergeUsage(record){
+  const existing=usageRecords.find(r=>r.id===record.id);
+  if(!existing){usageRecords.push(record);return;}
+  // A later complete import may replace a partial snapshot, never shorten it.
+  for(const part of record.parts){
+    const old=existing.parts.find(p=>p.index===part.index);
+    if(!old)existing.parts.push(part);
+    else if(part.end>=old.end)Object.assign(old,part,{start:Math.min(old.start,part.start),closed:old.closed||part.closed});
+  }
+}
+function registerUsage(filename){
+  const meta=state.meta,metadata=meta?.metadata||{};
+  if(meta?.schema?.startsWith('hand-diagnostic'))return;
+  const model=usageModel(metadata.model_id||state.inferredModel)||(metadata.slot_maps?.linear&&Object.keys(metadata.slot_maps.linear).length===14?'V2':null);
+  const start=Date.parse(meta?.started_at||'');
+  if(!model||!Number.isFinite(start)){$('usageStatus').textContent='此日志缺少型号或开始时间，未自动计时；可填写上方信息手动登记。';return;}
+  const part=meta.recording_part,index=part?.index||1;
+  const sides=['left','right'].includes(metadata.hand_side)?[metadata.hand_side]:[...usageScan.sides];
+  const duration=finiteValue(state.end?.duration_s)??finiteValue(state.end?.t)??usageScan.max;
+  const end=start+Math.max(usageScan.max,duration)*1000;
+  for(const side of sides){
+    const record={id:`log:${meta.session_id||part?.session_id||meta.started_at}:${model}:${side}`,model,side,
+      name:String(metadata.hand_name||'').slice(0,80),start,
+      parts:[{index,count:part?.count||null,start:start+(index===1?0:Math.min(usageScan.min,usageScan.max))*1000,
+        end,closed:!!state.end,filename}]};
+    if(validUsage(record))mergeUsage(record);
+  }
+  persistUsage();
+}
+function renderUsage(){
+  const groups=new Map();
+  const label=r=>`${r.model} ${r.side==='left'?'左手':'右手'}${r.name?' · '+r.name:''}`;
+  const visible=usageRecords.filter(record=>record.model===$('usageModel').value);
+  for(const record of visible){const key=label(record);groups.set(key,[...(groups.get(key)||[]),...usageRanges(record)]);}
+  $('usageTotals').innerHTML=[...groups].map(([key,ranges])=>metric(key+' · 总时长',durationText(unionRanges(ranges).reduce((sum,[a,b])=>sum+b-a,0)))).join('')||'<p class="hint">导入日志或添加记录后显示累计时长。</p>';
+  $('usageRows').innerHTML=visible.slice().sort((a,b)=>b.start-a.start).map(record=>{
+    const end=Math.max(...record.parts.map(p=>p.end));
+    return `<tr><td><input data-name="${escapeHtml(record.id)}" aria-label="设备名称" maxlength="80" value="${escapeHtml(record.name)}" placeholder="${record.model} ${record.side==='left'?'左手':'右手'}"></td>
+      <td>${escapeHtml(record.model)} / ${record.side==='left'?'左手':'右手'}</td><td>${escapeHtml(new Date(record.start).toLocaleString())}</td>
+      <td>${escapeHtml(new Date(end).toLocaleString())}</td><td>${durationText(usageDuration(record))}</td>
+      <td>${record.id.startsWith('manual:')?'手动登记':usageComplete(record)?'日志 · 已封存':'日志 · 未完整封存 / 仅已记录时段'}</td>
+      <td><button type="button" data-remove="${escapeHtml(record.id)}">移除记录</button></td></tr>`;
+  }).join('');
+}
+function setupUsage(){
+  try{const stored=JSON.parse(window.localStorage.getItem(USAGE_KEY)||'[]');if(Array.isArray(stored))usageRecords=stored.filter(validUsage);}
+  catch{$('usageStatus').textContent='使用记录缓存无法读取；可恢复备份，或导入日志重新生成。';}
+  $('usageAdd').addEventListener('click',()=>{
+    const start=new Date($('usageStart').value).getTime(),end=new Date($('usageEnd').value).getTime();
+    const record={id:'manual:'+crypto.randomUUID(),model:$('usageModel').value,side:$('usageSide').value,name:$('usageName').value.trim().slice(0,80),start,
+      parts:[{index:1,count:1,start,end,closed:true}]};
+    if(!validUsage(record)){$('usageStatus').textContent='请填写有效的开始、结束时间，结束时间不能早于开始时间。';return;}
+    mergeUsage(record);persistUsage();renderUsage();
+  });
+  $('usageRows').addEventListener('change',event=>{
+    const record=usageRecords.find(r=>r.id===event.target.dataset.name);if(!record)return;
+    record.name=event.target.value.trim().slice(0,80);persistUsage();renderUsage();
+  });
+  $('usageRows').addEventListener('click',event=>{
+    const id=event.target.dataset.remove;if(!id)return;
+    usageRecords=usageRecords.filter(r=>r.id!==id);persistUsage();renderUsage();
+  });
+  $('usageExport').addEventListener('click',()=>{
+    const a=document.createElement('a'),url=URL.createObjectURL(new Blob([JSON.stringify({schema:'hand-usage/v1',records:usageRecords},null,2)],{type:'application/json'}));
+    a.href=url;a.download='hand_usage_'+new Date().toISOString().slice(0,10)+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+  });
+  $('usageImport').addEventListener('change',async event=>{
+    try{
+      const file=event.target.files[0];if(!file)return;if(file.size>16*1024*1024)throw Error('备份超过 16 MiB');
+      const data=JSON.parse(await file.text());
+      if(data.schema!=='hand-usage/v1'||!Array.isArray(data.records)||data.records.length>10000||!data.records.every(validUsage))throw Error('备份格式无效');
+      for(const record of data.records)mergeUsage(record);persistUsage();renderUsage();$('usageStatus').textContent='备份已合并，相同记录不会重复累计。';
+    }catch(error){$('usageStatus').textContent=`恢复失败：${error.message}`;}
+    finally{event.target.value='';}
+  });
+  renderUsage();
+}
+function setupFolding(){
+  let saved={};try{saved=JSON.parse(window.localStorage.getItem('tsensei-viewer-folds')||'{}');}catch{}
+  if(!saved||typeof saved!=='object'||Array.isArray(saved))saved={};
+  for(const panel of document.querySelectorAll('details[data-fold]')){
+    if(typeof saved?.[panel.dataset.fold]==='boolean')panel.open=saved[panel.dataset.fold];
+    panel.addEventListener('toggle',()=>{
+      saved[panel.dataset.fold]=panel.open;
+      try{window.localStorage.setItem('tsensei-viewer-folds',JSON.stringify(saved));}catch{}
+      if(panel.open)requestAnimationFrame(()=>drawAll(false));
+    });
+  }
+}
+function sideRows(rows){return rows.filter(r=>!r.hand_side||r.hand_side===$("handSide").value);}
+function telemetryRows(){return sideRows(state.telemetry).filter(r=>$("includeRejected").checked||r.accepted!==false);}
+function finiteValue(v){return typeof v==="number"&&Number.isFinite(v)?v:null;}
+function validWallMillis(value){return Number.isFinite(value)&&Math.abs(value)<=8.64e15?value:null;}
+function sessionWallMillis(time){
+  const start=Date.parse(state.meta?.started_at||"");
+  return Number.isFinite(time)&&Number.isFinite(start)?validWallMillis(start+time*1000):null;
+}
+function eventWallMillis(row){
+  if(!row)return null;
+  const explicit=validWallMillis(finiteValue(row.wall_time_unix_ms));
+  if(explicit!==null)return explicit;
+  for(const key of ["wall_time","at"]){const parsed=Date.parse(row[key]||"");if(Number.isFinite(parsed))return parsed;}
+  return sessionWallMillis(row.t);
+}
+function eventWallSource(row){
+  if(!row||eventWallMillis(row)===null)return "unavailable";
+  return validWallMillis(finiteValue(row.wall_time_unix_ms))!==null||["wall_time","at"].some(key=>Number.isFinite(Date.parse(row[key]||"")))
+    ?"recorded_host_time":"derived_from_started_at_and_t";
+}
+function wallIso(ms){return ms===null?null:new Date(ms).toISOString();}
+function elapsedDuration(){return Math.max(0,finiteValue(state.end?.t)||0,usageScan.max);}
+function writeSuccessLabel(){return isA32Log()?"SDK 写入成功":"串口写入成功";}
+function resetData(){usageScan={min:Infinity,max:0,sides:new Set()};for(const key of ["retarget","skipped","planner","h7","mp","raw","control","filtered","filterDetail","conversion","downlink","telemetry","board","sdk","sdkEvents","events"])state[key]=[];state.meta=null;state.end=null;state.counts={};state.inferredModel=null;}
+function isA30Log(){return ["TsenseI_v3_0","TsenseI_v3_0_withid"].includes(state.meta?.metadata?.model_id)||state.inferredModel==="TsenseI_v3_0";}
+function isA32Log(){return ["TsenseI_v3_2","TsenseI_v3_2_withid"].includes(state.meta?.metadata?.model_id);}
+function availableSides(){
+  const counts={left:0,right:0};
+  for(const key of ["telemetry","downlink","conversion","retarget","h7","mp","control","filtered","filterDetail","sdk"])
+    for(const row of state[key])if(row.hand_side in counts)counts[row.hand_side]++;
+  return counts;
+}
+function hasLandmarkValues(points){return Array.isArray(points)&&points.some(p=>Array.isArray(p)&&p.some(v=>finiteValue(v)!==null));}
+function rawLandmarkRows(mode){return state.raw.filter(row=>mode==="webxr_world"?row.type==="webxr_raw":mode==="wuji_world"?row.type==="wuji_glove_raw":!["webxr_raw","wuji_glove_raw"].includes(row.type));}
+function landmarkNames(){return $("mpSource").value==="webxr_world"?WEBXR_NAMES:MP_NAMES;}
+function updateLandmarkOptions(){
+  const names=landmarkNames(),kind=$("mpSource").value==="webxr_world"?"webxr25":"compatible21",select=$("landmark");
+  if(select.dataset.jointSet===kind)return;
+  const previous=select.value;select.replaceChildren();
+  names.forEach((name,i)=>select.add(new Option(`${i}: ${name}`,String(i))));
+  if(Number(previous)<names.length)select.value=previous||"0";
+  select.dataset.jointSet=kind;
+}
+function adaptWebXRRaw(row){
+  // Keep native joint order and all raw rotations/radii/validity in raw_webxr.
+  // Any 21-point world field is a separate wrist-relative compatibility view.
+  const raw=row.raw_webxr,stale=row.source_metadata?.stale===true;
+  const hands=raw?.type==="hand_skeleton"&&Array.isArray(raw.hands)?raw.hands:[];
+  let world=hands.map(hand=>!stale&&hand.tracked!==false&&Array.isArray(hand.joints)
+    ? WEBXR_NAMES.map((name,i)=>{
+        const joint=hand.joints[i],position=joint?.position;
+        return joint?.name===name&&joint.valid===true&&Array.isArray(position)&&position.length===3
+          ? position.map(finiteValue):[null,null,null];
+      }):[]);
+  if(!raw&&!stale&&row.tracked!==false&&Array.isArray(row.world_landmarks))
+    world=row.world_landmarks.map(points=>Array.isArray(points)&&points.length===25
+      ?points.map(point=>Array.isArray(point)&&point.length===3?point.map(finiteValue):[null,null,null]):[]);
+  return {...row,input_source:"webxr",compatibility_world_landmarks:row.world_landmarks,
+    world_landmarks:world,normalized_landmarks:[],native_joint_names:WEBXR_NAMES,
+    coordinate_space:raw?.coordinate_space||row.source_metadata?.coordinate_space||"webxr_world"};
+}
+function hasMpSource(mode,hand=null){
+  if(mode==="input")return sideRows(state.mp).some(r=>hasLandmarkValues(r.points));
+  const field=mode==="normalized"?"normalized_landmarks":"world_landmarks";
+  return rawLandmarkRows(mode).some(r=>hand===null?(r[field]||[]).some(hasLandmarkValues):hasLandmarkValues(r[field]?.[hand]));
+}
+function selectLoadedMpSource(){
+  // Diagnostic recordings retain raw detections but omit retarget-input rows.
+  // Select an existing stage; never manufacture filtered points from raw data.
+  const current=$("mpSource").value;
+  const mode=[current,"input","world","normalized","webxr_world","wuji_world"].find(value=>hasMpSource(value));
+  if(!mode)return;
+  $("mpSource").value=mode;
+  if(mode!=="input"&&!hasMpSource(mode,Number($("mpHand").value))){
+    const hand=[...$("mpHand").options].find(option=>hasMpSource(mode,Number(option.value)));
+    if(hand)$("mpHand").value=hand.value;
+  }
+}
+function selectLoadedData(){
+  const counts=availableSides(),preferred=state.meta?.metadata?.hand_side;
+  $("handSide").value=counts[preferred]>0?preferred:counts.right>counts.left?"right":"left";
+  $("stageConversion").checked=state.conversion.length>0&&!state.retarget.length&&!state.h7.length;
+  selectLoadedMpSource();
+  setMotors();setJointChecks();drawAll(true);inspectFrame(0);
+}
+function updateDataNotice(){
+  const messages=[],counts=availableSides(),side=$("handSide").value,preferred=state.meta?.metadata?.hand_side;
+  const repaired=state.telemetry.reduce((total,row)=>total+(row.decode_corrections||[]).filter(c=>c.field!=="pos_err_mm").length,0);
+  if(repaired)messages.push(`已依据原始报文修正 ${repaired} 处旧版负零误解码（-2147483.648 mm → 0 mm）；原始文件保持不变，逐帧详情保留修正记录。`);
+  const redecoded=state.telemetry.filter(r=>r.redecoded_from_payload).length;
+  const invalid=state.telemetry.filter(r=>r.decode_issues?.length).length;
+  if(redecoded)messages.push(`已用与网页相同的 A3 解码器复核 ${redecoded} 帧原始报文（18 路自研＋2 路外接，直线 mm / 旋转 deg）。`);
+  if(invalid)messages.push(`${invalid} 帧原始遥测含非有限值或异常温度；这不是 JSON 读取失败。缺失值不补零，槽位与原始值见逐帧详情。`);
+  if(state.end?.recording_error)messages.push(`记录提前结束：${state.end.recording_error}。已保存的数据仍可查看。`);
+  else if(state.meta?.recording_status?.error)messages.push(`记录保存失败：${state.meta.recording_status.error}。当前文件可能不完整，请保留其他分段及诊断日志。`);
+  if(state.meta?.recording_status?.missing_chunks)messages.push(`本段缺少 ${state.meta.recording_status.missing_chunks} 个存储块，数据不完整。`);
+  if(state.meta?.recording_part){const p=state.meta.recording_part;messages.push(`当前为完整记录的第 ${p.index} / ${p.count??"待封存"} 段；这里只统计本段事件，时间沿用整次记录。请下载并检查其余分段；中间分段没有会话结束标记是正常的。`);}
+  if(state.skipped.length){
+    const names={no_hand:'未检测到手',wrong_hand:'手侧不符',solve_rejected:'求解未通过',invalid_retarget:'求解结果为空或无效',missing_retarget:'响应缺少求解结果',queue_replaced:'被更新帧替换',queue_expired:'送入求解前已过期',queue_closed:'停止时取消排队',request_cancelled:'停止时取消请求',request_failed:'请求失败'};
+    const counts={};for(const row of state.skipped)counts[row.reason]=(counts[row.reason]||0)+1;
+    messages.push(`未产生 Retarget 的原因：${Object.entries(counts).map(([reason,n])=>`${names[reason]||reason} ${n} 帧`).join('；')}。`);
+  }
+  if(state.counts.control_target_skipped)messages.push(`${state.counts.control_target_skipped} 帧已完成 Retarget，但后续控制未接受；原始求解角度已保留，不代表真机已执行。`);
+  if(state.meta?.metadata?.offline_replay)messages.push("离线滤波回放：滤波曲线为模拟计算，未写入真机；原始日志事件保留。延迟结果不包含串口和机械响应。");
+  if(state.meta?.metadata?.telemetry_format==="a32-native-sdk-state/v1")messages.push(`A3.2 原生 SDK 记录：14 路直线＋6 路旋转；遥测为 SDK 最新缓存的抽样，离线、过期或缺测区间的曲线断开，CSV 测量列留空；原始缓存值保留供排查。已保存 ${state.sdk.length} 条状态；逐帧详情可查看在线标志、找零状态和错误。`);
+  if(state.counts.a32_sdk_sample){
+    const connected=state.sdk.filter(r=>r.sdk_state?.connected).length;
+    messages.push(`A3.2 浏览器记录：${state.counts.a32_sdk_sample} 次 SDK 状态采样，${connected} 次已连接；回传曲线来自采样时的 SDK 缓存，并非每个硬件数据包。成功下发仅统计实际写入事件，不重复计入状态采样的 sent 标记。`);
+    if(!connected)messages.push("此文件 SDK 始终未连接，没有有效硬件回传；已有的骨架、关节和转换结果仍可查看。");
+  }
+  if(state.counts.a30_conversion)messages.push(`A3.0 求解/预览转换 ${state.counts.a30_conversion} 条已加载；与实际下发前的 conversion 分开保留，预览转换不代表已写入机械手。`);
+  const sdkGaps=state.sdkEvents.filter(r=>r.type==="a32_sdk_recording_gap").reduce((n,r)=>n+(finiteValue(r.count)||0),0);
+  if(sdkGaps)messages.push(`浏览器遗漏 ${sdkGaps} 条 SDK 下发采样，请检查服务端完整控制日志。`);
+  if(state.meta&&!state.raw.length&&!state.mp.length&&!state.retarget.length&&!state.conversion.length&&!state.h7.length&&!state.telemetry.length)
+    messages.push(`文件已读取，但没有动作或电机回传数据。${state.end?.reason?`结束原因：${state.end.reason}。`:""}`);
+  if(state.meta?.started_at)messages.push("曲线横轴使用单调时间 t（秒）。逐帧及 CSV 保留主机绝对时间；旧日志或任意十字轴位置的绝对时间由 started_at + t 推算并标明来源，系统时钟调整不会改变控制周期。");
+  if(state.meta?.metadata?.read_only_capture)messages.push("本文件为只读状态采样，没有下发动作；未接收到遥测时，电机曲线为空。");
+  if(!hasMpSource("input")&&(hasMpSource("world")||hasMpSource("normalized")||hasMpSource("webxr_world")))messages.push("此文件没有 Retarget 输入关键点，加载时已选择原始关键点数据；原始检测不能等同于滤波后的 Retarget 输入。");
+  if(state.counts.webxr_raw||state.counts.webxr)messages.push("WebXR 原始 world 为 25 个关节的米制坐标，Retarget 输入为映射后的 21 点腕坐标。WebXR 没有归一化图像坐标；原始位置、旋转、半径、有效标记及来源元数据保留在逐帧详情中。");
+  if($("mpSource").value==="input"&&hasMpSource("input")&&$("landmark").value==="0")messages.push("当前选择的是腕坐标系原点（关键点 0），X/Y/Z 为零是有效数据；选择指尖等关键点可查看变化。");
+  if(state.meta?.schema==="hand-diagnostic/v1"){
+    messages.push(`诊断日志是低频抽样记录，当前文件仅包含 ${state.raw.length} 条原始检测、${state.retarget.length} 条 Retarget、${state.telemetry.length} 条遥测；这些数量不等于运行时总帧数。查看密集控制曲线请加载 hand_control 文件。`);
+    if(!state.h7.length)messages.push("诊断日志未保存 H7 逐帧目标，H7 曲线为空。");
+  }
+  if(state.filtered.length)messages.push(`已捕获 ${state.filtered.length} 个直接滤波样本。勾选“物理处理后控制目标”对比滤波前输入；逐帧详情可查看滤波参数、候选值和 sent 标记。`);
+  const retargetRows=sideRows(state.retarget);
+  const gaps=retargetRows.slice(1).filter((r,i)=>r.t-retargetRows[i].t>RETARGET_GAP_S).length;
+  if(gaps)messages.push(state.meta?.schema==="hand-diagnostic/v1"
+    ? `诊断日志按采样保留 retarget；${gaps} 段超过 ${RETARGET_GAP_S} 秒的记录间隔已断开，不能据此推断识别丢帧。`
+    : `Retarget 有 ${gaps} 段超过 ${RETARGET_GAP_S} 秒没有新结果，曲线已断开；缺帧期间 H7 可能保持旧姿态。逐帧详情可查看原始识别、跳过原因与 planner_sample 碰撞保持状态。`);
+  if(state.meta&&preferred&&counts[preferred]===0&&(counts.left+counts.right)>0)
+    messages.push(`会话头记录为${preferred==="right"?"右手":"左手"}，实际事件数据属于另一手侧；加载时已按实际数据选择。`);
+  if(counts[side]===0&&(counts.left+counts.right)>0)messages.push(`当前${side==="right"?"右手":"左手"}没有事件数据，请切换手侧。`);
+  if(state.raw.length&&!state.raw.some(r=>(r.normalized_landmarks||[]).some(h=>h.length)||(r.world_landmarks||[]).some(h=>h.length)))
+    messages.push(`${state.raw.length} 次关键点采集均未检测到手，因此没有识别点和 retarget 曲线。`);
+  if(state.conversion.length&&!state.retarget.length&&!state.h7.length)
+    messages.push("此日志包含手动/直接控制数据：关节图可显示角度转换输入（HW 空间）；下方显示行程、回传、电流和温度。");
+  $("dataNotice").textContent=messages.join(" ");$("dataNotice").hidden=!messages.length;
+}
+function a32Channels(){
+  const side=state.meta?.metadata?.hand_side||"left";
+  return (state.meta?.metadata?.hardware_channels||A32_CHANNELS).map(c=>({...c,joint:c.joint.replace(/^(left|right)_hand_/,`${side}_hand_`)}))
+    .sort((a,b)=>(a.channel!=="self")-(b.channel!=="self")||a.index-b.index);
+}
+function a32Slots(kind){
+  const channels=a32Channels(),map=state.meta?.metadata?.slot_maps?.[kind];
+  if(map){const slots=[];for(const [joint,index] of Object.entries(map))slots[index]=channels.find(c=>c.joint===joint)||{joint};return slots;}
+  return channels.filter(c=>(c.unit==="mm")===(kind==="linear"));
+}
+function conversionSlots(row,kind){
+  if(row.type!=="a30_conversion")return a32Slots(kind);
+  const side=row.hand_side||state.meta?.metadata?.hand_side||"left";
+  const map=state.meta?.metadata?.slot_maps?.[kind]||A3Telemetry.telemetryMetadata(side).slot_maps[kind];
+  const slots=[];for(const [joint,index] of Object.entries(map))slots[index]={joint};return slots;
+}
+function a32Positions(row){
+  return Object.fromEntries(["linear","rotary"].map(kind=>[kind==="linear"?"linear_mm":"rotary_deg",
+    a32Slots(kind).map(c=>finiteValue(row[c.channel==="mit"?"mit_pos":"self"]?.[c.index]))]));
+}
+function normalizeA32Telemetry(row){
+  // The event marker describes derived positions only; SDK position/target stay raw.
+  // Older service logs lack it, while new logs have already applied this sign.
+  if(row.linear_feedback_sign===-1)return row;
+  return {...row,linear_feedback_sign:-1,linear:(row.linear||[]).map(slot=>{
+    const result={...slot};
+    for(const key of ["pos_act_mm","pos_actual_mm","pos_ref_mm","pos_err_mm"]){
+      if(!Object.hasOwn(slot,key))continue;
+      const value=finiteValue(slot[key]);result[key]=value===null?null:value===0?0:-value;
+    }
+    return result;
+  })};
+}
+function a32Telemetry(row){
+  const hardware=row.hardware,age=finiteValue(hardware.telemetry_age_ms);
+  const fresh=hardware.connected===true&&age!==null&&age>=0&&age<=500;
+  const result={...row,type:"telemetry",source_type:row.type,sdk_state:hardware,sampled:true,
+    telemetry_seq:hardware.sequence,tick_ms:hardware.tick_ms,telemetry_age_ms:age,accepted:true};
+  for(const kind of ["linear","rotary"])result[kind]=a32Slots(kind).map(c=>{
+    const values=hardware[c.channel]||[],raw=values.find(r=>r.joint===c.joint)||values.find(r=>(r.slot??r.index)===c.index)||values[c.index]||{};
+    const usable=fresh&&raw.online===true&&(c.channel!=="mit"||raw.valid===true);
+    const value=key=>usable?finiteValue(raw[key]):null,position=value("position"),centi=value("temperature_centi");
+    return {...raw,joint:c.joint,joint_suffix:c.joint.replace(/^(left|right)_hand_/,""),channel:c.channel,
+      online:raw.online===true,measurement_valid:usable&&position!==null,
+      pos_ref_mm:value("target"),pos_act_mm:position,pos_actual_mm:position,iq:value("iq"),iq_meas:value("iq"),iq_ref:value("iq_ref"),
+      mcu_temp_c:centi!==null&&centi!==32767?centi/100:null,velocity:value("velocity_rpm"),vbus_v:value("voltage")};
+  });
+  return normalizeA32Telemetry(result);
+}
+function setMotors(){
+  const previous=$("motor").value;$("motor").replaceChildren();
+  for(const kind of ["linear","rotary"]){
+    const map=state.meta?.metadata?.slot_maps?.[kind] || (isA30Log()?A3Telemetry.telemetryMetadata($("handSide").value).slot_maps[kind]:null);
+    const slots=map||isA30Log()?[]:isA32Log()?a32Slots(kind).map(c=>c.joint.replace(/^(left|right)_hand_/,"")):DEFAULT_SLOTS[kind].slice();
+    if(map)for(const [name,slot] of Object.entries(map))slots[slot]=name.replace(/^(left|right)_hand_/,"").replace(/_joint$/,"");
+    slots.forEach((name,i)=>$("motor").add(new Option(`${kind==="linear"?"L":"R"}${String(i).padStart(2,"0")} · ${name}`,`${kind}:${i}`)));
+  }
+  if([...$("motor").options].some(o=>o.value===previous))$("motor").value=previous;
+}
+
+MP_NAMES.forEach((name,i) => $("landmark").add(new Option(`${i}: ${name}`, String(i))));
+
+function setJointChecks() {
+  const host = $("jointChecks"); host.replaceChildren();
+  const finger=$("finger").value;
+  const joints=(isA30Log()||isA32Log())&&finger==="thumb"?[["thumb_rota_block","旋转 block"],["thumb_rotaback_joint2","旋转 back"],["thumb_MCP","MCP"],["thumb_PIP","PIP"]]
+    :FINGERS[finger].filter(([key])=>!(isA30Log()||isA32Log())||key!=="pinky_rota");
+  joints.forEach(([key,label], i) => {
+    const input = Object.assign(document.createElement("input"), {type:"checkbox", value:key, checked:i===0});
+    input.addEventListener("change", ()=>drawAll(true));
+    const wrapper = document.createElement("label"); wrapper.append(input, label); host.append(wrapper);
+  });
+  // For the suspected drift, thumb_rota is the default selection on the thumb.
+  drawAll(true);
+}
+
+async function readJsonLines(file) {
+  resetData();
+  const reader = file.stream().getReader(), decoder = new TextDecoder();
+  let carry="", count=0;
+  while (true) {
+    const {value,done} = await reader.read();
+    carry += decoder.decode(value || new Uint8Array(), {stream:!done});
+    const lines = carry.split(/\r?\n/); carry = lines.pop() || "";
+    for (const line of lines) { if (line.trim()) consume(JSON.parse(line)); count++; }
+    if (done) break;
+    if (count % 10000 === 0) { $("status").textContent=`正在读取：${count.toLocaleString()} 条`; await new Promise(requestAnimationFrame); }
+  }
+  if (carry.trim()) { consume(JSON.parse(carry)); count++; }
+  return count;
+}
+
+function repairLegacySignedZero(row) {
+  // Only repair the proven old-decoder error, with matching 780B wire evidence.
+  // Never clamp large measurements or infer zero when the raw packet is absent.
+  const hex=row.payload_hex;
+  if(typeof hex!=="string"||hex.length!==780*2||!/^[0-9a-f]+$/i.test(hex)||!Array.isArray(row.linear))return row;
+  let result=row;
+  row.linear.forEach((slot,index)=>{
+    if(index>=14)return;
+    let corrected=null;
+    for(const [field,offset] of [["pos_act_mm",4],["pos_ref_mm",16]]) {
+      const byteOffset=8+32*index+offset;
+      if(slot[field]!==-2147483.648||hex.slice(byteOffset*2,byteOffset*2+8)!=="00000080")continue;
+      if(result===row)result={...row,linear:row.linear.slice(),decode_corrections:[...(row.decode_corrections||[])]};
+      if(!corrected)corrected={...slot};
+      corrected[field]=0;
+      result.decode_corrections.push({slot:index,field,stored_value:slot[field],corrected_value:0,raw_hex:"00000080",reason:"legacy_signed_zero_decode"});
+    }
+    if(corrected){
+      if(Number.isFinite(corrected.pos_ref_mm)&&Number.isFinite(corrected.pos_act_mm)){
+        corrected.pos_err_mm=corrected.pos_ref_mm-corrected.pos_act_mm;
+        result.decode_corrections.push({slot:index,field:"pos_err_mm",stored_value:slot.pos_err_mm,corrected_value:corrected.pos_err_mm,reason:"recomputed_from_corrected_positions"});
+      }
+      result.linear[index]=corrected;
+    }
+  });
+  return result;
+}
+
+function consume(row) {
+  // Directory diagnostic logs use event/elapsed_ms; downloaded logs use type/t.
+  row={...row,type:row.type||row.event,t:finiteValue(row.t)??(finiteValue(row.elapsed_ms)??0)/1000,
+    hand_side:row.hand_side||row.context?.side||row.context?.hand_side};
+  if(["TsenseI_v3_0","TsenseI_v3_0_withid"].includes(row.model_id)||["TsenseI_v3_0","TsenseI_v3_0_withid"].includes(row.context?.model_id))state.inferredModel="TsenseI_v3_0";
+  if(row.type==="telemetry"&&typeof row.payload_hex==="string"&&[888,968].includes(row.payload_hex.length)&&/^[0-9a-f]+$/i.test(row.payload_hex)){
+    const decoded=A3Telemetry.telemetry(Uint8Array.from(row.payload_hex.match(/../g),b=>parseInt(b,16)));
+    // Keep original bytes and record context, replace derived fields with one decoder.
+    row={...row,...decoded,model_id:row.model_id||decoded.model_id,redecoded_from_payload:true};state.inferredModel="TsenseI_v3_0";
+  }
+  if(row.type==="board_telemetry"&&typeof row.payload_hex==="string"&&/^[0-9a-f]{16}$/i.test(row.payload_hex))
+    row={...row,...A3Telemetry.boardTelemetry(Uint8Array.from(row.payload_hex.match(/../g),b=>parseInt(b,16)))};
+  if(row.type==="telemetry")row=repairLegacySignedZero(row);
+  if(row.type==="telemetry"&&(isA32Log()||row.telemetry_format==="a32-native-sdk-state/v1"||["TsenseI_v3_2","TsenseI_v3_2_withid"].includes(row.model_id)))
+    row=normalizeA32Telemetry(row);
+  if(row.type!=='session'){
+    if(Number.isFinite(row.t)){usageScan.min=Math.min(usageScan.min,row.t);usageScan.max=Math.max(usageScan.max,row.t);}
+    if(['left','right'].includes(row.hand_side))usageScan.sides.add(row.hand_side);
+  }
+  state.counts[row.type]=(state.counts[row.type]||0)+1;
+  if (row.type === "session") state.meta=row;
+  else if (["a30_conversion","a32_conversion"].includes(row.type)) {
+    state.conversion.push({...row,type:"conversion",source_type:row.type,joints_hw:row.joint_angles_rad||{},
+      ...Object.fromEntries(["linear","rotary"].map(kind=>[kind==="linear"?"linear_mm":"rotary_deg",
+        conversionSlots(row,kind).map(c=>row.valid===false?null:finiteValue(row[kind==="linear"?"linear_strokes_mm":"rotary_positions_deg"]?.[c.joint]))]))});
+  }
+  else if (row.type === "a32_sdk_sample") {
+    row={...row,hand_side:row.hand_side||row.hardware?.hand_side||state.meta?.metadata?.hand_side};
+    state.sdk.push({...row,sdk_state:row.hardware||{}});
+    // A browser poll is an observed cache, never an additional successful write.
+    if(row.hardware&&(row.hardware.self?.length||row.hardware.mit?.length))state.telemetry.push(a32Telemetry(row));
+  }
+  else if (["a32_sdk_action","a32_sdk_error","a32_sdk_recording_gap"].includes(row.type))state.sdkEvents.push(row);
+  else if (row.type === "retarget") state.retarget.push({...row,joints:row.joints||{}});
+  else if (row.type === "retarget_skipped") state.skipped.push(row);
+  else if (row.type === "planner_sample") state.planner.push(row);
+  else if (row.type === "h7") {
+    state.h7.push({...row,joints:row.joints_ui||{},guard:!!row.guard_limited,faults:row.ruckig_faults||[]});
+    if(row.source==="a32_sdk_successful_write"&&row.sent===true)
+      state.downlink.push({...row,...a32Positions(row),type:"downlink",source_type:"h7",wall_time_unix_ms:row.sent_at_unix_ms});
+  }
+  else if (["mediapipe","webxr","wuji_glove"].includes(row.type)) state.mp.push({...row,points:row.landmarks||[],depth:row.depth_source||(row.type==="webxr"?"webxr_metric":"")});
+  else if (row.type === "mediapipe_raw") state.raw.push(row);
+  else if (row.type === "webxr_raw") state.raw.push(adaptWebXRRaw(row));
+  else if (row.type === "wuji_glove_raw") {
+    const raw=row.raw_wuji||row.source_metadata?.raw_wuji;
+    const fresh=row.tracked!==false&&row.source_metadata?.stale!==true;
+    state.raw.push({...row,raw_wuji:raw,normalized_landmarks:[],
+      world_landmarks:fresh&&Array.isArray(raw?.positions_xyz)?[raw.positions_xyz]:[],
+      coordinate_space:"wuji_wrist"});
+  }
+  else if (row.type === "control_target") state.control.push(row);
+  else if (row.type === "direct_filter") state.filtered.push(row);
+  else if (row.type === "direct_filter_detail") state.filterDetail.push(row);
+  else if (["conversion","downlink","telemetry"].includes(row.type)) state[row.type].push(row);
+  else if (row.type === "board_telemetry") state.board.push(row);
+  else if (row.type === "sdk_status") state.sdk.push(row);
+  else if (["sdk_action","sdk_error"].includes(row.type)) state.sdkEvents.push(row);
+  else if (row.type === "session_end") state.end=row;
+  else state.events.push(row);
+}
+
+function findJoint(joints, suffix) {
+  const ending = /_joint\d*$/.test(suffix)?`_${suffix}`:`_${suffix}_joint`;
+  const key = Object.keys(joints).find(name => name.endsWith(ending));
+  return key === undefined ? null : finiteValue(joints[key]);
+}
+
+function selectedJoints() { return [...document.querySelectorAll("#jointChecks input:checked")].map(x=>x.value); }
+function sampledRows(rows,max=5000) {
+  if(rows.length<=max) return rows;
+  const step=Math.ceil(rows.length/max), out=[];
+  for(let i=0;i<rows.length;i+=step) out.push(rows[i]);
+  if(out.at(-1)!==rows.at(-1)) out.push(rows.at(-1));
+  return out;
+}
+function jointPoints(rows,joint) { return rows.map(r=>[r.t,findJoint(r.joints,joint)]).filter(p=>Number.isFinite(p[1])); }
+// A retarget target is held until its next arrival, not interpolated ahead
+// of time. Use steps when comparing it to the high-rate causal filter.
+function heldPoints(points){const out=[];points.forEach((p,i)=>{if(i)out.push([p[0],points[i-1][1]]);out.push(p);});return out;}
+function nearestRow(rows,time) {
+  if(!rows.length) return null;
+  let lo=0,hi=rows.length-1;
+  while(lo<hi){const mid=(lo+hi)>>1;if(rows[mid].t<time)lo=mid+1;else hi=mid;}
+  if(lo>0 && Math.abs(rows[lo-1].t-time)<=Math.abs(rows[lo].t-time)) return rows[lo-1];
+  return rows[lo];
+}
+const RETARGET_GAP_S = .3;
+function exactJointSampler(rows,joint,maxGap=Infinity) { return time=>{
+  const row=nearestRow(rows,time);if(!row)return null;
+  if(Number.isFinite(maxGap)) {
+    let lo=0,hi=rows.length;
+    while(lo<hi){const mid=(lo+hi)>>1;if(rows[mid].t<time)lo=mid+1;else hi=mid;}
+    if(lo>0&&lo<rows.length&&rows[lo].t>time&&rows[lo].t-rows[lo-1].t>maxGap)return null;
+  }
+  const value=findJoint(row.joints,joint);return Number.isFinite(value)?[row.t,value]:null;
+}; }
+function vecSub(a,b){return [a[0]-b[0],a[1]-b[1],a[2]-b[2]];}
+function vecDot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
+function vecCross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
+function vecUnit(a){const n=Math.hypot(a[0],a[1],a[2]);return n>1e-12?a.map(v=>v/n):[0,0,0];}
+function signedMediaPipeAngle(row,joint) {
+  const triple=MP_ANGLE_TRIPLETS[joint],P=row?.points;if(!triple||!P||P.length<21)return null;
+  const [a,b,c]=triple;
+  const across0=vecUnit(vecSub(P[5],P[17])),forward=vecUnit(vecSub(P[9],P[0]));
+  const normal=vecUnit(vecCross(across0,forward)),axis=vecUnit(vecCross(forward,normal));
+  const proximal=vecUnit(vecSub(P[b],P[a])),distal=vecUnit(vecSub(P[c],P[b]));
+  if(Math.hypot(...axis)<1e-9||Math.hypot(...proximal)<1e-9||Math.hypot(...distal)<1e-9)return null;
+  // 约定：正常屈曲为正，反向伸展/超伸为负。
+  return -Math.atan2(vecDot(vecCross(proximal,distal),axis),vecDot(proximal,distal));
+}
+function mediaPipeAnglePoints(joint){return sideRows(state.mp).map(row=>[row.t,signedMediaPipeAngle(row,joint)]).filter(p=>Number.isFinite(p[1]));}
+function exactMediaPipeAngleSampler(joint){const rows=sideRows(state.mp);return time=>{const row=nearestRow(rows,time);if(!row)return null;const value=signedMediaPipeAngle(row,joint);return Number.isFinite(value)?[row.t,value]:null;};}
+function makeJointSeries() {
+  const selected=selectedJoints(), series=[]; let color=0;
+  for (const joint of selected) {
+    if ($("stageMediaPipeAngle").checked && MP_ANGLE_TRIPLETS[joint]) series.push({name:`${joint} · 输入骨架有符号`, color:COLORS[color++%COLORS.length], dash:false, points:mediaPipeAnglePoints(joint), sampleAt:exactMediaPipeAngleSampler(joint)});
+    if ($("stageRetarget").checked) series.push({name:`${joint} · retarget`, color:COLORS[color++%COLORS.length], dash:false, maxGap:RETARGET_GAP_S, points:jointPoints(sideRows(state.retarget),joint), sampleAt:exactJointSampler(sideRows(state.retarget),joint,RETARGET_GAP_S)});
+    if ($("stageControl").checked) {const points=jointPoints(sideRows(state.control),joint);series.push({name:`${joint} · 控制目标${state.filtered.length?'（保持）':''}`,color:COLORS[color++%COLORS.length],points:state.filtered.length?heldPoints(points):points,sampleAt:exactJointSampler(sideRows(state.control),joint)});}
+    if ($("stageRuckig").checked) series.push(valueSeries(`${joint} · Ruckig`,sideRows(state.h7).filter(r=>!r.direct_mode),r=>findJoint(r.joints_ruckig_ui||{},joint),COLORS[color++%COLORS.length]));
+    if ($("stageDirectFilter").checked) series.push({name:`${joint} · 直接滤波${state.meta?.metadata?.offline_replay?'（离线回放）':''}`,color:COLORS[color++%COLORS.length],points:jointPoints(sideRows(state.filtered),joint),sampleAt:exactJointSampler(sideRows(state.filtered),joint)});
+    if ($("stageFilterCandidate").checked) series.push(valueSeries(`${joint} · 滤波候选`,sideRows(state.filterDetail),r=>findJoint(r.filtered_joint_angles_rad||{},joint),COLORS[color++%COLORS.length]));
+    if ($("stageConversion").checked) series.push(valueSeries(`${joint} · 转换输入HW`,sideRows(state.conversion),r=>findJoint(r.joints_hw||{},joint),COLORS[color++%COLORS.length]));
+    if ($("stageH7").checked) series.push({name:`${joint} · ${isA32Log()?"SDK下发":"H7目标"}`, color:COLORS[color++%COLORS.length], dash:true, points:jointPoints(sideRows(state.h7),joint), sampleAt:exactJointSampler(sideRows(state.h7),joint)});
+  }
+  return series;
+}
+
+function makeMpSeries() {
+  const idx=Number($("landmark").value), labels=["X","Y","Z"];
+  const mode=$("mpSource").value,hand=Number($("mpHand").value);
+  const rows=mode==="input"?sideRows(state.mp):rawLandmarkRows(mode).map(r=>({...r,points:(mode==="normalized"?r.normalized_landmarks:r.world_landmarks)?.[hand]||[]}));
+  return [...document.querySelectorAll(".coord:checked")].map((input,i)=>valueSeries(
+    `${landmarkNames()[idx]} · ${labels[+input.value]}`,rows,row=>row.points[idx]?.[+input.value],
+    COLORS[i],false,{breakOnMissing:true}));
+}
+
+function motorSelection(){const [kind,index]=$("motor").value.split(":");return {kind,index:Number(index),unit:kind==="linear"?"mm":"deg"};}
+function valueSeries(name,rows,getValue,color,dash=false,{breakOnMissing=false}={}){
+  const samples=rows.map(r=>[r.t,finiteValue(getValue(r))]),points=samples.filter(p=>p[1]!==null);
+  if(!breakOnMissing)return {name,points,color,dash,sampleAt:time=>nearestPoint(points,time)};
+  const segments=[];let segment=[];
+  for(const point of samples){
+    if(point[1]===null){if(segment.length)segments.push(segment);segment=[];}
+    else segment.push(point);
+  }
+  if(segment.length)segments.push(segment);
+  return {name,points,color,dash,segments,sampleAt:time=>{
+    const sample=nearestPoint(samples,time);return sample&&sample[1]!==null?sample:null;
+  }};
+}
+function a32FeedbackValid(row,slot){
+  if(!isA32Log())return true;
+  if(row.sdk_gap||row.sdk_state?.connected===false||slot?.online===false||slot?.measurement_valid===false)return false;
+  const age=finiteValue(row.telemetry_age_ms??row.sdk_state?.telemetry_age_ms);
+  return age===null||age>=0&&age<=500;
+}
+function motorFeedbackValue(row,kind,index,key){
+  const slot=row[kind]?.[index];
+  if(isA30Log()&&(slot?.online===false||slot?.valid===false||slot?.fault||slot?.state===5))return null;
+  return a32FeedbackValid(row,slot)?slot?.[key]:null;
+}
+function motorFeedbackRows(){
+  const rows=telemetryRows();if(!isA32Log())return rows;
+  // Stale cached SDK state is recorded as status, not a new telemetry packet.
+  // Keep these observations as curve breaks without inventing telemetry/CSV rows.
+  const gaps=sideRows(state.sdk).filter(row=>{
+    const age=finiteValue(row.sdk_state?.telemetry_age_ms);
+    return row.sdk_state?.connected===false||age!==null&&(age<0||age>500);
+  }).map(row=>({...row,sdk_gap:true}));
+  return [...rows,...gaps].sort((a,b)=>a.t-b.t||(a.seq||0)-(b.seq||0));
+}
+function makeMotorSeries(){
+  const {kind,index}=motorSelection(),field=kind==="linear"?"linear_mm":"rotary_deg";
+  const feedback=motorFeedbackRows(),converted=sideRows(state.conversion),sent=sideRows(state.downlink).filter(r=>r.sent),failed=sideRows(state.downlink).filter(r=>!r.sent);
+  const actual=kind==="linear"?"pos_act_mm":"pos_actual_mm",current=kind==="linear"?"iq_meas":"iq";
+  const measured=(name,key,color,dash=false)=>valueSeries(name,feedback,row=>motorFeedbackValue(row,kind,index,key),color,dash,{breakOnMissing:isA32Log()||isA30Log()});
+  return {
+    position:[valueSeries("转换结果",converted,r=>r[field]?.[index],COLORS[0]),valueSeries(writeSuccessLabel(),sent,r=>r[field]?.[index],COLORS[1],true),measured("回传目标","pos_ref_mm",COLORS[2]),measured("回传实际",actual,COLORS[3]),valueSeries("写入失败",failed,r=>r[field]?.[index],COLORS[6],true)],
+    current:[measured("实测 iq",current,COLORS[0]),measured("目标 iq_ref","iq_ref",COLORS[1],true),...(kind==="linear"?[measured("重力补偿 grav_iq","grav_iq",COLORS[2])]:[])],
+    temperature:[measured("MCU 温度","mcu_temp_c",COLORS[1])]
+  };
+}
+function controlPeriodMs(row){
+  const seconds=finiteValue(row.control_dt_s),milliseconds=seconds!==null?seconds*1000:finiteValue(row.control_period_ms)??finiteValue(row.control_timing?.control_dt_ms);
+  return milliseconds!==null&&milliseconds>0?milliseconds:null;
+}
+function makeControlPeriodSeries(){
+  const sent=sideRows(state.downlink).filter(row=>row.sent&&Number.isFinite(row.t));
+  const intervals=sent.slice(1).map((row,i)=>({...row,write_interval_ms:row.source==="a32_sdk_successful_write"?finiteValue(row.control_timing?.host_write_interval_ms): (row.t-sent[i].t)*1000})).filter(row=>row.write_interval_ms!==null&&row.write_interval_ms>=0);
+  return [valueSeries("记录的控制周期",sideRows(state.h7),controlPeriodMs,COLORS[0]),
+    valueSeries("成功写入间隔",intervals,row=>row.write_interval_ms,COLORS[1],true)];
+}
+
+function inspectFrame(time=Number($("inspectTime").value)||0){
+  $("inspectTime").value=time.toFixed(6);
+  const down=nearestRow(sideRows(state.downlink),time),feedback=nearestRow(telemetryRows(),time),conversion=down?.command_id?state.conversion.find(r=>r.seq===down.command_id):
+    (down?.frame_id!=null?sideRows(state.conversion).find(r=>r.frame_id===down.frame_id):null)||nearestRow(sideRows(state.conversion),time);
+  const frameId=down?.frame_id??conversion?.frame_id;
+  const raw=frameId!=null?state.raw.find(r=>r.frame_id===frameId):nearestRow(state.raw,time);
+  const input=frameId!=null?sideRows(state.mp).find(r=>r.frame_id===frameId):nearestRow(sideRows(state.mp),time);
+  const retarget=frameId!=null?sideRows(state.retarget).find(r=>r.frame_id===frameId):nearestRow(sideRows(state.retarget),time);
+  const {kind,index}=motorSelection();
+  $("frameDetail").textContent=JSON.stringify({selected_time_s:time,selected_wall_time:wallIso(sessionWallMillis(time)),
+    selected_wall_time_source:sessionWallMillis(time)===null?"unavailable":"derived_from_started_at_and_t",
+    selected_motor:$("motor").value,
+    command_sample:nearestRow(sideRows(state.h7),time)??null,
+    direct_filter:nearestRow(sideRows(state.filtered),time)??null,
+    direct_filter_detail:nearestRow(sideRows(state.filterDetail),time)??null,
+    retarget_skipped:nearestRow(sideRows(state.skipped),time)??null,
+    planner_sample:nearestRow(sideRows(state.planner),time)??null,
+    sdk_status:nearestRow(sideRows(state.sdk),time)??null,
+    sdk_event:nearestRow(sideRows(state.sdkEvents),time)??null,
+    other_event:nearestRow(sideRows(state.events),time)??null,
+    selected_feedback:feedback?.[kind]?.[index]??null,decode_issues:feedback?.decode_issues||[],
+    correlation:"识别链优先按 frame_id，转换按 command_id；回传按最近时间显示，可能没有逐条应答关系",mediapipe_raw:raw?.type==="mediapipe_raw"?raw:null,webxr_raw:raw?.type==="webxr_raw"?raw:null,wuji_glove_raw:raw?.type==="wuji_glove_raw"?raw:null,retarget_input:input??null,retarget:retarget??null,conversion:conversion??null,downlink:down??null,telemetry:feedback??null,board_telemetry:nearestRow(sideRows(state.board),time)},null,2);
+}
+function exportMotorCsv(){
+  const {kind,index,unit}=motorSelection(),field=kind==="linear"?"linear_mm":"rotary_deg";
+  const rows=[["type","t_s","event_seq","frame_id","command_id","wire_seq","telemetry_seq","device_tick_ms","sent","accepted","position_unit","command_position","target_position","actual_position","iq_measured_native","iq_ref_native","grav_iq_native","mcu_temp_c","joint_suffix","online","raw_position","raw_target","external_motor_deg","external_output_rpm","external_bus_v","decode_issues","wall_time","wall_time_unix_ms","wall_time_source","control_period_ms","measurement_valid"]];
+  const events=[...sideRows(state.conversion),...sideRows(state.downlink),...telemetryRows(),...sideRows(state.h7)].sort((a,b)=>a.t-b.t||(a.seq||0)-(b.seq||0));
+  for(const r of events){
+    const s=r[kind]?.[index]||{},feedback=key=>motorFeedbackValue(r,kind,index,key);
+    rows.push([r.type,r.t,r.seq,r.frame_id,r.command_id,r.wire_seq,r.telemetry_seq,r.tick_ms,r.sent,r.accepted,unit,r[field]?.[index],
+      feedback("pos_ref_mm"),feedback(kind==="linear"?"pos_act_mm":"pos_actual_mm"),feedback(kind==="linear"?"iq_meas":"iq"),
+      feedback("iq_ref"),feedback("grav_iq"),feedback("mcu_temp_c"),s.joint_suffix,s.online,s.position,isA32Log()?(s.target??s.pos_ref):s.pos_ref,s.motor_position_deg,
+      feedback("velocity"),feedback("vbus_v"),JSON.stringify((r.decode_issues||[]).filter(x=>x.joint_suffix===s.joint_suffix)),
+      wallIso(eventWallMillis(r)),eventWallMillis(r),eventWallSource(r),controlPeriodMs(r),
+      r.type==="telemetry"&&isA32Log()?a32FeedbackValid(r,s)&&finiteValue(feedback(kind==="linear"?"pos_act_mm":"pos_actual_mm"))!==null:s.measurement_valid]);
+  }
+  const csv=rows.map(row=>row.map(v=>v==null||typeof v==="number"&&!Number.isFinite(v)?"":'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+  const url=URL.createObjectURL(new Blob(["\uFEFF",csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download=`${$("handSide").value}_${kind}_${index}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function downsample(points,max=5000) {
+  if (points.length<=max) return points;
+  // Keep bucket extrema so a single overcurrent/temperature spike survives rendering.
+  const step=Math.ceil(points.length/(max/4)), out=[];
+  for(let i=0;i<points.length;i+=step){let lo=i,hi=i,end=Math.min(i+step,points.length)-1;for(let j=i;j<=end;j++){if(points[j][1]<points[lo][1])lo=j;if(points[j][1]>points[hi][1])hi=j;}for(const j of [...new Set([i,lo,hi,end])].sort((a,b)=>a-b))out.push(points[j]);}
+  if(out[out.length-1]!==points[points.length-1]) out.push(points[points.length-1]);
+  return out;
+}
+
+function visibleCurvePoints(points,xmin,xmax) {
+  // Sorted original samples, before rendering downsampling. Include interpolated
+  // boundary values so a line crossing a narrow window still has correct bounds.
+  let lo=0,hi=points.length;
+  while(lo<hi){const mid=(lo+hi)>>1;if(points[mid][0]<xmin)lo=mid+1;else hi=mid;}
+  const start=lo;hi=points.length;
+  while(lo<hi){const mid=(lo+hi)>>1;if(points[mid][0]<=xmax)lo=mid+1;else hi=mid;}
+  const end=lo,out=points.slice(start,end);
+  function boundary(left,right,x){
+    if(!left||!right||left[0]>=x||right[0]<=x)return null;
+    const ratio=(x-left[0])/(right[0]-left[0]);
+    return [x,left[1]+ratio*(right[1]-left[1])];
+  }
+  const first=boundary(points[start-1],points[start],xmin),last=boundary(points[end-1],points[end],xmax);
+  if(first)out.unshift(first);if(last)out.push(last);
+  return out;
+}
+
+// Missing observations are not interpolated measurements. Split before both
+// viewport interpolation and downsampling, so zooming into a gap stays empty.
+function curveSegments(points,maxGap=Infinity) {
+  if(!points.length)return [];
+  const segments=[];let segment=[points[0]];
+  for(let i=1;i<points.length;i++) {
+    if(points[i][0]-points[i-1][0]>maxGap){segments.push(segment);segment=[];}
+    segment.push(points[i]);
+  }
+  segments.push(segment);return segments;
+}
+function seriesSegments(series){return (series.segments||[series.points]).flatMap(points=>curveSegments(points,series.maxGap));}
+
+function drawChart(canvas, series, emptyText, unit) {
+  const rect=canvas.getBoundingClientRect(), dpr=window.devicePixelRatio||1;
+  canvas.width=Math.max(1,Math.round(rect.width*dpr)); canvas.height=Math.max(1,Math.round(rect.height*dpr));
+  const ctx=canvas.getContext("2d"); ctx.scale(dpr,dpr); const W=rect.width,H=rect.height;
+  ctx.clearRect(0,0,W,H); ctx.fillStyle="#0a1525"; ctx.fillRect(0,0,W,H);
+  let xmin=Infinity,xmax=-Infinity,ymin=Infinity,ymax=-Infinity,count=0;
+  for(const s of series) for(const p of s.points){xmin=Math.min(xmin,p[0]);xmax=Math.max(xmax,p[0]);ymin=Math.min(ymin,p[1]);ymax=Math.max(ymax,p[1]);count++;}
+  if(!count) { chartModels.delete(canvas); const label=$(canvas.id.replace("Canvas","Range"));if(label)label.textContent="无数据";ctx.fillStyle="#91a4be"; ctx.textAlign="center"; ctx.fillText(emptyText,W/2,H/2); return; }
+  // One session clock for all charts, even when their first/last samples differ.
+  xmin=0;xmax=Math.max(xmax,finiteValue(state.end?.t)||0,...["mp","raw","retarget","control","h7","conversion","downlink","telemetry","sdk","sdkEvents"].map(key=>finiteValue(state[key].at(-1)?.t)||0));
+  if(xmax<=xmin) xmax=xmin+1; if(ymax<=ymin){ymin-=.1;ymax+=.1;} const pad=(ymax-ymin)*.08; ymin-=pad;ymax+=pad;
+  const fullXmin=xmin,fullXmax=xmax,fullYmin=ymin,fullYmax=ymax,saved=chartViews.get(canvas);
+  if(saved){
+    const minXSpan=Math.max((fullXmax-fullXmin)/2000,1e-6),minYSpan=Math.max((fullYmax-fullYmin)/2000,1e-9);
+    let xSpan=Math.min(fullXmax-fullXmin,Math.max(minXSpan,saved.xmax-saved.xmin));
+    let ySpan=Math.min(fullYmax-fullYmin,Math.max(minYSpan,saved.ymax-saved.ymin));
+    xmin=Math.min(fullXmax-xSpan,Math.max(fullXmin,saved.xmin));xmax=xmin+xSpan;
+    ymin=Math.min(fullYmax-ySpan,Math.max(fullYmin,saved.ymin));ymax=ymin+ySpan;
+  }
+  const autoY=saved?.autoY??$("autoFitY").checked;
+  const visibleSeries=series.flatMap(s=>seriesSegments(s).map(points=>({...s,points:visibleCurvePoints(points,xmin,xmax)})));
+  let visibleMin=Infinity,visibleMax=-Infinity;
+  for(const s of visibleSeries)for(const p of s.points){visibleMin=Math.min(visibleMin,p[1]);visibleMax=Math.max(visibleMax,p[1]);}
+  const hasVisible=Number.isFinite(visibleMin)&&Number.isFinite(visibleMax);
+  if(autoY&&hasVisible){
+    ymin=visibleMin;ymax=visibleMax;
+    // A constant/single-point curve needs a nonzero drawing span. The exact
+    // [min,max] remains available in the range label and model.
+    if(ymin===ymax){const margin=Math.max(Math.abs(ymin)*1e-6,1e-6);ymin-=margin;ymax+=margin;}
+  }
+  chartViews.set(canvas,{xmin,xmax,ymin,ymax,autoY});
+  const L=58,R=18,T=40,B=35, X=x=>L+(x-xmin)/(xmax-xmin)*(W-L-R), Y=y=>T+(ymax-y)/(ymax-ymin)*(H-T-B);
+  ctx.font="12px system-ui"; ctx.lineWidth=1; ctx.strokeStyle="#26364d"; ctx.fillStyle="#91a4be"; ctx.textAlign="right";
+  const yDigits=Math.min(9,Math.max(3,Math.ceil(-Math.log10((ymax-ymin)/5))+1));
+  for(let i=0;i<=5;i++){const y=T+i*(H-T-B)/5,v=ymax-i*(ymax-ymin)/5;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(W-R,y);ctx.stroke();ctx.fillText(v.toFixed(yDigits),L-7,y+4);}
+  ctx.textAlign="center"; for(let i=0;i<=5;i++){const x=L+i*(W-L-R)/5,v=xmin+i*(xmax-xmin)/5;ctx.fillText(`${v.toFixed(1)}s`,x,H-10);}
+  ctx.save();ctx.beginPath();ctx.rect(L,T,W-L-R,H-T-B);ctx.clip();
+  visibleSeries.forEach(s=>{
+    const pts=downsample(s.points);ctx.strokeStyle=s.color;ctx.fillStyle=s.color;ctx.lineWidth=1.7;ctx.setLineDash(s.dash?[7,4]:[]);ctx.beginPath();pts.forEach((p,i)=>{const x=X(p[0]),y=Y(p[1]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+    if(pts.length===1){ctx.beginPath();ctx.arc(X(pts[0][0]),Y(pts[0][1]),3,0,Math.PI*2);ctx.fill();}
+  });ctx.restore();ctx.setLineDash([]);
+  let lx=L; ctx.textAlign="left"; series.forEach(s=>{ctx.fillStyle=s.color;ctx.fillRect(lx,T-26,14,3);ctx.fillStyle="#dfe8f5";ctx.fillText(s.name,lx+19,T-20);lx+=ctx.measureText(s.name).width+43;});
+  const model={series,emptyText,xmin,xmax,ymin,ymax,visibleMin:hasVisible?visibleMin:null,visibleMax:hasVisible?visibleMax:null,autoY,fullXmin,fullXmax,fullYmin,fullYmax,L,R,T,B,W,H,unit};
+  chartModels.set(canvas,model);
+  const rangeLabel=$(canvas.id.replace("Canvas","Range"));
+  if(rangeLabel)rangeLabel.textContent=`${xmin.toFixed(3)}–${xmax.toFixed(3)}s · ${hasVisible?`当前曲线 [${Number(visibleMin.toPrecision(9))}, ${Number(visibleMax.toPrecision(9))}] ${unit}`:"当前区间无曲线"}${autoY?" · 纵轴自动":" · 纵轴手动"}`;
+}
+
+function redrawChartFromModel(canvas){const model=chartModels.get(canvas);if(model)drawChart(canvas,model.series,model.emptyText,model.unit);}
+function applyChartView(canvas,view,{linkTime=true}={}){
+  const autoY=linkTime&&$("autoFitY").checked;
+  chartViews.set(canvas,{...view,autoY});redrawChartFromModel(canvas);interactionControllers.get(canvas)?.clear();
+  if(!linkTime||!$("linkTimeZoom").checked)return;
+  const applied=chartModels.get(canvas)||view;
+  for(const id of CHART_IDS){const other=$(id+"Canvas"),otherModel=chartModels.get(other);if(other===canvas||!otherModel)continue;
+  const old=chartViews.get(other)||{xmin:otherModel.xmin,xmax:otherModel.xmax,ymin:otherModel.ymin,ymax:otherModel.ymax};
+  chartViews.set(other,{...old,xmin:applied.xmin,xmax:applied.xmax,autoY});redrawChartFromModel(other);interactionControllers.get(other)?.clear();}
+}
+
+function nearestPoint(points,time) {
+  if(!points.length) return null;
+  let lo=0,hi=points.length-1;
+  while(lo<hi){const mid=(lo+hi)>>1;if(points[mid][0]<time)lo=mid+1;else hi=mid;}
+  if(lo>0 && Math.abs(points[lo-1][0]-time)<=Math.abs(points[lo][0]-time)) return points[lo-1];
+  return points[lo];
+}
+
+function installChartInteraction(base,overlay,tooltip) {
+  const hover={locked:false,last:null};
+  const drag={active:false,moved:false,startX:0,startY:0,view:null,axis:"both"};
+  function clear() {
+    const rect=overlay.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+    overlay.width=Math.max(1,Math.round(rect.width*dpr));overlay.height=Math.max(1,Math.round(rect.height*dpr));
+    overlay.getContext("2d").clearRect(0,0,overlay.width,overlay.height);tooltip.style.display="none";
+  }
+  function render(event) {
+    const model=chartModels.get(base);if(!model){clear();return;}
+    const rect=overlay.getBoundingClientRect(),dpr=window.devicePixelRatio||1;
+    overlay.width=Math.max(1,Math.round(rect.width*dpr));overlay.height=Math.max(1,Math.round(rect.height*dpr));
+    const x=event.clientX-rect.left,y=event.clientY-rect.top;
+    if(x<model.L||x>model.W-model.R||y<model.T||y>model.H-model.B){if(!hover.locked)clear();return;}
+    hover.last={clientX:event.clientX,clientY:event.clientY};
+    const time=model.xmin+(x-model.L)/(model.W-model.L-model.R)*(model.xmax-model.xmin);
+    const value=model.ymax-(y-model.T)/(model.H-model.T-model.B)*(model.ymax-model.ymin);
+    const ctx=overlay.getContext("2d");ctx.scale(dpr,dpr);ctx.clearRect(0,0,rect.width,rect.height);
+    ctx.strokeStyle="rgba(232,238,248,.72)";ctx.lineWidth=1;ctx.setLineDash([4,3]);
+    ctx.beginPath();ctx.moveTo(x,model.T);ctx.lineTo(x,model.H-model.B);ctx.moveTo(model.L,y);ctx.lineTo(model.W-model.R,y);ctx.stroke();ctx.setLineDash([]);
+    ctx.font="11px ui-monospace,Consolas,monospace";ctx.textAlign="center";ctx.textBaseline="middle";
+    const timeLabel=`${time.toFixed(4)} s`,labelX=Math.min(model.W-model.R-80,Math.max(model.L,x-40));ctx.fillStyle="#dfe8f5";ctx.fillRect(labelX,model.H-model.B+3,80,19);ctx.fillStyle="#08111f";ctx.fillText(timeLabel,labelX+40,model.H-model.B+12.5);
+    const valueLabel=value.toFixed(5);ctx.textAlign="right";ctx.fillStyle="#dfe8f5";ctx.fillRect(2,y-9,model.L-7,18);ctx.fillStyle="#08111f";ctx.fillText(valueLabel,model.L-9,y);
+    const rows=[];
+    for(const s of model.series){const p=s.sampleAt?s.sampleAt(time):nearestPoint(s.points,time);if(!p)continue;const px=model.L+(p[0]-model.xmin)/(model.xmax-model.xmin)*(model.W-model.L-model.R),py=model.T+(model.ymax-p[1])/(model.ymax-model.ymin)*(model.H-model.T-model.B);ctx.fillStyle=s.color;ctx.beginPath();ctx.arc(px,py,3.2,0,Math.PI*2);ctx.fill();rows.push(`<div><span style="color:${s.color}">●</span> ${s.name}: ${p[1].toFixed(6)} ${model.unit} <span style="color:#91a4be">@${p[0].toFixed(4)}s</span></div>`);}
+    const wall=wallIso(sessionWallMillis(time));
+    tooltip.innerHTML=`<div class="tip-title">t=${time.toFixed(4)} s　Y=${value.toFixed(6)} ${model.unit}</div>${wall?`<div>${escapeHtml(wall)}（推算）</div>`:""}${rows.join("")}<div class="tip-help">${hover.locked?"已锁定；单击解锁":"单击锁定十字轴"}</div>`;
+    tooltip.style.display="block";let left=x+14,top=y+14;const tw=tooltip.offsetWidth,th=tooltip.offsetHeight;if(left+tw>rect.width)left=x-tw-14;if(top+th>rect.height)top=y-th-14;tooltip.style.left=`${Math.max(0,left)}px`;tooltip.style.top=`${Math.max(0,top)}px`;
+  }
+  function interactionZone(clientX,clientY) {
+    const model=chartModels.get(base);if(!model)return "outside";
+    const rect=overlay.getBoundingClientRect(),x=clientX-rect.left,y=clientY-rect.top;
+    if(x>=0&&x<=model.L&&y>=model.T&&y<=model.H-model.B)return "y";
+    if(x>=model.L&&x<=model.W-model.R&&y>=model.H-model.B&&y<=model.H)return "x";
+    if(x>=model.L&&x<=model.W-model.R&&y>=model.T&&y<=model.H-model.B)return "plot";
+    return "outside";
+  }
+  function cursorForZone(zone){return zone==="x"?"ew-resize":zone==="y"?"ns-resize":"crosshair";}
+  function zoom(factor,clientX=null,clientY=null,axis="x") {
+    const model=chartModels.get(base);if(!model)return;
+    const rect=overlay.getBoundingClientRect();
+    const px=clientX===null?(model.L+model.W-model.R)/2:clientX-rect.left;
+    const py=clientY===null?(model.T+model.H-model.B)/2:clientY-rect.top;
+    const rx=Math.min(1,Math.max(0,(px-model.L)/(model.W-model.L-model.R)));
+    const ry=Math.min(1,Math.max(0,(py-model.T)/(model.H-model.T-model.B)));
+    const xPivot=model.xmin+rx*(model.xmax-model.xmin),yPivot=model.ymax-ry*(model.ymax-model.ymin);
+    const xSpan=(model.xmax-model.xmin)*factor,ySpan=(model.ymax-model.ymin)*factor;
+    hover.locked=false;
+    applyChartView(base,{
+      xmin:axis==="x"?xPivot-rx*xSpan:model.xmin,
+      xmax:axis==="x"?xPivot+(1-rx)*xSpan:model.xmax,
+      ymin:axis==="y"?yPivot-(1-ry)*ySpan:model.ymin,
+      ymax:axis==="y"?yPivot+ry*ySpan:model.ymax,
+    },{linkTime:axis==="x"});
+  }
+  function resetAxis(axis) {
+    const model=chartModels.get(base);if(!model)return;
+    applyChartView(base,{
+      xmin:axis==="x"?model.fullXmin:model.xmin,xmax:axis==="x"?model.fullXmax:model.xmax,
+      ymin:axis==="y"?model.fullYmin:model.ymin,ymax:axis==="y"?model.fullYmax:model.ymax,
+    },{linkTime:axis==="x"});
+  }
+  function reset({linkTime=true}={}) {
+    hover.locked=false;chartViews.delete(base);redrawChartFromModel(base);clear();
+    if(!linkTime||!$("linkTimeZoom").checked)return;
+    for(const id of CHART_IDS){const other=$(id+"Canvas");chartViews.delete(other);redrawChartFromModel(other);interactionControllers.get(other)?.clear();}
+  }
+  overlay.addEventListener("wheel",event=>{
+    event.preventDefault();
+    const zone=interactionZone(event.clientX,event.clientY),axis=zone==="y"?"y":"x";
+    zoom(event.deltaY<0?.72:1.4,event.clientX,event.clientY,axis);
+  },{passive:false});
+  overlay.addEventListener("pointerdown",event=>{
+    if(event.button!==0||!chartModels.has(base))return;
+    const model=chartModels.get(base);drag.active=true;drag.moved=false;drag.startX=event.clientX;drag.startY=event.clientY;
+    const zone=interactionZone(event.clientX,event.clientY);drag.axis=zone==="x"?"x":zone==="y"?"y":"both";
+    drag.view={xmin:model.xmin,xmax:model.xmax,ymin:model.ymin,ymax:model.ymax};
+    overlay.setPointerCapture?.(event.pointerId);
+  });
+  overlay.addEventListener("pointermove",event=>{
+    if(!drag.active){const zone=interactionZone(event.clientX,event.clientY);overlay.style.cursor=cursorForZone(zone);if(!hover.locked)render(event);return;}
+    const model=chartModels.get(base);if(!model)return;
+    const dx=event.clientX-drag.startX,dy=event.clientY-drag.startY;
+    if(!drag.moved&&Math.hypot(dx,dy)<3)return;
+    drag.moved=true;hover.locked=false;overlay.style.cursor="grabbing";
+    const xShift=-dx/(model.W-model.L-model.R)*(drag.view.xmax-drag.view.xmin);
+    const yShift=dy/(model.H-model.T-model.B)*(drag.view.ymax-drag.view.ymin);
+    applyChartView(base,{
+      xmin:drag.axis==="y"?drag.view.xmin:drag.view.xmin+xShift,
+      xmax:drag.axis==="y"?drag.view.xmax:drag.view.xmax+xShift,
+      ymin:drag.axis==="x"?drag.view.ymin:drag.view.ymin+yShift,
+      ymax:drag.axis==="x"?drag.view.ymax:drag.view.ymax+yShift,
+    },{linkTime:drag.axis!=="y"});
+  });
+  function finishPointer(event) {
+    if(!drag.active)return;
+    overlay.releasePointerCapture?.(event.pointerId);overlay.style.cursor=cursorForZone(interactionZone(event.clientX,event.clientY));
+    const wasMoved=drag.moved;drag.active=false;drag.moved=false;
+    if(wasMoved){clear();return;}
+    if(hover.locked){hover.locked=false;render(event);}else{render(event);hover.locked=true;render(event);}
+  }
+  overlay.addEventListener("pointerup",finishPointer);
+  overlay.addEventListener("pointercancel",event=>{drag.active=false;drag.moved=false;overlay.style.cursor="crosshair";overlay.releasePointerCapture?.(event.pointerId);clear();});
+  overlay.addEventListener("pointerleave",()=>{if(!hover.locked&&!drag.active)clear();});
+  overlay.addEventListener("dblclick",event=>{event.preventDefault();const zone=interactionZone(event.clientX,event.clientY);if(zone==="x")resetAxis("x");else if(zone==="y")resetAxis("y");else reset();});
+  window.addEventListener("keydown",event=>{if(event.key==="Escape"&&hover.locked){hover.locked=false;clear();}});
+  return {clear:()=>{hover.locked=false;clear();},zoom,reset};
+}
+
+function longestIncreasing(values, eps=1e-5) { let best=values.length?1:0,run=best; for(let i=1;i<values.length;i++){run=values[i]>values[i-1]+eps?run+1:1;best=Math.max(best,run);} return best; }
+function escapeHtml(v){return String(v).replace(/[&<>"\']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","\'":"&#39;"}[c]));}
+function metric(label,value,cls="") { label=escapeHtml(label);value=escapeHtml(value);return `<div class="metric ${cls}"><span>${label}</span><b>${value}</b></div>`; }
+function updateStats() {
+  const joint=selectedJoints()[0], host=$("jointStats");
+  const vals=sideRows(state.retarget).map(r=>findJoint(r.joints,joint)).filter(Number.isFinite);
+  let jointMetrics=metric("所选关节","无 retarget 数据");
+  if(vals.length){
+  const delta=vals.at(-1)-vals[0], run=longestIncreasing(vals);
+  jointMetrics=metric("起点",vals[0].toFixed(4))+metric("终点",vals.at(-1).toFixed(4))+metric("总变化",`${delta>=0?"+":""}${delta.toFixed(4)}`,delta>.15?"warn":"")+metric("最长连续递增",`${run} 帧`,run>=10?"warn":"");
+  if($("stageMediaPipeAngle").checked&&MP_ANGLE_TRIPLETS[joint]){
+    const mpAngles=state.mp.map(row=>signedMediaPipeAngle(row,joint)).filter(Number.isFinite),negative=mpAngles.filter(value=>value<0).length;
+    if(mpAngles.length)jointMetrics+=metric("输入骨架负角帧",`${negative} / ${mpAngles.length}`,negative?"warn":"")+metric("输入骨架最小角",`${mpAngles.reduce((best,value)=>Math.min(best,value),Infinity).toFixed(4)} rad`,negative?"warn":"");
+  }
+  }
+  host.innerHTML=jointMetrics;
+  const guard=state.h7.filter(x=>x.guard).length, faults=state.h7.filter(x=>x.faults.length).length, sent=state.h7.filter(x=>x.sent).length;
+  const depth=[...new Set(state.mp.map(x=>x.depth).filter(Boolean))].join(" / ")||"—";
+  const duration=elapsedDuration();
+  const diagnostic=state.meta?.schema==="hand-diagnostic/v1";
+  const reasonNames={usb_disconnected:"串口断开",model_sync_stopped:"模型同步关闭",checkbox_unchecked:"取消保存",application_closed:"应用关闭",recording_error:"记录提前结束"},reason=state.end?(reasonNames[state.end.reason]||state.end.reason||"正常结束"):diagnostic?"诊断快照（可无结束标记）":"未找到结束标记";
+  const connection=isA32Log()?(state.meta?.metadata?.transport||"a32_native_sdk"):(state.meta?.metadata?.serial_port||"—"),dropped=state.end?.dropped_events??"未知";
+  const periods=sideRows(state.h7).map(controlPeriodMs).filter(value=>value!==null).sort((a,b)=>a-b);
+  const periodMetrics=periods.length?metric("平均控制周期",`${(periods.reduce((sum,value)=>sum+value,0)/periods.length).toFixed(3)} ms`)+metric("P95 控制周期",`${periods[Math.ceil(periods.length*.95)-1].toFixed(3)} ms`)+metric("最大控制周期",`${periods.at(-1).toFixed(3)} ms`):"";
+  const sdkErrors=state.sdkEvents.filter(row=>["sdk_error","a32_sdk_error"].includes(row.type)).length;
+  $("sessionStats").innerHTML=metric("原始检测帧",state.raw.length.toLocaleString())+metric("Retarget 输入帧",state.mp.length.toLocaleString())+metric("转换记录",state.conversion.length.toLocaleString())+metric(writeSuccessLabel(),state.downlink.filter(r=>r.sent).length.toLocaleString())+metric("写入失败",state.downlink.filter(r=>!r.sent).length.toLocaleString())+metric("回传帧",state.telemetry.length.toLocaleString())+metric("重复 / 旧帧",state.telemetry.filter(r=>r.accepted===false).length.toLocaleString())+metric("跳过求解",state.counts.retarget_skipped||0)+metric("Retarget 帧",state.retarget.length.toLocaleString())+metric(isA32Log()?"SDK 控制 tick":"H7 tick",state.h7.length.toLocaleString())+metric("成功下发",sent.toLocaleString())+metric("Guard 限幅",guard.toLocaleString(),guard?"warn":"")+metric("Ruckig 故障 tick",faults.toLocaleString(),faults?"warn":"")+metric("深度来源",depth)+metric("记录时长",`${duration.toFixed(3)} s`)+metric(isA32Log()?"SDK 传输":"H7 串口",connection)+metric("结束原因",reason,!state.end?"warn":"")+metric("丢弃记录",String(dropped),dropped?"warn":"")+periodMetrics+(isA32Log()?metric("SDK 错误",sdkErrors,sdkErrors?"warn":""):"");
+  const start=wallIso(sessionWallMillis(0)),end=state.end?.ended_at||wallIso(sessionWallMillis(duration));
+  $("sessionTimeRange").textContent=start?`会话时间：${state.meta.started_at} → ${end} · 相对时间 0–${duration.toFixed(3)} s（末端无绝对时间时按 t 推算）`:"日志没有会话开始时间，仅显示相对秒数。";
+  $("writeSemantics").textContent=isA32Log()?"回传目标来自 SDK target；成功下发表示 SDK sendOnce 返回成功。回传关联为观测前最近的主机写入，不是固件逐条确认。":"回传目标来自 pos_ref；成功下发表示串口写入成功。回传关联为接收前最近的主机写入，不是固件逐条确认。";
+  $("h7StageLabel").textContent=isA32Log()?"SDK 下发（关节空间）":"H7 下发（UI 空间）";
+}
+
+for(const id of CHART_IDS){
+  const interaction=installChartInteraction($(id+"Canvas"),$(id+"Crosshair"),$(id+"Tooltip"));
+  interactionControllers.set($(id+"Canvas"),interaction);
+  $(id+"ZoomIn").addEventListener("click",()=>interaction.zoom(.72));
+  $(id+"ZoomOut").addEventListener("click",()=>interaction.zoom(1.4));
+  $(id+"ZoomReset").addEventListener("click",()=>interaction.reset());
+}
+function drawAll(resetView=false){
+  updateLandmarkOptions();
+  for(const id of CHART_IDS){const canvas=$(id+"Canvas");if(resetView)chartViews.delete(canvas);interactionControllers.get(canvas)?.clear();}
+  drawChart($("jointCanvas"),makeJointSeries(),"请选择数据文件与关节","rad");
+  const mpUnit=$("mpSource").value==="normalized"?"归一化":"m";$("mpTitle").textContent=$("mpSource").value==="webxr_world"?"WebXR 原始 world / m（25 关节）":$("mpSource").value==="wuji_world"?"Wuji 手套骨架 / m（21 点）":`关键点坐标 / ${mpUnit}`;
+  drawChart($("mpCanvas"),makeMpSeries(),"此阶段无关键点记录",mpUnit);
+  const series=makeMotorSeries();
+  for(const id of ["position","current","temperature"])drawChart($(id+"Canvas"),series[id],id==="temperature"?"该电机没有有效温度回传":"此阶段无记录（旧日志不含行程和遥测）",id==="position"?motorSelection().unit:id==="current"?"协议原值":"°C");
+  drawChart($("controlPeriodCanvas"),makeControlPeriodSeries(),"此日志未记录控制周期，且不足两次成功写入","ms");
+  updateStats();updateDataNotice();
+}
+function resetAllZoom(){drawAll(true);}
+function applyTimeRange(){
+  const start=$("viewStart").value.trim(),end=$("viewEnd").value.trim(),xmin=Number(start),xmax=Number(end);
+  if(!start||!end||!Number.isFinite(xmin)||!Number.isFinite(xmax)||xmin<0||xmax<=xmin){$("status").textContent="请填写有效时间范围，结束秒数须大于开始秒数。";return;}
+  for(const id of CHART_IDS){const canvas=$(id+"Canvas"),model=chartModels.get(canvas);if(!model)continue;
+    chartViews.set(canvas,{xmin,xmax,ymin:model.ymin,ymax:model.ymax,autoY:$("autoFitY").checked});
+    redrawChartFromModel(canvas);interactionControllers.get(canvas)?.clear();}
+  $("status").textContent=`时间范围已应用：${xmin.toFixed(3)}–${xmax.toFixed(3)} s；超出日志边界的范围自动收回。`;
+}
+$("file").addEventListener("change",async e=>{
+  const files=[...e.target.files];if(!files.length)return;$("file").disabled=true;
+  try{
+    for(let i=0;i<files.length;i++){
+      const file=files[i];$("status").textContent=`正在读取 ${i+1}/${files.length}：${file.name}`;
+      const n=await readJsonLines(file);registerUsage(file.name);
+      $("status").textContent=`${file.name} · ${n.toLocaleString()} 条 · ${(file.size/1048576).toFixed(1)} MiB · 本次导入 ${files.length} 个文件，曲线显示最后一个`;
+    }
+    selectLoadedData();renderUsage();
+  }catch(err){resetData();drawAll(true);$("status").textContent=`读取失败：${err.message}`;console.error(err);}
+  finally{$("file").disabled=false;e.target.value='';}
+});
+$("finger").addEventListener("change",setJointChecks);
+for(const id of ["stageMediaPipeAngle","stageRetarget","stageH7","stageControl","stageRuckig","stageDirectFilter","stageFilterCandidate","stageConversion","landmark","mpSource","mpHand","motor","includeRejected","handSide"])$(id).addEventListener("change",()=>{drawAll(true);inspectFrame();});
+document.querySelectorAll(".coord").forEach(x=>x.addEventListener("change",()=>drawAll(true)));
+window.addEventListener("resize",()=>drawAll(false));
+$("resetAllZoom").addEventListener("click",resetAllZoom);
+$("applyTimeRange").addEventListener("click",applyTimeRange);
+$("autoFitY").addEventListener("change",()=>{
+  for(const id of CHART_IDS){const canvas=$(id+"Canvas"),view=chartViews.get(canvas);if(view)chartViews.set(canvas,{...view,autoY:$("autoFitY").checked});}
+  drawAll(false);
+});
+$("inspect").addEventListener("click",()=>inspectFrame());
+$("exportMotor").addEventListener("click",exportMotorCsv);
+async function loadLocalCatalog(){
+  const model=$('usageModel').value;
+  if(location.protocol==='file:'){
+    $('usageStatus').textContent='独立 HTML 无法按磁盘路径自动读取。请通过本机手势服务的 /data-viewer 页面打开。';
+    return;
+  }
+  try{
+    const response=await fetch('/api/viewer/logs?model='+encodeURIComponent(model),{cache:'no-store'});
+    if(!response.ok)throw Error(response.status===403?'本机日志接口仅在本地服务中可用':`本地日志接口返回 ${response.status}`);
+    const result=await response.json();
+    if(model!==$('usageModel').value)return;
+    if(!Array.isArray(result.records)||!Array.isArray(result.files))throw Error('本地日志目录返回的数据格式无效');
+    for(const record of result.records)if(validUsage(record))mergeUsage(record);
+    persistUsage();renderUsage();
+    const select=$('usageLogFile'),previous=select.value;
+    select.replaceChildren(new Option(`选择 ${model} 日志`,''),...result.files.map(file=>new Option(`${file.name} · ${(file.bytes/1048576).toFixed(1)} MiB`,file.name)));
+    if(result.files.some(file=>file.name===previous))select.value=previous;
+    const input=$('usageParentPath');
+    if(!input.value||input.value===input.dataset.savedParent)input.value=result.parent;
+    input.dataset.savedParent=result.parent;
+    $('usageLogParent').textContent=`日志父目录：${result.parent}`;
+    $('usageRefreshFolder').textContent=`刷新 ${model} 文件夹`;
+    $('usageStatus').textContent=`已自动读取 ${model} 文件夹：${result.files.length} 份全链路日志，使用时长已汇总。`;
+  }catch(error){$('usageStatus').textContent=`自动读取失败：${error.message}；仍可手动选择日志。`;}
+}
+async function openLocalLogFile(){
+  const name=$('usageLogFile').value,model=$('usageModel').value;if(!name)return;
+  $('usageOpenLog').disabled=true;
+  try{
+    const response=await fetch('/api/viewer/log-file?model='+encodeURIComponent(model)+'&name='+encodeURIComponent(name),{cache:'no-store'});
+    if(!response.ok||!response.body)throw Error(`读取 ${name} 失败（HTTP ${response.status}）`);
+    $('status').textContent=`正在读取 ${name}…`;
+    const size=Number(response.headers.get('content-length'))||0;
+    const n=await readJsonLines({stream:()=>response.body});registerUsage(name);
+    selectLoadedData();renderUsage();
+    $('status').textContent=`${name} · ${n.toLocaleString()} 条 · ${(size/1048576).toFixed(1)} MiB`;
+  }catch(error){resetData();drawAll(true);$('status').textContent=`读取失败：${error.message}`;}
+  finally{$('usageOpenLog').disabled=false;}
+}
+async function saveLogParent(){
+  const button=$('usageSaveParent'),value=$('usageParentPath').value.trim();
+  if(!value){$('usageStatus').textContent='请先填写日志父目录的绝对路径。';return;}
+  button.disabled=true;
+  try{
+    const response=await fetch('/api/viewer/log-parent',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({parent:value})});
+    const result=await response.json();
+    if(!response.ok)throw Error(result.error||`保存失败（HTTP ${response.status}）`);
+    $('usageParentPath').value=result.parent;
+    $('usageParentPath').dataset.savedParent=result.parent;
+    await loadLocalCatalog();
+    $('usageStatus').textContent=`父目录已保存：${result.parent}；已确认 A30、A32、V2 三个子目录。`;
+  }catch(error){$('usageStatus').textContent=`父目录保存失败：${error.message}`;}
+  finally{button.disabled=false;}
+}
+$('usageModel').addEventListener('change',()=>{renderUsage();loadLocalCatalog();});
+$('usageRefreshFolder').addEventListener('click',loadLocalCatalog);
+$('usageOpenLog').addEventListener('click',openLocalLogFile);
+$('usageSaveParent').addEventListener('click',saveLogParent);
+setupUsage();setupFolding();setMotors();setJointChecks();drawAll(true);
+loadLocalCatalog();
+</script>
+</body>
+</html>

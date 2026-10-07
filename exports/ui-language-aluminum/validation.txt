@@ -1,0 +1,13 @@
+UI language and aluminum finish validation
+
+Play Python regression: 321 passed.
+Track JavaScript regression: 238 passed.
+Track web Python regression: 137 passed, 1 existing failure.
+Existing failure: tests/test_web_v2_control_timing.py::test_variable_steps_preserve_motion_constraints_and_phase_path
+Baseline: migration/ubuntu/validation-reports/numeric-baseline-comparison.json
+
+Browser checks: tracking and calibration navigation, Chinese/English toggle and reload persistence, input/select values unchanged, dynamic playback controls translated, A3.2/A3.2 with ID rendering and A3.0 with ID model switching, no inspected console errors.
+All URDF meshes use the shared aluminum material and a locally generated studio reflection environment.
+Unknown server/device diagnostic messages retain their original text.
+
+Idle live playback service restarted to load static routes; model, side, joint values and editor parameters restored and verified. No hardware connection or movement initiated.

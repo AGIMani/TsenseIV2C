@@ -1,0 +1,70 @@
+# Qt 配置缓存
+.qtcreator/
+
+# Python 字节码缓存
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.pytest-runtime/
+/.pytest_tmp*/
+/.codex-pytest-*/
+/.test-tmp-*/
+
+error_urdf/
+
+# 媒体、日志、临时文件
+*.mp4
+*.avi
+*.log
+*.tmp
+*.bat
+*.md
+!TsenseI_retargeting/README.md
+!TsenseI_retargeting/robots/README.md
+!docs/**/*.md
+!docs/*.md
+
+*.ui
+*.bmp
+gitcommand.txt
+talk.txt
+
+deprecated/
+func/
+logs/
+profiles/
+
+# WiLoR / 第三方权重与源码树（本地保留，勿入库；ckpt ~2.4GB）
+external/
+*.ckpt
+*.pt
+*.pth
+*.pkl
+!**/mano_mean_params.npz
+
+# 机器人资产唯一真源：assets/hands/TsenseI_hand（禁止再提交重复 meshes）
+TsenseI_retargeting/robots/left_hand/
+
+# Local archives of replaced robot packages and their annotations.
+assets/hands/_backups/
+
+# Local test runs, deployment scratch space and source backups.
+/.work/
+/backups/
+*.rar
+*.zip
+/configs/control_log_parent.txt
+
+# Ubuntu local environments and generated runtime certificates.
+/.venvs/
+/runtime/
+.env
+.env.*
+!.env.example
+
+# Offline installer exceeds GitHub regular Git file size limit; keep locally.
+/migration/ubuntu/ultraleap/tracking-software-linux-x64-6.2.0.deb
+
+# Keep repository instructions and entry documentation.
+!AGENTS.md
+!README.md

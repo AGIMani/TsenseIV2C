@@ -1,0 +1,34 @@
+schema_version: 1
+model_id: TsenseI_v3_0
+display_name: TsenseI A3.0
+coordinate_space: urdf_radians
+sides:
+  left:
+    urdf: urdf/TsenseI_hand_left_v3_0.urdf
+    keypoints: robot_keypoints_21.yaml
+    eval_config: eval_config.yaml
+    mjcf: mjcf/mjmodel.xml
+  right:
+    urdf: urdf/TsenseI_hand_right_v3_0.urdf
+    keypoints: robot_keypoints_21_right.yaml
+    eval_config: eval_config_right.yaml
+    mjcf: mjcf/mjmodel_right.xml
+fixed_joints: {}
+hardware:
+  enabled: false
+  adapter: null
+retarget:
+  pinch_enabled: true
+  pinch_full_ratio: 0.08
+  pinch_start_ratio: 0.50
+  pinch_weight: 65.0
+  lambda_smooth: 0.1
+  lambda_reg: 0.1
+  init_max_iters: 2
+  topo_max_iters: 3
+mirror_axis: y
+notes:
+- 'Pinky renamed by function: MCP flexion, swing abduction, PIP, DIP; CAD geometry
+  and limits unchanged.'
+- Collision uses independent capsule/palm proxies; validate against the physical hand.
+- A3.0 uses A3.2 MCP/PIP linkage conversion and direct rotary DIP; downlink is reserved, hardware disabled.

@@ -1,0 +1,133 @@
+<?xml version='1.0' encoding='utf-8'?>
+<mujoco model="TsenseI_v3_0_withid_left_contact">
+  <compiler angle="radian" autolimits="true" />
+  <option timestep="0.002" gravity="0 0 0" iterations="50" integrator="implicitfast" />
+  <default>
+    <joint damping="0.5" />
+    <geom friction="0.8 0.005 0.0001" condim="3" solref="0.01 1" solimp="0.9 0.95 0.001 0.5 2" />
+  </default>
+  <worldbody>
+    <body name="base_link">
+      <body name="Left_hand_palm_link" pos="0.0237000000003022 0.00650000000000002 0.0441380069844003" quat="1 0 0 0">
+        <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+      </body>
+      <body name="left_hand_thumb_rota_block_link" pos="0.023016 -0.016557 0.027044" quat="0.978746460264436 0.104033516081469 -0.175736931076473 0.0186795371298843">
+        <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+        <joint name="left_hand_thumb_rota_block_joint" type="hinge" axis="0 0 1" range="0 2.09" />
+        <body name="left_hand_thumb_rotaback_link2" pos="-0.0091878 -0.019669 -0.00042716" quat="0.995865082287017 0 0 -0.090844580914176">
+          <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+          <joint name="left_hand_thumb_rotaback_joint2" type="hinge" axis="1 0 0" range="0 1.74" />
+          <body name="left_hand_thumb_MCP_link" pos="0.014465 -0.0025468 0.051604" quat="0.958968760717848 0.0629210948685738 -0.0180995238308245 0.275848253619471">
+            <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+            <joint name="left_hand_thumb_MCP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+            <body name="left_hand_thumb_PIP_link" pos="-0.0084 0 0.0241" quat="1 0 0 0">
+              <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+              <joint name="left_hand_thumb_PIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+              <geom name="left_hand_thumb_PIP_link_capsule" type="capsule" size="0.00870880385627971" contype="1" conaffinity="30" fromto="0.000607993661702868 -0.000173184103841006 0.000710014370976645 0.000607993661702868 -0.000173184103841006 0.0240709655489506" />
+            </body>
+            <geom name="left_hand_thumb_MCP_link_capsule" type="capsule" size="0.00938657764345407" contype="1" conaffinity="30" fromto="-0.00854184573433582 -0.000157601967421851 0.00628657803978694 -0.00854184573433582 -0.000157601967421851 0.0239054927788388" />
+          </body>
+          <geom name="left_hand_thumb_rotaback_link2_capsule" type="capsule" size="0.0145911381999765" contype="1" conaffinity="30" fromto="0.00798421330453315 -0.00447104543412666 0.00422888839531497 0.00798421330453315 -0.00447104543412666 0.0394358933512489" />
+        </body>
+      </body>
+      <body name="left_hand_index_MCP_link" pos="0.0271 -0.027373 0.086723" quat="0.998510608748793 0.0545578978344484 0 0">
+        <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+        <joint name="left_hand_index_MCP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+        <body name="left_hand_index_swing_link" pos="-0.0134 0 0.01" quat="1 0 0 0">
+          <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+          <joint name="left_hand_index_swing_joint" type="hinge" axis="1 0 0" range="-0.35 0.35" />
+          <body name="left_hand_index_PIP_link" pos="0.0156 0 0.041" quat="1 0 0 0">
+            <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+            <joint name="left_hand_index_PIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+            <body name="left_hand_index_DIP_link" pos="-0.0084 0 0.0261" quat="1 0 0 0">
+              <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+              <joint name="left_hand_index_DIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+              <geom name="left_hand_index_DIP_link_capsule" type="capsule" size="0.0087088038562797" contype="2" conaffinity="29" fromto="0.000608390265730295 7.45298504138681e-06 0.000709913162458532 0.000608390265730295 7.45298504138681e-06 0.0240708473944535" />
+            </body>
+            <geom name="left_hand_index_PIP_link_capsule" type="capsule" size="0.00951973674818873" contype="2" conaffinity="29" fromto="-0.00861902419704794 7.45362936611146e-06 0.00641984612413206 -0.00861902419704794 7.45362936611146e-06 0.0257724688598076" />
+          </body>
+          <geom name="left_hand_index_swing_link_capsule" type="capsule" size="0.00997072484974979" contype="2" conaffinity="29" fromto="0.00489998841255482 2.46513046435557e-06 0.00197062020472698 0.00489998841255482 2.46513046435557e-06 0.0335291779949831" />
+        </body>
+      </body>
+      <body name="left_hand_mid_MCP_link" pos="0.0272 -0.0015 0.088138" quat="1 0 0 0">
+        <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+        <joint name="left_hand_mid_MCP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+        <body name="left_hand_mid_swing_link" pos="-0.014875 0 0.01" quat="1 0 0 0">
+          <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+          <joint name="left_hand_mid_swing_joint" type="hinge" axis="1 0 0" range="-0.35 0.35" />
+          <body name="left_hand_mid_PIP_link" pos="0.017075 0 0.041" quat="1 0 0 0">
+            <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+            <joint name="left_hand_mid_PIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+            <body name="left_hand_mid_DIP_link" pos="-0.0084 0 0.0341" quat="1 0 0 0">
+              <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+              <joint name="left_hand_mid_DIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+              <geom name="left_hand_mid_DIP_link_capsule" type="capsule" size="0.0087088038562797" contype="4" conaffinity="27" fromto="0.000607993453766005 7.45298516238724e-06 0.000710014195646657 0.000607993453766005 7.45298516238724e-06 0.0240709642530368" />
+            </body>
+            <geom name="left_hand_mid_PIP_link_capsule" type="capsule" size="0.0094999996945262" contype="4" conaffinity="27" fromto="-0.00875556899700269 2.4528929025271e-06 0.00643798033710138 -0.00875556899700269 2.4528929025271e-06 0.0337920719758102" />
+          </body>
+          <geom name="left_hand_mid_swing_link_capsule" type="capsule" size="0.00997072458267212" contype="4" conaffinity="27" fromto="0.00637498841254599 2.46521085501238e-06 0.00197061989456415 0.00637498841254599 2.46521085501238e-06 0.0335291773080826" />
+        </body>
+      </body>
+      <body name="left_hand_ring_MCP_link" pos="0.0271 0.022574 0.080986" quat="0.999048231670989 -0.0436191562856228 0 0">
+        <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+        <joint name="left_hand_ring_MCP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+        <body name="left_hand_ring_swing_link" pos="-0.0149 0 0.01" quat="1 0 0 0">
+          <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+          <joint name="left_hand_ring_swing_joint" type="hinge" axis="1 0 0" range="-0.35 0.35" />
+          <body name="left_hand_ring_PIP_link" pos="0.0171 0 0.041" quat="1 0 0 0">
+            <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+            <joint name="left_hand_ring_PIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+            <body name="left_hand_ring_DIP_link" pos="-0.0084 0 0.0261" quat="1 0 0 0">
+              <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+              <joint name="left_hand_ring_DIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+              <geom name="left_hand_ring_DIP_link_capsule" type="capsule" size="0.0087088038562797" contype="8" conaffinity="23" fromto="0.000607993453743378 7.45298504139374e-06 0.000710014195647051 0.000607993453743378 7.45298504139374e-06 0.0240709642530414" />
+            </body>
+            <geom name="left_hand_ring_PIP_link_capsule" type="capsule" size="0.00951973674818873" contype="8" conaffinity="23" fromto="-0.00861913675907672 7.45362936634911e-06 0.00641973712481875 -0.00861913675907672 7.45362936634911e-06 0.0257723336108068" />
+          </body>
+          <geom name="left_hand_ring_swing_link_capsule" type="capsule" size="0.0099707248168902" contype="8" conaffinity="23" fromto="0.00639998841255507 2.46527323145493e-06 0.0019706199767337 0.00639998841255507 2.46527323145493e-06 0.033529174802388" />
+        </body>
+      </body>
+      <body name="left_hand_pinky_MCP_link" pos="0.0271 0.043922 0.071353" quat="0.998155589741395 -0.0607076491721442 0 0">
+        <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+        <joint name="left_hand_pinky_MCP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+        <body name="left_hand_pinky_swing_link" pos="-0.014875 0 0.01" quat="1 0 0 0">
+          <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+          <joint name="left_hand_pinky_swing_joint" type="hinge" axis="1 0 0" range="-0.35 0.35" />
+          <body name="left_hand_pinky_PIP_link" pos="0.014075 0 0.036" quat="1 0 0 0">
+            <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+            <joint name="left_hand_pinky_PIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+            <body name="left_hand_pinky_DIP_link" pos="-0.0084 0 0.023" quat="1 0 0 0">
+              <inertial mass="0.008" pos="0 0 0" diaginertia="2e-6 2e-6 2e-6" />
+              <joint name="left_hand_pinky_DIP_joint" type="hinge" axis="0 1 0" range="0 1.57" />
+              <geom name="left_hand_pinky_DIP_link_capsule" type="capsule" size="0.0087088038562797" contype="16" conaffinity="15" fromto="0.000607993453745135 7.45298515716919e-06 0.00071001419564702 0.000607993453745135 7.45298515716919e-06 0.0240709642530411" />
+            </body>
+            <geom name="left_hand_pinky_PIP_link_capsule" type="capsule" size="0.00847809272818267" contype="16" conaffinity="15" fromto="-0.00775493797845631 3.08831441908795e-05 0.00587809225544892 -0.00775493797845631 3.08831441908795e-05 0.0237139773089508" />
+          </body>
+          <geom name="left_hand_pinky_swing_link_capsule" type="capsule" size="0.0085300007026064" contype="16" conaffinity="15" fromto="0.00537498824864714 2.45319809377958e-06 0.000529895799315063 0.00537498824864714 2.45319809377958e-06 0.0299698404276163" />
+        </body>
+      </body>
+    </body>
+  </worldbody>
+  <actuator>
+    <position name="left_hand_thumb_rota_block_joint_act" joint="left_hand_thumb_rota_block_joint" kp="20" ctrlrange="0 2.09" />
+    <position name="left_hand_thumb_rotaback_joint2_act" joint="left_hand_thumb_rotaback_joint2" kp="20" ctrlrange="0 1.74" />
+    <position name="left_hand_thumb_MCP_joint_act" joint="left_hand_thumb_MCP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_thumb_PIP_joint_act" joint="left_hand_thumb_PIP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_index_MCP_joint_act" joint="left_hand_index_MCP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_index_swing_joint_act" joint="left_hand_index_swing_joint" kp="20" ctrlrange="-0.35 0.35" />
+    <position name="left_hand_index_PIP_joint_act" joint="left_hand_index_PIP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_index_DIP_joint_act" joint="left_hand_index_DIP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_mid_MCP_joint_act" joint="left_hand_mid_MCP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_mid_swing_joint_act" joint="left_hand_mid_swing_joint" kp="20" ctrlrange="-0.35 0.35" />
+    <position name="left_hand_mid_PIP_joint_act" joint="left_hand_mid_PIP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_mid_DIP_joint_act" joint="left_hand_mid_DIP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_ring_MCP_joint_act" joint="left_hand_ring_MCP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_ring_swing_joint_act" joint="left_hand_ring_swing_joint" kp="20" ctrlrange="-0.35 0.35" />
+    <position name="left_hand_ring_PIP_joint_act" joint="left_hand_ring_PIP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_ring_DIP_joint_act" joint="left_hand_ring_DIP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_pinky_MCP_joint_act" joint="left_hand_pinky_MCP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_pinky_swing_joint_act" joint="left_hand_pinky_swing_joint" kp="20" ctrlrange="-0.35 0.35" />
+    <position name="left_hand_pinky_PIP_joint_act" joint="left_hand_pinky_PIP_joint" kp="20" ctrlrange="0 1.57" />
+    <position name="left_hand_pinky_DIP_joint_act" joint="left_hand_pinky_DIP_joint" kp="20" ctrlrange="0 1.57" />
+  </actuator>
+</mujoco>

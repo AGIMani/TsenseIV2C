@@ -1,0 +1,16 @@
+[project]
+name = "hand-sdk"
+version = "1.0.0"
+
+[tool.pyside6-project]
+files = [
+    "config",
+    "example/main.py",
+    "form.ui",
+    "form2.ui",
+    "form3.ui",
+    "form5.ui",
+    "form_display.ui",
+    "rsc.qrc",
+    "src/",
+]

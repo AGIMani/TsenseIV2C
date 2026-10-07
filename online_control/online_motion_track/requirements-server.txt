@@ -1,0 +1,7 @@
+# CPU-only retarget. Browser runs MediaPipe + WebGL; no Qt/OpenCV/MediaPipe/
+# torch/CUDA/MuJoCo/serial dependencies on the server. Python 3.11-3.13.
+numpy==2.4.4
+scipy==1.17.1
+PyYAML==6.0.3
+daqp==0.8.7
+# Analytic Jacobians use the bundled NumPy backend; Pinocchio is not needed.

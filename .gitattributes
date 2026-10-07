@@ -1,0 +1,4 @@
+/online_vision2control_node0.sh text eol=lf
+/online_vision2control_node0.cmd text eol=crlf
+/sync_all_right_keypoints.cmd text eol=crlf
+/example/light_web_v3_2/deployment/node0/*.sh text eol=lf

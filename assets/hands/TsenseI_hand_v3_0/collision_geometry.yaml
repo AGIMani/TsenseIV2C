@@ -1,0 +1,189 @@
+schema_version: 2
+unit: meter
+quality_status: verified_outer_envelopes
+notes:
+- All active finger bodies use one conservative low-complexity convex outer envelope.
+- Each side is fitted to its own transformed URDF visual vertices; binary STL containment
+  is verified.
+- Error is Euclidean excess over the full convex hull; concave cavities remain filled.
+- Existing collision pair masks are preserved; enabled palms use the full visual-shell
+  envelope.
+geoms:
+- link: left_hand_thumb_rotaback_link2
+  type: mesh
+  finger: thumb
+  contype: 1
+  conaffinity: 30
+  name: left_hand_thumb_rotaback_link2_collision
+  region: proximal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_thumb_rotaback_link2.stl
+    right: collision_meshes/right_right_hand_thumb_rotaback_link2.stl
+- link: left_hand_thumb_MCP_link
+  type: mesh
+  finger: thumb
+  contype: 1
+  conaffinity: 62
+  name: left_hand_thumb_MCP_link_collision
+  region: intermediate
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_thumb_MCP_link.stl
+    right: collision_meshes/right_right_hand_thumb_MCP_link.stl
+- link: left_hand_thumb_PIP_link
+  type: mesh
+  finger: thumb
+  contype: 1
+  conaffinity: 62
+  name: left_hand_thumb_PIP_link_collision
+  region: distal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_thumb_PIP_link.stl
+    right: collision_meshes/right_right_hand_thumb_PIP_link.stl
+- link: left_hand_index_swing_link
+  type: mesh
+  finger: index
+  contype: 2
+  conaffinity: 29
+  name: left_hand_index_swing_link_collision
+  region: proximal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_index_swing_link.stl
+    right: collision_meshes/right_right_hand_index_swing_link.stl
+- link: left_hand_index_PIP_link
+  type: mesh
+  finger: index
+  contype: 2
+  conaffinity: 61
+  name: left_hand_index_PIP_link_collision
+  region: intermediate
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_index_PIP_link.stl
+    right: collision_meshes/right_right_hand_index_PIP_link.stl
+- link: left_hand_index_DIP_link
+  type: mesh
+  finger: index
+  contype: 2
+  conaffinity: 61
+  name: left_hand_index_DIP_link_collision
+  region: distal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_index_DIP_link.stl
+    right: collision_meshes/right_right_hand_index_DIP_link.stl
+- link: left_hand_mid_swing_link
+  type: mesh
+  finger: mid
+  contype: 4
+  conaffinity: 27
+  name: left_hand_mid_swing_link_collision
+  region: proximal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_mid_swing_link.stl
+    right: collision_meshes/right_right_hand_mid_swing_link.stl
+- link: left_hand_mid_PIP_link
+  type: mesh
+  finger: mid
+  contype: 4
+  conaffinity: 59
+  name: left_hand_mid_PIP_link_collision
+  region: intermediate
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_mid_PIP_link.stl
+    right: collision_meshes/right_right_hand_mid_PIP_link.stl
+- link: left_hand_mid_DIP_link
+  type: mesh
+  finger: mid
+  contype: 4
+  conaffinity: 59
+  name: left_hand_mid_DIP_link_collision
+  region: distal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_mid_DIP_link.stl
+    right: collision_meshes/right_right_hand_mid_DIP_link.stl
+- link: left_hand_ring_swing_link
+  type: mesh
+  finger: ring
+  contype: 8
+  conaffinity: 23
+  name: left_hand_ring_swing_link_collision
+  region: proximal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_ring_swing_link.stl
+    right: collision_meshes/right_right_hand_ring_swing_link.stl
+- link: left_hand_ring_PIP_link
+  type: mesh
+  finger: ring
+  contype: 8
+  conaffinity: 55
+  name: left_hand_ring_PIP_link_collision
+  region: intermediate
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_ring_PIP_link.stl
+    right: collision_meshes/right_right_hand_ring_PIP_link.stl
+- link: left_hand_ring_DIP_link
+  type: mesh
+  finger: ring
+  contype: 8
+  conaffinity: 55
+  name: left_hand_ring_DIP_link_collision
+  region: distal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_ring_DIP_link.stl
+    right: collision_meshes/right_right_hand_ring_DIP_link.stl
+- link: left_hand_pinky_swing_link
+  type: mesh
+  finger: pinky
+  contype: 16
+  conaffinity: 15
+  name: left_hand_pinky_swing_link_collision
+  region: proximal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_pinky_swing_link.stl
+    right: collision_meshes/right_right_hand_pinky_swing_link.stl
+- link: left_hand_pinky_PIP_link
+  type: mesh
+  finger: pinky
+  contype: 16
+  conaffinity: 47
+  name: left_hand_pinky_PIP_link_collision
+  region: intermediate
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_pinky_PIP_link.stl
+    right: collision_meshes/right_right_hand_pinky_PIP_link.stl
+- link: left_hand_pinky_DIP_link
+  type: mesh
+  finger: pinky
+  contype: 16
+  conaffinity: 47
+  name: left_hand_pinky_DIP_link_collision
+  region: distal
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_left_hand_pinky_DIP_link.stl
+    right: collision_meshes/right_right_hand_pinky_DIP_link.stl
+- link: Left_hand_palm_link
+  type: mesh
+  contype: 32
+  conaffinity: 0
+  name: Left_hand_palm_link_collision
+  region: palm
+  fit: supporting_outer_hull_v1
+  mesh_files:
+    left: collision_meshes/left_Left_hand_palm_link.stl
+    right: collision_meshes/right_Right_hand_palm_link.stl
+proxy_version: supporting_outer_hull_v1
+max_excess_mm: 0.35
+source: canonical URDF visuals with per-side mesh scale and visual origin applied

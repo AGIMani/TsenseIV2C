@@ -1,0 +1,13 @@
+{
+  "source": "/home/onkiall/projects/hand",
+  "git_head": "5ed4fef0c2b4ea6b46efd7a2e036e841cec6b958",
+  "snapshot_local": "2026-10-06T06:04:00.943150+08:00",
+  "file_count": 3554,
+  "source_bytes": 1473847964,
+  "python_environments_included": false,
+  "historical_logs_included": false,
+  "git_history_included": false,
+  "architecture": "x86_64",
+  "target": "Ubuntu 24.04 LTS / Python 3.12",
+  "ultraleap_binding_commit": "2341c6c3db5dc08236bb52890d8c43a224139694"
+}

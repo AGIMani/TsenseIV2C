@@ -1,0 +1,677 @@
+[
+  {
+    "scope": "Chrome + configured test server + simulated camera/USB + actual recording worker; no physical device",
+    "recorded_moving_hand": true,
+    "events": [
+      {
+        "at": 5741.0999999940395,
+        "type": "trajectory_recovered",
+        "duration_ms": 26.099999994039536,
+        "browser_epoch": 2
+      },
+      {
+        "at": 6539.5,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 1955,
+        "age_ms": 101.44849998666905
+      },
+      {
+        "at": 6545.4000000059605,
+        "type": "trajectory_recovered",
+        "duration_ms": 5.9000000059604645,
+        "browser_epoch": 3
+      },
+      {
+        "at": 7617.9000000059605,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 2495,
+        "age_ms": 100.16219999687746
+      },
+      {
+        "at": 7624.0999999940395,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.0999999940395355,
+        "browser_epoch": 4
+      },
+      {
+        "at": 8338.90000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 2855,
+        "age_ms": 101.01880000974052
+      },
+      {
+        "at": 8345,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.0999999940395355,
+        "browser_epoch": 5
+      },
+      {
+        "at": 9155.299999982119,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 3263,
+        "age_ms": 101.52709997491911
+      },
+      {
+        "at": 9161.90000000596,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.5,
+        "browser_epoch": 6
+      },
+      {
+        "at": 9961.90000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 3667,
+        "age_ms": 100.28019999549724
+      },
+      {
+        "at": 9973.199999988079,
+        "type": "trajectory_recovered",
+        "duration_ms": 11.099999994039536,
+        "browser_epoch": 7
+      },
+      {
+        "at": 10702,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 4037,
+        "age_ms": 100.2804999963846
+      },
+      {
+        "at": 10708.199999988079,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.0999999940395355,
+        "browser_epoch": 8
+      },
+      {
+        "at": 11464,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 4418,
+        "age_ms": 100.39109997753985
+      },
+      {
+        "at": 11470.799999982119,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.799999982118607,
+        "browser_epoch": 9
+      },
+      {
+        "at": 12339.09999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 4854,
+        "age_ms": 101.33949998137541
+      },
+      {
+        "at": 12345.299999982119,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.199999988079071,
+        "browser_epoch": 10
+      },
+      {
+        "at": 12941.90000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 5156,
+        "age_ms": 100.10929999337532
+      },
+      {
+        "at": 12948.799999982119,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.799999982118607,
+        "browser_epoch": 11
+      },
+      {
+        "at": 13554.09999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 5462,
+        "age_ms": 100.19299997529015
+      },
+      {
+        "at": 13559.59999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 5.4000000059604645,
+        "browser_epoch": 12
+      },
+      {
+        "at": 14170.40000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 5770,
+        "age_ms": 100.63919998542406
+      },
+      {
+        "at": 14191.299999982119,
+        "type": "trajectory_recovered",
+        "duration_ms": 20.799999982118607,
+        "browser_epoch": 13
+      },
+      {
+        "at": 14800.40000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 6084,
+        "age_ms": 100.69009998999536
+      },
+      {
+        "at": 14807.799999982119,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.299999982118607,
+        "browser_epoch": 14
+      },
+      {
+        "at": 15328.59999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 6348,
+        "age_ms": 100.95759997703135
+      },
+      {
+        "at": 15341.199999988079,
+        "type": "trajectory_recovered",
+        "duration_ms": 12.400000005960464,
+        "browser_epoch": 15
+      },
+      {
+        "at": 15874,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 6621,
+        "age_ms": 100.06829998991452
+      },
+      {
+        "at": 15891.299999982119,
+        "type": "trajectory_recovered",
+        "duration_ms": 17.299999982118607,
+        "browser_epoch": 16
+      },
+      {
+        "at": 16431,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 6899,
+        "age_ms": 101.26639997353777
+      },
+      {
+        "at": 16457.5,
+        "type": "trajectory_recovered",
+        "duration_ms": 26.5,
+        "browser_epoch": 17
+      },
+      {
+        "at": 17078.59999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 7223,
+        "age_ms": 100.61049998248927
+      },
+      {
+        "at": 17090,
+        "type": "trajectory_recovered",
+        "duration_ms": 11.300000011920929,
+        "browser_epoch": 18
+      },
+      {
+        "at": 17689.09999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 7528,
+        "age_ms": 101.3906999763567
+      },
+      {
+        "at": 17705.79999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 16.69999998807907,
+        "browser_epoch": 19
+      },
+      {
+        "at": 18246,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 7806,
+        "age_ms": 100.14279997209087
+      },
+      {
+        "at": 18252.69999998808,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.5999999940395355,
+        "browser_epoch": 20
+      },
+      {
+        "at": 18908.09999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 8137,
+        "age_ms": 100.2873999744188
+      },
+      {
+        "at": 18915.29999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.0999999940395355,
+        "browser_epoch": 21
+      },
+      {
+        "at": 19462.19999998808,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 8414,
+        "age_ms": 100.40959995915182
+      },
+      {
+        "at": 19472.09999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 9.800000011920929,
+        "browser_epoch": 22
+      },
+      {
+        "at": 19975.19999998808,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 8670,
+        "age_ms": 100.6981999676209
+      },
+      {
+        "at": 19990.90000000596,
+        "type": "trajectory_recovered",
+        "duration_ms": 15.600000023841858,
+        "browser_epoch": 23
+      },
+      {
+        "at": 20487.59999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 8922,
+        "age_ms": 107.92879998870194
+      },
+      {
+        "at": 20512.29999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 24.5,
+        "browser_epoch": 24
+      },
+      {
+        "at": 21010.09999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 9173,
+        "age_ms": 100.01999996206723
+      },
+      {
+        "at": 21016.79999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.5999999940395355,
+        "browser_epoch": 25
+      },
+      {
+        "at": 21639,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 9487,
+        "age_ms": 101.3424999867566
+      },
+      {
+        "at": 21659.90000000596,
+        "type": "trajectory_recovered",
+        "duration_ms": 20.80000001192093,
+        "browser_epoch": 26
+      },
+      {
+        "at": 22234.5,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 9785,
+        "age_ms": 100.78499999502674
+      },
+      {
+        "at": 22242.5,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.9000000059604645,
+        "browser_epoch": 27
+      },
+      {
+        "at": 22812.29999998212,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 10074,
+        "age_ms": 100.12569996365346
+      },
+      {
+        "at": 22819.69999998808,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.299999982118607,
+        "browser_epoch": 28
+      },
+      {
+        "at": 23337.40000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 10336,
+        "age_ms": 101.08959999401122
+      },
+      {
+        "at": 23344.59999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.0999999940395355,
+        "browser_epoch": 29
+      },
+      {
+        "at": 23914.69999998808,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 10625,
+        "age_ms": 101.02259995625354
+      },
+      {
+        "at": 23943.09999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 28.30000001192093,
+        "browser_epoch": 30
+      },
+      {
+        "at": 24458,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 10896,
+        "age_ms": 100.27479998813942
+      },
+      {
+        "at": 24465.5,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.5,
+        "browser_epoch": 31
+      },
+      {
+        "at": 25122.5,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 11228,
+        "age_ms": 100.88719998113811
+      },
+      {
+        "at": 25141.69999998808,
+        "type": "trajectory_recovered",
+        "duration_ms": 19.099999994039536,
+        "browser_epoch": 32
+      },
+      {
+        "at": 25737.5,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 11534,
+        "age_ms": 100.80619998485781
+      },
+      {
+        "at": 25743.90000000596,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.300000011920929,
+        "browser_epoch": 33
+      },
+      {
+        "at": 26237.79999998212,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 11784,
+        "age_ms": 102.12929995753802
+      },
+      {
+        "at": 26244.59999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.699999988079071,
+        "browser_epoch": 34
+      },
+      {
+        "at": 26744,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 12038,
+        "age_ms": 100.30399998486973
+      },
+      {
+        "at": 26750.29999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.299999982118607,
+        "browser_epoch": 35
+      },
+      {
+        "at": 27289.5,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 12309,
+        "age_ms": 103.66159999067895
+      },
+      {
+        "at": 27295.90000000596,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.300000011920929,
+        "browser_epoch": 36
+      },
+      {
+        "at": 27867.90000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 12600,
+        "age_ms": 100.2919999808073
+      },
+      {
+        "at": 27875,
+        "type": "trajectory_recovered",
+        "duration_ms": 7,
+        "browser_epoch": 37
+      },
+      {
+        "at": 28355.40000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 12843,
+        "age_ms": 101.62769997678697
+      },
+      {
+        "at": 28363.09999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.5999999940395355,
+        "browser_epoch": 38
+      },
+      {
+        "at": 29019,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 13175,
+        "age_ms": 100.5023999880068
+      },
+      {
+        "at": 29041.29999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 22.19999998807907,
+        "browser_epoch": 39
+      },
+      {
+        "at": 29654.09999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 13493,
+        "age_ms": 100.40649996534921
+      },
+      {
+        "at": 29660.79999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.5999999940395355,
+        "browser_epoch": 40
+      },
+      {
+        "at": 30239.40000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 13785,
+        "age_ms": 101.30569997872226
+      },
+      {
+        "at": 30246.59999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.0999999940395355,
+        "browser_epoch": 41
+      },
+      {
+        "at": 30881.59999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 14106,
+        "age_ms": 101.82849998748861
+      },
+      {
+        "at": 30891.5,
+        "type": "trajectory_recovered",
+        "duration_ms": 9.900000005960464,
+        "browser_epoch": 42
+      },
+      {
+        "at": 31456,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 14393,
+        "age_ms": 100.21899997838773
+      },
+      {
+        "at": 31463.79999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.5999999940395355,
+        "browser_epoch": 43
+      },
+      {
+        "at": 31984.90000000596,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 14657,
+        "age_ms": 100.70509998477064
+      },
+      {
+        "at": 31991.79999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.699999988079071,
+        "browser_epoch": 44
+      },
+      {
+        "at": 32518.29999998212,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 14924,
+        "age_ms": 100.4084999577608
+      },
+      {
+        "at": 32525.40000000596,
+        "type": "trajectory_recovered",
+        "duration_ms": 7.100000023841858,
+        "browser_epoch": 45
+      },
+      {
+        "at": 33039.19999998808,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 15183,
+        "age_ms": 101.42889995966107
+      },
+      {
+        "at": 33046,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.5999999940395355,
+        "browser_epoch": 46
+      },
+      {
+        "at": 33672.19999998808,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 15500,
+        "age_ms": 100.22319997404702
+      },
+      {
+        "at": 33678.59999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 6.4000000059604645,
+        "browser_epoch": 47
+      },
+      {
+        "at": 34214,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 15771,
+        "age_ms": 100.26279999013059
+      },
+      {
+        "at": 34224.5,
+        "type": "trajectory_recovered",
+        "duration_ms": 10.400000005960464,
+        "browser_epoch": 48
+      },
+      {
+        "at": 34842.69999998808,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 16085,
+        "age_ms": 100.80709995981306
+      },
+      {
+        "at": 34851.59999999404,
+        "type": "trajectory_recovered",
+        "duration_ms": 8.800000011920929,
+        "browser_epoch": 49
+      },
+      {
+        "at": 35425.09999999404,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 16375,
+        "age_ms": 101.17449998459779
+      },
+      {
+        "at": 35441.29999998212,
+        "type": "trajectory_recovered",
+        "duration_ms": 16.19999998807907,
+        "browser_epoch": 50
+      }
+    ],
+    "position_hz": 402.8554479469704,
+    "page_rate": "Ruckig \u5df2\u5f00\u542f \u00b7 \u6309\u624b\u6307\u540c\u6b65 \u00b7 \u63a7\u5236 498 Hz \u00b7 \u672c\u673a\u5199\u5165 12430 \u5e27 \u00b7 404 Hz \u00b7 \u8ddf\u968f\u4e2d",
+    "stage": "browser-clock",
+    "recovery_count": 48,
+    "disarm_count": 0
+  },
+  {
+    "scope": "Chrome + configured test server + simulated camera/USB + actual recording worker; no physical device",
+    "recorded_moving_hand": true,
+    "events": [
+      {
+        "at": 20603,
+        "type": "trajectory_recovery",
+        "reason": "stale_after_pacing",
+        "tick": 9012,
+        "age_ms": 100.33450000244193
+      },
+      {
+        "at": 20613.600000023842,
+        "type": "trajectory_recovered",
+        "duration_ms": 10.5,
+        "browser_epoch": 2
+      }
+    ],
+    "position_hz": 485.1644212759659,
+    "page_rate": "Ruckig \u5df2\u5f00\u542f \u00b7 \u6309\u624b\u6307\u540c\u6b65 \u00b7 \u63a7\u5236 500 Hz \u00b7 \u672c\u673a\u5199\u5165 14955 \u5e27 \u00b7 485 Hz \u00b7 \u8ddf\u968f\u4e2d",
+    "stage": "browser-pacer",
+    "recovery_count": 1,
+    "disarm_count": 0
+  },
+  {
+    "scope": "Chrome + configured test server + simulated camera/USB + actual recording worker; no physical device",
+    "recorded_moving_hand": true,
+    "events": [],
+    "position_hz": 490.1444502960226,
+    "page_rate": "Ruckig \u5df2\u5f00\u542f \u00b7 \u6309\u624b\u6307\u540c\u6b65 \u00b7 \u63a7\u5236 500 Hz \u00b7 \u672c\u673a\u5199\u5165 15128 \u5e27 \u00b7 468 Hz \u00b7 \u8ddf\u968f\u4e2d",
+    "stage": "browser-final",
+    "recovery_count": 0,
+    "disarm_count": 0
+  }
+]

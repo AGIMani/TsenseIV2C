@@ -1,0 +1,498 @@
+[
+  {
+    "path": ".codex-pytest-native-a32-review",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": ".cursor",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": ".git",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": ".pytest-runtime",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": ".pytest_cache",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": ".vscode",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": ".work",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": ".wsl-migration-source.json",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "README-WSL.md",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/.git",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/DEMO_C++/libInterfCheck.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/DEMO_C++/libKine.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/DEMO_C++/libMarvinSDK.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/DEMO_PYTHON/libMarvinSDK.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/MarvinPlatform_EN/MarvinPlatform_win_100343.exe",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/SDK_PYTHON/libInterfCheck.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/SDK_PYTHON/libKine.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/SDK_PYTHON/libMarvinSDK.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/contrlSDK/libMarvinSDK.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/contrlSDK100343/libMarvinSDK.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/interferenceCheck/Interf/libInterfCheck.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/kinematicsSDK/libKine.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/marvinSDK_windows.bat",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TJ_FX_ROBOT_CONTRL_SDK/marvinSDK_windows_100343.bat",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "TsenseI_A3.0_hand_withid/backups",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "TsenseI_retargeting/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "TsenseI_retargeting/fk/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "assets/hands/_backups",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "backups",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "configs/control_log_parent.txt",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "deploy_node0.cmd",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "docs/local_and_node0_launcher.md",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "docs/wsl_online_control.md",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "docs/wuji_wsl_network.md",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "exports/collision_design_20261003/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "exports/collision_design_20261003/geometry/build.log",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "exports/collision_implementation_20261003/geometry_generation.log",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "exports/collision_implementation_20261003/geometry_metadata_refresh.log",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "exports/collision_implementation_20261003/geometry_palm_generation.log",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "exports/collision_implementation_20261003/geometry_regeneration.log",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "exports/collision_implementation_20261003/geometry_render.log",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "exports/collision_implementation_20261003/geometry_tests.log",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "exports/collision_review_20261003/static/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "external/Teleop/.cursor",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "external/Teleop/.git",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "external/wuji-retargeting/.git",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "external/wuji-retargeting/example/utils/mujoco-sim/.git",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "external/wuji-retargeting/example/utils/mujoco-sim/wuji_hand_description/.git",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "external/wuji-retargeting/wuji_retargeting/wuji-description/.git",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "func/puscode.bat",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "logs",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_cmd.md",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "online_control/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/clean.ps1",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "online_control/online_motion_play/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_play/deployment",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "online_control/online_motion_play/dist",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_play/runtime",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "online_control/online_motion_track/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/a30/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/a32/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/deployment",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "online_control/online_motion_track/dist",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/logs",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/node_modules",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/pipeline_v2/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/pipeline_v2/logs",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/pipeline_v3_0/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/pipeline_v3_2/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/pipeline_v3_2/logs",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/online_motion_track/requirements-wsl.txt",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "online_control/online_motion_track/runtime",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "online_control/online_motion_track/tests/wuji-browser-wsl.mjs",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "online_control/online_motion_track/v2/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_control/shared/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "online_vision2control_node0.cmd",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "online_vision2control_node0.sh",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "src/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/a30_kinematics/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/a32_driver/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/a32_driver/bin/a32_native.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "src/a32_driver/bin/a32_native_timed.dll",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "src/a32_driver/bin/lowlatency",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "src/a32_driver/bin/staged",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "src/a32_driver/build",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/a32_driver/build_native.ps1",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "src/a32_driver/native",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "src/a32_kinematics/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/app/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/camera/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/kinematics/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/physics/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/protocol/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/skeleton/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/tools/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/tracking/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/ui/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/urdf/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/usb/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "src/utils/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "start_local_and_update_node0.cmd",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "sync_all_right_keypoints.cmd",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "tests/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "tests/fixtures/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "tools/__pycache__",
+    "reason": "依赖、Git、日志、缓存、构建或历史备份"
+  },
+  {
+    "path": "tools/allow_quest_https_firewall.ps1",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "tools/check_wuji_wsl.py",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "tools/ensure_wuji_network.ps1",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "tools/setup_quest_webxr_firewall.ps1",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "tools/setup_wuji_windows_network.ps1",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "tools/start_local_and_update_node0.py",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "tools/start_metal_studio.ps1",
+    "reason": "Windows文件、日志或编译缓存"
+  },
+  {
+    "path": "tools/start_wuji_windows.py",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "tools/wuji_udp_forwarder.py",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "tracker_log.txt",
+    "reason": "旧环境、桥接、部署凭据或运行时目录"
+  },
+  {
+    "path": "tools/wuji_launcher.py",
+    "reason": "旧 Windows/node0 桥接、Windows 二进制或对应测试"
+  },
+  {
+    "path": "tools/wuji_network.py",
+    "reason": "旧 Windows/node0 桥接、Windows 二进制或对应测试"
+  },
+  {
+    "path": "tests/test_wuji_launcher.py",
+    "reason": "旧 Windows/node0 桥接、Windows 二进制或对应测试"
+  },
+  {
+    "path": "tests/test_wuji_network.py",
+    "reason": "旧 Windows/node0 桥接、Windows 二进制或对应测试"
+  },
+  {
+    "path": "tests/test_wuji_udp_forwarder.py",
+    "reason": "旧 Windows/node0 桥接、Windows 二进制或对应测试"
+  },
+  {
+    "path": "tests/test_local_node0_launcher.py",
+    "reason": "旧 Windows/node0 桥接、Windows 二进制或对应测试"
+  },
+  {
+    "path": "src/a32_driver/bin/a32_native.before-diagnostics",
+    "reason": "旧 Windows/node0 桥接、Windows 二进制或对应测试"
+  },
+  {
+    "path": "online_control/online_motion_play/deploy_node0.py",
+    "reason": "旧 Windows/node0 桥接、Windows 二进制或对应测试"
+  }
+]

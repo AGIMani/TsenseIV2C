@@ -1,0 +1,224 @@
+schema_version: 1
+unit: meter
+mirror_axis: y
+quality_status: geometry_seed
+collision_scope: different_fingers_only
+source: TsenseI_V3.2_hand_withid_fixed/collision_proxies.json
+notes:
+- 15 phalanx capsules retain the supplied ID-shell fitted shapes; palm and mounting
+  shell excluded.
+- Source distal capsules fit narrow 1 mm cap bands, not conservative cover envelopes;
+  physical calibration pending.
+- Same-finger contacts disabled; source masses, virtual wrist/forearm servos and Shadow
+  settings are not imported.
+geoms:
+- link: left_hand_thumb_rotaback_link2
+  finger: thumb
+  type: capsule
+  fromto:
+  - 0.011706449748613804
+  - -0.0007569759846130261
+  - 0.006682829500195685
+  - 0.004846381479918834
+  - -0.006903449858071875
+  - 0.046279127835447895
+  size:
+  - 0.009716639099964144
+  contype: 1
+  conaffinity: 30
+- link: left_hand_thumb_MCP_link
+  finger: thumb
+  type: capsule
+  fromto:
+  - -0.008362358225060849
+  - 2.005370269885222e-06
+  - 0.004470212130256103
+  - -0.008870073651263216
+  - 2.005370269885222e-06
+  - 0.019215749693789454
+  size:
+  - 0.008897844483900194
+  contype: 1
+  conaffinity: 30
+- link: left_hand_thumb_PIP_link
+  finger: thumb
+  type: capsule
+  fromto:
+  - -0.001332400948740542
+  - -1.4899768918663625e-11
+  - -0.0021668189438059926
+  - -0.001332400948740542
+  - -1.4899768918663625e-11
+  - 0.019514840212650597
+  size:
+  - 0.002333180862478912
+  contype: 1
+  conaffinity: 30
+- link: left_hand_index_swing_link
+  finger: index
+  type: capsule
+  fromto:
+  - -0.0018526610939972985
+  - 5.723387615575397e-05
+  - 0.011849513645531157
+  - 0.008731816294992393
+  - -8.898300419148152e-05
+  - 0.03410038310354113
+  size:
+  - 0.010605794594110061
+  contype: 2
+  conaffinity: 29
+- link: left_hand_index_PIP_link
+  finger: index
+  type: capsule
+  fromto:
+  - -0.007958557109435258
+  - -1.5001395332503108e-05
+  - 0.004332569291817137
+  - -0.008998245323537133
+  - -1.5001395332503108e-05
+  - 0.01929606952735019
+  size:
+  - 0.008921686570641678
+  contype: 2
+  conaffinity: 29
+- link: left_hand_index_DIP_link
+  finger: index
+  type: capsule
+  fromto:
+  - -0.002006369177252054
+  - 1.4331066267914139e-05
+  - -0.0020707235671579838
+  - -0.002006369177252054
+  - 1.4331066267914139e-05
+  - 0.02356491144746542
+  size:
+  - 0.002419174648821354
+  contype: 2
+  conaffinity: 29
+- link: left_hand_mid_swing_link
+  finger: mid
+  type: capsule
+  fromto:
+  - -0.003277161259039319
+  - 9.939390767740961e-06
+  - 0.011075966231153846
+  - 0.00744129732342674
+  - -6.440131222324724e-06
+  - 0.034450066221580734
+  size:
+  - 0.010337239921237352
+  contype: 4
+  conaffinity: 27
+- link: left_hand_mid_PIP_link
+  finger: mid
+  type: capsule
+  fromto:
+  - -0.00934134885239284
+  - -6.821507162338433e-07
+  - 0.004865156118035639
+  - -0.006465991390701235
+  - -6.821507162338433e-07
+  - 0.023728412642335956
+  size:
+  - 0.009190189782035141
+  contype: 4
+  conaffinity: 27
+- link: left_hand_mid_DIP_link
+  finger: mid
+  type: capsule
+  fromto:
+  - -0.001801920821890235
+  - 5.703023470138291e-11
+  - -0.002488737227395177
+  - -0.001801920821890235
+  - 5.703023470138291e-11
+  - 0.02737963874824345
+  size:
+  - 0.0020112625788897276
+  contype: 4
+  conaffinity: 27
+- link: left_hand_ring_swing_link
+  finger: ring
+  type: capsule
+  fromto:
+  - -0.003277129685768814
+  - 9.457167705564157e-06
+  - 0.01107602376990382
+  - 0.0074413967119942945
+  - -1.1119799121459534e-05
+  - 0.0344500173582947
+  size:
+  - 0.010337254270164093
+  contype: 8
+  conaffinity: 23
+- link: left_hand_ring_PIP_link
+  finger: ring
+  type: capsule
+  fromto:
+  - -0.008203089087660657
+  - 1.9997811140276178e-05
+  - 0.004394895617328312
+  - -0.00881171875984342
+  - 1.9997811140276178e-05
+  - 0.019320728630933624
+  size:
+  - 0.008928780568651115
+  contype: 8
+  conaffinity: 23
+- link: left_hand_ring_DIP_link
+  finger: ring
+  type: capsule
+  fromto:
+  - -0.0016032624989748001
+  - -5.755336587753845e-06
+  - -0.002080844365991652
+  - -0.0016032624989748001
+  - -5.755336587753845e-06
+  - 0.02627503138501197
+  size:
+  - 0.0024090538499876857
+  contype: 8
+  conaffinity: 23
+- link: left_hand_pinky_swing_link
+  finger: pinky
+  type: capsule
+  fromto:
+  - -0.005069153873966522
+  - 1.250622483362771e-05
+  - 0.010762960901651495
+  - 0.00939305610369028
+  - -9.94356591046953e-06
+  - 0.031237496786392777
+  size:
+  - 0.009637355598567671
+  contype: 16
+  conaffinity: 15
+- link: left_hand_pinky_PIP_link
+  finger: pinky
+  type: capsule
+  fromto:
+  - -0.006095269066472201
+  - 6.449432495134926e-05
+  - 0.006089659767090704
+  - -0.002357836335804084
+  - 0.0001129447685380905
+  - 0.01951648959235752
+  size:
+  - 0.00864381096880364
+  contype: 16
+  conaffinity: 15
+- link: left_hand_pinky_DIP_link
+  finger: pinky
+  type: capsule
+  fromto:
+  - -0.001332400948740542
+  - 1.849242980966892e-12
+  - -0.0021668189438059926
+  - -0.001332400948740542
+  - 1.849242980966892e-12
+  - 0.019514840212650597
+  size:
+  - 0.002333180862478912
+  contype: 16
+  conaffinity: 15

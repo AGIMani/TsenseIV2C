@@ -1,0 +1,98 @@
+{
+  "date": "2026-10-06",
+  "project": "/tmp/hand-ubuntu-20261006/hand",
+  "validation_scope": "Native Linux software/browser validation; no real USB/SDK device or camera was opened.",
+  "environment": {
+    "node": "v24.21.0",
+    "browser": "Linux Playwright Chromium 1243 with SwiftShader",
+    "play_python": "/tmp/hand-ubuntu-20261006/verify-noqt/bin/python (no PySide6 or shiboken6)",
+    "track_python": "/home/onkiall/.venvs/hand-track/bin/python",
+    "external_development_dependencies": "Playwright imported from original checkout; no development node_modules added to migration stage"
+  },
+  "checks": [
+    {
+      "name": "node_unit_tests",
+      "status": "pass",
+      "passed": 258,
+      "failed": 0,
+      "log": "node-tests.log",
+      "command": "HAND_PYTHON=/home/onkiall/.venvs/hand-track/bin/python node --test online_control/shared/test_serial_timing.mjs online_control/online_motion_play/test_browser_serial.mjs online_control/online_motion_play/test_serial_worker.mjs online_control/online_motion_track/tests/*.test.mjs"
+    },
+    {
+      "name": "five_model_browser_workflows",
+      "status": "pass",
+      "models": [
+        "TsenseI_v2",
+        "TsenseI_v3_0",
+        "TsenseI_v3_0_withid",
+        "TsenseI_v3_2",
+        "TsenseI_v3_2_withid"
+      ],
+      "checks": [
+        "model and mesh rendering",
+        "21 V2 / 20 A3 joints",
+        "joint editing",
+        "save and confirmations",
+        "export browser download",
+        "delete",
+        "import through file input",
+        "offline playback final pose",
+        "left and right model views"
+      ],
+      "page_errors": [],
+      "failed_http_api_or_assets": [],
+      "script": "migration-motion-smoke.mjs",
+      "tested_script": "all-models.mjs",
+      "log": "all-models.log",
+      "screenshot": "five-models.png"
+    },
+    {
+      "name": "webxr_resource_browser_smoke",
+      "status": "pass",
+      "checks": [
+        "desktop source=webxr initializes without camera",
+        "3D model canvas present",
+        "Quest /q capture page loads",
+        "37 JavaScript/model/resource responses succeed"
+      ],
+      "page_errors": [],
+      "failed_assets": [],
+      "script": "migration-webxr-resources.mjs",
+      "log": "webxr-resources.log",
+      "screenshots": [
+        "webxr-resource-desktop.png",
+        "webxr-resource-capture.png"
+      ]
+    },
+    {
+      "name": "legacy_a32_browser_test",
+      "status": "fail",
+      "classification": "legacy hard-coded joint-limit assertion mismatches current calibrated range; production A32 code was not changed to match the assertion",
+      "observed": "Pinky DIP maximum 1.020649563213339 rad versus hard-coded 1.565 rad",
+      "log": "a32-browser.log",
+      "replacement_coverage": "five_model_browser_workflows passes for both A32 models"
+    },
+    {
+      "name": "legacy_webxr_synthetic_end_to_end",
+      "status": "inconclusive",
+      "stage_test_status": "fail",
+      "source_baseline_status": "fail at an earlier session expiry; identical failure not established",
+      "stage_observed": "Synthetic Quest data reached live retargeted UI; transient poll failure recovered, no camera requests, model/skeleton rendering and mobile layout passed. UI correctly indicated lost input, but legacy test expected a new !tracking WebXR solver update in its collected update-only array.",
+      "stage_log": "webxr-browser.log",
+      "source_baseline_log": "webxr-source.log",
+      "not_claimed": "Full current lost-input/stop/source-switch browser contract; no production code changed to accommodate this test."
+    }
+  ],
+  "stage_test_adaptations": [
+    "online_control/online_motion_track/tests/a30-serial.test.mjs reads tests/fixtures/a30_protocol_reference.py instead of removed desktop GUI",
+    "online_control/online_motion_track/tests/joint-enable.test.mjs reads the same pure protocol fixture",
+    "online_control/online_motion_play/test_a32_lifecycle_browser.mjs accepts CHROME_PATH"
+  ],
+  "services": "Every test-owned server was started with an explicit temporary config/data/log directory and stopped in a finally block; original pre-existing services were not stopped.",
+  "reproduction": {
+    "motion": "Set MOTION_URL to an isolated Qt-free motion service with a fresh data_dir; set CHROME_PATH, PLAYWRIGHT_MODULE (package name or file URL), and MOTION_QA_OUTPUT; run node migration-motion-smoke.mjs.",
+    "webxr_resources": "Set WEB_URL to an isolated tracking server started with --log-dir outside the project; set the same browser/output variables; run node migration-webxr-resources.mjs.",
+    "all_models_service_runner": "run-final-models.py records the exact local test invocation; reusable browser scripts accept explicit service URLs."
+  },
+  "physical_hardware": "not tested; all browser interactions were offline and no connect button was pressed"
+}

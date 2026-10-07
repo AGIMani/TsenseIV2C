@@ -1,0 +1,251 @@
+{
+  "schema_version": 1,
+  "source": "README.md: user-filled left-hand slot table, 2026-09-23",
+  "calibration_confirmed": true,
+  "calibration_note": "用户确认：所有通道方向 +1、零偏 0（2026-09-23）。",
+  "hand_side": "left",
+  "channels": [
+    {
+      "joint": "left_hand_pinky_DIP_joint",
+      "channel": "self",
+      "index": 0,
+      "unit": "mm",
+      "limits": [
+        0.03978232907593353,
+        8.0
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_pinky_PIP_joint",
+      "channel": "self",
+      "index": 1,
+      "unit": "mm",
+      "limits": [
+        0.047213362066967496,
+        15.563614436072365
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_pinky_MCP_joint",
+      "channel": "self",
+      "index": 2,
+      "unit": "mm",
+      "limits": [
+        0.06346077964261738,
+        15.917403329193267
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_ring_DIP_joint",
+      "channel": "self",
+      "index": 3,
+      "unit": "mm",
+      "limits": [
+        0.039889456830952824,
+        8.0
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_ring_PIP_joint",
+      "channel": "self",
+      "index": 4,
+      "unit": "mm",
+      "limits": [
+        0.048521004893416556,
+        16.49396956515652
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_ring_MCP_joint",
+      "channel": "self",
+      "index": 5,
+      "unit": "mm",
+      "limits": [
+        0.052955557089815614,
+        17.506244070309826
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_pinky_swing_joint",
+      "channel": "self",
+      "index": 6,
+      "unit": "deg",
+      "limits": [
+        0.2864788975654116,
+        39.82056676159221
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_ring_swing_joint",
+      "channel": "self",
+      "index": 7,
+      "unit": "deg",
+      "limits": [
+        0.2864788975654116,
+        39.82056676159221
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_mid_DIP_joint",
+      "channel": "self",
+      "index": 8,
+      "unit": "mm",
+      "limits": [
+        0.04002034247826795,
+        8.0
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_mid_PIP_joint",
+      "channel": "self",
+      "index": 9,
+      "unit": "mm",
+      "limits": [
+        0.0484368546490796,
+        16.480592961964707
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_mid_MCP_joint",
+      "channel": "self",
+      "index": 10,
+      "unit": "mm",
+      "limits": [
+        0.06356215084720937,
+        15.926229444931497
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_index_DIP_joint",
+      "channel": "self",
+      "index": 11,
+      "unit": "mm",
+      "limits": [
+        0.039889456830952824,
+        8.0
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_index_PIP_joint",
+      "channel": "self",
+      "index": 12,
+      "unit": "mm",
+      "limits": [
+        0.048521004893416556,
+        16.49396956515652
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_index_MCP_joint",
+      "channel": "self",
+      "index": 13,
+      "unit": "mm",
+      "limits": [
+        0.052955557089815614,
+        17.506244070309826
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_mid_swing_joint",
+      "channel": "self",
+      "index": 14,
+      "unit": "deg",
+      "limits": [
+        0.2864788975654116,
+        39.82056676159221
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_index_swing_joint",
+      "channel": "self",
+      "index": 15,
+      "unit": "deg",
+      "limits": [
+        0.2864788975654116,
+        39.82056676159221
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_thumb_PIP_joint",
+      "channel": "self",
+      "index": 16,
+      "unit": "mm",
+      "limits": [
+        0.04002219983329294,
+        12.380969592467999
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_thumb_MCP_joint",
+      "channel": "self",
+      "index": 17,
+      "unit": "mm",
+      "limits": [
+        0.04943704517454406,
+        13.72395301636824
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_thumb_rotaback_joint2",
+      "channel": "mit",
+      "index": 0,
+      "unit": "deg",
+      "limits": [
+        0,
+        99
+      ],
+      "direction": 1,
+      "offset": 0
+    },
+    {
+      "joint": "left_hand_thumb_rota_block_joint",
+      "channel": "mit",
+      "index": 1,
+      "unit": "deg",
+      "limits": [
+        0,
+        119
+      ],
+      "direction": 1,
+      "offset": 0
+    }
+  ],
+  "joint_coordinate_version": "a32-positive-swing-v1",
+  "range_note": "2026-09-28 user-requested joint ranges; linear limits derived from existing geometry; self swing is positive radians converted to SDK degrees. No hardware motion used for validation. 2026-10-05: four-finger DIP mechanism and command upper limits reduced to 8 mm."
+}

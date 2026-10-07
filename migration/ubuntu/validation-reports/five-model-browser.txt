@@ -1,0 +1,6 @@
+MODEL TsenseI_v2
+MODEL TsenseI_v3_0
+MODEL TsenseI_v3_0_withid
+MODEL TsenseI_v3_2
+MODEL TsenseI_v3_2_withid
+{"ok":true,"models":5,"left_right":10,"save_delete_import_export_playback":true,"errors":[],"failed":[]}

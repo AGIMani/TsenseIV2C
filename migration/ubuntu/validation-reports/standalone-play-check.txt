@@ -1,0 +1,1 @@
+CHECK OK: Qt-free V2 (21 joints), A3.0 / A3.2 with ID, left/right models, Ruckig, serial and writable data directory; no hardware connected

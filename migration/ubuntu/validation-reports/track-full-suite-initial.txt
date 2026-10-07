@@ -1,0 +1,1204 @@
+..............................FF...FF................................... [  4%]
+........................................................................ [  9%]
+.............FFFF.....................F................................. [ 14%]
+........................................................................ [ 19%]
+..................s............................. [ 23%]
+..........F.F......................s.......................F............ [ 28%]
+.sFF.................................................................... [ 33%]
+........................................................................ [ 38%]
+........................................................................ [ 43%]
+........................................................................ [ 48%]
+.............................F.F...FFF.F......F................ss.s..... [ 53%]
+........................................................................ [ 58%]
+........................................................................ [ 63%]
+...............................................FF....................... [ 68%]
+........................................................................ [ 73%]
+..........................................ss............................ [ 78%]
+........................................................................ [ 82%]
+............F................................F.F.F.F.F.................. [ 87%]
+........................................................................ [ 92%]
+........F............................................................... [ 97%]
+...........s..................                                           [100%]
+=================================== FAILURES ===================================
+_____ test_withid_open_gesture_recovers_after_other_fingers_separate[left] _____
+
+side = 'left'
+
+    @pytest.mark.parametrize('side',['left','right'])
+    def test_withid_open_gesture_recovers_after_other_fingers_separate(side):
+        case=json.loads((ROOT/'tests/fixtures/a30_withid_collision_resume.json').read_text())
+        profile=load_hand_profile('TsenseI_v3_0_withid')
+        controller=A30Control(profile,side,'mink',start=False)
+        guard=MinkCollisionGuard(profile,side)
+        target={n.replace('left_',side+'_'):q for n,q in case['target'].items()}
+        open_pose=profile.init_pose(side)
+        held=False
+        try:
+            for frame in range(110):
+                requested=guard.project(target if frame<10 else open_pose)
+                controller.push(requested,frame)
+                for _ in range(15):
+                    controller.step(.002)
+                    assert controller.valid,controller.error
+                    held |= bool(controller.finger_holds)
+                    controller.guard.filter.sync_pose_from_dict(controller.pose)
+                    assert controller.guard.filter.data.ncon==0
+                    assert len(controller.wire)==108
+            assert held  # Exercise an actual collision hold, not only a clear path.
+>           assert guard.diagnostics['status']=='clear'
+E           AssertionError: assert 'held_distance_check' == 'clear'
+E             
+E             - clear
+E             + held_distance_check
+
+tests/test_a30_collision_resume.py:64: AssertionError
+____ test_withid_open_gesture_recovers_after_other_fingers_separate[right] _____
+
+side = 'right'
+
+    @pytest.mark.parametrize('side',['left','right'])
+    def test_withid_open_gesture_recovers_after_other_fingers_separate(side):
+        case=json.loads((ROOT/'tests/fixtures/a30_withid_collision_resume.json').read_text())
+        profile=load_hand_profile('TsenseI_v3_0_withid')
+        controller=A30Control(profile,side,'mink',start=False)
+        guard=MinkCollisionGuard(profile,side)
+        target={n.replace('left_',side+'_'):q for n,q in case['target'].items()}
+        open_pose=profile.init_pose(side)
+        held=False
+        try:
+            for frame in range(110):
+                requested=guard.project(target if frame<10 else open_pose)
+                controller.push(requested,frame)
+                for _ in range(15):
+                    controller.step(.002)
+                    assert controller.valid,controller.error
+                    held |= bool(controller.finger_holds)
+                    controller.guard.filter.sync_pose_from_dict(controller.pose)
+                    assert controller.guard.filter.data.ncon==0
+                    assert len(controller.wire)==108
+            assert held  # Exercise an actual collision hold, not only a clear path.
+>           assert guard.diagnostics['status']=='clear'
+E           AssertionError: assert 'held_distance_check' == 'clear'
+E             
+E             - clear
+E             + held_distance_check
+
+tests/test_a30_collision_resume.py:64: AssertionError
+__ test_target_collision_guard_holds_only_contact_fingers_with_real_geometry ___
+
+    def test_target_collision_guard_holds_only_contact_fingers_with_real_geometry():
+        from online_control.online_motion_track.pipeline_v3_0.collision import StopCollisionGuard
+        case = json.loads((ROOT / 'tests/fixtures/a30_collision_685.json').read_text(encoding='utf-8'))
+        g = StopCollisionGuard(load_hand_profile('TsenseI_v3_0'), 'left', finger_stop=True)
+>       g.current = dict(case['last_safe_pose']); g.guard.rebase(g.current)
+                                                  ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_continuous.py:30: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+online_control/online_motion_track/pipeline_v3_0/collision.py:30: in rebase
+    super().rebase(current_values)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <online_control.online_motion_track.pipeline_v3_0.collision._KinematicStopGuard object at 0x7f3d27827350>
+current_values = {'left_hand_thumb_rota_block_joint': 1.9764817953109741, 'left_hand_thumb_rotaback_joint2': 1.1638740301132202, 'left_hand_thumb_MCP_joint': 0.3172200322151184, 'left_hand_thumb_PIP_joint': 0.4202919006347656, ...}
+
+    def rebase(self, current_values: Mapping[str, float] | None) -> None:
+        """Discard stale routes and restart planning at the accepted hand pose.
+    
+        Used after tracking reacquisition; unlike reset(), this never restores
+        the physics model's warm-up pose or assumes the previous goal was met.
+        """
+        self._clear_avoidance()
+        self._previous_safe = None
+        if current_values:
+            current = self._pose(current_values)
+            penetration, _ = self._evaluate(current)
+            if not self._is_safe(penetration):
+>               raise RuntimeError("reacquisition pose exceeds collision tolerance")
+E               RuntimeError: reacquisition pose exceeds collision tolerance
+
+online_control/online_motion_track/pipeline_v2/collision_guard.py:1162: RuntimeError
+____ test_mink_automatic_resume_inside_clearance_keeps_feasible_target_seed ____
+
+    def test_mink_automatic_resume_inside_clearance_keeps_feasible_target_seed():
+        from online_control.online_motion_track.main import Application
+        case = json.loads((ROOT / 'tests/fixtures/a30_collision_685.json').read_text(encoding='utf-8'))
+        app = Application(public=True)
+        try:
+            session = app.create({'model_id':'TsenseI_v3_0', 'recording':False, 'collision_mode':'mink'})
+            obj = app.get(session['session']); obj.control.close()
+            g = obj.pipeline.mink_guard; original = g.q.copy()
+            assert not g._feasible(g._vector(case['last_safe_pose']))
+>           state = obj.command('browser_rebase', {'telemetry':bytes(484).hex(),
+                'pose':case['last_safe_pose'], 'resume_from_commanded_pose':True})
+
+tests/test_a30_continuous.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+online_control/online_motion_track/a30/session.py:50: in command
+    return self.control.rebase(data["telemetry"], data.get("pose"),
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <online_control.online_motion_track.a30.control.A30Control object at 0x7f3d26008830>
+payload = '000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000...0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000'
+fallback_pose = {'left_hand_thumb_rota_block_joint': 1.9764817953109741, 'left_hand_thumb_rotaback_joint2': 1.1638740301132202, 'left_hand_thumb_MCP_joint': 0.3172200322151184, 'left_hand_thumb_PIP_joint': 0.4202919006347656, ...}
+resume_from_commanded_pose = True
+
+    def rebase(self, payload, fallback_pose=None, *, resume_from_commanded_pose=False):
+        with self.lock:
+            target, target_at = dict(self.target), self.target_at
+            if resume_from_commanded_pose and not self.valid:
+                raise ValueError("控制器故障未解除，请手动重新开启")
+            missing, clipped = [], []
+            # The preview may already have advanced. Never use it as unmeasured
+            # hardware feedback: use the client's last sent pose or initial pose.
+            pose = measured_pose(payload, self.mapper,
+                                 fallback_pose=self.profile.init_pose(self.side) if fallback_pose is None else fallback_pose,
+                                 missing_joints=missing, clamp=True, clipped_joints=clipped)
+            if resume_from_commanded_pose:
+                # Automatic stream recovery must continue from the last USB
+                # command, not a cached telemetry packet from before that write.
+                if not isinstance(fallback_pose, dict) or any(
+                    n not in fallback_pose or not isinstance(fallback_pose[n], (int, float))
+                    or not math.isfinite(fallback_pose[n])
+                    or not lo-1e-5 <= fallback_pose[n] <= hi+1e-5
+                    for n, (lo, hi) in self.limits.items()
+                ):
+                    raise ValueError("恢复轨迹缺少有效的最后下发姿态")
+                pose = self.mapper.convert(fallback_pose, clamp=True).joint_angles_rad
+            if self.guard:
+                self.guard.filter.sync_pose_from_dict(pose)
+                if self.guard.filter.data.ncon:
+>                   raise ValueError("当前反馈姿态存在碰撞，请先调整实机")
+E                   ValueError: 当前反馈姿态存在碰撞，请先调整实机
+
+online_control/online_motion_track/a30/control.py:137: ValueError
+____ test_retained_channels_match_a32_and_four_dips_are_direct[exact-left] _____
+
+side = 'left', method = 'exact'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    @pytest.mark.parametrize("method", ["exact", "lut"])
+    def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+        mapper = A30StrokeMapper(side, method=method)
+        reference = A32StrokeMapper(side, method=method)
+        assert mapper._prepared.n == 9
+        assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
+        assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
+        dips = {f"{side}_hand_{f}_DIP_joint" for f in ("index", "mid", "ring", "pinky")}
+        rng = np.random.default_rng(30)
+        for _ in range(40):
+            pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
+            before = dict(pose)
+            target = mapper.convert(pose)
+            ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
+>           ref = reference.convert(ref_pose)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_mapper.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <a32_kinematics.mapper.A32StrokeMapper object at 0x7f3d271f37a0>
+joint_angles = {'left_hand_thumb_rota_block_joint': 0.4928195020581935, 'left_hand_thumb_rotaback_joint2': 0.7466461776785114, 'left_hand_thumb_MCP_joint': 0.14486863598866864, 'left_hand_thumb_PIP_joint': 0.9303863284188952, ...}
+clamp = False
+
+    def convert(self, joint_angles: Mapping[str, float], *, clamp: bool = False) -> A32MotorTargets:
+        if not isinstance(joint_angles, Mapping):
+            raise ValueError("A3.2 pose must be a joint-name mapping")
+        if joint_angles.keys() != self._name_set:
+            missing = self._name_set - joint_angles.keys()
+            unknown = joint_angles.keys() - self._name_set
+            raise ValueError(f"A3.2 requires its own complete 20-joint pose; "
+                             f"missing={sorted(missing)}, unknown={sorted(unknown, key=repr)}")
+        angles, applied, clamped = [], {}, {}
+        for name, (lo, hi), sign in zip(self.joint_names, self._limits, self._source_signs):
+            value = joint_angles[name]
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}") from exc
+            if not math.isfinite(value):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            if value < lo - 1e-10 or value > hi + 1e-10:
+                if not clamp:
+>                   raise A32Error("AngleLimit", f"{name}: {value} rad outside [{lo}, {hi}]")
+E                   a32_kinematics.a32_angles_to_inputs.A32Error: A32:AngleLimit: left_hand_ring_MCP_joint: 1.374140568022994 rad outside [0.005, 1.3]
+
+src/a32_kinematics/mapper.py:143: A32Error
+____ test_retained_channels_match_a32_and_four_dips_are_direct[exact-right] ____
+
+side = 'right', method = 'exact'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    @pytest.mark.parametrize("method", ["exact", "lut"])
+    def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+        mapper = A30StrokeMapper(side, method=method)
+        reference = A32StrokeMapper(side, method=method)
+        assert mapper._prepared.n == 9
+        assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
+        assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
+        dips = {f"{side}_hand_{f}_DIP_joint" for f in ("index", "mid", "ring", "pinky")}
+        rng = np.random.default_rng(30)
+        for _ in range(40):
+            pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
+            before = dict(pose)
+            target = mapper.convert(pose)
+            ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
+>           ref = reference.convert(ref_pose)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_mapper.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <a32_kinematics.mapper.A32StrokeMapper object at 0x7f3d8312d0a0>
+joint_angles = {'right_hand_thumb_rota_block_joint': 0.4928195020581935, 'right_hand_thumb_rotaback_joint2': 0.7466461776785114, 'right_hand_thumb_MCP_joint': 0.14486863598866864, 'right_hand_thumb_PIP_joint': 0.9303863284188952, ...}
+clamp = False
+
+    def convert(self, joint_angles: Mapping[str, float], *, clamp: bool = False) -> A32MotorTargets:
+        if not isinstance(joint_angles, Mapping):
+            raise ValueError("A3.2 pose must be a joint-name mapping")
+        if joint_angles.keys() != self._name_set:
+            missing = self._name_set - joint_angles.keys()
+            unknown = joint_angles.keys() - self._name_set
+            raise ValueError(f"A3.2 requires its own complete 20-joint pose; "
+                             f"missing={sorted(missing)}, unknown={sorted(unknown, key=repr)}")
+        angles, applied, clamped = [], {}, {}
+        for name, (lo, hi), sign in zip(self.joint_names, self._limits, self._source_signs):
+            value = joint_angles[name]
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}") from exc
+            if not math.isfinite(value):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            if value < lo - 1e-10 or value > hi + 1e-10:
+                if not clamp:
+>                   raise A32Error("AngleLimit", f"{name}: {value} rad outside [{lo}, {hi}]")
+E                   a32_kinematics.a32_angles_to_inputs.A32Error: A32:AngleLimit: right_hand_ring_MCP_joint: 1.374140568022994 rad outside [0.005, 1.3]
+
+src/a32_kinematics/mapper.py:143: A32Error
+_____ test_retained_channels_match_a32_and_four_dips_are_direct[lut-left] ______
+
+side = 'left', method = 'lut'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    @pytest.mark.parametrize("method", ["exact", "lut"])
+    def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+        mapper = A30StrokeMapper(side, method=method)
+        reference = A32StrokeMapper(side, method=method)
+        assert mapper._prepared.n == 9
+        assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
+        assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
+        dips = {f"{side}_hand_{f}_DIP_joint" for f in ("index", "mid", "ring", "pinky")}
+        rng = np.random.default_rng(30)
+        for _ in range(40):
+            pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
+            before = dict(pose)
+            target = mapper.convert(pose)
+            ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
+>           ref = reference.convert(ref_pose)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_mapper.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <a32_kinematics.mapper.A32StrokeMapper object at 0x7f3d27243080>
+joint_angles = {'left_hand_thumb_rota_block_joint': 0.4928195020581935, 'left_hand_thumb_rotaback_joint2': 0.7466461776785114, 'left_hand_thumb_MCP_joint': 0.14486863598866864, 'left_hand_thumb_PIP_joint': 0.9303863284188952, ...}
+clamp = False
+
+    def convert(self, joint_angles: Mapping[str, float], *, clamp: bool = False) -> A32MotorTargets:
+        if not isinstance(joint_angles, Mapping):
+            raise ValueError("A3.2 pose must be a joint-name mapping")
+        if joint_angles.keys() != self._name_set:
+            missing = self._name_set - joint_angles.keys()
+            unknown = joint_angles.keys() - self._name_set
+            raise ValueError(f"A3.2 requires its own complete 20-joint pose; "
+                             f"missing={sorted(missing)}, unknown={sorted(unknown, key=repr)}")
+        angles, applied, clamped = [], {}, {}
+        for name, (lo, hi), sign in zip(self.joint_names, self._limits, self._source_signs):
+            value = joint_angles[name]
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}") from exc
+            if not math.isfinite(value):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            if value < lo - 1e-10 or value > hi + 1e-10:
+                if not clamp:
+>                   raise A32Error("AngleLimit", f"{name}: {value} rad outside [{lo}, {hi}]")
+E                   a32_kinematics.a32_angles_to_inputs.A32Error: A32:AngleLimit: left_hand_ring_MCP_joint: 1.374140568022994 rad outside [0.005, 1.3]
+
+src/a32_kinematics/mapper.py:143: A32Error
+_____ test_retained_channels_match_a32_and_four_dips_are_direct[lut-right] _____
+
+side = 'right', method = 'lut'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    @pytest.mark.parametrize("method", ["exact", "lut"])
+    def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+        mapper = A30StrokeMapper(side, method=method)
+        reference = A32StrokeMapper(side, method=method)
+        assert mapper._prepared.n == 9
+        assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
+        assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
+        dips = {f"{side}_hand_{f}_DIP_joint" for f in ("index", "mid", "ring", "pinky")}
+        rng = np.random.default_rng(30)
+        for _ in range(40):
+            pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
+            before = dict(pose)
+            target = mapper.convert(pose)
+            ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
+>           ref = reference.convert(ref_pose)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_a30_mapper.py:31: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <a32_kinematics.mapper.A32StrokeMapper object at 0x7f3d28acdfa0>
+joint_angles = {'right_hand_thumb_rota_block_joint': 0.4928195020581935, 'right_hand_thumb_rotaback_joint2': 0.7466461776785114, 'right_hand_thumb_MCP_joint': 0.14486863598866864, 'right_hand_thumb_PIP_joint': 0.9303863284188952, ...}
+clamp = False
+
+    def convert(self, joint_angles: Mapping[str, float], *, clamp: bool = False) -> A32MotorTargets:
+        if not isinstance(joint_angles, Mapping):
+            raise ValueError("A3.2 pose must be a joint-name mapping")
+        if joint_angles.keys() != self._name_set:
+            missing = self._name_set - joint_angles.keys()
+            unknown = joint_angles.keys() - self._name_set
+            raise ValueError(f"A3.2 requires its own complete 20-joint pose; "
+                             f"missing={sorted(missing)}, unknown={sorted(unknown, key=repr)}")
+        angles, applied, clamped = [], {}, {}
+        for name, (lo, hi), sign in zip(self.joint_names, self._limits, self._source_signs):
+            value = joint_angles[name]
+            if isinstance(value, bool) or not isinstance(value, Real):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            try:
+                value = float(value)
+            except (ValueError, TypeError, OverflowError) as exc:
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}") from exc
+            if not math.isfinite(value):
+                raise ValueError(f"A3.2 joint must be a finite real angle: {name}")
+            if value < lo - 1e-10 or value > hi + 1e-10:
+                if not clamp:
+>                   raise A32Error("AngleLimit", f"{name}: {value} rad outside [{lo}, {hi}]")
+E                   a32_kinematics.a32_angles_to_inputs.A32Error: A32:AngleLimit: right_hand_ring_MCP_joint: 1.374140568022994 rad outside [0.005, 1.3]
+
+src/a32_kinematics/mapper.py:143: A32Error
+__________ test_recorded_retreat_does_not_freeze_both_contact_fingers __________
+
+    def test_recorded_retreat_does_not_freeze_both_contact_fingers():
+        case = json.loads((ROOT / "tests/fixtures/a30_plateau_145628.json").read_text())
+        c = A30Control(load_hand_profile("TsenseI_v3_0"), "left", "mink", start=False)
+        try:
+>           c._seed(case["seed_pose"])
+
+tests/test_a30_plateau.py:18: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+online_control/online_motion_track/a30/control.py:68: in _seed
+    self.guard.current = dict(pose); self.guard.guard.rebase(pose)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+online_control/online_motion_track/pipeline_v3_0/collision.py:30: in rebase
+    super().rebase(current_values)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <online_control.online_motion_track.pipeline_v3_0.collision._KinematicStopGuard object at 0x7f3d260098e0>
+current_values = {'left_hand_thumb_rota_block_joint': 1.6853546954877168, 'left_hand_thumb_rotaback_joint2': 1.1806582144134563, 'left_hand_thumb_MCP_joint': 0.5529742440082737, 'left_hand_thumb_PIP_joint': 0.3395892972139983, ...}
+
+    def rebase(self, current_values: Mapping[str, float] | None) -> None:
+        """Discard stale routes and restart planning at the accepted hand pose.
+    
+        Used after tracking reacquisition; unlike reset(), this never restores
+        the physics model's warm-up pose or assumes the previous goal was met.
+        """
+        self._clear_avoidance()
+        self._previous_safe = None
+        if current_values:
+            current = self._pose(current_values)
+            penetration, _ = self._evaluate(current)
+            if not self._is_safe(penetration):
+>               raise RuntimeError("reacquisition pose exceeds collision tolerance")
+E               RuntimeError: reacquisition pose exceeds collision tolerance
+
+online_control/online_motion_track/pipeline_v2/collision_guard.py:1162: RuntimeError
+_ test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent[left-TsenseI_v3_2] _
+
+model_id = 'TsenseI_v3_2', side = 'left'
+
+    @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
+    @pytest.mark.parametrize("side", ["left", "right"])
+    def test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent(model_id, side):
+        profile = load_hand_profile(model_id)
+        source = (ROOT / f"TsenseI_V3.2_hand_withid_fixed/urdf/TsenseI_{side}.urdf" if model_id.endswith("withid")
+                  else Path(os.environ.get("A32_REFERENCE_SDK", ROOT.parent / "a3-cpp-sdk")) /
+                  f"daxian_hand_v3_2/urdf/daxian_hand_{side}_v3_2.urdf")
+>       old, new = UrdfModel(source), UrdfModel(profile.path("urdf", side))
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_a32_joint_ranges.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+TsenseI_retargeting/fk/urdf.py:87: in __init__
+    self.tree = ET.parse(self.urdf_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/xml/etree/ElementTree.py:1204: in parse
+    tree.parse(source, parser)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0x7f3d25f72d20>
+source = PosixPath('/tmp/hand-ubuntu-20261006/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf')
+parser = None
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+>           source = open(source, "rb")
+                     ^^^^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/hand-ubuntu-20261006/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf'
+
+/usr/lib/python3.12/xml/etree/ElementTree.py:558: FileNotFoundError
+_ test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent[right-TsenseI_v3_2] _
+
+model_id = 'TsenseI_v3_2', side = 'right'
+
+    @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
+    @pytest.mark.parametrize("side", ["left", "right"])
+    def test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent(model_id, side):
+        profile = load_hand_profile(model_id)
+        source = (ROOT / f"TsenseI_V3.2_hand_withid_fixed/urdf/TsenseI_{side}.urdf" if model_id.endswith("withid")
+                  else Path(os.environ.get("A32_REFERENCE_SDK", ROOT.parent / "a3-cpp-sdk")) /
+                  f"daxian_hand_v3_2/urdf/daxian_hand_{side}_v3_2.urdf")
+>       old, new = UrdfModel(source), UrdfModel(profile.path("urdf", side))
+                   ^^^^^^^^^^^^^^^^^
+
+tests/test_a32_joint_ranges.py:78: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+TsenseI_retargeting/fk/urdf.py:87: in __init__
+    self.tree = ET.parse(self.urdf_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/xml/etree/ElementTree.py:1204: in parse
+    tree.parse(source, parser)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0x7f3d2720a300>
+source = PosixPath('/tmp/hand-ubuntu-20261006/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_right_v3_2.urdf')
+parser = None
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+>           source = open(source, "rb")
+                     ^^^^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/hand-ubuntu-20261006/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_right_v3_2.urdf'
+
+/usr/lib/python3.12/xml/etree/ElementTree.py:558: FileNotFoundError
+____________ test_id_right_and_keypoints_are_equal_angle_xz_mirrors ____________
+
+    def test_id_right_and_keypoints_are_equal_angle_xz_mirrors():
+        profile = load_hand_profile("TsenseI_v3_2_withid")
+        left, right = (UrdfModel(profile.path("urdf", side)) for side in ("left", "right"))
+        reflection = np.diag([1, -1, 1, 1])
+        rng = np.random.default_rng(39)
+        for _ in range(5):
+            pose = {name: rng.uniform(lo, hi) for name, (lo, hi) in left.joint_limits().items()}
+            a = left.forward_kinematics(pose)
+            b = right.forward_kinematics({name.replace("left_hand", "right_hand"): value for name, value in pose.items()})
+            for name, transform in a.items():
+                reflected_name = name.replace("left_hand", "right_hand").replace("Left_hand", "Right_hand")
+                np.testing.assert_allclose(b[reflected_name], reflection @ transform @ reflection, atol=1e-12)
+        from TsenseI_retargeting.fk.fk import RobotKeypointFK
+        a, b = (RobotKeypointFK(profile.path("urdf", side), profile.path("keypoints", side)) for side in ("left", "right"))
+>       np.testing.assert_allclose(b.compute(), a.compute() @ reflection[:3, :3], atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 7 / 63 (11.1%)
+E       First 5 mismatches are at indices:
+E        [0, 1]: 0.0008226530976906907 (ACTUAL), -0.004741477055684609 (DESIRED)
+E        [1, 0]: 0.023525317948513334 (ACTUAL), 0.04137237597568439 (DESIRED)
+E        [1, 1]: 0.03718525196848635 (ACTUAL), 0.038628169076676586 (DESIRED)
+E        [1, 2]: 0.01804364424782207 (ACTUAL), 0.024335220183996528 (DESIRED)
+E        [3, 0]: 0.007330574154670526 (ACTUAL), 0.011843710914594126 (DESIRED)
+E       Max absolute difference among violations: 0.01784706
+E       Max relative difference among violations: 1.17350144
+E        ACTUAL: array([[ 1.187814e-02,  8.226531e-04,  1.151343e-04],
+E              [ 2.352532e-02,  3.718525e-02,  1.804364e-02],
+E              [ 1.957649e-02,  5.161511e-02,  6.956908e-02],...
+E        DESIRED: array([[ 1.187814e-02, -4.741477e-03,  1.151343e-04],
+E              [ 4.137238e-02,  3.862817e-02,  2.433522e-02],
+E              [ 1.957649e-02,  5.161511e-02,  6.956908e-02],...
+
+tests/test_a32_models_integration.py:110: AssertionError
+_____ test_rotaback_zero_touches_stop_and_positive_motion_opens_gap[left] ______
+
+side = 'left'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    def test_rotaback_zero_touches_stop_and_positive_motion_opens_gap(side):
+        profile = load_hand_profile("TsenseI_v3_2")
+        model = UrdfModel(profile.path("urdf", side))
+        joint = model.joint_by_name[f"{side}_hand_thumb_rotaback_joint2"]
+        visuals = model.visual_meshes_by_link()
+        parent, child = (trimesh.load_mesh(visuals[name][0].path, process=False)
+                         for name in (joint.parent, joint.child))
+        # Locate the actual CAD vertex on the fixed stop's chamfer. Coordinates
+        # identify the illustrated stop, excluding the concentric bearing meshes.
+        hint = np.array([.00251821, -.01723753, .0116032])
+        if side == "right":
+            hint[0] *= -1
+        stop = parent.vertices[np.linalg.norm(parent.vertices - hint, axis=1).argmin()]
+        assert np.linalg.norm(stop - hint) < 1e-8
+        stop = visuals[joint.parent][0].origin @ np.r_[stop * visuals[joint.parent][0].scale, 1]
+    
+        def signed_gap(angle):
+            moving = joint.origin @ axis_angle_matrix(joint.axis, angle) @ visuals[joint.child][0].origin
+            local = (np.linalg.inv(moving) @ stop)[:3] / visuals[joint.child][0].scale
+            points, distances, faces = trimesh.proximity.closest_point(child, [local])
+            return np.dot(local - points[0], child.face_normals[faces[0]]), distances[0]
+    
+>       assert signed_gap(0.)[1] < 1e-8  # contact to better than 0.01 micrometre
+               ^^^^^^^^^^^^^^
+
+tests/test_a32_thumb_mechanical_zero.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_a32_thumb_mechanical_zero.py:37: in signed_gap
+    points, distances, faces = trimesh.proximity.closest_point(child, [local])
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/proximity.py:147: in closest_point
+    candidates = nearby_faces(mesh, points)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/proximity.py:53: in nearby_faces
+    rtree = mesh.triangles_tree
+            ^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/caching.py:139: in get_cached
+    value = function(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/base.py:911: in triangles_tree
+    return triangles.bounds_tree(self.triangles)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/triangles.py:392: in bounds_tree
+    tree = util.bounds_tree(triangle_bounds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+bounds = array([[ 0.01159455, -0.01648975,  0.01264863,  0.01239198, -0.01518371,
+         0.01335681],
+       [ 0.01282526, -0...4 ],
+       [ 0.01637284,  0.00765925,  0.00320883,  0.01737284,  0.00865798,
+         0.0037344 ]], shape=(146161, 6))
+
+    def bounds_tree(bounds):
+        """
+        Given a set of axis aligned bounds create an r-tree for
+        broad-phase collision detection.
+    
+        Parameters
+        ------------
+        bounds : (n, 2D) or (n, 2, D) float
+          Non-interleaved bounds where D=dimension
+          E.G a 2D bounds tree:
+          [(minx, miny, maxx, maxy), ...]
+    
+        Returns
+        ---------
+        tree : Rtree
+          Tree containing bounds by index
+        """
+>       import rtree
+E       ModuleNotFoundError: No module named 'rtree'
+
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/util.py:1821: ModuleNotFoundError
+_____ test_rotaback_zero_touches_stop_and_positive_motion_opens_gap[right] _____
+
+side = 'right'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    def test_rotaback_zero_touches_stop_and_positive_motion_opens_gap(side):
+        profile = load_hand_profile("TsenseI_v3_2")
+        model = UrdfModel(profile.path("urdf", side))
+        joint = model.joint_by_name[f"{side}_hand_thumb_rotaback_joint2"]
+        visuals = model.visual_meshes_by_link()
+        parent, child = (trimesh.load_mesh(visuals[name][0].path, process=False)
+                         for name in (joint.parent, joint.child))
+        # Locate the actual CAD vertex on the fixed stop's chamfer. Coordinates
+        # identify the illustrated stop, excluding the concentric bearing meshes.
+        hint = np.array([.00251821, -.01723753, .0116032])
+        if side == "right":
+            hint[0] *= -1
+        stop = parent.vertices[np.linalg.norm(parent.vertices - hint, axis=1).argmin()]
+        assert np.linalg.norm(stop - hint) < 1e-8
+        stop = visuals[joint.parent][0].origin @ np.r_[stop * visuals[joint.parent][0].scale, 1]
+    
+        def signed_gap(angle):
+            moving = joint.origin @ axis_angle_matrix(joint.axis, angle) @ visuals[joint.child][0].origin
+            local = (np.linalg.inv(moving) @ stop)[:3] / visuals[joint.child][0].scale
+            points, distances, faces = trimesh.proximity.closest_point(child, [local])
+            return np.dot(local - points[0], child.face_normals[faces[0]]), distances[0]
+    
+>       assert signed_gap(0.)[1] < 1e-8  # contact to better than 0.01 micrometre
+               ^^^^^^^^^^^^^^
+
+tests/test_a32_thumb_mechanical_zero.py:40: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tests/test_a32_thumb_mechanical_zero.py:37: in signed_gap
+    points, distances, faces = trimesh.proximity.closest_point(child, [local])
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/proximity.py:147: in closest_point
+    candidates = nearby_faces(mesh, points)
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/proximity.py:53: in nearby_faces
+    rtree = mesh.triangles_tree
+            ^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/caching.py:139: in get_cached
+    value = function(*args, **kwargs)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/base.py:911: in triangles_tree
+    return triangles.bounds_tree(self.triangles)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/triangles.py:392: in bounds_tree
+    tree = util.bounds_tree(triangle_bounds)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+bounds = array([[-0.01239198, -0.01648975,  0.01264863, -0.01159455, -0.01518371,
+         0.01335681],
+       [-0.01317284, -0...4 ],
+       [-0.01737284,  0.00765925,  0.00320883, -0.01637284,  0.00865798,
+         0.0037344 ]], shape=(146161, 6))
+
+    def bounds_tree(bounds):
+        """
+        Given a set of axis aligned bounds create an r-tree for
+        broad-phase collision detection.
+    
+        Parameters
+        ------------
+        bounds : (n, 2D) or (n, 2, D) float
+          Non-interleaved bounds where D=dimension
+          E.G a 2D bounds tree:
+          [(minx, miny, maxx, maxy), ...]
+    
+        Returns
+        ---------
+        tree : Rtree
+          Tree containing bounds by index
+        """
+>       import rtree
+E       ModuleNotFoundError: No module named 'rtree'
+
+/home/onkiall/.venvs/hand-track/lib/python3.12/site-packages/trimesh/util.py:1821: ModuleNotFoundError
+_______________ test_source_manifest_matches_current_cad_package _______________
+
+    def test_source_manifest_matches_current_cad_package():
+        import hashlib
+        import yaml
+        from prepare_hand_v3_2 import source_fingerprint, source_reference
+        profile = load_hand_profile("TsenseI_v3_2")
+        mapping = yaml.safe_load((profile.root / "source_mapping.yaml").read_text(encoding="utf-8"))
+        assert mapping["source"] == source_reference()
+>       assert mapping["source_urdf_sha256"] == hashlib.sha256(SOURCE_URDF.read_bytes()).hexdigest()
+                                                               ^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_hand_profile_v3_2.py:23: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.12/pathlib.py:1021: in read_bytes
+    with self.open(mode='rb') as f:
+         ^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/hand-ubuntu-20261006/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf')
+mode = 'rb', buffering = -1, encoding = None, errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/hand-ubuntu-20261006/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf'
+
+/usr/lib/python3.12/pathlib.py:1015: FileNotFoundError
+_____________ test_rename_preserves_cad_kinematics_and_pinky_chain _____________
+
+    def test_rename_preserves_cad_kinematics_and_pinky_chain():
+>       old = UrdfModel(SOURCE_URDF)
+              ^^^^^^^^^^^^^^^^^^^^^^
+
+tests/test_hand_profile_v3_2.py:42: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+TsenseI_retargeting/fk/urdf.py:87: in __init__
+    self.tree = ET.parse(self.urdf_path)
+                ^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.12/xml/etree/ElementTree.py:1204: in parse
+    tree.parse(source, parser)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <xml.etree.ElementTree.ElementTree object at 0x7f3d271bae40>
+source = PosixPath('/tmp/hand-ubuntu-20261006/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf')
+parser = None
+
+    def parse(self, source, parser=None):
+        """Load external XML document into element tree.
+    
+        *source* is a file name or file object, *parser* is an optional parser
+        instance that defaults to XMLParser.
+    
+        ParseError is raised if the parser fails to parse the document.
+    
+        Returns the root element of the given source document.
+    
+        """
+        close_source = False
+        if not hasattr(source, "read"):
+>           source = open(source, "rb")
+                     ^^^^^^^^^^^^^^^^^^
+E           FileNotFoundError: [Errno 2] No such file or directory: '/tmp/hand-ubuntu-20261006/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf'
+
+/usr/lib/python3.12/xml/etree/ElementTree.py:558: FileNotFoundError
+_____________ test_profile_retarget_and_hardware_placeholder[left] _____________
+
+side = 'left'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    def test_profile_retarget_and_hardware_placeholder(side):
+        session = HandModelSession(hand_side=side)
+        solver = session.profile.create_retargeter(side)
+        assert len(solver.joint_names) == 20
+>       assert solver._analytic_kinematics is not None
+E       assert None is not None
+E        +  where None = <TsenseI_retargeting.toporetarget.TopoRetargeter object at 0x7f3d27588980>._analytic_kinematics
+
+tests/test_hand_profile_v3_2.py:114: AssertionError
+____________ test_profile_retarget_and_hardware_placeholder[right] _____________
+
+side = 'right'
+
+    @pytest.mark.parametrize("side", ["left", "right"])
+    def test_profile_retarget_and_hardware_placeholder(side):
+        session = HandModelSession(hand_side=side)
+        solver = session.profile.create_retargeter(side)
+        assert len(solver.joint_names) == 20
+>       assert solver._analytic_kinematics is not None
+E       assert None is not None
+E        +  where None = <TsenseI_retargeting.toporetarget.TopoRetargeter object at 0x7f3d26058980>._analytic_kinematics
+
+tests/test_hand_profile_v3_2.py:114: AssertionError
+_______________ test_keypoint_mirroring_and_no_v2_state_mutation _______________
+
+    def test_keypoint_mirroring_and_no_v2_state_mutation():
+        profile = load_hand_profile("TsenseI_v3_2")
+        from TsenseI_retargeting.fk.fk import RobotKeypointFK
+        a, b = [RobotKeypointFK(profile.path("urdf", s), profile.path("keypoints", s)) for s in ("left", "right")]
+        q = {n: .12 for n in a.model.joint_names()}
+>       np.testing.assert_allclose(b.compute({right_name(k): v for k, v in q.items()}),
+                                   a.compute(q) @ MIRROR, atol=1e-12)
+E       AssertionError: 
+E       Not equal to tolerance rtol=1e-07, atol=1e-12
+E       
+E       Mismatched elements: 3 / 63 (4.76%)
+E       Mismatch at indices:
+E        [1, 0]: 0.023697566108829827 (ACTUAL), 0.021886512107268094 (DESIRED)
+E        [1, 1]: -0.0006220892248084819 (ACTUAL), -0.0018314282013627316 (DESIRED)
+E        [1, 2]: -0.06503603773398306 (ACTUAL), -0.06810295692389248 (DESIRED)
+E       Max absolute difference among violations: 0.00306692
+E       Max relative difference among violations: 0.66032563
+E        ACTUAL: array([[-0.005368,  0.016357, -0.093041],
+E              [ 0.023698, -0.000622, -0.065036],
+E              [ 0.06059 ,  0.015316, -0.021789],...
+E        DESIRED: array([[-0.005368,  0.016357, -0.093041],
+E              [ 0.021887, -0.001831, -0.068103],
+E              [ 0.06059 ,  0.015316, -0.021789],...
+
+tests/test_hand_profile_v3_2.py:135: AssertionError
+________ test_keypoints_follow_mirrored_motion_and_display_meshes_load _________
+
+    def test_keypoints_follow_mirrored_motion_and_display_meshes_load():
+        profile = load_hand_profile("TsenseI_v3_0")
+        left, right = [RobotKeypointFK(profile.path("urdf", s), profile.path("keypoints", s)) for s in ("left", "right")]
+        for fraction in (0, .4, .8):
+            q = {n: lo + fraction * (hi - lo) for n, (lo, hi) in profile.joint_limits().items()}
+>           np.testing.assert_allclose(right.compute({right_name(n): v for n, v in q.items()}), left.compute(q) @ MIRROR, atol=1e-12)
+E           AssertionError: 
+E           Not equal to tolerance rtol=1e-07, atol=1e-12
+E           
+E           Mismatched elements: 12 / 63 (19%)
+E           First 5 mismatches are at indices:
+E            [4, 0]: -0.0016826821834243248 (ACTUAL), -0.00288589867768526 (DESIRED)
+E            [4, 1]: 0.06750885436142529 (ACTUAL), 0.06865731947407655 (DESIRED)
+E            [4, 2]: 0.11214903399675913 (ACTUAL), 0.11515795121362427 (DESIRED)
+E            [8, 1]: 0.007712947610377911 (ACTUAL), 0.006920192801187376 (DESIRED)
+E            [8, 2]: 0.18498257412761435 (ACTUAL), 0.18821044800859799 (DESIRED)
+E           Max absolute difference among violations: 0.00444001
+E           Max relative difference among violations: 0.41692957
+E            ACTUAL: array([[ 0.000281, -0.002599, -0.003899],
+E                  [ 0.024837,  0.037823,  0.023567],
+E                  [ 0.013481,  0.050508,  0.069141],...
+E            DESIRED: array([[ 0.000281, -0.002599, -0.003899],
+E                  [ 0.024837,  0.037823,  0.023567],
+E                  [ 0.013481,  0.050508,  0.069141],...
+
+tests/test_hand_v3_0.py:51: AssertionError
+_____________________ test_fresh_landmarks_and_mirrored_fk _____________________
+
+    def test_fresh_landmarks_and_mirrored_fk():
+        profile=load_hand_profile(MODEL)
+        old=load_hand_profile('TsenseI_v3_0')
+        data=yaml.safe_load(profile.path('keypoints').read_text(encoding='utf-8'))
+        old_data=yaml.safe_load(old.path('keypoints').read_text(encoding='utf-8'))
+        assert profile.calibration_status()['point_count']==21
+        assert profile.path('keypoints') != old.path('keypoints')
+        assert data['robot_name'] != old_data['robot_name']
+        assert not np.allclose([r['local_xyz'] for r in data['keypoints']], [r['local_xyz'] for r in old_data['keypoints']])
+        left,right=[RobotKeypointFK(profile.path('urdf',s),profile.path('keypoints',s)) for s in ('left','right')]
+        for fraction in (0,.4,.8):
+            q={n:lo+fraction*(hi-lo) for n,(lo,hi) in profile.joint_limits().items()}
+>           np.testing.assert_allclose(right.compute({right_name(n):v for n,v in q.items()}),left.compute(q)@MIRROR,atol=1e-12)
+E           AssertionError: 
+E           Not equal to tolerance rtol=1e-07, atol=1e-12
+E           
+E           Mismatched elements: 10 / 63 (15.9%)
+E           First 5 mismatches are at indices:
+E            [1, 0]: 0.01598579484117969 (ACTUAL), 0.022987381564749745 (DESIRED)
+E            [1, 1]: 0.03569672648692834 (ACTUAL), 0.0370209600425066 (DESIRED)
+E            [1, 2]: 0.019579766554021102 (ACTUAL), 0.0218741394476586 (DESIRED)
+E            [3, 0]: -0.003609418466231057 (ACTUAL), 0.0038593639644233764 (DESIRED)
+E            [3, 1]: 0.062475754979632384 (ACTUAL), 0.05936096398516463 (DESIRED)
+E           Max absolute difference among violations: 0.00951126
+E           Max relative difference among violations: 1.93523661
+E            ACTUAL: array([[ 0.030305, -0.001469, -0.00361 ],
+E                  [ 0.015986,  0.035697,  0.01958 ],
+E                  [ 0.011715,  0.051552,  0.070659],...
+E            DESIRED: array([[ 0.030305, -0.001469, -0.00361 ],
+E                  [ 0.022987,  0.037021,  0.021874],
+E                  [ 0.011715,  0.051552,  0.070659],...
+
+tests/test_hand_v3_0_withid.py:61: AssertionError
+_ test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample[avoid] _
+
+mode = 'avoid'
+
+    @pytest.mark.parametrize("mode", ["avoid", "stop"])
+    def test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample(mode):
+        flex = "left_hand_index_MCP_joint"
+        lateral = "left_hand_index_swing_joint"
+        fixed = "left_hand_pinky_rota_joint"
+        current = {flex: 0.1, lateral: 0.0, fixed: 0.0}
+        interp = PhaseSynchronizedRuckigInterpolator(joint_names=list(current))
+        interp.seed_ramp(current, current)
+        tracking = TrackingTransition(interp)
+        planner = SelfCollisionGuard(strategy=mode, path_step_rad=0.025, physics_filter=_BlockedTransitionFilter())
+        sample_guard = SelfCollisionGuard(strategy="stop", path_step_rad=0.01, physics_filter=_BlockedTransitionFilter())
+        sample_guard.rebase(current)
+        now = 0.0
+        for _ in range(3):
+            tracking.observe(True, now=now, current=current)
+            now += 0.03
+        interp.push({flex: 0.3, lateral: 0.0, fixed: 0.0})
+        history = []
+    
+        def sample():
+            nonlocal now, current
+            tracking.tick(now=now, current=current)
+            pose, diag = sample_guard.project(interp.sample())
+            assert diag["output_max_penetration_mm"] <= 0.200001
+            assert max(abs(pose[name] - current[name]) for name in pose) <= 0.008001
+            assert pose[fixed] == 0.0
+            assert not interp.last_faults
+            if diag["limited"]:
+                interp.sync_current_pose(pose)
+            current = pose
+            history.append(dict(current))
+            now += 0.002
+    
+        for tick in range(225):
+            if tick % 16 == 0:
+                tracking.observe(True, now=now, current=current)
+            sample()
+        lost_pose = dict(current)
+        tracking.observe(False, now=now, current=current)
+        for _ in range(650):
+            sample()
+        assert tracking.phase == "holding"
+        stopped = dict(current)
+        assert stopped[flex] >= lost_pose[flex]
+        assert stopped[flex] < 0.35
+>       assert history[-1] == history[-50]
+E       AssertionError: assert {'left_hand_i...a_joint': 0.0} == {'left_hand_i...a_joint': 0.0}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing items:
+E         {'left_hand_index_MCP_joint': 0.30000000000000077} != {'left_hand_index_MCP_joint': 0.30000000000000066}
+E         Use -v to get more diff
+
+tests/test_light_test_pipeline.py:369: AssertionError
+_ test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample[stop] _
+
+mode = 'stop'
+
+    @pytest.mark.parametrize("mode", ["avoid", "stop"])
+    def test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample(mode):
+        flex = "left_hand_index_MCP_joint"
+        lateral = "left_hand_index_swing_joint"
+        fixed = "left_hand_pinky_rota_joint"
+        current = {flex: 0.1, lateral: 0.0, fixed: 0.0}
+        interp = PhaseSynchronizedRuckigInterpolator(joint_names=list(current))
+        interp.seed_ramp(current, current)
+        tracking = TrackingTransition(interp)
+        planner = SelfCollisionGuard(strategy=mode, path_step_rad=0.025, physics_filter=_BlockedTransitionFilter())
+        sample_guard = SelfCollisionGuard(strategy="stop", path_step_rad=0.01, physics_filter=_BlockedTransitionFilter())
+        sample_guard.rebase(current)
+        now = 0.0
+        for _ in range(3):
+            tracking.observe(True, now=now, current=current)
+            now += 0.03
+        interp.push({flex: 0.3, lateral: 0.0, fixed: 0.0})
+        history = []
+    
+        def sample():
+            nonlocal now, current
+            tracking.tick(now=now, current=current)
+            pose, diag = sample_guard.project(interp.sample())
+            assert diag["output_max_penetration_mm"] <= 0.200001
+            assert max(abs(pose[name] - current[name]) for name in pose) <= 0.008001
+            assert pose[fixed] == 0.0
+            assert not interp.last_faults
+            if diag["limited"]:
+                interp.sync_current_pose(pose)
+            current = pose
+            history.append(dict(current))
+            now += 0.002
+    
+        for tick in range(225):
+            if tick % 16 == 0:
+                tracking.observe(True, now=now, current=current)
+            sample()
+        lost_pose = dict(current)
+        tracking.observe(False, now=now, current=current)
+        for _ in range(650):
+            sample()
+        assert tracking.phase == "holding"
+        stopped = dict(current)
+        assert stopped[flex] >= lost_pose[flex]
+        assert stopped[flex] < 0.35
+>       assert history[-1] == history[-50]
+E       AssertionError: assert {'left_hand_i...a_joint': 0.0} == {'left_hand_i...a_joint': 0.0}
+E         
+E         Omitting 2 identical items, use -vv to show
+E         Differing items:
+E         {'left_hand_index_MCP_joint': 0.30000000000000077} != {'left_hand_index_MCP_joint': 0.30000000000000066}
+E         Use -v to get more diff
+
+tests/test_light_test_pipeline.py:369: AssertionError
+_ test_corrected_markers_have_consistent_jacobian_and_recover_bent_thumb[auto] _
+
+fk = <TsenseI_retargeting.fk.fk.RobotKeypointFK object at 0x7f3d27903da0>
+backend = 'auto'
+
+    @pytest.mark.parametrize("backend", ["auto", "numpy"])
+    def test_corrected_markers_have_consistent_jacobian_and_recover_bent_thumb(fk, backend):
+        config = replace(runtime._build_topo_config(), kinematics_backend=backend)
+        solver = TopoRetargeter(config)
+        q = (solver.lower + solver.upper) * .4
+>       points, jac = solver._analytic_kinematics.compute_points_and_jacobian(q)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       AttributeError: 'NoneType' object has no attribute 'compute_points_and_jacobian'
+
+tests/test_thumb_retarget_geometry.py:96: AttributeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips0-auto] ______
+
+backend = 'auto', tips = (8,)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips1-auto] ______
+
+backend = 'auto', tips = (12,)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips2-auto] ______
+
+backend = 'auto', tips = (16,)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips3-auto] ______
+
+backend = 'auto', tips = (20,)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+______ test_contact_jacobian_and_full_residual_are_consistent[tips4-auto] ______
+
+backend = 'auto', tips = (8, 12, 16, 20)
+
+    @pytest.mark.parametrize('backend', ['numpy', 'auto'])
+    @pytest.mark.parametrize('tips', [(8,), (12,), (16,), (20,), (8, 12, 16, 20)])
+    def test_contact_jacobian_and_full_residual_are_consistent(backend, tips):
+        solver = solver_for()
+        solver = TopoRetargeter(replace(solver.config, kinematics_backend=backend))
+        source = contact_input(solver)
+        width = np.linalg.norm(source[5]-source[17])
+        for _, tip in PINCH_PAIRS:
+            # Isolate each pair, then exercise the sum of all four contacts.
+            source[tip] = source[4] + [width*(.05 if tip in tips else 1.5), 0, 0]
+        solver.retarget(source)
+        points = solver._source_points_in_robot_scale(source)
+        canonical = _canonical_hand_points(points)
+        graph = _build_interaction_graph(canonical, solver.config, distance_scale_m=solver.robot_palm_width_m)
+        q = .4*solver.lower + .6*solver.upper
+        args = (q.copy(), q.copy(), _laplacian_coordinates(canonical, graph), _relative_bone_terms(points), graph)
+>       residual, analytic = solver._weighted_residual_and_jacobian(q, *args, eps=1e-6)
+        ^^^^^^^^^^^^^^^^^^
+E       TypeError: cannot unpack non-iterable NoneType object
+
+tests/test_topo_pinch.py:81: TypeError
+________ test_variable_steps_preserve_motion_constraints_and_phase_path ________
+
+    def test_variable_steps_preserve_motion_constraints_and_phase_path():
+        names = [JOINT, "left_hand_index_MCP_joint"]
+        interp = PhaseSynchronizedRuckigInterpolator(names)
+        interp.seed_ramp(dict.fromkeys(names, 0.0), {names[0]: 1.2, names[1]: .6})
+        for n in range(80):
+            pose = interp.sample(delta_time=(.002, .015, .008)[n % 3])
+            assert not interp.last_faults
+            assert pose[names[1]] == pytest.approx(pose[names[0]] / 2, abs=1e-8)
+>           assert max(abs(v) for v in interp._output.new_velocity) <= 4 + 1e-8
+E           assert 4.012328056970277 <= (4 + 1e-08)
+E            +  where 4.012328056970277 = max(<generator object test_variable_steps_preserve_motion_constraints_and_phase_path.<locals>.<genexpr> at 0x7f3d272c2b50>)
+
+tests/test_web_v2_control_timing.py:48: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_a30_collision_resume.py::test_withid_open_gesture_recovers_after_other_fingers_separate[left]
+FAILED tests/test_a30_collision_resume.py::test_withid_open_gesture_recovers_after_other_fingers_separate[right]
+FAILED tests/test_a30_continuous.py::test_target_collision_guard_holds_only_contact_fingers_with_real_geometry
+FAILED tests/test_a30_continuous.py::test_mink_automatic_resume_inside_clearance_keeps_feasible_target_seed
+FAILED tests/test_a30_mapper.py::test_retained_channels_match_a32_and_four_dips_are_direct[exact-left]
+FAILED tests/test_a30_mapper.py::test_retained_channels_match_a32_and_four_dips_are_direct[exact-right]
+FAILED tests/test_a30_mapper.py::test_retained_channels_match_a32_and_four_dips_are_direct[lut-left]
+FAILED tests/test_a30_mapper.py::test_retained_channels_match_a32_and_four_dips_are_direct[lut-right]
+FAILED tests/test_a30_plateau.py::test_recorded_retreat_does_not_freeze_both_contact_fingers
+FAILED tests/test_a32_joint_ranges.py::test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent[left-TsenseI_v3_2]
+FAILED tests/test_a32_joint_ranges.py::test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent[right-TsenseI_v3_2]
+FAILED tests/test_a32_models_integration.py::test_id_right_and_keypoints_are_equal_angle_xz_mirrors
+FAILED tests/test_a32_thumb_mechanical_zero.py::test_rotaback_zero_touches_stop_and_positive_motion_opens_gap[left]
+FAILED tests/test_a32_thumb_mechanical_zero.py::test_rotaback_zero_touches_stop_and_positive_motion_opens_gap[right]
+FAILED tests/test_hand_profile_v3_2.py::test_source_manifest_matches_current_cad_package
+FAILED tests/test_hand_profile_v3_2.py::test_rename_preserves_cad_kinematics_and_pinky_chain
+FAILED tests/test_hand_profile_v3_2.py::test_profile_retarget_and_hardware_placeholder[left]
+FAILED tests/test_hand_profile_v3_2.py::test_profile_retarget_and_hardware_placeholder[right]
+FAILED tests/test_hand_profile_v3_2.py::test_keypoint_mirroring_and_no_v2_state_mutation
+FAILED tests/test_hand_v3_0.py::test_keypoints_follow_mirrored_motion_and_display_meshes_load
+FAILED tests/test_hand_v3_0_withid.py::test_fresh_landmarks_and_mirrored_fk
+FAILED tests/test_light_test_pipeline.py::test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample[avoid]
+FAILED tests/test_light_test_pipeline.py::test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample[stop]
+FAILED tests/test_thumb_retarget_geometry.py::test_corrected_markers_have_consistent_jacobian_and_recover_bent_thumb[auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips0-auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips1-auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips2-auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips3-auto]
+FAILED tests/test_topo_pinch.py::test_contact_jacobian_and_full_residual_are_consistent[tips4-auto]
+FAILED tests/test_web_v2_control_timing.py::test_variable_steps_preserve_motion_constraints_and_phase_path
+30 failed, 1407 passed, 9 skipped, 384 subtests passed in 217.54s (0:03:37)

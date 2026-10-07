@@ -1,0 +1,14 @@
+{
+  "description": "User-marked protruding palm-side FPC sheet removed",
+  "selection_y_m": [
+    -0.03143,
+    -0.03116
+  ],
+  "clip_x_m": 0.06,
+  "source_faces": 207026,
+  "selected_faces": 413,
+  "retained_clipped_triangles": 51,
+  "output_faces": 206664,
+  "untouched_faces": 206613,
+  "note": "Only selected sheet triangles are clipped; new vertices lie on the cut plane inside the shell."
+}

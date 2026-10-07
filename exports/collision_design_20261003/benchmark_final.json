@@ -1,0 +1,378 @@
+{
+  "notes": [
+    "Synthetic open/flex/pinch/crossed/release, 40 sequential targets per run, 3 alternating timing runs per variant",
+    "No geometry changes. Cache-only requires exact q byte keys, per-call reset, _update tracks actual configuration and only skips identical q",
+    "No hardware, retargeting, Ruckig, or end-to-end IO; observed milliseconds on this WSL host are not realtime guarantees",
+    "Instrumented times are inclusive; profile instrumentation overhead excluded from timing runs"
+  ],
+  "models": {
+    "TsenseI_v3_2": {
+      "ngeom": 16,
+      "nmesh": 0,
+      "pair_count": 100,
+      "baseline_summary": {
+        "calls": 120,
+        "p50_ms": 0.34325,
+        "p95_ms": 3.5007350499999985,
+        "max_ms": 5.354301,
+        "mean_ms": 0.6379583583333334,
+        "statuses": {
+          "clear": 105,
+          "limited": 6,
+          "held_distance_check": 9
+        },
+        "mean_iterations": 0.575
+      },
+      "cache_only_summary": {
+        "calls": 120,
+        "p50_ms": 0.3529,
+        "p95_ms": 3.512364999999998,
+        "max_ms": 5.5359,
+        "mean_ms": 0.6718142,
+        "statuses": {
+          "clear": 105,
+          "limited": 6,
+          "held_distance_check": 9
+        },
+        "mean_iterations": 0.575
+      },
+      "max_output_difference_rad": 0,
+      "trials": [
+        {
+          "baseline": {
+            "calls": 40,
+            "p50_ms": 0.3355,
+            "p95_ms": 3.530084999999997,
+            "max_ms": 5.354301,
+            "mean_ms": 0.658065025,
+            "statuses": {
+              "clear": 35,
+              "limited": 2,
+              "held_distance_check": 3
+            },
+            "mean_iterations": 0.575
+          },
+          "cache_only": {
+            "calls": 40,
+            "p50_ms": 0.36335,
+            "p95_ms": 3.514140049999998,
+            "max_ms": 5.4226,
+            "mean_ms": 0.670232525,
+            "statuses": {
+              "clear": 35,
+              "limited": 2,
+              "held_distance_check": 3
+            },
+            "mean_iterations": 0.575
+          }
+        },
+        {
+          "baseline": {
+            "calls": 40,
+            "p50_ms": 0.30465,
+            "p95_ms": 3.2279649999999975,
+            "max_ms": 5.2159,
+            "mean_ms": 0.618905025,
+            "statuses": {
+              "clear": 35,
+              "limited": 2,
+              "held_distance_check": 3
+            },
+            "mean_iterations": 0.575
+          },
+          "cache_only": {
+            "calls": 40,
+            "p50_ms": 0.34675,
+            "p95_ms": 3.152314999999997,
+            "max_ms": 5.453,
+            "mean_ms": 0.66540005,
+            "statuses": {
+              "clear": 35,
+              "limited": 2,
+              "held_distance_check": 3
+            },
+            "mean_iterations": 0.575
+          }
+        },
+        {
+          "baseline": {
+            "calls": 40,
+            "p50_ms": 0.35475,
+            "p95_ms": 3.1770700499999975,
+            "max_ms": 5.2259,
+            "mean_ms": 0.6369050249999999,
+            "statuses": {
+              "clear": 35,
+              "limited": 2,
+              "held_distance_check": 3
+            },
+            "mean_iterations": 0.575
+          },
+          "cache_only": {
+            "calls": 40,
+            "p50_ms": 0.3656,
+            "p95_ms": 3.229984999999997,
+            "max_ms": 5.5359,
+            "mean_ms": 0.679810025,
+            "statuses": {
+              "clear": 35,
+              "limited": 2,
+              "held_distance_check": 3
+            },
+            "mean_iterations": 0.575
+          }
+        }
+      ],
+      "baseline_profile": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 0.52,
+          "p95_ms": 4.161425949999997,
+          "max_ms": 7.3777,
+          "mean_ms": 0.9354925250000001,
+          "statuses": {
+            "clear": 35,
+            "limited": 2,
+            "held_distance_check": 3
+          },
+          "mean_iterations": 0.575
+        },
+        "trace_counts": {
+          "_update": 459,
+          "mj_geomDistance": 13978,
+          "_distances": 80,
+          "_feasible": 356,
+          "_path_feasible": 150,
+          "inequalities": 46,
+          "solve_qp": 23
+        },
+        "trace_inclusive_ms": {
+          "_update": 3.883099999999997,
+          "mj_geomDistance": 10.433100000000923,
+          "_distances": 8.758999999999999,
+          "_feasible": 18.802799999999987,
+          "_path_feasible": 20.6875,
+          "inequalities": 3.3634999999999993,
+          "solve_qp": 0.9956999999999999
+        }
+      },
+      "cache_only_profile": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 0.6965,
+          "p95_ms": 5.811134999999991,
+          "max_ms": 8.879101,
+          "mean_ms": 1.26073505,
+          "statuses": {
+            "clear": 35,
+            "limited": 2,
+            "held_distance_check": 3
+          },
+          "mean_iterations": 0.575
+        },
+        "trace_counts": {
+          "_update": 437,
+          "mj_geomDistance": 13552,
+          "_distances": 80,
+          "_feasible": 356,
+          "_path_feasible": 150,
+          "inequalities": 46,
+          "solve_qp": 23
+        },
+        "trace_inclusive_ms": {
+          "_update": 7.197300000000001,
+          "mj_geomDistance": 12.628701000000857,
+          "_distances": 11.329300000000003,
+          "_feasible": 24.950301999999997,
+          "_path_feasible": 27.606902000000016,
+          "inequalities": 5.0801,
+          "solve_qp": 1.1599000000000002
+        }
+      }
+    },
+    "TsenseI_v3_2_withid": {
+      "ngeom": 15,
+      "nmesh": 5,
+      "pair_count": 90,
+      "baseline_summary": {
+        "calls": 120,
+        "p50_ms": 0.77835,
+        "p95_ms": 19.723111,
+        "max_ms": 21.064701,
+        "mean_ms": 3.875052666666667,
+        "statuses": {
+          "clear": 81,
+          "limited": 15,
+          "held_distance_check": 24
+        },
+        "mean_iterations": 2.025
+      },
+      "cache_only_summary": {
+        "calls": 120,
+        "p50_ms": 0.8350500000000001,
+        "p95_ms": 15.100550999999996,
+        "max_ms": 28.090801,
+        "mean_ms": 3.44425015,
+        "statuses": {
+          "clear": 81,
+          "limited": 15,
+          "held_distance_check": 24
+        },
+        "mean_iterations": 2.025
+      },
+      "max_output_difference_rad": 0,
+      "trials": [
+        {
+          "baseline": {
+            "calls": 40,
+            "p50_ms": 0.84135,
+            "p95_ms": 19.723736,
+            "max_ms": 20.912801,
+            "mean_ms": 4.0109726750000005,
+            "statuses": {
+              "clear": 27,
+              "limited": 5,
+              "held_distance_check": 8
+            },
+            "mean_iterations": 2.025
+          },
+          "cache_only": {
+            "calls": 40,
+            "p50_ms": 0.8163505,
+            "p95_ms": 17.642360049999997,
+            "max_ms": 23.426001,
+            "mean_ms": 4.108707675,
+            "statuses": {
+              "clear": 27,
+              "limited": 5,
+              "held_distance_check": 8
+            },
+            "mean_iterations": 2.025
+          }
+        },
+        {
+          "baseline": {
+            "calls": 40,
+            "p50_ms": 0.80215,
+            "p95_ms": 18.144955999999993,
+            "max_ms": 20.836001,
+            "mean_ms": 3.8538901500000002,
+            "statuses": {
+              "clear": 27,
+              "limited": 5,
+              "held_distance_check": 8
+            },
+            "mean_iterations": 2.025
+          },
+          "cache_only": {
+            "calls": 40,
+            "p50_ms": 0.9628,
+            "p95_ms": 10.779440049999987,
+            "max_ms": 28.090801,
+            "mean_ms": 3.36090765,
+            "statuses": {
+              "clear": 27,
+              "limited": 5,
+              "held_distance_check": 8
+            },
+            "mean_iterations": 2.025
+          }
+        },
+        {
+          "baseline": {
+            "calls": 40,
+            "p50_ms": 0.7652,
+            "p95_ms": 18.621205999999997,
+            "max_ms": 21.064701,
+            "mean_ms": 3.7602951750000004,
+            "statuses": {
+              "clear": 27,
+              "limited": 5,
+              "held_distance_check": 8
+            },
+            "mean_iterations": 2.025
+          },
+          "cache_only": {
+            "calls": 40,
+            "p50_ms": 0.8052999999999999,
+            "p95_ms": 11.338415999999995,
+            "max_ms": 19.009701,
+            "mean_ms": 2.8631351250000003,
+            "statuses": {
+              "clear": 27,
+              "limited": 5,
+              "held_distance_check": 8
+            },
+            "mean_iterations": 2.025
+          }
+        }
+      ],
+      "baseline_profile": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 1.2207,
+          "p95_ms": 25.559986949999992,
+          "max_ms": 29.066102,
+          "mean_ms": 5.3973327499999995,
+          "statuses": {
+            "clear": 27,
+            "limited": 5,
+            "held_distance_check": 8
+          },
+          "mean_iterations": 2.025
+        },
+        "trace_counts": {
+          "_update": 1392,
+          "mj_geomDistance": 68804,
+          "_distances": 80,
+          "_feasible": 1231,
+          "_path_feasible": 509,
+          "inequalities": 81,
+          "solve_qp": 81
+        },
+        "trace_inclusive_ms": {
+          "_update": 14.164101999999993,
+          "mj_geomDistance": 97.42070299997944,
+          "_distances": 11.843401,
+          "_feasible": 167.21930600000027,
+          "_path_feasible": 175.53030600000002,
+          "inequalities": 14.688002000000003,
+          "solve_qp": 3.8554999999999997
+        }
+      },
+      "cache_only_profile": {
+        "summary": {
+          "calls": 40,
+          "p50_ms": 1.24055,
+          "p95_ms": 16.287485999999987,
+          "max_ms": 28.419201,
+          "mean_ms": 4.2448676999999995,
+          "statuses": {
+            "clear": 27,
+            "limited": 5,
+            "held_distance_check": 8
+          },
+          "mean_iterations": 2.025
+        },
+        "trace_counts": {
+          "_update": 1019,
+          "mj_geomDistance": 49425,
+          "_distances": 80,
+          "_feasible": 1231,
+          "_path_feasible": 509,
+          "inequalities": 81,
+          "solve_qp": 81
+        },
+        "trace_inclusive_ms": {
+          "_update": 16.21109999999998,
+          "mj_geomDistance": 70.02070399999354,
+          "_distances": 12.43060200000001,
+          "_feasible": 122.13720499999985,
+          "_path_feasible": 129.5914050000001,
+          "inequalities": 14.426101,
+          "solve_qp": 3.67
+        }
+      }
+    }
+  }
+}

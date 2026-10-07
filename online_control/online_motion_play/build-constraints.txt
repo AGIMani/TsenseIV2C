@@ -1,0 +1,4 @@
+# Ruckig 0.17.3 uses the legacy cmake.targets setting, removed in newer
+# scikit-build-core releases. Keep isolated source builds reproducible.
+scikit-build-core==0.9.10
+nanobind==2.12.0

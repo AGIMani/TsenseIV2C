@@ -1,0 +1,104 @@
+{
+  "environment": {
+    "python": "3.11.15 | packaged by Anaconda, Inc. | (main, Jun 11 2026, 15:12:53) [MSC v.1942 64 bit (AMD64)]",
+    "executable": "E:\\conda\\envs\\hand_dex\\python.exe",
+    "platform": "Windows-10-10.0.22000-SP0",
+    "processor": "AMD64 Family 25 Model 80 Stepping 0, AuthenticAMD",
+    "cpu_count": 16,
+    "numpy": "2.4.4",
+    "ruckig": "0.17.3",
+    "device_dt_s": 0.002
+  },
+  "method": {
+    "iterations": 10000,
+    "warmup": 1000,
+    "seed": 30,
+    "gc": "enabled",
+    "clock": "perf_counter_ns",
+    "unit": "microseconds",
+    "serial": "memory only",
+    "tick_clock": "synthetic; no sleep"
+  },
+  "sha256": {
+    "online_control/online_motion_play/a30_device.py": "8cff5a56cc98009504569eaa363efd145fc20bba4472985e1fad1b98d40dfa25",
+    "src/a30_kinematics/mapper.py": "59c24089ae59b24849d464ec098812789fe18808a79b8c15973c509b3b1b169a",
+    "src/a30_kinematics/downlink.py": "8b7cf319aa21a585f10b5dcf08637b72f3ff2d328437ef8da68f9ff268bcd4ff",
+    "src/a32_kinematics/a32_fast.py": "c7320bb5199bdfecef27d32a898889fa6b66680afff8931448575c7604461ca1",
+    "online_control/shared/downlink.py": "ddc6702b5e92cdd2e6345da66bbe83c25fca2bb14403070a2d8416ad56ff9cc5",
+    "tools/benchmark_a30_python.py": "a9c94366c9ff2207dfadfec53a3802729353ac97b549e627ec333d5f9274152d"
+  },
+  "results": {
+    "mapper_convert_20": {
+      "samples": 10000,
+      "mean_us": 51.12864,
+      "p50_us": 48.4,
+      "p95_us": 64.6,
+      "p99_us": 99.9,
+      "max_us": 203.2
+    },
+    "encode_108": {
+      "samples": 10000,
+      "mean_us": 84.59972,
+      "p50_us": 70.2,
+      "p95_us": 143.4,
+      "p99_us": 163.3,
+      "max_us": 503.6
+    },
+    "convert_and_encode": {
+      "samples": 10000,
+      "mean_us": 148.56734,
+      "p50_us": 127.3,
+      "p95_us": 264.7,
+      "p99_us": 310.2,
+      "max_us": 970.0
+    },
+    "ruckig_step": {
+      "samples": 10000,
+      "mean_us": 0.89625,
+      "p50_us": 0.8,
+      "p95_us": 1.0,
+      "p99_us": 1.1,
+      "max_us": 23.7
+    },
+    "ruckig_replan": {
+      "samples": 10000,
+      "mean_us": 24.74141,
+      "p50_us": 18.3,
+      "p95_us": 43.2,
+      "p99_us": 54.1,
+      "max_us": 83.3
+    },
+    "tick_1ms": {
+      "samples": 10000,
+      "mean_us": 78.58612,
+      "p50_us": 98.1,
+      "p95_us": 150.9,
+      "p99_us": 174.9,
+      "max_us": 441.2
+    },
+    "tick_2ms": {
+      "samples": 10000,
+      "mean_us": 149.56957,
+      "p50_us": 146.3,
+      "p95_us": 163.2,
+      "p99_us": 239.4,
+      "max_us": 348.9
+    },
+    "tick_3ms": {
+      "samples": 10000,
+      "mean_us": 151.37115,
+      "p50_us": 147.5,
+      "p95_us": 167.0,
+      "p99_us": 240.5,
+      "max_us": 885.3
+    },
+    "tick_4ms": {
+      "samples": 10000,
+      "mean_us": 153.03767,
+      "p50_us": 149.1,
+      "p95_us": 168.6,
+      "p99_us": 241.0,
+      "max_us": 631.7
+    }
+  }
+}

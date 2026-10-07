@@ -1,0 +1,26 @@
+{
+  "source": "D:/Qtworks/gravity",
+  "copied_on": "2026-09-18",
+  "changes": "a32_fast.py: use package-relative import; 2026-10-05: index/mid/ring/pinky DIP strokeRange upper bounds set to 0.008 m; solver and other mechanism parameters unchanged; 2026-10-07: MAT DIP endpoints restored from original MATLAB reference; runtime uses geometry_constants.py with explicit 8 mm project overrides; MAT no longer loaded at runtime; 2026-10-07 follow-up: Python DIP overrides cleared, original geometry active; hardware 8 mm limits retained",
+  "sha256": {
+    "a32_fast.py": {
+      "source": "7acba6c3ef56036cb97f035fccae945e8d8ac95de88bc2f5c012490dd32b5f3e",
+      "bundled": "3336cba4c952212b7eece79ea0a63a8b02101057fe452e666ea1216843d859a9"
+    },
+    "a32_angles_to_inputs.py": {
+      "source": "0aeefd2a80fd1e676659e09d66982517ecda398404b55a86da8f91feb3de2e02",
+      "bundled": "0d94995241df98a8ab5136c48a3f7fd4b3f400e62c4e73fc4fc57e6da2c13837"
+    },
+    "model/A3.2_source.urdf": {
+      "source": "424ca17ab605dae410d7dba4a29d8c2f8fd9e00c3cbfaf71d92202f09fed40ee",
+      "bundled": "424ca17ab605dae410d7dba4a29d8c2f8fd9e00c3cbfaf71d92202f09fed40ee"
+    },
+    "model/geometry_inferred.mat": {
+      "source": "3fe5f224c23458f0303809eb3f71bb38b6122c15038b79632f89bbd420589143",
+      "bundled": "aa218d45905baa50beabc0decb3b2667b693a8e97907e4c8542f2aeec708eecc"
+    },
+    "geometry_constants.py": {
+      "bundled": "c8fc14a8e2ef1d11089f74d62a37b7988aa19c230c0ef1b9c5b5dc2098cde2e1"
+    }
+  }
+}

@@ -1,0 +1,370 @@
+{
+  "synthetic": [
+    {
+      "variant": "before",
+      "finger": "all",
+      "collision": false,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 8,
+        "physics": 8,
+        "ruckig": 15
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 52.231648366623915,
+        "physics_error_deg": 52.231648366623915,
+        "ruckig_error_deg": 74.06791331772914,
+        "contacts": 0
+      },
+      "solve_ms_median": 7.4189999995724065
+    },
+    {
+      "variant": "after",
+      "finger": "all",
+      "collision": false,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 2,
+        "physics": 2,
+        "ruckig": 14
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 3.8179588366207042,
+        "physics_error_deg": 3.8179588366207042,
+        "ruckig_error_deg": 73.31865598736361,
+        "contacts": 0
+      },
+      "solve_ms_median": 7.106400000338908
+    },
+    {
+      "variant": "weights_only",
+      "finger": "all",
+      "collision": false,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 4,
+        "physics": 4,
+        "ruckig": 15
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 32.27982286126226,
+        "physics_error_deg": 32.27982286126226,
+        "ruckig_error_deg": 73.80948159322644,
+        "contacts": 0
+      },
+      "solve_ms_median": 7.022350000625011
+    },
+    {
+      "variant": "iterations_only",
+      "finger": "all",
+      "collision": false,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 7,
+        "physics": 7,
+        "ruckig": 14
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 50.491034096674426,
+        "physics_error_deg": 50.491034096674426,
+        "ruckig_error_deg": 74.28109982593726,
+        "contacts": 0
+      },
+      "solve_ms_median": 7.915099999991071
+    },
+    {
+      "variant": "before",
+      "finger": "all",
+      "collision": true,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 14,
+        "physics": 15,
+        "ruckig": 20
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 63.51716072710879,
+        "physics_error_deg": 70.47866898242518,
+        "ruckig_error_deg": 72.07848017553238,
+        "contacts": 3
+      },
+      "solve_ms_median": 7.669900001019414
+    },
+    {
+      "variant": "after",
+      "finger": "all",
+      "collision": true,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 3,
+        "physics": 5,
+        "ruckig": 14
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 6.316539033125094,
+        "physics_error_deg": 66.25614514199721,
+        "ruckig_error_deg": 73.00339591262693,
+        "contacts": 0
+      },
+      "solve_ms_median": 9.271899999475863
+    },
+    {
+      "variant": "weights_only",
+      "finger": "all",
+      "collision": true,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 4,
+        "physics": 6,
+        "ruckig": 14
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 39.41496166293039,
+        "physics_error_deg": 70.72941660616232,
+        "ruckig_error_deg": 73.22261207821273,
+        "contacts": 0
+      },
+      "solve_ms_median": 7.565100000647362
+    },
+    {
+      "variant": "iterations_only",
+      "finger": "all",
+      "collision": true,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 17,
+        "physics": 18,
+        "ruckig": 22
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 60.49493565495528,
+        "physics_error_deg": 69.7085039402521,
+        "ruckig_error_deg": 70.67546495376067,
+        "contacts": 2
+      },
+      "solve_ms_median": 9.802300000046671
+    },
+    {
+      "variant": "before",
+      "finger": "mid",
+      "collision": false,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 6,
+        "physics": 6,
+        "ruckig": 13
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 41.26836053119038,
+        "physics_error_deg": 41.26836053119038,
+        "ruckig_error_deg": 69.24994907181367,
+        "contacts": 0
+      },
+      "solve_ms_median": 8.069999999861466
+    },
+    {
+      "variant": "after",
+      "finger": "mid",
+      "collision": false,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 2,
+        "physics": 2,
+        "ruckig": 13
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 1.967719250965475e-15,
+        "physics_error_deg": 1.967719250965475e-15,
+        "ruckig_error_deg": 68.55021589299514,
+        "contacts": 0
+      },
+      "solve_ms_median": 7.0033000001785695
+    },
+    {
+      "variant": "weights_only",
+      "finger": "mid",
+      "collision": false,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 4,
+        "physics": 4,
+        "ruckig": 13
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 37.541030224454744,
+        "physics_error_deg": 37.541030224454744,
+        "ruckig_error_deg": 68.70335106159331,
+        "contacts": 0
+      },
+      "solve_ms_median": 7.073650000165799
+    },
+    {
+      "variant": "iterations_only",
+      "finger": "mid",
+      "collision": false,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 5,
+        "physics": 5,
+        "ruckig": 13
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 34.942098067517165,
+        "physics_error_deg": 34.942098067517165,
+        "ruckig_error_deg": 69.23259505585258,
+        "contacts": 0
+      },
+      "solve_ms_median": 8.017899999686051
+    },
+    {
+      "variant": "before",
+      "finger": "mid",
+      "collision": true,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": null,
+        "physics": null,
+        "ruckig": null
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 46.2754181547764,
+        "physics_error_deg": 67.55268702139544,
+        "ruckig_error_deg": 67.82875683136815,
+        "contacts": 2
+      },
+      "solve_ms_median": 7.621900001140602
+    },
+    {
+      "variant": "after",
+      "finger": "mid",
+      "collision": true,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 2,
+        "physics": null,
+        "ruckig": null
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 1.5525653474874952,
+        "physics_error_deg": 66.2954489913167,
+        "ruckig_error_deg": 69.08150222697307,
+        "contacts": 0
+      },
+      "solve_ms_median": 9.701599999971222
+    },
+    {
+      "variant": "weights_only",
+      "finger": "mid",
+      "collision": true,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": 4,
+        "physics": null,
+        "ruckig": null
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 37.541030224454744,
+        "physics_error_deg": 70.28556698973055,
+        "ruckig_error_deg": 71.21949520295938,
+        "contacts": 1
+      },
+      "solve_ms_median": 7.8595999993922305
+    },
+    {
+      "variant": "iterations_only",
+      "finger": "mid",
+      "collision": true,
+      "input_fps": 28.0,
+      "frames_to_5deg": {
+        "solver": null,
+        "physics": null,
+        "ruckig": null
+      },
+      "second_frame": {
+        "frame": 2,
+        "elapsed_s": 0.07000000000000005,
+        "solver_error_deg": 42.489606161787705,
+        "physics_error_deg": 66.67039684255572,
+        "ruckig_error_deg": 66.96086379824608,
+        "contacts": 1
+      },
+      "solve_ms_median": 10.156050000659889
+    }
+  ],
+  "pinch_regression": [
+    {
+      "variant": "before",
+      "frames": 95,
+      "median_ip_error_deg": 4.699271297812853,
+      "median_tip_middle_mm": 20.595162851548633
+    },
+    {
+      "variant": "after",
+      "frames": 95,
+      "median_ip_error_deg": 5.901719780249984,
+      "median_tip_middle_mm": 20.3948103082193
+    },
+    {
+      "variant": "rota",
+      "frames": 95,
+      "median_ip_error_deg": 7.086632767800328,
+      "median_tip_middle_mm": 21.108177280126863
+    }
+  ],
+  "cmc_no_collision": [
+    {
+      "binding": "swing",
+      "frames": 241,
+      "first": 18211,
+      "last": 18511,
+      "median": {
+        "ip_error_deg": 4.558335868308943,
+        "bone_loss": 0.16036992219447754,
+        "interaction_loss": 0.1664801558959262,
+        "tip_middle_distance_mm": 114.52562791581147
+      }
+    },
+    {
+      "binding": "rota",
+      "frames": 241,
+      "first": 18211,
+      "last": 18511,
+      "median": {
+        "ip_error_deg": 5.9200667100172275,
+        "bone_loss": 0.13242204972880428,
+        "interaction_loss": 0.16084520403005517,
+        "tip_middle_distance_mm": 111.76994270787253
+      }
+    }
+  ]
+}

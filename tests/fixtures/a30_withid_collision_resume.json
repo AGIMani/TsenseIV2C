@@ -1,0 +1,26 @@
+{
+  "source": "Synthetic with-ID MuJoCo/Mink replay, RNG 41; no device or user recording",
+  "description": "Move toward this gesture for 10 frames, then request open hand for 100 frames. Before fix the index finger remains at 1.023770326 rad although Mink reports clear.",
+  "target": {
+    "left_hand_thumb_rota_block_joint": 0.6852227057636554,
+    "left_hand_thumb_rotaback_joint2": 0.4354971631934947,
+    "left_hand_thumb_MCP_joint": 1.336110575202164,
+    "left_hand_thumb_PIP_joint": 1.2008485440744827,
+    "left_hand_index_MCP_joint": 1.3122443461736584,
+    "left_hand_index_swing_joint": 0.040016824987098465,
+    "left_hand_index_PIP_joint": 1.3947545262534167,
+    "left_hand_index_DIP_joint": 0.20398359639454514,
+    "left_hand_mid_MCP_joint": 1.3852733021406776,
+    "left_hand_mid_swing_joint": -0.0903776910796979,
+    "left_hand_mid_PIP_joint": 0.6504932943388505,
+    "left_hand_mid_DIP_joint": 1.3066050209307492,
+    "left_hand_ring_MCP_joint": 1.1074587181423112,
+    "left_hand_ring_swing_joint": -0.3131182247919291,
+    "left_hand_ring_PIP_joint": 0.39677475700071974,
+    "left_hand_ring_DIP_joint": 1.4477052044496086,
+    "left_hand_pinky_MCP_joint": 0.1649289247841927,
+    "left_hand_pinky_swing_joint": 0.1557931743188229,
+    "left_hand_pinky_PIP_joint": 0.45542858641542294,
+    "left_hand_pinky_DIP_joint": 0.6174417451925773
+  }
+}

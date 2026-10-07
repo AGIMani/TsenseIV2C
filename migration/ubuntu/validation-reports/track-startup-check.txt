@@ -1,0 +1,1 @@
+CHECK OK: A3.0/A3.2 assets, left/right analytic retarget; no camera/GPU server dependency

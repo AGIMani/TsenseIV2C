@@ -1,0 +1,13 @@
+source: vendor/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf
+renames: {}
+naming: SDK functional joint names retained; original link labels preserved
+source_urdf_sha256: 86098a5c1b6de17a4b7cabe7a6c21edd2df5f6cbe31417de080e14bff4c40c45
+source_package_sha256: bbc2e797db6e23ef9d32c9c5ef89446812ac560df120d56c9cb88aa31233a021
+geometry_changed: false
+right_mirror: 'YZ: M=diag(-1,1,1), rotation axes -M; equal q'
+joint_coordinate_version: a32-positive-swing-v1
+joint_coordinate_change: new bare swing = original SDK swing + 0.350; axes aligned
+  with ID; model [0, 0.7], default 0; command clipped to [0.005, 0.695]
+swing_axis_alignment: id-direction-v1
+thumb_zero_alignment: mechanical-stop-v1
+thumb_rotaback_origin_offset_rad: -0.25042009379455915

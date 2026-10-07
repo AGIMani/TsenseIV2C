@@ -1,0 +1,6 @@
+{
+  "host": "127.0.0.1",
+  "port": 8765,
+  "allowed_hosts": ["localhost", "127.0.0.1"],
+  "data_dir": "runtime/ubuntu/play"
+}

@@ -1,0 +1,1 @@
+/usr/bin/c++ -fPIC -O3 -DNDEBUG -shared -Wl,-soname,liba32_native.so -o /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/bin/liba32_native.so CMakeFiles/a32_native.dir/a32_native_linux.cpp.o CMakeFiles/a32_native.dir/protocol.cpp.o 

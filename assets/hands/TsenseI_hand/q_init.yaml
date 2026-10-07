@@ -1,0 +1,23 @@
+robot_name: Left hand URDF model
+q:
+  left_hand_thumb_rota_joint: 0.0
+  left_hand_thumb_swing_joint: 0.0
+  left_hand_thumb_MCP_joint: 0.0
+  left_hand_thumb_PIP_joint: 0.0
+  left_hand_index_swing_joint: 0.0
+  left_hand_index_MCP_joint: 0.0
+  left_hand_index_PIP_joint: 0.0
+  left_hand_index_DIP_joint: 0.0
+  left_hand_mid_swing_joint: 0.0
+  left_hand_mid_MCP_joint: 0.0
+  left_hand_mid_PIP_joint: 0.0
+  left_hand_mid_DIP_joint: 0.0
+  left_hand_ring_swing_joint: 0.0
+  left_hand_ring_MCP_joint: 0.0
+  left_hand_ring_PIP_joint: 0.0
+  left_hand_ring_DIP_joint: 0.0
+  left_hand_pinky_rota_joint: 0.0
+  left_hand_pinky_swing_joint: 0.0
+  left_hand_pinky_MCP_joint: 0.0
+  left_hand_pinky_PIP_joint: 0.0
+  left_hand_pinky_DIP_joint: 0.0

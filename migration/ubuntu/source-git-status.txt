@@ -1,0 +1,856 @@
+ M .vscode/settings.json
+ M README.md
+ M assets/hands/TsenseI_hand_v3_0/collision_geometry.yaml
+ M assets/hands/TsenseI_hand_v3_0/mjcf/mjmodel.xml
+ M assets/hands/TsenseI_hand_v3_0/mjcf/mjmodel_right.xml
+ M assets/hands/TsenseI_hand_v3_0/urdf/TsenseI_hand_left_v3_0.urdf
+ M assets/hands/TsenseI_hand_v3_0/urdf/TsenseI_hand_right_v3_0.urdf
+ M assets/hands/TsenseI_hand_v3_0_withid/collision_geometry.yaml
+ M assets/hands/TsenseI_hand_v3_0_withid/mjcf/mjmodel.xml
+ M assets/hands/TsenseI_hand_v3_0_withid/mjcf/mjmodel_right.xml
+ M assets/hands/TsenseI_hand_v3_0_withid/urdf/TsenseI_hand_left_v3_0_withid.urdf
+ M assets/hands/TsenseI_hand_v3_0_withid/urdf/TsenseI_hand_right_v3_0_withid.urdf
+ M assets/hands/TsenseI_hand_v3_2/collision_geometry.yaml
+ M assets/hands/TsenseI_hand_v3_2/mjcf/mjmodel.xml
+ M assets/hands/TsenseI_hand_v3_2/mjcf/mjmodel_right.xml
+ M assets/hands/TsenseI_hand_v3_2/sdk_source_mapping.yaml
+ M assets/hands/TsenseI_hand_v3_2/source_mapping.yaml
+ M assets/hands/TsenseI_hand_v3_2/urdf/TsenseI_hand_left_v3_2.urdf
+ M assets/hands/TsenseI_hand_v3_2/urdf/TsenseI_hand_right_v3_2.urdf
+ M assets/hands/TsenseI_hand_v3_2_withid/collision_geometry.yaml
+ M assets/hands/TsenseI_hand_v3_2_withid/mjcf/mjmodel.xml
+ M assets/hands/TsenseI_hand_v3_2_withid/mjcf/mjmodel_right.xml
+ M assets/hands/TsenseI_hand_v3_2_withid/source_mapping.yaml
+ M assets/hands/TsenseI_hand_v3_2_withid/urdf/TsenseI_hand_left_v3_2_withid.urdf
+ M assets/hands/TsenseI_hand_v3_2_withid/urdf/TsenseI_hand_right_v3_2_withid.urdf
+ M docs/a32_gesture_control_policy.md
+ M docs/a32_joint_ranges.md
+ M docs/a32_motion_recording.md
+ M docs/a32_platform_integration.md
+ M docs/keypoint_calibration.md
+ M docs/online_webxr_quest3.md
+ M docs/wuji_glove_input.md
+ M online_control/online_motion_play/a32_session.py
+ M online_control/online_motion_play/package.py
+ M online_control/online_motion_play/test_a30.py
+ M online_control/online_motion_play/test_a32.py
+ M online_control/online_motion_track/a30/control.py
+ M online_control/online_motion_track/a30/session.py
+ M online_control/online_motion_track/a32/control.py
+ M online_control/online_motion_track/a32/session.py
+ M online_control/online_motion_track/a32/solver_process.py
+ M online_control/online_motion_track/landmark_filter.py
+ M online_control/online_motion_track/main.py
+ M online_control/online_motion_track/mink_guard.py
+ M online_control/online_motion_track/package.json
+ M online_control/online_motion_track/package.py
+ M online_control/online_motion_track/pipeline_v3_0/collision.py
+ M online_control/online_motion_track/pipeline_v3_2/pipeline.py
+ M online_control/online_motion_track/pipeline_v3_2/recording.py
+ M online_control/online_motion_track/static/a30-browser-hand-control.js
+ M online_control/online_motion_track/static/a32-sdk-control.js
+ M online_control/online_motion_track/static/app.js
+ M online_control/online_motion_track/static/browser-hand-control.js
+ M online_control/online_motion_track/static/control-readiness.js
+ M online_control/online_motion_track/static/index.html
+ M online_control/online_motion_track/static/local-recorder.js
+ M online_control/online_motion_track/static/quest-capture.js
+ M online_control/online_motion_track/static/style.css
+ M online_control/online_motion_track/static/webxr-receiver.js
+ M online_control/online_motion_track/static/wuji-receiver.js
+ M online_control/online_motion_track/tests/a30-control-browser.mjs
+ M online_control/online_motion_track/tests/a30-stream.test.mjs
+ M online_control/online_motion_track/tests/a32-readiness.test.mjs
+ M online_control/online_motion_track/tests/control-readiness.test.mjs
+ M online_control/online_motion_track/tests/frame-processing.test.mjs
+ M online_control/online_motion_track/tests/quest-capture-browser.mjs
+ M online_control/online_motion_track/tests/webxr-browser.mjs
+ M online_control/online_motion_track/tests/webxr-receiver.test.mjs
+ M online_control/online_motion_track/tests/wuji-browser.mjs
+ M online_control/online_motion_track/tests/wuji-receiver.test.mjs
+ M online_control/online_motion_track/v2/session.py
+ M online_control/online_motion_track/webxr_input.py
+ M online_control/online_motion_track/wuji_input.py
+ M online_control/online_motion_track/wuji_transport.py
+ M online_control/shared/downlink.py
+ M online_control/shared/version.py
+ M src/a32_driver/a32_hardware.json
+ M src/a32_driver/device.py
+ M src/a32_driver/native.py
+ M src/a32_driver/recording.py
+ M src/a32_kinematics/joint_coordinates.py
+ M src/a32_kinematics/model/geometry_inferred.mat
+ M src/a32_kinematics/source_snapshot.json
+ M src/utils/ruckig_interpolator.py
+ M tests/run_wuji_browser_fixture.py
+ M tests/test_a30_collision.py
+ M tests/test_a30_collision_resume.py
+ M tests/test_a30_control.py
+ M tests/test_a30_device_timing.py
+ M tests/test_a30_retarget_recovery.py
+ M tests/test_a32_distal_collision.py
+ M tests/test_a32_driver.py
+ M tests/test_a32_fast.py
+ M tests/test_a32_joint_ranges.py
+ M tests/test_a32_tracking_control.py
+ M tests/test_a32_tracking_recording.py
+ M tests/test_control_log_viewer.cjs
+ M tests/test_direct_preview.py
+ M tests/test_form2_ruckig_downlink.py
+ M tests/test_hand_profile_v3_2.py
+ M tests/test_light_test_v3_2.py
+ M tests/test_light_tracking_recovery.py
+ M tests/test_mink_v3_2.py
+ M tests/test_online_webxr_input.py
+ M tests/test_responsive_landmark_filter.py
+ M tools/apply_a32_joint_ranges.py
+ M tools/edit_robot_keypoints_21.py
+ M tools/generate_profile_collision.py
+ M tools/hand_control_log_viewer.html
+ M tools/keypoint_mesh_renderer.py
+ M tools/keypoint_view3d.py
+ M tools/prepare_hand_v3_0.py
+ M tools/prepare_hand_v3_0_withid.py
+ M tools/prepare_hand_v3_2.py
+ M tools/prepare_hand_v3_2_withid.py
+ M tools/wuji_glove_bridge.py
+?? .wsl-migration-source.json
+?? TJ_FX_ROBOT_CONTRL_SDK/
+?? TsenseI_A3.2_hand/README.txt
+?? TsenseI_A3.2_hand/meshes/Left_hand_palm_link.STL
+?? TsenseI_A3.2_hand/meshes/Right_hand_palm_link.STL
+?? TsenseI_A3.2_hand/meshes/base_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_index_DIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_index_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_index_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_index_swing_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_mid_DIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_mid_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_mid_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_mid_swing_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_pinky_DIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_pinky_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_pinky_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_pinky_swing_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_ring_DIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_ring_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_ring_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_ring_swing_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_thumb_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_thumb_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_thumb_rota_block_link.STL
+?? TsenseI_A3.2_hand/meshes/left_hand_thumb_rotaback_link2.STL
+?? TsenseI_A3.2_hand/meshes/right_base_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_index_DIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_index_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_index_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_index_swing_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_mid_DIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_mid_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_mid_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_mid_swing_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_pinky_DIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_pinky_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_pinky_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_pinky_swing_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_ring_DIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_ring_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_ring_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_ring_swing_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_thumb_MCP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_thumb_PIP_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_thumb_rota_block_link.STL
+?? TsenseI_A3.2_hand/meshes/right_hand_thumb_rotaback_link2.STL
+?? TsenseI_A3.2_hand/resource_manifest.json
+?? TsenseI_A3.2_hand/urdf/TsenseI_hand_left_v3_2.urdf
+?? TsenseI_A3.2_hand/urdf/TsenseI_hand_right_v3_2.urdf
+?? assets/hands/TsenseI_hand_v3_0/collision_mesh_report.json
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_Left_hand_palm_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_base_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_index_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_index_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_index_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_index_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_mid_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_mid_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_mid_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_mid_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_pinky_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_pinky_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_pinky_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_pinky_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_ring_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_ring_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_ring_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_ring_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_thumb_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_thumb_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_thumb_rota_block_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/left_left_hand_thumb_rotaback_link2.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_Right_hand_palm_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_base_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_index_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_index_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_index_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_index_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_mid_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_mid_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_mid_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_mid_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_pinky_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_pinky_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_pinky_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_pinky_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_ring_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_ring_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_ring_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_ring_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_thumb_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_thumb_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_thumb_rota_block_link.stl
+?? assets/hands/TsenseI_hand_v3_0/mjcf/collision_meshes/right_right_hand_thumb_rotaback_link2.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/collision_mesh_report.json
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_Left_hand_palm_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_index_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_index_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_index_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_index_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_mid_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_mid_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_mid_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_mid_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_pinky_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_pinky_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_pinky_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_pinky_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_ring_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_ring_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_ring_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_ring_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_thumb_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_thumb_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_thumb_rota_block_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/left_left_hand_thumb_rotaback_link2.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_Right_hand_palm_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_index_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_index_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_index_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_index_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_mid_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_mid_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_mid_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_mid_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_pinky_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_pinky_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_pinky_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_pinky_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_ring_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_ring_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_ring_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_ring_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_thumb_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_thumb_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_thumb_rota_block_link.stl
+?? assets/hands/TsenseI_hand_v3_0_withid/mjcf/collision_meshes/right_right_hand_thumb_rotaback_link2.stl
+?? assets/hands/TsenseI_hand_v3_2/collision_mesh_report.json
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_Left_hand_palm_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_base_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_index_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_index_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_index_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_index_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_mid_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_mid_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_mid_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_mid_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_pinky_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_pinky_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_pinky_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_pinky_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_ring_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_ring_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_ring_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_ring_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_thumb_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_thumb_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_thumb_rota_block_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/left_left_hand_thumb_rotaback_link2.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_Right_hand_palm_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_base_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_index_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_index_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_index_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_index_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_mid_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_mid_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_mid_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_mid_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_pinky_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_pinky_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_pinky_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_pinky_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_ring_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_ring_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_ring_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_ring_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_thumb_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_thumb_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_thumb_rota_block_link.stl
+?? assets/hands/TsenseI_hand_v3_2/mjcf/collision_meshes/right_right_hand_thumb_rotaback_link2.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/collision_mesh_report.json
+?? assets/hands/TsenseI_hand_v3_2_withid/inertial_parameters.json
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_Left_hand_palm_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_base_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_index_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_index_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_index_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_index_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_mid_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_mid_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_mid_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_mid_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_pinky_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_pinky_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_pinky_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_pinky_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_ring_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_ring_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_ring_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_ring_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_thumb_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_thumb_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_thumb_rota_block_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_left_hand_thumb_rotaback_link2.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_Right_hand_palm_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_base_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_index_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_index_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_index_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_index_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_mid_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_mid_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_mid_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_mid_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_pinky_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_pinky_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_pinky_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_pinky_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_ring_DIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_ring_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_ring_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_ring_swing_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_thumb_MCP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_thumb_PIP_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_thumb_rota_block_link.stl
+?? assets/hands/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_right_hand_thumb_rotaback_link2.stl
+?? docs/collision_outer_envelopes.md
+?? docs/leapmotion2_input.md
+?? docs/motion_limits.md
+?? docs/online_control_latency.md
+?? docs/wsl_online_control.md
+?? docs/wuji_cli_calibration.md
+?? docs/wuji_wsl_network.md
+?? exports/collision_design_20261003/benchmark_final.json
+?? exports/collision_design_20261003/benchmark_final.py
+?? exports/collision_design_20261003/benchmark_geometry.json
+?? exports/collision_design_20261003/benchmark_geometry.py
+?? exports/collision_design_20261003/benchmark_mink.py
+?? exports/collision_design_20261003/benchmark_notes.txt
+?? exports/collision_design_20261003/benchmark_results.json
+?? exports/collision_design_20261003/benchmark_variants.json
+?? exports/collision_design_20261003/benchmark_variants.py
+?? exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0/data-viewer.png
+?? exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0/diagnostic.jsonl
+?? exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0/session.jsonl
+?? exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0/streaming.png
+?? exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0_withid/data-viewer.png
+?? exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0_withid/diagnostic.jsonl
+?? exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0_withid/session.jsonl
+?? exports/collision_design_20261003/browser_collision_off/TsenseI_v3_0_withid/streaming.png
+?? exports/collision_design_20261003/browser_collision_off/smoke_summary.json
+?? exports/collision_design_20261003/geometry/a32_thumb_root_full_hull.stl
+?? exports/collision_design_20261003/geometry/a32_thumb_root_outer_32.stl
+?? exports/collision_design_20261003/geometry/a32_thumb_root_outer_32_model.xml
+?? exports/collision_design_20261003/geometry/a32_thumb_root_outer_64.stl
+?? exports/collision_design_20261003/geometry/a32_thumb_root_outer_64_model.xml
+?? exports/collision_design_20261003/geometry/a32_thumb_root_outer_96.stl
+?? exports/collision_design_20261003/geometry/a32_thumb_root_outer_96_model.xml
+?? exports/collision_design_20261003/geometry/a32_withid_index_tip_full_hull.stl
+?? exports/collision_design_20261003/geometry/a32_withid_index_tip_outer_128.stl
+?? exports/collision_design_20261003/geometry/a32_withid_index_tip_outer_32.stl
+?? exports/collision_design_20261003/geometry/a32_withid_index_tip_outer_64.stl
+?? exports/collision_design_20261003/geometry/a32_withid_index_tip_outer_96.stl
+?? exports/collision_design_20261003/geometry/build_geometry_design.py
+?? exports/collision_design_20261003/geometry/geometry_metrics.json
+?? exports/collision_design_20261003/geometry/thumb_root_comparison.png
+?? exports/collision_design_20261003/geometry/withid_tip_comparison.png
+?? exports/collision_design_20261003/new_geometry_probe.py
+?? exports/collision_design_20261003/runtime_probe.py
+?? exports/collision_implementation_20261003/TsenseI_v3_0_left_full_palm.xml
+?? exports/collision_implementation_20261003/TsenseI_v3_0_right_full_palm.xml
+?? exports/collision_implementation_20261003/TsenseI_v3_2_left_full_palm.xml
+?? exports/collision_implementation_20261003/TsenseI_v3_2_right_full_palm.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/collision_geometry.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/eval_config.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/eval_config_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/hand_profile.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/joint_groups.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/joint_groups_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/Left_hand_palm_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/Right_hand_palm_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/base_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_index_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_index_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_index_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_index_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_mid_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_mid_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_mid_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_mid_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_pinky_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_pinky_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_pinky_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_pinky_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_ring_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_ring_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_ring_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_ring_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_thumb_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_thumb_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_thumb_rota_block_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/left_hand_thumb_rotaback_link2.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_base_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_index_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_index_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_index_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_index_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_mid_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_mid_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_mid_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_mid_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_pinky_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_pinky_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_pinky_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_pinky_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_ring_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_ring_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_ring_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_ring_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_thumb_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_thumb_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_thumb_rota_block_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/meshes/right_hand_thumb_rotaback_link2.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/mjcf/mjmodel.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/mjcf/mjmodel_right.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/q_init.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/q_init_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/qa/collision_overlay.png
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260920_090921_568736
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260920_090921_756296
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260920_090921_921052
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260920_091132_256420
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260920_091132_863664
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260920_091133_051641
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260920_091438_715087
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260920_091438_902640
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173706_581409
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173710_870603
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173712_139750
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173712_394167
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173715_409454
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173715_597416
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173715_746905
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173715_889246
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173717_149013
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173717_291500
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_173717_441566
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_190436_692825
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_190436_887589
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_190437_037595
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_190437_202953
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_190438_410210
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260922_190438_545316
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103654_075319
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103654_495149
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103654_780492
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103655_065389
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103655_328187
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103655_552599
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103805_026686
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103805_348768
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103805_513405
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103805_664214
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_103805_851424
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_144406_345126
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_144406_517935
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_144406_637646
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_151710_229674
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_151710_499516
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_151710_627164
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260923_151710_867768
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260929_113055_520012
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260929_113055_678177
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260929_113055_835246
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260929_145104_705352
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260929_145104_870460
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21.yaml.bak_20260929_145105_020846
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21_right.yaml.bak_20260920_091147_591821
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21_right.yaml.bak_20260920_091447_651737
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21_right.yaml.bak_20260922_190447_199769
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21_right.yaml.bak_20260923_103816_938482
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21_right.yaml.bak_20260923_144415_379351
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21_right.yaml.bak_20260923_151718_195479
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/robot_keypoints_21_right.yaml.bak_20260929_113242_698956
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/source_mapping.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/urdf/TsenseI_hand_left_v3_0.urdf
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0/urdf/TsenseI_hand_right_v3_0.urdf
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/collision_geometry.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/eval_config.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/eval_config_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/hand_profile.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/joint_groups.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/joint_groups_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link11.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link12.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link13.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link14.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link21.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link22.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link23.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link24.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link31.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link32.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link33.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link34.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link41.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link42.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link43.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link44.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link51.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link52.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link53.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Empty_Link54.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Left_hand_palm_reconstructed_part1.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Left_hand_palm_reconstructed_part2.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Right_hand_palm_reconstructed_part1.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/Right_hand_palm_reconstructed_part2.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link11.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link12.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link13.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link14.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link21.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link22.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link23.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link24.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link31.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link32.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link33.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link34.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link41.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link42.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link43.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link44.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link51.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link52.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link53.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/meshes/right_Empty_Link54.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/mjcf/mjmodel.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/mjcf/mjmodel_right.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/q_init.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/q_init_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/qa/collision_overlay.png
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/qa/keypoints_left.png
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231630_276103
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231630_426047
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231630_553792
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231630_711828
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231638_624688
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231638_789051
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231647_624622
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231647_819445
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231647_954029
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260923_231648_179468
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113216_204761
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113216_354602
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113216_482720
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113216_625558
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113216_880732
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113217_217983
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113217_420122
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113229_322684
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_113229_472798
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_145214_065966
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21.yaml.bak_20260929_145214_246342
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21_right.yaml.bak_20260923_235347_350468
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/robot_keypoints_21_right.yaml.bak_20260929_113632_034654
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/source_mapping.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/urdf/TsenseI_hand_left_v3_0_withid.urdf
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_0_withid/urdf/TsenseI_hand_right_v3_0_withid.urdf
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/collision_geometry.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/eval_config.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/eval_config_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/hand_profile.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/joint_groups.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/joint_groups_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/Left_hand_palm_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/Right_hand_palm_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/base_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_index_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_index_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_index_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_index_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_mid_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_mid_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_mid_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_mid_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_pinky_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_pinky_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_pinky_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_pinky_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_ring_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_ring_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_ring_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_ring_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_thumb_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_thumb_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_thumb_rota_block_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/left_hand_thumb_rotaback_link2.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_base_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_index_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_index_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_index_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_index_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_mid_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_mid_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_mid_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_mid_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_pinky_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_pinky_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_pinky_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_pinky_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_ring_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_ring_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_ring_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_ring_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_thumb_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_thumb_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_thumb_rota_block_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/meshes/right_hand_thumb_rotaback_link2.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/mjcf/mjmodel.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/mjcf/mjmodel_right.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/q_init.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/q_init_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/qa/collision_overlay.png
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/qa/editor_3d_left.png
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/qa/editor_3d_right.png
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21.yaml.bak_20260917_104717_458529
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21.yaml.bak_20260929_145404_235727
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21.yaml.bak_20260929_145404_377540
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21.yaml.bak_20260929_145404_534809
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21.yaml.bak_20260929_145404_662311
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21.yaml.bak_20260929_145404_790813
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21_right.yaml.bak_20260917_104127_869771
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/robot_keypoints_21_right.yaml.bak_20260917_104724_051554
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/sdk_source_mapping.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/source_mapping.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/urdf/TsenseI_hand_left_v3_2.urdf
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2/urdf/TsenseI_hand_right_v3_2.urdf
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/collision_geometry.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/collision_geometry.yaml.bak_before_full_distal_hulls
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/eval_config.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/eval_config_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/hand_profile.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/inertial_parameters.json
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/joint_groups.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/joint_groups_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/Left_hand_palm_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/base_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_index_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_index_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_index_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_index_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_mid_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_mid_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_mid_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_mid_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_pinky_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_pinky_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_pinky_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_pinky_SWING_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_ring_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_ring_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_ring_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_ring_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_thumb_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_thumb_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_thumb_rota_block_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/left/left_hand_thumb_rotaback_link2.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/Right_hand_palm_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/base_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_index_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_index_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_index_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_index_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_mid_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_mid_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_mid_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_mid_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_pinky_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_pinky_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_pinky_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_pinky_SWING_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_ring_DIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_ring_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_ring_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_ring_swing_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_thumb_MCP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_thumb_PIP_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_thumb_rota_block_link.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/meshes/right/right_hand_thumb_rotaback_link2.STL
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_hand_index_DIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_hand_mid_DIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_hand_pinky_DIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_hand_ring_DIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/left_hand_thumb_PIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_hand_index_DIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_hand_mid_DIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_hand_pinky_DIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_hand_ring_DIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/collision_meshes/right_hand_thumb_PIP_link.stl
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/mjmodel.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/mjcf/mjmodel_right.xml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/q_init.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/q_init_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/qa/collision_overlay.png
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/robot_keypoints_21.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/robot_keypoints_21.yaml.bak_20260929_145300_402431
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/robot_keypoints_21.yaml.bak_20260929_145300_536535
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/robot_keypoints_21.yaml.bak_20260929_145300_672031
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/robot_keypoints_21.yaml.bak_20260929_145300_800065
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/robot_keypoints_21.yaml.bak_20260929_145300_935075
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/robot_keypoints_21_right.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/source_mapping.yaml
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/urdf/TsenseI_hand_left_v3_2_withid.urdf
+?? exports/collision_implementation_20261003/baseline_geometry/TsenseI_hand_v3_2_withid/urdf/TsenseI_hand_right_v3_2_withid.urdf
+?? exports/collision_implementation_20261003/baseline_runtime/mink_guard.py
+?? exports/collision_implementation_20261003/baseline_runtime/stop_guard.py
+?? exports/collision_implementation_20261003/check_convexity.py
+?? exports/collision_implementation_20261003/check_existing_keypoint_failures.py
+?? exports/collision_implementation_20261003/check_full_palm.py
+?? exports/collision_implementation_20261003/check_geometry.py
+?? exports/collision_implementation_20261003/check_mirror.py
+?? exports/collision_implementation_20261003/check_regeneration.py
+?? exports/collision_implementation_20261003/collision_outer_envelopes_front.png
+?? exports/collision_implementation_20261003/collision_outer_envelopes_side.png
+?? exports/collision_implementation_20261003/finalize_report.py
+?? exports/collision_implementation_20261003/find_palm_contacts.py
+?? exports/collision_implementation_20261003/geometry_regeneration_before.json
+?? exports/collision_implementation_20261003/geometry_summary.json
+?? exports/collision_implementation_20261003/geometry_summary.py
+?? exports/collision_implementation_20261003/invariants_before.json
+?? exports/collision_implementation_20261003/palm_contact_TsenseI_v3_0_left.json
+?? exports/collision_implementation_20261003/palm_contact_TsenseI_v3_0_right.json
+?? exports/collision_implementation_20261003/palm_contact_TsenseI_v3_2_left.json
+?? exports/collision_implementation_20261003/palm_contact_TsenseI_v3_2_right.json
+?? exports/collision_implementation_20261003/path_probe.py
+?? exports/collision_implementation_20261003/path_regression.json
+?? exports/collision_implementation_20261003/render_current.py
+?? exports/collision_implementation_20261003/runtime_benchmark.json
+?? exports/collision_implementation_20261003/runtime_benchmark_fingers_stage.json
+?? exports/collision_implementation_20261003/runtime_benchmark_unbounded_sweep.json
+?? exports/collision_implementation_20261003/snapshot_invariants.py
+?? exports/collision_review_20261003/check_layout.mjs
+?? exports/collision_review_20261003/check_viewer.mjs
+?? exports/collision_review_20261003/collision_data.json
+?? exports/collision_review_20261003/extract_collision_data.py
+?? exports/collision_review_20261003/static/collision_overlay_front.png
+?? exports/collision_review_20261003/static/collision_overlay_side.png
+?? exports/collision_review_20261003/static/inspect_models.py
+?? exports/collision_review_20261003/static/render_current.py
+?? exports/collision_review_20261003/viewer-dark.png
+?? exports/collision_review_20261003/viewer-desktop.png
+?? exports/collision_review_20261003/viewer-mobile.png
+?? exports/collision_review_20261003/viewer-preview.html
+?? exports/collision_review_20261003/viewer-selected.png
+?? online_control/online_motion_track/calibration.py
+?? online_control/online_motion_track/collision_queries.py
+?? online_control/online_motion_track/feedback.py
+?? online_control/online_motion_track/leapmotion_input.py
+?? online_control/online_motion_track/leapmotion_source.py
+?? online_control/online_motion_track/requirements-wsl.txt
+?? online_control/online_motion_track/source_worker.py
+?? online_control/online_motion_track/static/calibration-viewer.js
+?? online_control/online_motion_track/static/calibration.css
+?? online_control/online_motion_track/static/calibration.html
+?? online_control/online_motion_track/static/calibration.js
+?? online_control/online_motion_track/static/detector-client.js
+?? online_control/online_motion_track/static/feedback-preview.js
+?? online_control/online_motion_track/static/leapmotion-receiver.js
+?? online_control/online_motion_track/tests/a3-direct-browser.mjs
+?? online_control/online_motion_track/tests/a32-sdk-recording.test.mjs
+?? online_control/online_motion_track/tests/calibration-browser.mjs
+?? online_control/online_motion_track/tests/collision-off-downlink.test.mjs
+?? online_control/online_motion_track/tests/feedback-browser.mjs
+?? online_control/online_motion_track/tests/feedback-preview.test.mjs
+?? online_control/online_motion_track/tests/frame-display.test.mjs
+?? online_control/online_motion_track/tests/leapmotion-browser.mjs
+?? online_control/online_motion_track/tests/leapmotion-receiver.test.mjs
+?? online_control/online_motion_track/tests/metric-frame-processing.test.mjs
+?? online_control/online_motion_track/tests/quest-frame-order.test.mjs
+?? online_control/online_motion_track/tests/recording-model-matrix-browser.mjs
+?? online_control/online_motion_track/tests/wuji-browser-wsl.mjs
+?? online_control/online_motion_track/wuji_sdk_source.py
+?? src/a32_driver/bin/liba32_native.so
+?? src/a32_driver/build_native_linux.sh
+?? src/a32_driver/native_linux/CMakeLists.txt
+?? src/a32_driver/native_linux/a32_native_linux.cpp
+?? src/a32_driver/native_linux/protocol.cpp
+?? src/a32_driver/native_linux/protocol.hpp
+?? src/a32_driver/native_linux/tests/test_offline.py
+?? src/utils/motion_limits.py
+?? tests/fixtures/a30_convex_thumb_pinky.json
+?? tests/fixtures/a32_collision_swept_regression.json
+?? tests/run_calibration_browser_fixture.py
+?? tests/run_leapmotion_browser_fixture.py
+?? tests/run_wuji_sdk_browser_fixture.py
+?? tests/test_a32_background_control.py
+?? tests/test_a32_direct_control.py
+?? tests/test_a32_feedback_recording.py
+?? tests/test_a32_input_filter_latency.py
+?? tests/test_a32_thumb_mechanical_zero.py
+?? tests/test_a3_direct_sessions.py
+?? tests/test_collision_bundle_assets.py
+?? tests/test_collision_outer_hulls.py
+?? tests/test_collision_runtime_optimized.py
+?? tests/test_feedback_pose.py
+?? tests/test_keypoint_mediapipe_input.py
+?? tests/test_keypoint_pose_presets.py
+?? tests/test_keypoint_retarget_preview.py
+?? tests/test_leapmotion_application.py
+?? tests/test_leapmotion_commit.py
+?? tests/test_leapmotion_sdk_compat.py
+?? tests/test_metric_landmark_passthrough.py
+?? tests/test_metric_source_worker.py
+?? tests/test_online_leapmotion_input.py
+?? tests/test_web_calibration.py
+?? tests/test_wuji_sdk_direct.py
+?? tools/apply_a32_withid_inertials.py
+?? tools/benchmark_a32_input_latency.py
+?? tools/benchmark_collision_runtime.py
+?? tools/check_wuji_wsl.py
+?? tools/collision_outer_hull.py
+?? tools/keypoint_mediapipe_input.py
+?? tools/keypoint_pose_presets.py
+?? tools/keypoint_preview_solver.py
+?? tools/keypoint_retarget_preview.py
+?? tools/leapmotion_diagnostic.py
+?? tools/leapmotion_ir_preview.py
+?? tools/patch_leapmotion_sdk.py
+?? tools/restart_local_service.py
+?? tracker_log.txt

@@ -1,0 +1,25 @@
+{
+  "description": "Synthetic with-ID direct-filter retreat deadlock, seed 731 trial 4",
+  "pose": {
+    "left_hand_thumb_rota_block_joint": 1.4591006990508106,
+    "left_hand_thumb_rotaback_joint2": 0.6272499390994155,
+    "left_hand_thumb_MCP_joint": 1.3084860585646463,
+    "left_hand_thumb_PIP_joint": 0.55748770247631,
+    "left_hand_index_MCP_joint": 0.38703574412940933,
+    "left_hand_index_swing_joint": 0.34170629244165973,
+    "left_hand_index_PIP_joint": 0.7173585474050506,
+    "left_hand_index_DIP_joint": 0.7474149403978702,
+    "left_hand_mid_MCP_joint": 0.5459692550585027,
+    "left_hand_mid_swing_joint": 0.14776563483037058,
+    "left_hand_mid_PIP_joint": 0.9055220819220925,
+    "left_hand_mid_DIP_joint": 1.3237542753735168,
+    "left_hand_ring_MCP_joint": 0.821786970170055,
+    "left_hand_ring_swing_joint": -0.0910334420606581,
+    "left_hand_ring_PIP_joint": 0.47697095886919855,
+    "left_hand_ring_DIP_joint": 0.6076480968953253,
+    "left_hand_pinky_MCP_joint": 0.7831591859620087,
+    "left_hand_pinky_swing_joint": 0.022177051448698783,
+    "left_hand_pinky_PIP_joint": 1.3356446066817989,
+    "left_hand_pinky_DIP_joint": 1.396019452119513
+  }
+}

@@ -1,0 +1,7 @@
+source: TsenseI_A3.0_hand_withid/urdf/A3-2691-1053yw1.urdf
+renames: {}
+naming: canonical functional names stored directly in source URDF
+source_urdf_sha256: da19273dcc86fb30ed991c6197450d521b4784d6a75f064346c066de4f6ff2b2
+source_package_sha256: c1d10917289e39d33a1fe08f6d8e916b74c83dbc069e16f9947885d70bdc12ef
+geometry_changed: false
+right_mirror: 'XZ: M=diag(1,-1,1), rotation axes -M; equal q'

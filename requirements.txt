@@ -1,0 +1,4 @@
+# Ubuntu web migration: track environment ONLY (Python 3.12).
+# Prefer: bash migration/ubuntu/install.sh all
+# Motion playback has a separate environment; see README-UBUNTU.txt.
+-r migration/ubuntu/requirements-track.txt

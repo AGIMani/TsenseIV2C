@@ -1,0 +1,2557 @@
+[
+  {
+    "file": "hand_control_20260924_142150_088000.jsonl",
+    "sha256": "298e7ae817adc504a0eb8bcf2d3ae39ad40f973e8bd654f3d027c62a1180d3e3",
+    "started_at": "2026-09-24T06:21:50.089Z",
+    "model_id": "TsenseI_v3_0",
+    "counts": {
+      "session": 1,
+      "serial_open_requested": 1,
+      "serial_connect": 1,
+      "telemetry": 8750,
+      "planner_sample": 668,
+      "h7": 13250,
+      "model_sample": 2497,
+      "board_telemetry": 43,
+      "mediapipe_raw": 2376,
+      "retarget_skipped": 2100,
+      "a30_conversion": 1888,
+      "mediapipe": 276,
+      "retarget": 276,
+      "control_target": 276,
+      "feedback_seed": 1,
+      "usb_tx": 12957,
+      "downlink": 12939,
+      "joint_power": 18,
+      "control_arm": 1,
+      "serial_io_stats": 52,
+      "conversion": 12938,
+      "trajectory_recovery": 29,
+      "trajectory_recovered": 25,
+      "control_disarm": 2,
+      "serial_close_requested": 1,
+      "serial_read_end": 1,
+      "serial_close_completed": 1,
+      "serial_disconnect": 1,
+      "session_end": 1
+    },
+    "skips": {
+      "queue_expired": 1,
+      "no_hand": 1585,
+      "queue_replaced": 487,
+      "wrong_hand": 27
+    },
+    "recoveries": {
+      "stale_after_pacing": 21,
+      "stale_sample": 8
+    },
+    "phases": {
+      "holding": 527,
+      "tracking": 141
+    },
+    "telemetry_masks": {
+      "(0, 3)": 1,
+      "(195583, 3)": 8749
+    },
+    "timing": {
+      "planner_hz": {
+        "p50": 477.31339017510317,
+        "p95": 490.82228552850876,
+        "max": 500.21028840510127
+      },
+      "solve_ms": {
+        "p50": 75.75824999366887,
+        "p95": 106.81950001162477,
+        "max": 922.046899999259
+      },
+      "capture_to_response_ms": {
+        "p50": 131.3999999910593,
+        "p95": 173.97499999403954,
+        "max": 1005.6999999880791
+      },
+      "queue_wait_ms": {
+        "p50": 18.25,
+        "p95": 46.2749999910593,
+        "max": 69.80000001192093
+      },
+      "request_response_ms": {
+        "p50": 85.65000002086163,
+        "p95": 116.55000001192093,
+        "max": 938.5
+      },
+      "collision_ms": {
+        "p50": 11.72480000241194,
+        "p95": 43.23487500369083,
+        "max": 865.4110999777913
+      },
+      "reported_max_usb_write_ms": {
+        "p50": 0.7999999821186066,
+        "p95": 1.0999999940395355,
+        "max": 1.0999999940395355
+      }
+    },
+    "usb_interval_ms": {
+      "p50": 2.3999999761485924,
+      "p95": 8.900000005958475,
+      "max": 1332.599999994038
+    },
+    "events": [
+      {
+        "type": "control_arm",
+        "t": 43.05490000000596
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 43.82740000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.30859999801032,
+        "tick": 18262
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 43.94169999998808,
+        "duration_ms": 114.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 52.20359999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.31590001983568,
+        "tick": 21187
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 53.159599999994036,
+        "reason": "stale_sample",
+        "age_ms": 835.130800020881,
+        "tick": 21652
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 53.40179999998212,
+        "reason": "stale_sample",
+        "age_ms": 123.1267999720294,
+        "tick": 21754
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 53.53209999999404,
+        "duration_ms": 1328.4000000059605
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 53.96319999998808,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.38619999005459,
+        "tick": 21956
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 54.08329999998212,
+        "duration_ms": 119.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 54.64569999998808,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.0465000004042,
+        "tick": 22280
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 54.75240000000596,
+        "duration_ms": 106.5
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 55.30719999998808,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.53739999700338,
+        "tick": 22594
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 55.408,
+        "duration_ms": 100.5
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 56.619,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.22139997081831,
+        "tick": 23216
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 56.7405,
+        "duration_ms": 121.5
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 57.67409999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.28279998945072,
+        "tick": 23711
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 57.742299999982116,
+        "duration_ms": 68
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 59.207900000005964,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.71729997894727,
+        "tick": 24444
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 59.31009999999404,
+        "duration_ms": 102
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 59.946299999982116,
+        "reason": "stale_after_pacing",
+        "age_ms": 115.23639999190345,
+        "tick": 24789
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 60.07529999998212,
+        "duration_ms": 128.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 62.43419999998808,
+        "reason": "stale_sample",
+        "age_ms": 104.00769999274053,
+        "tick": 25661
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 62.62119999998808,
+        "duration_ms": 186.80000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 64.22240000000596,
+        "reason": "stale_sample",
+        "age_ms": 100.44289997033775,
+        "tick": 26271
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 64.3985,
+        "duration_ms": 175.89999997615814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 68.14119999998807,
+        "reason": "stale_sample",
+        "age_ms": 101.08459998946637,
+        "tick": 27584
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 68.42729999998213,
+        "reason": "stale_sample",
+        "age_ms": 101.82339997100644,
+        "tick": 27687
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 68.91190000000596,
+        "reason": "stale_sample",
+        "age_ms": 366.91949997423217,
+        "tick": 27912
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 69.04119999998808,
+        "duration_ms": 900
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 77.67540000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 103.61960001289845,
+        "tick": 31035
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 77.807,
+        "duration_ms": 131.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 78.8775,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.3891000256408,
+        "tick": 31611
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 78.90690000000596,
+        "duration_ms": 29.299999982118607
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 80.183,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.0110999844037,
+        "tick": 32241
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 80.23219999998808,
+        "duration_ms": 49.099999994039536
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 81.145,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.12730002496392,
+        "tick": 32696
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 81.24119999998808,
+        "duration_ms": 96.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 82.44440000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.1969999957364,
+        "tick": 33309
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 82.47469999998808,
+        "duration_ms": 30.299999982118607
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 83.60629999998211,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.57080001593567,
+        "tick": 33864
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 83.69040000000597,
+        "duration_ms": 83.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 84.98569999998809,
+        "reason": "stale_after_pacing",
+        "age_ms": 104.27190000587143,
+        "tick": 34509
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 85.03629999998212,
+        "duration_ms": 50.400000005960464
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 86.64040000000595,
+        "reason": "stale_after_pacing",
+        "age_ms": 104.83930001594126,
+        "tick": 35297
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 86.71729999998212,
+        "duration_ms": 76.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 88.17640000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.85210001887754,
+        "tick": 36033
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 88.27759999999404,
+        "duration_ms": 101
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 89.177,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.24649999896064,
+        "tick": 36511
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 89.26569999998807,
+        "duration_ms": 88.69999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 90.25529999998211,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.80320000415668,
+        "tick": 37017
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 90.29019999998808,
+        "duration_ms": 34.80000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 91.399,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.34020000277087,
+        "tick": 37556
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 91.51219999998808,
+        "duration_ms": 113.19999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 92.46690000000596,
+        "reason": "stale_sample",
+        "age_ms": 443.5102999827359,
+        "tick": 38094
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 92.58309999999403,
+        "duration_ms": 116.09999999403954
+      },
+      {
+        "type": "control_disarm",
+        "t": 93.33079999998212,
+        "reason": "识别已停止"
+      },
+      {
+        "type": "control_disarm",
+        "t": 93.3405,
+        "reason": "串口已断开"
+      }
+    ]
+  },
+  {
+    "file": "hand_control_20260924_142624_430000.jsonl",
+    "sha256": "4826cc8d41c4d78c0eb478d0b163e41582f676f96937ce48af4a33770b898482",
+    "started_at": "2026-09-24T06:26:24.431Z",
+    "model_id": "TsenseI_v3_0",
+    "counts": {
+      "session": 1,
+      "planner_sample": 511,
+      "h7": 20860,
+      "model_sample": 2210,
+      "mediapipe_raw": 2401,
+      "retarget_skipped": 1718,
+      "a30_conversion": 1080,
+      "serial_open_requested": 1,
+      "serial_connect": 1,
+      "telemetry": 8784,
+      "feedback_seed": 1,
+      "usb_tx": 20850,
+      "downlink": 20832,
+      "joint_power": 18,
+      "control_arm": 1,
+      "conversion": 20831,
+      "serial_io_stats": 88,
+      "board_telemetry": 44,
+      "trajectory_recovery": 109,
+      "trajectory_recovered": 98,
+      "mediapipe": 683,
+      "retarget": 683,
+      "control_target": 683,
+      "control_disarm": 2,
+      "serial_close_requested": 1,
+      "serial_read_end": 1,
+      "serial_close_completed": 1,
+      "serial_disconnect": 1,
+      "session_end": 1
+    },
+    "skips": {
+      "queue_expired": 2,
+      "no_hand": 231,
+      "queue_replaced": 1319,
+      "wrong_hand": 166
+    },
+    "recoveries": {
+      "stale_after_pacing": 56,
+      "stale_sample": 53
+    },
+    "phases": {
+      "holding": 147,
+      "tracking": 364
+    },
+    "telemetry_masks": {
+      "(195583, 3)": 8784
+    },
+    "timing": {
+      "planner_hz": {
+        "p50": 350.1314743711007,
+        "p95": 478.96763808485025,
+        "max": 499.89702121514
+      },
+      "reported_max_usb_write_ms": {
+        "p50": 0.7000000178813934,
+        "p95": 0.7000000178813934,
+        "max": 0.7000000178813934
+      },
+      "solve_ms": {
+        "p50": 83.53940001688898,
+        "p95": 135.50914999213998,
+        "max": 1667.153699992923
+      },
+      "capture_to_response_ms": {
+        "p50": 148.7999999821186,
+        "p95": 203.8399999976158,
+        "max": 1709.5999999940395
+      },
+      "queue_wait_ms": {
+        "p50": 19.19999998807907,
+        "p95": 42.17000001668929,
+        "max": 75.59999999403954
+      },
+      "request_response_ms": {
+        "p50": 94.59999999403954,
+        "p95": 146.69999998211858,
+        "max": 1676.5999999940395
+      },
+      "collision_ms": {
+        "p50": 15.103000012459233,
+        "p95": 70.19022000313271,
+        "max": 1611.2443000019994
+      }
+    },
+    "usb_interval_ms": {
+      "p50": 2.6000000238397547,
+      "p95": 6.900000005956031,
+      "max": 1566.400000005963
+    },
+    "events": [
+      {
+        "type": "control_arm",
+        "t": 5.101700000017882
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 5.7649000000059605,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.6621000142768,
+        "tick": 1826
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 5.799,
+        "duration_ms": 33.900000005960464
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 6.4785,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.8708000073675,
+        "tick": 2157
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 6.578599999994039,
+        "duration_ms": 100
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 7.26659999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 103.61480001872405,
+        "tick": 2519
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 7.37409999999404,
+        "duration_ms": 107.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 7.585200000017881,
+        "reason": "stale_sample",
+        "age_ms": 103.40369998663664,
+        "tick": 2703
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 7.789300000011921,
+        "duration_ms": 204
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 8.037,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.99880001088604,
+        "tick": 2819
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 8.15440000000596,
+        "duration_ms": 117.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 9.864400000005961,
+        "reason": "stale_sample",
+        "age_ms": 102.95830001472495,
+        "tick": 3408
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 10.03209999999404,
+        "duration_ms": 167.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 11.0155,
+        "reason": "stale_sample",
+        "age_ms": 133.82479999936186,
+        "tick": 3788
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 11.188,
+        "duration_ms": 172.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 12.165700000017882,
+        "reason": "stale_after_pacing",
+        "age_ms": 115.72989999060519,
+        "tick": 4164
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 12.333800000011921,
+        "duration_ms": 168.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 12.56280000001192,
+        "reason": "stale_sample",
+        "age_ms": 101.09520002524368,
+        "tick": 4298
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 12.69980000001192,
+        "duration_ms": 136.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 13.199599999994039,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.51440000510775,
+        "tick": 4507
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 13.30840000000596,
+        "duration_ms": 108.60000002384186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 13.699200000017882,
+        "reason": "stale_sample",
+        "age_ms": 111.76860000798479,
+        "tick": 4684
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 13.89540000000596,
+        "duration_ms": 196
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 14.31090000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 130.83580002794042,
+        "tick": 4901
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 14.502200000017881,
+        "duration_ms": 191.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 15.10180000001192,
+        "reason": "stale_after_pacing",
+        "age_ms": 113.82430000929162,
+        "tick": 5165
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 15.283200000017882,
+        "duration_ms": 181.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 15.65740000000596,
+        "reason": "stale_sample",
+        "age_ms": 103.42680000932887,
+        "tick": 5350
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 15.83190000000596,
+        "duration_ms": 174.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 16.14259999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.45509999897331,
+        "tick": 5496
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 16.36570000001788,
+        "duration_ms": 222.69999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 16.57,
+        "reason": "stale_after_pacing",
+        "age_ms": 105.58539999928325,
+        "tick": 5653
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 16.73840000000596,
+        "duration_ms": 168.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 19.44090000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 103.81759999203496,
+        "tick": 6576
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 19.62070000001788,
+        "duration_ms": 179.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 20.242599999994038,
+        "reason": "stale_after_pacing",
+        "age_ms": 336.4072000263259,
+        "tick": 6904
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 20.439300000011922,
+        "duration_ms": 196.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 22.93190000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 590.9642000170425,
+        "tick": 8043
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 23.04559999999404,
+        "duration_ms": 113.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 23.5695,
+        "reason": "stale_after_pacing",
+        "age_ms": 124.54799998528324,
+        "tick": 8316
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 23.76559999999404,
+        "duration_ms": 196
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 24.168900000005962,
+        "reason": "stale_after_pacing",
+        "age_ms": 107.56340002035722,
+        "tick": 8576
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 24.5905,
+        "reason": "stale_sample",
+        "age_ms": 321.85160000110045,
+        "tick": 8779
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 24.916700000017883,
+        "reason": "stale_sample",
+        "age_ms": 221.50530000729486,
+        "tick": 8925
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 25.31090000000596,
+        "reason": "stale_sample",
+        "age_ms": 289.23680002149194,
+        "tick": 9106
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 25.61940000000596,
+        "reason": "stale_sample",
+        "age_ms": 202.80709999008104,
+        "tick": 9243
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 25.72480000001192,
+        "duration_ms": 1555.800000011921
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 26.068800000011922,
+        "reason": "stale_sample",
+        "age_ms": 249.2123999875039,
+        "tick": 9445
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 26.20030000001192,
+        "duration_ms": 131.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 26.41409999999404,
+        "reason": "stale_sample",
+        "age_ms": 107.94429999636486,
+        "tick": 9592
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 26.665700000017882,
+        "reason": "stale_sample",
+        "age_ms": 143.73479997343384,
+        "tick": 9701
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 26.77559999999404,
+        "duration_ms": 361.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 27.168900000005962,
+        "reason": "stale_sample",
+        "age_ms": 110.12429997837171,
+        "tick": 9876
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 27.30140000000596,
+        "duration_ms": 132.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 28.43570000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 497.6419999944046,
+        "tick": 10397
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 28.56670000001788,
+        "duration_ms": 131
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 29.13109999999404,
+        "reason": "stale_sample",
+        "age_ms": 292.4657999854535,
+        "tick": 10696
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 29.331099999994038,
+        "duration_ms": 200
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 30.276700000017883,
+        "reason": "stale_sample",
+        "age_ms": 100.2917000092566,
+        "tick": 11086
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 30.41770000001788,
+        "duration_ms": 140.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 30.95690000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 123.22569998307154,
+        "tick": 11329
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 31.1325,
+        "duration_ms": 175.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 31.33059999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.8889999797102,
+        "tick": 11450
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 31.50880000001192,
+        "duration_ms": 178.10000002384186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 31.802099999994038,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.03179999510758,
+        "tick": 11606
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 31.90209999999404,
+        "duration_ms": 99.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 33.63930000001192,
+        "reason": "stale_sample",
+        "age_ms": 106.92079998133704,
+        "tick": 12211
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 33.77559999999404,
+        "duration_ms": 136.19999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 33.97980000001192,
+        "reason": "stale_after_pacing",
+        "age_ms": 115.70340001699515,
+        "tick": 12312
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 34.208,
+        "reason": "stale_sample",
+        "age_ms": 116.05039996933192,
+        "tick": 12384
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 34.36880000001192,
+        "duration_ms": 388.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 35.003,
+        "reason": "stale_sample",
+        "age_ms": 125.77930000214837,
+        "tick": 12680
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 35.205700000017885,
+        "duration_ms": 202.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 35.2965,
+        "reason": "stale_sample",
+        "age_ms": 100.18960002413951,
+        "tick": 12783
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 35.324700000017884,
+        "duration_ms": 28
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 35.86930000001192,
+        "reason": "stale_after_pacing",
+        "age_ms": 141.46479998202994,
+        "tick": 13031
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 36.08209999999404,
+        "duration_ms": 212.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 36.28170000001788,
+        "reason": "stale_sample",
+        "age_ms": 100.24309998005629,
+        "tick": 13191
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 36.45480000001192,
+        "duration_ms": 173
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 36.997200000017884,
+        "reason": "stale_sample",
+        "age_ms": 100.62820000154898,
+        "tick": 13424
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 37.2,
+        "duration_ms": 202.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 38.166,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.14620002475567,
+        "tick": 13795
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 38.3315,
+        "duration_ms": 165.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 38.56490000000596,
+        "reason": "stale_sample",
+        "age_ms": 133.3658999959007,
+        "tick": 13931
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 38.7395,
+        "duration_ms": 174.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 39.75040000000596,
+        "reason": "stale_sample",
+        "age_ms": 172.31550000584684,
+        "tick": 14336
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 39.93109999999404,
+        "duration_ms": 180.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 41.643200000017885,
+        "reason": "stale_sample",
+        "age_ms": 109.4522000043653,
+        "tick": 14942
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 41.83020000001788,
+        "duration_ms": 186.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 43.38320000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 116.39729998772964,
+        "tick": 15488
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 43.57640000000596,
+        "duration_ms": 193
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 44.064,
+        "reason": "stale_after_pacing",
+        "age_ms": 102.1956999823451,
+        "tick": 15715
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 44.34170000001788,
+        "duration_ms": 277.5
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 44.71970000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 104.42869998328388,
+        "tick": 15929
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 44.89659999999404,
+        "duration_ms": 176.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 45.198,
+        "reason": "stale_sample",
+        "age_ms": 100.0495999949053,
+        "tick": 16091
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 45.37420000001788,
+        "duration_ms": 176
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 47.2985,
+        "reason": "stale_sample",
+        "age_ms": 100.25249998131767,
+        "tick": 16765
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 47.45440000000596,
+        "duration_ms": 155.60000002384186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 49.21330000001192,
+        "reason": "stale_sample",
+        "age_ms": 110.35919998865575,
+        "tick": 17370
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 49.3445,
+        "duration_ms": 131.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 49.96570000001788,
+        "reason": "stale_sample",
+        "age_ms": 104.93070000992157,
+        "tick": 17625
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 50.14609999999404,
+        "duration_ms": 180.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 50.52159999999404,
+        "reason": "stale_sample",
+        "age_ms": 168.9878999844659,
+        "tick": 17812
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 50.71330000001192,
+        "duration_ms": 191.60000002384186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 50.901400000005964,
+        "reason": "stale_sample",
+        "age_ms": 100.52230002731085,
+        "tick": 17937
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 51.11870000001788,
+        "reason": "stale_sample",
+        "age_ms": 101.50949997804128,
+        "tick": 18005
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 51.28780000001192,
+        "duration_ms": 386.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 53.48220000001788,
+        "reason": "stale_sample",
+        "age_ms": 102.27119999867864,
+        "tick": 18818
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 53.67220000001788,
+        "duration_ms": 189.89999997615814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 55.2425,
+        "reason": "stale_sample",
+        "age_ms": 141.71599998581223,
+        "tick": 19387
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 55.43480000001192,
+        "duration_ms": 192.2000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 55.89790000000596,
+        "reason": "stale_sample",
+        "age_ms": 174.6096000119578,
+        "tick": 19613
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 56.09120000001788,
+        "duration_ms": 193.19999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 56.43590000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.36910000769421,
+        "tick": 19785
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 56.56909999999404,
+        "duration_ms": 133.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 56.766700000017885,
+        "reason": "stale_sample",
+        "age_ms": 109.06730000930838,
+        "tick": 19899
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 56.94770000001788,
+        "duration_ms": 181
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 57.20009999999404,
+        "reason": "stale_sample",
+        "age_ms": 139.50119999609888,
+        "tick": 20053
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 57.38490000000596,
+        "duration_ms": 184.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 57.97470000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 105.09289997606538,
+        "tick": 20330
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 58.20559999999404,
+        "reason": "stale_sample",
+        "age_ms": 114.45579999801703,
+        "tick": 20425
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 58.41170000001788,
+        "duration_ms": 436.89999997615814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 58.53130000001192,
+        "reason": "stale_sample",
+        "age_ms": 100.2925000260584,
+        "tick": 20540
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 58.76980000001192,
+        "duration_ms": 238.5
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 58.984,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.24620000948198,
+        "tick": 20679
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 59.13109999999404,
+        "duration_ms": 147.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 59.44180000001192,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.8602000346873,
+        "tick": 20820
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 59.68270000001788,
+        "duration_ms": 240.69999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 60.010700000017884,
+        "reason": "stale_sample",
+        "age_ms": 101.49699999019504,
+        "tick": 21021
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 60.19859999999404,
+        "duration_ms": 187.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 60.4445,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.51749998400919,
+        "tick": 21155
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 60.564200000017884,
+        "duration_ms": 119.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 60.89830000001192,
+        "reason": "stale_after_pacing",
+        "age_ms": 131.21509999665432,
+        "tick": 21314
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 61.0985,
+        "duration_ms": 200
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 61.40580000001192,
+        "reason": "stale_after_pacing",
+        "age_ms": 110.13620000402443,
+        "tick": 21489
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 61.5315,
+        "duration_ms": 125.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 62.537599999994036,
+        "reason": "stale_after_pacing",
+        "age_ms": 910.7469999867026,
+        "tick": 22019
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 62.735,
+        "duration_ms": 197.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 62.931,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.80669999634847,
+        "tick": 22147
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 63.0985,
+        "duration_ms": 167.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 63.30409999999404,
+        "reason": "stale_sample",
+        "age_ms": 109.21719998656772,
+        "tick": 22276
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 63.47890000000596,
+        "duration_ms": 174.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 63.85740000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.01970003638417,
+        "tick": 22446
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 64.03180000001193,
+        "duration_ms": 174.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 64.06130000001193,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.99510000599548,
+        "tick": 22515
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 64.14709999999404,
+        "duration_ms": 85.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 65.047,
+        "reason": "stale_after_pacing",
+        "age_ms": 124.26580000808463,
+        "tick": 22960
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 65.23790000000596,
+        "duration_ms": 190.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 66.498,
+        "reason": "stale_after_pacing",
+        "age_ms": 775.0067000142299,
+        "tick": 23612
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 66.69030000001192,
+        "duration_ms": 192
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 66.969,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.20469999522902,
+        "tick": 23772
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 67.08720000001789,
+        "duration_ms": 117.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 67.66909999999405,
+        "reason": "stale_after_pacing",
+        "age_ms": 110.55179996858351,
+        "tick": 24005
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 67.85080000001192,
+        "duration_ms": 181.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 68.7905,
+        "reason": "stale_after_pacing",
+        "age_ms": 278.18290002807043,
+        "tick": 24407
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 69.11790000000596,
+        "reason": "stale_sample",
+        "age_ms": 201.44730003434233,
+        "tick": 24556
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 69.4085,
+        "reason": "stale_sample",
+        "age_ms": 181.92520000389777,
+        "tick": 24683
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 69.58820000001788,
+        "duration_ms": 797.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 69.97959999999404,
+        "reason": "stale_sample",
+        "age_ms": 106.71720000565983,
+        "tick": 24870
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 70.16859999999404,
+        "duration_ms": 188.80000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 70.36690000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 105.87039998662658,
+        "tick": 24995
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 70.56520000001788,
+        "duration_ms": 198.19999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 71.1165,
+        "reason": "stale_sample",
+        "age_ms": 135.1061000037007,
+        "tick": 25267
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 71.32380000001191,
+        "duration_ms": 207.2000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 74.3995,
+        "reason": "stale_sample",
+        "age_ms": 1688.4198000035249,
+        "tick": 26660
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 74.54530000001192,
+        "duration_ms": 145.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 75.33170000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.60969999316148,
+        "tick": 26996
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 75.45770000001788,
+        "duration_ms": 125.89999997615814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 76.23170000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 103.36360001470894,
+        "tick": 27382
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 76.35259999999404,
+        "duration_ms": 120.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 76.57520000001789,
+        "reason": "stale_sample",
+        "age_ms": 116.22460000379942,
+        "tick": 27570
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 76.7735,
+        "duration_ms": 198.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 79.3895,
+        "reason": "stale_sample",
+        "age_ms": 106.62960000569001,
+        "tick": 28449
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 79.5635,
+        "duration_ms": 173.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 80.03080000001192,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.77910001017153,
+        "tick": 28647
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 80.12390000000596,
+        "duration_ms": 93.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 80.62140000000596,
+        "reason": "stale_sample",
+        "age_ms": 101.0236999981571,
+        "tick": 28840
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 80.81890000000595,
+        "duration_ms": 197.5
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 81.03820000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.21169995819218,
+        "tick": 28972
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 81.1855,
+        "duration_ms": 147.2999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 81.54720000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 117.59979996574111,
+        "tick": 29152
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 81.73520000001788,
+        "duration_ms": 187.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 82.06290000000595,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.96920001367107,
+        "tick": 29323
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 82.21809999999404,
+        "duration_ms": 155.19999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 82.66620000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 159.05720000667498,
+        "tick": 29536
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 82.85580000001193,
+        "duration_ms": 189.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 83.48390000000596,
+        "reason": "stale_sample",
+        "age_ms": 104.13230000017211,
+        "tick": 29824
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 83.65270000001789,
+        "duration_ms": 168.59999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 83.96980000001192,
+        "reason": "stale_after_pacing",
+        "age_ms": 111.21450001280755,
+        "tick": 29985
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 84.14970000001789,
+        "duration_ms": 179.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 84.70390000000596,
+        "reason": "stale_sample",
+        "age_ms": 115.65300001995638,
+        "tick": 30274
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 84.91109999999404,
+        "duration_ms": 207
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 85.99790000000596,
+        "reason": "stale_sample",
+        "age_ms": 112.77209997945465,
+        "tick": 30751
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 86.124,
+        "duration_ms": 126
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 86.7325,
+        "reason": "stale_sample",
+        "age_ms": 101.9074999736622,
+        "tick": 31012
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 86.91690000000597,
+        "duration_ms": 184.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 87.19120000001789,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.06080000009388,
+        "tick": 31155
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 87.47740000000596,
+        "duration_ms": 286
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 88.46370000001788,
+        "reason": "stale_after_pacing",
+        "age_ms": 102.29079998517409,
+        "tick": 31634
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 88.54680000001193,
+        "duration_ms": 82.89999997615814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 89.26390000000596,
+        "reason": "stale_after_pacing",
+        "age_ms": 102.24989998480305,
+        "tick": 31975
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 89.33080000001192,
+        "duration_ms": 66.69999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 90.26190000000597,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.20840000733733,
+        "tick": 32445
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 90.3255,
+        "duration_ms": 63.400000005960464
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 91.0305,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.71560000162572,
+        "tick": 32808
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 91.102,
+        "duration_ms": 71.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 92.02859999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.99560000165366,
+        "tick": 33278
+      },
+      {
+        "type": "control_disarm",
+        "t": 92.06790000000596,
+        "reason": "识别已停止"
+      },
+      {
+        "type": "control_disarm",
+        "t": 92.07390000000596,
+        "reason": "串口已断开"
+      }
+    ]
+  },
+  {
+    "file": "hand_control_20260924_142855_172000.jsonl",
+    "sha256": "a7b5f064682eadd6bf8ffade266e5e0a2c74e96efc2748b4b49c9b6baccd5c44",
+    "started_at": "2026-09-24T06:28:55.173Z",
+    "model_id": "TsenseI_v3_0",
+    "counts": {
+      "session": 1,
+      "planner_sample": 611,
+      "h7": 13581,
+      "model_sample": 2517,
+      "mediapipe_raw": 2786,
+      "retarget_skipped": 2123,
+      "mediapipe": 663,
+      "a30_conversion": 1337,
+      "retarget": 663,
+      "control_target": 663,
+      "serial_open_requested": 1,
+      "serial_connect": 1,
+      "telemetry": 9416,
+      "feedback_seed": 2,
+      "usb_tx": 13326,
+      "downlink": 13290,
+      "joint_power": 36,
+      "control_arm": 2,
+      "serial_io_stats": 58,
+      "conversion": 13288,
+      "board_telemetry": 47,
+      "trajectory_recovery": 58,
+      "trajectory_recovered": 44,
+      "control_disarm": 3,
+      "serial_close_requested": 1,
+      "serial_read_end": 1,
+      "serial_close_completed": 1,
+      "serial_disconnect": 1,
+      "session_end": 1
+    },
+    "skips": {
+      "queue_expired": 3,
+      "queue_replaced": 1444,
+      "no_hand": 670,
+      "wrong_hand": 4,
+      "queue_closed": 1,
+      "request_cancelled": 1
+    },
+    "recoveries": {
+      "stale_after_pacing": 24,
+      "stale_sample": 34
+    },
+    "phases": {
+      "holding": 259,
+      "tracking": 352
+    },
+    "telemetry_masks": {
+      "(195583, 3)": 9416
+    },
+    "timing": {
+      "planner_hz": {
+        "p50": 356.93929976165856,
+        "p95": 486.20032214937527,
+        "max": 500.25302798641053
+      },
+      "solve_ms": {
+        "p50": 82.1185999957379,
+        "p95": 176.84567002288486,
+        "max": 776.9692000001669
+      },
+      "capture_to_response_ms": {
+        "p50": 143.59999999403954,
+        "p95": 263.33000000119205,
+        "max": 859.5
+      },
+      "queue_wait_ms": {
+        "p50": 18.0,
+        "p95": 38.900000005960464,
+        "max": 69.5
+      },
+      "request_response_ms": {
+        "p50": 93.0,
+        "p95": 191.9099999934431,
+        "max": 788.7000000178814
+      },
+      "collision_ms": {
+        "p50": 13.374999980442226,
+        "p95": 96.1515900155063,
+        "max": 721.2042000028305
+      },
+      "reported_max_usb_write_ms": {
+        "p50": 0.699999988079071,
+        "p95": 0.699999988079071,
+        "max": 0.699999988079071
+      }
+    },
+    "usb_interval_ms": {
+      "p50": 2.8000000119163815,
+      "p95": 7.199999988074524,
+      "max": 37667.5
+    },
+    "events": [
+      {
+        "type": "control_arm",
+        "t": 10.2785
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 10.81509999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.13600001274608,
+        "tick": 3286
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 10.872399999976158,
+        "duration_ms": 57.099999994039536
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 11.704899999976158,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.76429999573156,
+        "tick": 3701
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 11.775899999976158,
+        "duration_ms": 70.89999997615814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 12.42679999998212,
+        "reason": "stale_after_pacing",
+        "age_ms": 122.58590000169352,
+        "tick": 4076
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 12.58259999999404,
+        "duration_ms": 155.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 14.09419999998808,
+        "reason": "stale_sample",
+        "age_ms": 101.93879999197088,
+        "tick": 4630
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 14.27119999998808,
+        "duration_ms": 176.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 15.412799999982118,
+        "reason": "stale_sample",
+        "age_ms": 123.3147999998182,
+        "tick": 5069
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 15.608099999994039,
+        "duration_ms": 195.2000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 17.27,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.85180001985282,
+        "tick": 5655
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 17.42229999998212,
+        "duration_ms": 152.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 18.32009999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 112.40420001954772,
+        "tick": 6013
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 18.51789999997616,
+        "duration_ms": 197.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 18.642299999982118,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.2420000124257,
+        "tick": 6108
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 18.91839999997616,
+        "duration_ms": 275.80000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 19.29279999998212,
+        "reason": "stale_sample",
+        "age_ms": 104.35220002336428,
+        "tick": 6316
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 19.50889999997616,
+        "duration_ms": 216
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 19.85979999998212,
+        "reason": "stale_after_pacing",
+        "age_ms": 120.15379999112338,
+        "tick": 6507
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 20.03209999999404,
+        "duration_ms": 172.2000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 21.337399999976157,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.8417999970261,
+        "tick": 6986
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 21.505299999982117,
+        "duration_ms": 167.69999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 22.531899999976158,
+        "reason": "stale_sample",
+        "age_ms": 122.30550000397488,
+        "tick": 7404
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 22.73819999998808,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.05489999591373,
+        "tick": 7481
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 22.87569999998808,
+        "duration_ms": 343.60000002384186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 23.31039999997616,
+        "reason": "stale_after_pacing",
+        "age_ms": 327.1608999844175,
+        "tick": 7730
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 23.50659999999404,
+        "duration_ms": 196.10000002384186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 23.829799999982118,
+        "reason": "stale_after_pacing",
+        "age_ms": 121.2879999994766,
+        "tick": 7922
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 24.24,
+        "reason": "stale_sample",
+        "age_ms": 295.11570002301596,
+        "tick": 8099
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 24.39179999998212,
+        "duration_ms": 562
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 25.366399999976156,
+        "reason": "stale_sample",
+        "age_ms": 259.92590000177734,
+        "tick": 8520
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 25.62509999999404,
+        "reason": "stale_sample",
+        "age_ms": 131.27069998020306,
+        "tick": 8627
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 25.777199999988078,
+        "duration_ms": 410.7000000178814
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 26.131399999976157,
+        "reason": "stale_after_pacing",
+        "age_ms": 261.5616000057198,
+        "tick": 8834
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 26.297799999982118,
+        "duration_ms": 166.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 26.646799999982118,
+        "reason": "stale_sample",
+        "age_ms": 257.25269999029115,
+        "tick": 9056
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 27.038399999976157,
+        "reason": "stale_sample",
+        "age_ms": 271.40959996636957,
+        "tick": 9232
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 27.33,
+        "reason": "stale_sample",
+        "age_ms": 189.24659996828996,
+        "tick": 9359
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 27.46329999998212,
+        "duration_ms": 816.4000000059605
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 27.91559999999404,
+        "reason": "stale_sample",
+        "age_ms": 231.22859999444336,
+        "tick": 9598
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 28.248899999976157,
+        "reason": "stale_sample",
+        "age_ms": 210.93079997389577,
+        "tick": 9734
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 28.68839999997616,
+        "reason": "stale_sample",
+        "age_ms": 324.22300002980046,
+        "tick": 9934
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 28.838899999976157,
+        "duration_ms": 923.1999999880791
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 29.13059999999404,
+        "reason": "stale_sample",
+        "age_ms": 192.55040003592148,
+        "tick": 10118
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 29.352,
+        "reason": "stale_sample",
+        "age_ms": 103.37309998855926,
+        "tick": 10195
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 29.55609999999404,
+        "duration_ms": 425.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 29.89909999999404,
+        "reason": "stale_sample",
+        "age_ms": 118.18900001305155,
+        "tick": 10381
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 30.04419999998808,
+        "duration_ms": 145
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 30.24379999998212,
+        "reason": "stale_after_pacing",
+        "age_ms": 105.52309997449629,
+        "tick": 10488
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 30.45769999998808,
+        "duration_ms": 213.80000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 31.277,
+        "reason": "stale_sample",
+        "age_ms": 112.14209999516606,
+        "tick": 10828
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 31.54539999997616,
+        "reason": "stale_sample",
+        "age_ms": 146.59140000795014,
+        "tick": 10941
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 31.88269999998808,
+        "reason": "stale_sample",
+        "age_ms": 233.67920002248138,
+        "tick": 11084
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 32.19119999998808,
+        "reason": "stale_sample",
+        "age_ms": 197.13640000368468,
+        "tick": 11219
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 32.9645,
+        "reason": "stale_sample",
+        "age_ms": 670.1222999989986,
+        "tick": 11590
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 33.26229999998212,
+        "reason": "stale_sample",
+        "age_ms": 193.65030002454296,
+        "tick": 11717
+      },
+      {
+        "type": "control_disarm",
+        "t": 33.27979999998212,
+        "reason": "轨迹恢复超过 2 秒，实时下发已关闭"
+      },
+      {
+        "type": "control_arm",
+        "t": 68.94559999999404
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 69.60409999999403,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.43069999222644,
+        "tick": 27102
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 69.67819999998808,
+        "duration_ms": 74
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 70.64569999998808,
+        "reason": "stale_after_pacing",
+        "age_ms": 247.93829999724403,
+        "tick": 27597
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 70.85219999998807,
+        "duration_ms": 206.30000001192093
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 71.14039999997615,
+        "reason": "stale_after_pacing",
+        "age_ms": 105.70429999218322,
+        "tick": 27788
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 71.24369999998808,
+        "duration_ms": 103.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 73.90609999999404,
+        "reason": "stale_sample",
+        "age_ms": 291.26919998344965,
+        "tick": 28736
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 74.06109999999404,
+        "duration_ms": 154.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 78.3395,
+        "reason": "stale_sample",
+        "age_ms": 102.33010001131333,
+        "tick": 30154
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 78.53879999998212,
+        "duration_ms": 199.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 78.73289999997615,
+        "reason": "stale_sample",
+        "age_ms": 103.46399999014102,
+        "tick": 30272
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 78.85429999998212,
+        "duration_ms": 121.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 79.244,
+        "reason": "stale_sample",
+        "age_ms": 107.58990000677295,
+        "tick": 30431
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 79.44259999999404,
+        "duration_ms": 198.5
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 79.64439999997616,
+        "reason": "stale_sample",
+        "age_ms": 114.2983000013046,
+        "tick": 30558
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 79.8425,
+        "duration_ms": 198
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 83.30369999998808,
+        "reason": "stale_after_pacing",
+        "age_ms": 147.5607999949716,
+        "tick": 31746
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 83.47289999997616,
+        "duration_ms": 169
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 85.48379999998212,
+        "reason": "stale_sample",
+        "age_ms": 100.70340002002195,
+        "tick": 32477
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 85.65429999998211,
+        "duration_ms": 170.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 86.50839999997616,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.19080001092516,
+        "tick": 32808
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 86.75539999997616,
+        "duration_ms": 246.90000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 87.60839999997616,
+        "reason": "stale_sample",
+        "age_ms": 100.46909999009222,
+        "tick": 33171
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 87.87159999999405,
+        "duration_ms": 263.10000002384186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 88.81259999999403,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.37460000324063,
+        "tick": 33578
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 89.00789999997616,
+        "duration_ms": 195.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 89.30619999998808,
+        "reason": "stale_after_pacing",
+        "age_ms": 100.94250000128523,
+        "tick": 33756
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 89.34479999998211,
+        "duration_ms": 38.5
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 89.81279999998212,
+        "reason": "stale_sample",
+        "age_ms": 383.41939998138696,
+        "tick": 33986
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 89.936,
+        "duration_ms": 123.09999999403954
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 90.904,
+        "reason": "stale_after_pacing",
+        "age_ms": 102.24230002169497,
+        "tick": 34451
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 90.95439999997616,
+        "duration_ms": 50.19999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 92.7395,
+        "reason": "stale_after_pacing",
+        "age_ms": 102.49010002496652,
+        "tick": 35283
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 92.846,
+        "duration_ms": 106.40000000596046
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 93.12559999999404,
+        "reason": "stale_after_pacing",
+        "age_ms": 101.27899998426437,
+        "tick": 35417
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 93.23089999997616,
+        "duration_ms": 105.19999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 94.20659999999404,
+        "reason": "stale_sample",
+        "age_ms": 100.76169997500256,
+        "tick": 35782
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 94.29979999998211,
+        "duration_ms": 93.19999998807907
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 96.618,
+        "reason": "stale_sample",
+        "age_ms": 108.024700013455,
+        "tick": 36527
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 96.79819999998809,
+        "duration_ms": 180
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 98.12289999997616,
+        "reason": "stale_sample",
+        "age_ms": 101.21559999184683,
+        "tick": 37005
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 98.29619999998808,
+        "duration_ms": 173
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 98.68209999999404,
+        "reason": "stale_sample",
+        "age_ms": 108.26360001740977,
+        "tick": 37183
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 98.85289999997616,
+        "duration_ms": 170.7999999821186
+      },
+      {
+        "type": "trajectory_recovery",
+        "t": 102.15219999998808,
+        "reason": "stale_after_pacing",
+        "age_ms": 112.87650000769645,
+        "tick": 38289
+      },
+      {
+        "type": "trajectory_recovered",
+        "t": 102.34269999998808,
+        "duration_ms": 190.30000001192093
+      },
+      {
+        "type": "control_disarm",
+        "t": 102.99209999999404,
+        "reason": "识别已停止"
+      },
+      {
+        "type": "control_disarm",
+        "t": 103.00569999998808,
+        "reason": "串口已断开"
+      }
+    ]
+  }
+]

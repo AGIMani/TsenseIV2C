@@ -1,0 +1,208 @@
+robot_name: Left hand URDF model
+urdf_path: assets/robots/Left hand URDF model/urdf/Left hand URDF model.urdf
+base_link: base_link
+link_count: 23
+links:
+- base_link
+- Left_hand_palm_link
+- left_hand_thumb_rota_link
+- left_hand_thumb_swing_link
+- left_hand_thumb_MCP_link
+- left_hand_thumb_PIP_link
+- left_hand_index_swing_link
+- left_hand_index_MCP_link
+- left_hand_index_PIP_link
+- left_hand_index_DIP_link
+- left_hand_mid_swing_link
+- left_hand_mid_MCP_link
+- left_hand_mid_PIP_link
+- left_hand_mid_DIP_link
+- left_hand_ring_swing_link
+- left_hand_ring_MCP_link
+- left_hand_ring_PIP_link
+- left_hand_ring_DIP_link
+- left_hand_pinky_rota_link
+- left_hand_pinky_swing_link
+- left_hand_pinky_MCP_link
+- left_hand_pinky_PIP_link
+- left_hand_pinky_DIP_link
+joint_count: 22
+joints:
+- name: Left_hand_palm_joint
+  type: fixed
+  parent: base_link
+  child: Left_hand_palm_link
+  lower: null
+  upper: null
+  effort: null
+  velocity: null
+- name: left_hand_thumb_rota_joint
+  type: revolute
+  parent: base_link
+  child: left_hand_thumb_rota_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.344
+  velocity: 6.18
+- name: left_hand_thumb_swing_joint
+  type: revolute
+  parent: left_hand_thumb_rota_link
+  child: left_hand_thumb_swing_link
+  lower: 0.0
+  upper: 2.0
+  effort: 0.344
+  velocity: 6.28
+- name: left_hand_thumb_MCP_joint
+  type: revolute
+  parent: left_hand_thumb_swing_link
+  child: left_hand_thumb_MCP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.6
+  velocity: 31.4
+- name: left_hand_thumb_PIP_joint
+  type: revolute
+  parent: left_hand_thumb_MCP_link
+  child: left_hand_thumb_PIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.33
+  velocity: 31.4
+- name: left_hand_index_swing_joint
+  type: revolute
+  parent: base_link
+  child: left_hand_index_swing_link
+  lower: -0.348
+  upper: 0.348
+  effort: 0.344
+  velocity: 6.28
+- name: left_hand_index_MCP_joint
+  type: revolute
+  parent: left_hand_index_swing_link
+  child: left_hand_index_MCP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.6
+  velocity: 31.4
+- name: left_hand_index_PIP_joint
+  type: revolute
+  parent: left_hand_index_MCP_link
+  child: left_hand_index_PIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.48
+  velocity: 31.4
+- name: left_hand_index_DIP_joint
+  type: revolute
+  parent: left_hand_index_PIP_link
+  child: left_hand_index_DIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.33
+  velocity: 31.4
+- name: left_hand_mid_swing_joint
+  type: revolute
+  parent: base_link
+  child: left_hand_mid_swing_link
+  lower: -0.348
+  upper: 0.348
+  effort: 0.344
+  velocity: 6.28
+- name: left_hand_mid_MCP_joint
+  type: revolute
+  parent: left_hand_mid_swing_link
+  child: left_hand_mid_MCP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.6
+  velocity: 31.4
+- name: left_hand_mid_PIP_joint
+  type: revolute
+  parent: left_hand_mid_MCP_link
+  child: left_hand_mid_PIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.48
+  velocity: 31.4
+- name: left_hand_mid_DIP_joint
+  type: revolute
+  parent: left_hand_mid_PIP_link
+  child: left_hand_mid_DIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.33
+  velocity: 31.4
+- name: left_hand_ring_swing_joint
+  type: revolute
+  parent: base_link
+  child: left_hand_ring_swing_link
+  lower: -0.348
+  upper: 0.348
+  effort: 0.344
+  velocity: 6.28
+- name: left_hand_ring_MCP_joint
+  type: revolute
+  parent: left_hand_ring_swing_link
+  child: left_hand_ring_MCP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.6
+  velocity: 31.4
+- name: left_hand_ring_PIP_joint
+  type: revolute
+  parent: left_hand_ring_MCP_link
+  child: left_hand_ring_PIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.48
+  velocity: 31.4
+- name: left_hand_ring_DIP_joint
+  type: revolute
+  parent: left_hand_ring_PIP_link
+  child: left_hand_ring_DIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.33
+  velocity: 31.4
+- name: left_hand_pinky_rota_joint
+  type: revolute
+  parent: base_link
+  child: left_hand_pinky_rota_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.344
+  velocity: 6.28
+- name: left_hand_pinky_swing_joint
+  type: revolute
+  parent: left_hand_pinky_rota_link
+  child: left_hand_pinky_swing_link
+  lower: -0.348
+  upper: 0.348
+  effort: 0.344
+  velocity: 6.28
+- name: left_hand_pinky_MCP_joint
+  type: revolute
+  parent: left_hand_pinky_swing_link
+  child: left_hand_pinky_MCP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.6
+  velocity: 31.4
+- name: left_hand_pinky_PIP_joint
+  type: revolute
+  parent: left_hand_pinky_MCP_link
+  child: left_hand_pinky_PIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.48
+  velocity: 31.4
+- name: left_hand_pinky_DIP_joint
+  type: revolute
+  parent: left_hand_pinky_PIP_link
+  child: left_hand_pinky_DIP_link
+  lower: 0.0
+  upper: 1.57
+  effort: 0.33
+  velocity: 31.4
+mesh_ref_count: 46
+missing_meshes: []
