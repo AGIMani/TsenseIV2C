@@ -1,7 +1,9 @@
 """Real .so integration against local TCP and PTY only. Never opens hardware.
 
 Run: python3 test_offline.py /absolute/path/to/liba32_native.so
-Wire golden values come from the unmodified Windows vendor SDK oracle.
+Wire golden values retain the original vendor oracle fixtures, with SDK 1.1.15
+host metadata, slot limits, homing classification and current units verified
+through the real native adapter against independent raw telemetry fixtures.
 """
 import ctypes
 import importlib.util
@@ -23,11 +25,17 @@ LIBRARY = Path(sys.argv.pop(1)).resolve()
 spec = importlib.util.spec_from_file_location("a32_native_under_test", Path(__file__).parents[2] / "native.py")
 native = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(native)
-HOST_QUERY = bytes.fromhex("aa550800030101010001000000003d72")
+HOST_QUERY = bytes.fromhex("aa550800030101010f01000000003d8d")
 ENABLE = bytes.fromhex("aa5504000321ffff01036984")
-DISABLE = bytes.fromhex("aa5504000321ffff02036974")
 HOME17 = bytes.fromhex("aa550c000322020201000000a04200000000e26d")
 RESET17 = bytes.fromhex("aa550c00032202020200000000000000000072cd")
+# Explicit expectations include the SDK 1.1.15 four-link stroke caps.
+SELF_MAX = (12.437476671033064, 11.761489775595662, 19.627778913882647,
+            12.437476671033064, 16.939021296767194, 19.627778913882647,
+            20., 20., 12.437476671033064, 16.939021296767194,
+            19.627778913882647, 12.437476671033064, 16.939021296767194,
+            19.627778913882647, 20., 20., 12.437476671033064, 16.939021296767194)
+SELF_MIN = tuple(-20. if i in (6, 7, 14, 15) else 0. for i in range(18))
 
 
 def crc(data):
@@ -70,6 +78,7 @@ class Device:
         self.peer = None
         self.writer = threading.Lock()
         self.error = None
+        self.received_bytes = 0
         if kind == "tcp":
             self.listener = socket.socket()
             self.listener.bind(("127.0.0.1", 0))
@@ -109,6 +118,7 @@ class Device:
                 chunk = self.peer.recv(2048) if self.kind == "tcp" else os.read(fd, 2048)
                 if not chunk:
                     break
+                self.received_bytes += len(chunk)
                 pending.extend(chunk)
                 while len(pending) >= 8:
                     if pending[:2] != b"\xaa\x55":
@@ -174,6 +184,14 @@ class OfflineDriverTest(unittest.TestCase):
             time.sleep(.005)
         self.fail("condition did not become true before timeout")
 
+    def assert_quiet(self, peer, received_bytes):
+        # Waiting on the peer prevents a just-written command from escaping an
+        # immediate Queue.empty() assertion; count even incomplete wire frames.
+        with self.assertRaises(queue.Empty):
+            peer.frames.get(timeout=.12)
+        self.assertEqual(peer.received_bytes, received_bytes)
+        self.assertIsNone(peer.error)
+
     def exercise_transport(self, kind):
         peer = self.device(kind=kind)
         peer.connect(self.hand)
@@ -203,7 +221,7 @@ class OfflineDriverTest(unittest.TestCase):
         self.assertEqual(peer.next(), HOME17)
         self.hand.home_reset_slot(17)
         self.assertEqual(peer.next(), RESET17)
-        positions = [i + 1.125 for i in range(18)]
+        positions = [i * .5 + 1.125 for i in range(18)]
         first = self.hand.send_targets(positions, [1, -2])
         packet = peer.next()
         self.assertEqual(len(packet), 108)
@@ -222,10 +240,10 @@ class OfflineDriverTest(unittest.TestCase):
             self.hand.set_targets(positions, [math.inf, 2])
         self.assertEqual(self.hand.get_state()["targets"], cached)
         self.assertTrue(peer.frames.empty())
+        received_bytes = peer.received_bytes
         self.hand.estop()
-        self.assertEqual(peer.next(), DISABLE)
         self.hand.enable_all(False)
-        self.assertEqual(peer.next(), DISABLE)
+        self.assert_quiet(peer, received_bytes)
         peer.send(frame(2, telemetry(sequence=0x1235, nan=True)))
         self.eventually(lambda: self.hand.get_state()["sequence"] == 0x1235)
         self.assertIsNone(self.hand.get_state()["self"][0]["position"])
@@ -241,6 +259,211 @@ class OfflineDriverTest(unittest.TestCase):
     def test_pty(self):
         self.exercise_transport("pty")
 
+    def test_sdk_self_currents_are_amperes_once_for_all_slots(self):
+        peer = self.device(reply=False)
+        peer.connect(self.hand)
+        self.assertEqual(peer.next(), HOST_QUERY)
+        rotary_slots = {6, 7, 14, 15}
+        for sequence, (measured, reference) in enumerate(((819., -80.), (-819., 80.), (0., 0.)), 1):
+            with self.subTest(measured_counts=measured, reference_counts=reference):
+                payload = bytearray(telemetry(sequence=sequence))
+                for slot in range(18):
+                    struct.pack_into("<ff", payload, 12 + 24 * slot + 8, measured, reference)
+                peer.send(frame(2, payload))
+                self.eventually(lambda: self.hand.get_state()["sequence"] == sequence)
+                state = self.hand.get_state()
+                self.assertEqual(state["telemetry_format"], "a32-native-sdk-state/v2")
+                self.assertEqual(state["telemetry_units"], {"self_current": "A", "external_current": "A"})
+                for slot, row in enumerate(state["self"]):
+                    scale = 1. / 819. if slot in rotary_slots else .001374
+                    self.assertAlmostEqual(row["iq"], measured * scale, places=6)
+                    self.assertAlmostEqual(row["iq_ref"], reference * scale, places=6)
+                    self.assertEqual(row["current_unit"], "A")
+                self.assertEqual(state["mit"][0]["iq"], 2.75)
+                self.assertEqual(state["mit"][1]["iq"], -2.75)
+                self.assertTrue(all(row["current_unit"] == "A" for row in state["mit"]))
+
+        # Invalid readings must remain JSON null; never turn them into zero A.
+        payload = bytearray(telemetry(sequence=4))
+        for slot, readings in ((0, (math.nan, math.inf)), (6, (-math.inf, math.nan)),
+                               (14, (math.inf, -math.inf)), (17, (math.nan, math.nan))):
+            struct.pack_into("<ff", payload, 12 + 24 * slot + 8, *readings)
+        peer.send(frame(2, payload))
+        self.eventually(lambda: self.hand.get_state()["sequence"] == 4)
+        state = self.hand.get_state()
+        for slot in (0, 6, 14, 17):
+            self.assertIsNone(state["self"][slot]["iq"])
+            self.assertIsNone(state["self"][slot]["iq_ref"])
+
+        # Feedback unit conversion must never alter homing's count-based command.
+        self.hand.home_slot(17, 80)
+        self.assertEqual(peer.next(), HOME17)
+
+    def test_sdk_homing_distinguishes_float_low_bytes_from_open_spin(self):
+        peer = self.device(reply=False)
+        peer.connect(self.hand)
+        self.assertEqual(peer.next(), HOST_QUERY)
+        cases = [(bytes((0, 0, 0, code)), code) for code in range(5)]
+        # Ordinary floats near 1 rad used to be mislabeled OpenSpin solely
+        # because their mantissa low byte happened to be 01..04.
+        cases += [(bytes((low, 0, 0x80, 0x3f)), 254) for low in range(1, 5)]
+        cases += [(bytes((code, 0xe8, 3, 4)), 255) for code in range(1, 5)]
+        cases += [(bytes((1, 0xe8, 3, 5)), 254),  # High byte outside a homing code.
+                  (bytes((0, 0, 0, 0x40)), 0),  # Retain the SDK's exact-float fallback.
+                  (bytes((0, 0, 0x80, 0x3f)), 254),
+                  (bytes(4), 0), (bytes((0, 0, 0, 2)), 2)]
+        payload = bytearray(telemetry(sequence=1))
+        for slot, (raw, expected) in enumerate(cases):
+            payload[12 + 24 * slot:16 + 24 * slot] = raw
+        peer.send(frame(2, payload))
+        self.eventually(lambda: self.hand.get_state()["sequence"] == 1)
+        state = self.hand.get_state()
+        for slot, (raw, expected) in enumerate(cases):
+            with self.subTest(slot=slot, raw=raw.hex()):
+                self.assertEqual(state["self"][slot]["homing"], expected)
+                self.assertEqual(state["self"][slot]["open_spin"], expected == 255)
+        self.assertTrue(self.hand.get_control_state()["homing_active"])
+        # An all-theta frame clears SEEK/RELEASE in the fast control snapshot.
+        struct.pack_into("<H", payload, 0, 2)
+        for slot in range(18):
+            payload[12 + 24 * slot:16 + 24 * slot] = bytes((1, 0, 0x80, 0x3f))
+        peer.send(frame(2, payload))
+        self.eventually(lambda: self.hand.get_state()["sequence"] == 2)
+        self.assertFalse(self.hand.get_control_state()["homing_active"])
+
+    def test_sdk_slot_limits_match_cached_and_transmitted_targets(self):
+        peer = self.device()
+        peer.connect(self.hand)
+        self.assertEqual(peer.next(), HOST_QUERY)
+        for requested, expected, mit_requested, mit_expected in (
+                ([100.] * 18, SELF_MAX, [200., -200.], [180., -180.]),
+                ([-100.] * 18, SELF_MIN, [-200., 200.], [-180., 180.]),
+                (list(SELF_MAX), SELF_MAX, [180., -180.], [180., -180.])):
+            with self.subTest(requested=requested[0]):
+                self.hand.send_targets(requested, mit_requested)
+                packet = peer.next()
+                # Compare float32 bytes so rounding at SDK decimal limits is
+                # checked independently of JSON snapshot formatting.
+                self.assertEqual(packet[7:79], struct.pack("<18f", *expected))
+                self.assertEqual(packet[79:87], struct.pack("<2f", *(x * 50. for x in mit_expected)))
+                cached = self.hand.get_state()["targets"]
+                for slot, value in enumerate(expected):
+                    self.assertAlmostEqual(cached["self"][slot], value, places=5)
+                self.assertEqual(cached["mit_pos"], mit_expected)
+
+    def test_invalid_target_batches_never_partially_replace_or_send(self):
+        peer = self.device()
+        peer.connect(self.hand)
+        self.assertEqual(peer.next(), HOST_QUERY)
+        self.hand.send_targets([2.] * 18, [3., 4.])
+        peer.next()
+        cached = self.hand.get_state()["targets"]
+        received_bytes = peer.received_bytes
+        for operation in (self.hand.set_targets, self.hand.send_targets):
+            for positions, mit in (([7.] * 17 + [math.nan], [8., 9.]),
+                                   ([7.] * 18, [8., math.inf]),
+                                   ([7.] * 18, [8., -math.inf])):
+                with self.subTest(operation=operation.__name__, invalid=mit[-1]):
+                    with self.assertRaises(native.A32DriverError):
+                        operation(positions, mit)
+                    self.assertEqual(self.hand.get_state()["targets"], cached)
+                    self.assert_quiet(peer, received_bytes)
+        self.hand.send_once()
+        packet = peer.next()
+        self.assertEqual(struct.unpack_from("<18f", packet, 7), (2.,) * 18)
+        self.assertEqual(struct.unpack_from("<2f", packet, 79), (150., 200.))
+
+    def test_firmware_hand_side_metadata(self):
+        peer = self.device(reply=False)
+        peer.connect(self.hand)
+        self.assertEqual(peer.next(), HOST_QUERY)
+        for sequence, (wire_side, expected) in enumerate(((0, 0), (1, 1), (2, 2), (255, 0)), 1):
+            with self.subTest(wire_side=wire_side):
+                peer.send(frame(1, bytes((1, 0, 1, 1, 9, sequence, wire_side, 0))), fragmented=True)
+                self.eventually(lambda: self.hand.get_state()["firmware"]["app_build"] == sequence)
+                state = self.hand.get_state()
+                self.assertEqual(state["firmware"]["hand_side"], expected)
+                self.assertTrue(state["connected"])
+                self.assertTrue(peer.frames.empty(), "metadata must not enable or send targets")
+
+    def test_mit_identity_validity_is_separate_from_online_and_keeps_precision(self):
+        peer = self.device(reply=False)
+        peer.connect(self.hand)
+        self.assertEqual(peer.next(), HOST_QUERY)
+        payload = bytearray(telemetry(sequence=1))
+        struct.pack_into("<H", payload, 2, 0)  # Both offline, identity may still be valid.
+        payload[444:446] = bytes((0x05, 0x05))
+        struct.pack_into("<I", payload, 446, 0x80000001)
+        peer.send(frame(2, payload))
+        self.eventually(lambda: self.hand.get_state()["sequence"] == 1)
+        state = self.hand.get_state()
+        self.assertTrue(state["mit"][0]["valid"])
+        self.assertFalse(state["mit"][0]["online"])
+        self.assertAlmostEqual(state["mit"][0]["position"], 360. / 2097152. / 50., places=12)
+        self.assertFalse(state["mit"][1]["valid"])
+        self.assertFalse(state["mit"][1]["online"])
+        self.assertEqual(state["mit"][1]["fault"], 0)
+        self.assertFalse(any(row["fault"] for row in self.hand.get_control_state()["mit"]))
+        # An online mask is sufficient even when old firmware omits identity.
+        struct.pack_into("<HH", payload, 0, 2, 2)
+        struct.pack_into("<I", payload, 466, 0x7fffffff)
+        peer.send(frame(2, payload))
+        self.eventually(lambda: self.hand.get_state()["sequence"] == 2)
+        state = self.hand.get_state()
+        self.assertTrue(state["mit"][1]["valid"])
+        self.assertTrue(state["mit"][1]["online"])
+        self.assertAlmostEqual(state["mit"][1]["position"], -360. / 2097152. / 50., places=12)
+        self.assertTrue(self.hand.get_control_state()["mit"][1]["fault"])
+
+    def test_native_stop_calls_cancel_cached_targets_without_wire_commands(self):
+        # Call the C ABI directly: a Python compatibility guard must not hide a
+        # regression in a32_estop or a32_enable_all(false) inside the library.
+        stop_sending = self.hand._dll.a32_stop_sending
+        stop_sending.argtypes = [ctypes.c_void_p]
+        stop_sending.restype = ctypes.c_int
+        for kind in ("tcp", "pty"):
+            peer = self.device(kind=kind)
+            peer.connect(self.hand)
+            self.assertEqual(peer.next(), HOST_QUERY)
+            for name, args in (("a32_estop", ()), ("a32_enable_all", (0,)), ("a32_stop_sending", ())):
+                with self.subTest(kind=kind, operation=name):
+                    self.hand.set_targets([12.] * 18, [1., -2.])
+                    received_bytes = peer.received_bytes
+                    self.assertEqual(getattr(self.hand._dll, name)(self.hand._handle, *args), 1)
+                    self.assertTrue(self.hand.get_state()["connected"])
+                    self.assertEqual(self.hand._dll.a32_send_once(self.hand._handle), 0)
+                    self.assert_quiet(peer, received_bytes)
+                    # Enabling power remains explicit and cannot replay the
+                    # cancelled target; a fresh target resumes normal sending.
+                    self.assertEqual(self.hand._dll.a32_enable_all(self.hand._handle, 1), 1)
+                    self.assertEqual(peer.next(), ENABLE)
+                    received_bytes = peer.received_bytes
+                    self.assertEqual(self.hand._dll.a32_send_once(self.hand._handle), 0)
+                    self.assert_quiet(peer, received_bytes)
+                    self.hand.send_targets([3.] * 18, [0., 0.])
+                    packet = peer.next()
+                    self.assertEqual(packet[5], 0x20)
+                    self.assertEqual(struct.unpack_from("<18f", packet, 7), (3.,) * 18)
+            peer.send(frame(2, telemetry()))
+            self.eventually(lambda: self.hand.get_state()["sequence"] == 0x1234)
+            self.hand.disconnect()
+
+    def test_disconnect_and_close_never_send_commands(self):
+        for kind in ("tcp", "pty"):
+            for action in ("disconnect", "close"):
+                with self.subTest(kind=kind, action=action):
+                    peer = self.device(kind=kind)
+                    hand = native.NativeHand(LIBRARY)
+                    self.addCleanup(hand.close)
+                    peer.connect(hand)
+                    self.assertEqual(peer.next(), HOST_QUERY)
+                    hand.enable_all()
+                    self.assertEqual(peer.next(), ENABLE)
+                    hand.set_targets([9.] * 18, [1., 2.])
+                    received_bytes = peer.received_bytes
+                    getattr(hand, action)()
+                    self.assert_quiet(peer, received_bytes)
+
     def test_pty_exclusive_ownership(self):
         peer = self.device(kind="pty")
         peer.connect(self.hand)
@@ -255,23 +478,48 @@ class OfflineDriverTest(unittest.TestCase):
         self.assertEqual(peer.next(), HOST_QUERY)
         other.disconnect()
 
-    def test_handshake_timeout(self):
+    def test_connection_without_firmware_reply(self):
+        for kind in ("tcp", "pty"):
+            with self.subTest(kind=kind):
+                peer = self.device(kind=kind, reply=False)
+                before = time.monotonic()
+                peer.connect(self.hand)
+                self.assertLess(time.monotonic() - before, 1)
+                self.assertEqual(peer.next(), HOST_QUERY)
+                state = self.hand.get_state()
+                self.assertTrue(state["connected"])
+                self.assertFalse(state["firmware"]["valid"])
+                # Missing version metadata does not prevent valid telemetry.
+                peer.send(frame(2, telemetry()))
+                self.eventually(lambda: self.hand.get_state()["sequence"] == 0x1234)
+                self.assertTrue(peer.frames.empty(), "connect must not send power or targets")
+                self.hand.disconnect()
+
+    def test_late_firmware_reply_is_metadata(self):
         peer = self.device(reply=False)
-        before = time.monotonic()
-        with self.assertRaisesRegex(native.A32DriverError, "timed out"):
-            peer.connect(self.hand)
-        self.assertLess(time.monotonic() - before, 3)
-        self.assertFalse(self.hand.get_state()["connected"])
+        peer.connect(self.hand)
         self.assertEqual(peer.next(), HOST_QUERY)
+        time.sleep(1.6)  # Beyond the former handshake deadline.
+        self.assertTrue(self.hand.get_state()["connected"])
+        self.assertFalse(self.hand.get_state()["firmware"]["valid"])
+        peer.send(frame(1, peer.firmware), fragmented=True)
+        self.eventually(lambda: self.hand.get_state()["firmware"]["valid"])
+        self.assertTrue(self.hand.get_state()["connected"])
         self.assertTrue(peer.frames.empty())
 
-    def test_incompatible_firmware(self):
-        peer = self.device(firmware=b"\x02\x00\x01\x00\x00\x00\x00\x00")
-        with self.assertRaisesRegex(native.A32DriverError, "incompatible"):
+    def test_other_firmware_versions_do_not_block_connection(self):
+        for major_index in (0, 2):
+            firmware = bytearray(b"\x01\x00\x01\x00\x00\x00\x00\x00")
+            firmware[major_index] = 2
+            peer = self.device(firmware=bytes(firmware))
             peer.connect(self.hand)
-        self.assertFalse(self.hand.get_state()["connected"])
-        self.assertEqual(peer.next(), HOST_QUERY)
-        self.assertTrue(peer.frames.empty())
+            self.assertEqual(peer.next(), HOST_QUERY)
+            self.eventually(lambda: self.hand.get_state()["firmware"]["valid"])
+            state = self.hand.get_state()
+            self.assertTrue(state["connected"])
+            self.assertEqual(state["firmware"]["proto_major" if major_index == 0 else "app_major"], 2)
+            self.assertTrue(peer.frames.empty())
+            self.hand.disconnect()
 
     def test_peer_loss_and_reconnect(self):
         peer = Device()
@@ -307,7 +555,9 @@ class OfflineDriverTest(unittest.TestCase):
         required = self.hand._dll.a32_state(self.hand._handle, buffer, 1)
         self.assertGreater(required, 1)
         self.assertEqual(buffer.value, b"sentinel")
-        self.assertEqual(self.hand.get_state()["sdk_version"], "independent-linux-abi2/1.0")
+        state = self.hand.get_state()
+        self.assertEqual(state["sdk_version"], "1.1.15")
+        self.assertEqual(state["native_implementation"], "a3-sdk-protocol-linux-abi2/1.0")
 
 
 if __name__ == "__main__":

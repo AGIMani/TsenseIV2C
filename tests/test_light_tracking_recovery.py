@@ -146,8 +146,8 @@ def test_ruckig_loss_brake_preserves_state_and_respects_motion_limits(side):
     interp = PhaseSynchronizedRuckigInterpolator(joint_names=[name])
     interp.seed_ramp({name: 0.1}, {name: 1.5})
     # Brake early enough that jerk-limited stopping still precedes the target
-    # with the shared 10/80/200 limits.
-    for _ in range(40):
+    # with the shared 20/400/2400 limits.
+    for _ in range(20):
         interp.sample()
     before = np.array([
         interp._input.current_position[0],

@@ -19,7 +19,10 @@ import zipfile
 from ruckig import InputParameter, OutputParameter, Result, Ruckig
 
 from a32_driver import A32Device
-from a32_kinematics.joint_coordinates import COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, is_finger_swing, migrate_legacy_pose
+from a32_kinematics.joint_coordinates import (
+    COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, POSITIVE_COORDINATE_VERSION,
+    POSITIVE_SWING_AXIS_ALIGNMENT, requested_limits, migrate_legacy_pose, migrate_positive_pose,
+)
 from a32_recording import A32SessionRecorder
 from hand_profiles import load_hand_profile
 from utils.control_clock import precise_control_timer
@@ -45,6 +48,7 @@ class A32Session:
         self._lock = threading.RLock()
         self._io_stop = threading.Event()
         self._io_thread = None
+        self._closed = False
         self.stop_reason = ""
         self.sample_ticks = 0
         self.last_control_dt_s = 0.
@@ -54,10 +58,11 @@ class A32Session:
         self.device = device if device is not None else A32Device(side, model_id=model_id)
         self.limits = {name: tuple(0.0 if abs(value) < 1e-12 else value for value in bounds)
                        for name, bounds in self.device.joint_limits().items()}
-        # Keep the translated 0..0.7 swing available in the editor, including
-        # the zero default. Only the final hardware command clips its ends.
+        # Expose the authored flexion and swing ranges in the editor. Hardware
+        # conversion clips to the mechanism intersection (including index/ring
+        # MCP) and the narrower swing command range.
         self.limits.update({name: bounds for name, bounds in self.profile.joint_limits(side).items()
-                            if is_finger_swing(name)})
+                            if requested_limits(name) is not None})
         self.pose = self.validate_pose(self.profile.init_pose(side))
         self.names = tuple(self.limits)
         self.target_pose = dict(self.pose)
@@ -73,7 +78,7 @@ class A32Session:
         self.dialog = self.playback = None
         self.home_slot, self.home_iq = 0, 0.0
         self.name = ""
-        self.message = "A3.2 · 本机原生 SDK · 连接后可勾选实时控制；右手仅支持离线预览"
+        self.message = "A3.2 · 本机原生 SDK · 连接后可勾选实时控制；左右手均支持硬件控制"
         self._moving = False
         self._reset_planner()
         if self.path.exists():
@@ -113,9 +118,21 @@ class A32Session:
         for channel in self.device.channels:
             key = "self" if channel["channel"] == "self" else "mit_pos"
             values = [endpoint[key][channel["index"]] for endpoint in endpoints]
-            result[channel["joint"]] = {"min": min(values), "max": max(values), "unit": channel["unit"],
-                                        "slot": f"{channel['channel']} {channel['index']}",
-                                        "at_ui_min": values[0], "at_ui_max": values[1]}
+            joint = channel["joint"]
+            lo, hi = self.limits[joint]
+            curve = []
+            # Keep the exact non-linear SDK conversion available to the web
+            # editor so the stroke display can be used as a real slider scale.
+            # The pose is complete for every sample; only this joint changes.
+            for sample in range(33):
+                fraction = sample / 32
+                pose = dict(self.pose)
+                pose[joint] = lo + fraction * (hi - lo)
+                target = self.device.prepare_targets(pose, clamp=True)
+                curve.append([pose[joint], target[key][channel["index"]]])
+            result[joint] = {"min": min(values), "max": max(values), "unit": channel["unit"],
+                             "slot": f"{channel['channel']} {channel['index']}",
+                             "at_ui_min": values[0], "at_ui_max": values[1], "curve": curve}
         return result
 
     def _reset_planner(self):
@@ -137,13 +154,22 @@ class A32Session:
         if self._io_thread is not None and self._io_thread is not threading.current_thread():
             self._io_thread.join(timeout=2)
         with self._lock:
+            if self._closed:
+                return
+            self._closed = True
             try:
                 self.stop(reason="session_closed")
             finally:
                 try:
                     self.device.close()
                 finally:
-                    self.recorder.stop(reason="session_closed")
+                    try:
+                        self.recorder.stop(reason="session_closed")
+                    finally:
+                        # Signal handlers/HTTP requests can retain this session
+                        # until interpreter teardown. Release nanobind objects
+                        # now, including the fresh planner created by stop().
+                        self.planner = self.input = self.output = None
 
     @synchronized
     def stop(self, reason="user_stop"):
@@ -168,7 +194,7 @@ class A32Session:
         number = lambda key, value, maximum=600: self.spec(key, "number", value=value, min=0., max=maximum, step=.01, enabled=not busy)
         names = list(self.motions)
         controls = {
-            "handSide": self.spec("handSide", "select", value=int(self.side == "right"), options=["左手", "右手（离线）"], enabled=not self.connected),
+            "handSide": self.spec("handSide", "select", value=int(self.side == "right"), options=["左手", "右手"], enabled=not self.connected),
             "choosemotion": self.spec("choosemotion", "select", value=self.selected, options=names or ["无动作"], enabled=bool(names) and not busy),
             "savemotion": button("savemotion", "保存动作", not busy),
             "loadmotion": button("loadmotion", "加载选定动作", bool(names) and not busy),
@@ -179,7 +205,7 @@ class A32Session:
             "isConnectOffline": check("isConnectOffline", "动作同步下位机", self.sync, self.connected),
             "realtimeJointControl": check("realtimeJointControl", "实时关节控制", self.armed and not self.sync, self.connected),
             "a32Enable": button("a32Enable", "使能 18 self + 2 MIT", self.connected and not busy and not device.get("enabled")),
-            "a32Disable": button("a32Disable", "停止 / 全部失能", self.connected),
+            "a32Disable": button("a32Disable", "停止下发", self.connected),
             "a32Reset": button("a32Reset", "复位找零状态", self.connected),
             "a32Init": button("a32Init", "回到初始姿态", not busy),
             "a32Home": button("a32Home", "自研电机找零", self.connected and not busy),
@@ -235,9 +261,10 @@ class A32Session:
         if not isinstance(motions, dict) or len(motions) > 2000:
             raise ValueError("motions 必须为不超过 2000 个动作的对象")
         version = data.get("_joint_coordinate_version")
-        if version not in (None, COORDINATE_VERSION):
+        if version not in (None, POSITIVE_COORDINATE_VERSION, COORDINATE_VERSION):
             raise ValueError("A3.2 动作坐标版本不受支持")
-        if data.get("_swing_axis_alignment") not in (None, SWING_AXIS_ALIGNMENT):
+        alignment = POSITIVE_SWING_AXIS_ALIGNMENT if version == POSITIVE_COORDINATE_VERSION else SWING_AXIS_ALIGNMENT
+        if data.get("_swing_axis_alignment") not in (None, alignment):
             raise ValueError("A3.2 动作 swing 轴向版本不受支持")
         motions = copy.deepcopy(motions)
         for name, entry in motions.items():
@@ -245,6 +272,8 @@ class A32Session:
                 raise ValueError("动作名称或内容无效")
             if version is None:
                 entry["pose"] = migrate_legacy_pose(entry.get("pose"), self.limits, model_id=self.model_id)
+            elif version == POSITIVE_COORDINATE_VERSION:
+                entry["pose"] = migrate_positive_pose(entry.get("pose"), self.limits)
             self.validate_pose(entry.get("pose"))
             for field in ("transition", "interval"):
                 value = entry.get(field)
@@ -295,9 +324,9 @@ class A32Session:
                 self.last_control_dt_s = elapsed
                 self.max_control_dt_s = max(self.max_control_dt_s, elapsed)
                 if self._command_requested and elapsed > .1:
-                    raise ValueError("SDK 轨迹采样间隔超过 100 ms，已停止动作")
+                    raise ValueError("SDK 轨迹采样间隔超过 100 ms，已停止下发")
                 if not state.get("connected") or not state.get("enabled") or state.get("homing"):
-                    raise ValueError("SDK 已断开、电机已失能或正在找零，已停止动作")
+                    raise ValueError("SDK 已断开、软件使能已关闭或正在找零，已停止下发")
             candidate = dict(self.pose)
             result = None
             if self._moving:
@@ -305,7 +334,9 @@ class A32Session:
                 result = self.planner.update(self.input, self.output)
                 if result not in (Result.Working, Result.Finished):
                     raise ValueError(f"A3.2 轨迹计算失败：{result}")
-                candidate = self.validate_pose(dict(zip(self.names, self.output.new_position)))
+                planned_pose = dict(zip(self.names, self.output.new_position))
+                self.recorder.record_event("ruckig", joints=planned_pose, frame_id=self.sample_ticks)
+                candidate = self.validate_pose(planned_pose)
                 for name, bound in zip(self.names, self.output.trajectory.position_extrema):
                     lo, hi = self.limits[name]
                     if bound.min < lo - 1e-8 or bound.max > hi + 1e-8:
@@ -344,7 +375,7 @@ class A32Session:
             try:
                 self.stop(reason=str(exc))
             except Exception as stop_error:
-                self.message += f"；SDK 停止失败：{stop_error}"
+                self.message += f"；停止下发失败：{stop_error}"
 
     def _preview_targets(self, pose):
         try:
@@ -400,7 +431,7 @@ class A32Session:
                 raise
             self.recorder.record_action("connected", self.device.get_state())
             self.stop_reason = ""
-            self.message = "SDK 已连接；点击使能后开启实时控制或动作同步，无需等待遥测"
+            self.message = "SDK 已连接；收到完整有效反馈后可开启实时控制或动作同步"
         elif action == "disconnect":
             try:
                 self.stop()
@@ -464,19 +495,19 @@ class A32Session:
         elif key == "motionStreamLoop":
             self.loop = value
         elif key == "a32Enable":
-            self._enable(self.validate_pose(self.device.starting_pose(self.pose)))
+            self._enable(self.validate_pose(self.device.starting_pose()))
             self.message = "SDK 已使能，尚未下发轨迹；可开启实时关节控制或动作同步"
         elif key == "a32Disable":
             self.stop()
-            self.message = "已停止轨迹并请求全部电机失能"
+            self.message = "已停止下发，未发送失能；设备可能继续执行已接收的命令或找零"
         elif key == "a32Reset":
             self.stop()
             self.device.reset_home(slot=None if self.home_slot == 0 else self.home_slot - 1)
-            self.message = "已停止并请求复位所选 self 找零状态；请检查反馈后重新找零/使能"
+            self.message = "已停止下发并请求复位所选 self 找零状态，未发送失能；请检查反馈后重新找零/使能"
         elif key in ("isConnectOffline", "realtimeJointControl"):
             self.playback = None
             if value:
-                seed = self.validate_pose(self.device.starting_pose(self.pose))
+                seed = self.validate_pose(self.device.starting_pose())
                 if not self.device.get_state().get("enabled"):
                     self._enable(seed)
                 self.pose = seed

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>A3 灵巧手</title>
+  <link rel="icon" href="logo.png" type="image/png" />
+  <link rel="stylesheet" href="style.css?v=2" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo-frame">
+        <img src="logo.png" alt="达显身手 TsenseI ROBOT" class="logo" />
+      </div>
+      <div class="brand-text">
+        <h1>A3 灵巧手</h1>
+        <p>USB CDC / ETH TCP 5001 · H7 AA55</p>
+      </div>
+    </div>
+
+    <div class="conn-panel">
+      <label class="field">
+        <span>链路</span>
+        <select id="linkKind">
+          <option value="usb">USB CDC</option>
+          <option value="eth">ETH 5001</option>
+        </select>
+      </label>
+      <div id="usbFields" class="conn-fields">
+        <label class="field grow">
+          <span>串口</span>
+          <select id="usbPort"></select>
+        </label>
+        <button type="button" id="btnPorts" class="ghost">刷新</button>
+      </div>
+      <div id="ethFields" class="conn-fields" hidden>
+        <label class="field grow">
+          <span>主机</span>
+          <input id="ethHost" value="" list="ethHostList" placeholder="DHCP 扫描或手填 IP" spellcheck="false" />
+          <datalist id="ethHostList"></datalist>
+        </label>
+        <button type="button" id="btnEthScan" class="ghost">扫描</button>
+        <label class="field port">
+          <span>端口</span>
+          <input id="ethPort" value="5001" />
+        </label>
+      </div>
+      <button type="button" id="btnConnect" class="accent">连接</button>
+      <button type="button" id="btnDisconnect" class="ghost" disabled>断开</button>
+      <div class="status-stack">
+        <span id="linkState" class="chip wait">未连接</span>
+        <span id="hzState" class="hz">TX — · RX —</span>
+      </div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button type="button" class="tab on" data-tab="down">下行控制</button>
+    <button type="button" class="tab" data-tab="sp">单点命令</button>
+    <button type="button" class="tab" data-tab="up">上行遥测</button>
+    <button type="button" class="tab" data-tab="touch">五指触觉</button>
+  </nav>
+
+  <main>
+    <section id="tab-down" class="panel on">
+      <div class="toolbar">
+        <div class="tool-group">
+          <label class="field">
+            <span>发送周期</span>
+            <select id="rate">
+              <option>10</option><option>50</option><option>100</option>
+              <option>200</option><option selected>500</option><option>1000</option>
+            </select>
+          </label>
+          <span class="unit-tag">Hz</span>
+          <button type="button" id="btnOnce" class="accent">发一帧</button>
+          <button type="button" id="btnStream">开始连续</button>
+          <button type="button" id="btnZero" class="ghost">全部置零</button>
+        </div>
+        <div class="tool-group">
+          <label class="field">
+            <span>波形</span>
+            <select id="wave"><option>保持</option><option selected>正弦</option></select>
+          </label>
+          <select id="sineMode"><option>单次</option><option>循环往复</option></select>
+          <label class="field port">
+            <span>周期</span>
+            <input id="sinePeriod" value="2.0" />
+          </label>
+          <span class="hint-inline">秒 · 从当前目标滑向框值</span>
+        </div>
+      </div>
+      <div class="grid3" id="motorCards"></div>
+      <div class="card logbox">
+        <h3>日志</h3>
+        <pre id="log"></pre>
+      </div>
+    </section>
+
+    <section id="tab-sp" class="panel">
+      <p class="banner">自研单点立刻转 CAN（0x21–0x25）。PID / 开环只允许当前电机。回零不要混发直线+旋转。MIT 不走本页。</p>
+      <div class="toolbar">
+        <label class="field grow">
+          <span>槽位</span>
+          <select id="spSlot"></select>
+        </label>
+        <label class="field">
+          <span>范围</span>
+          <select id="spScope">
+            <option value="slot">当前电机</option>
+            <option value="bus">本总线全部</option>
+            <option value="bus_lin">本总线直线电机</option>
+            <option value="bus_rot">本总线旋转电机</option>
+            <option value="hand">全手 18 台</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>驱动</span>
+          <select id="spDrv">
+            <option value="3">全部</option>
+            <option value="1">DRV1</option>
+            <option value="2">DRV2</option>
+          </select>
+        </label>
+      </div>
+      <div class="cmd-grid">
+        <div class="card">
+          <h3>电源与回零</h3>
+          <div class="btn-row">
+            <button type="button" class="accent" data-en="1">使能</button>
+            <button type="button" data-en="0">断电</button>
+          </div>
+          <div class="form-row">
+            <label class="field">
+              <span>iq_seek</span>
+              <input id="iqSeek" value="80" />
+            </label>
+            <button type="button" id="btnHome">机械回零</button>
+          </div>
+        </div>
+        <div class="card">
+          <h3>位置 PID</h3>
+          <div class="pid-grid">
+            <label class="field"><span>Kp</span><input id="pkp" value="400" /></label>
+            <label class="field"><span>Ki</span><input id="pki" value="0" /></label>
+            <label class="field"><span>Kd</span><input id="pkd" value="0" /></label>
+          </div>
+          <button type="button" id="btnPosPid" class="accent">写入</button>
+        </div>
+        <div class="card">
+          <h3>电流 PID</h3>
+          <div class="pid-grid six">
+            <label class="field"><span>Id Kp</span><input id="idkp" value="0.4" /></label>
+            <label class="field"><span>Id Ki</span><input id="idki" value="0" /></label>
+            <label class="field"><span>Id Kd</span><input id="idkd" value="0" /></label>
+            <label class="field"><span>Iq Kp</span><input id="iqkp" value="0.4" /></label>
+            <label class="field"><span>Iq Ki</span><input id="iqki" value="0" /></label>
+            <label class="field"><span>Iq Kd</span><input id="iqkd" value="0" /></label>
+          </div>
+          <button type="button" id="btnCurPid" class="accent">写入</button>
+        </div>
+        <div class="card">
+          <h3>开环往复</h3>
+          <div class="form-row">
+            <label class="field"><span>频率</span><input id="spinHz" value="2" /></label>
+            <span class="unit-tag">Hz</span>
+            <label class="field"><span>半行程</span><input id="spinHalf" value="1" /></label>
+            <span class="unit-tag">s</span>
+          </div>
+          <div class="btn-row">
+            <button type="button" id="btnSpinOn" class="accent">开始</button>
+            <button type="button" id="btnSpinOff">停止</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="tab-up" class="panel">
+      <div class="card chips" id="boardChips">
+        <span class="chip">NTC_C —</span>
+        <span class="chip">NTC_B —</span>
+        <span class="chip">VIN24 —</span>
+      </div>
+      <div class="card tablewrap">
+        <table id="telemTable">
+          <thead>
+            <tr>
+              <th>总线</th><th>槽</th><th>类型</th><th>电机</th>
+              <th>回零/θ</th><th>位置</th><th>位置参考</th>
+              <th>Iq</th><th>Iq 参考</th><th>重力 Iq</th><th>MCU ℃</th><th>保护</th><th>状态</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="tab-touch" class="panel">
+      <div class="toolbar">
+        <label class="field grow">
+          <span>目标</span>
+          <select id="touchSrc"></select>
+        </label>
+        <label class="field">
+          <span>模式</span>
+          <select id="touchMode">
+            <option value="0">ADC</option>
+            <option value="1" selected>法向力</option>
+            <option value="2">法向+切向</option>
+          </select>
+        </label>
+        <label class="field">
+          <span>频率</span>
+          <select id="touchFreq">
+            <option>50</option><option>60</option><option>80</option><option>100</option>
+          </select>
+        </label>
+        <span class="unit-tag">Hz</span>
+        <button type="button" id="touchInfo">查询信息</button>
+        <button type="button" id="touchSetMode" class="accent">设模式</button>
+        <button type="button" id="touchSetFreq">设频率</button>
+      </div>
+      <div class="touch-grid" id="touchGrid"></div>
+    </section>
+  </main>
+  <script src="app.js?v=3"></script>
+</body>
+</html>

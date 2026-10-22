@@ -83,6 +83,12 @@ class NativeHand:
         for name, (args, result) in signatures.items():
             method = getattr(self._dll, name)
             method.argtypes, method.restype = args, result
+        # This additive entry point only clears queued host targets. Never use
+        # legacy estop/enable(false), which older libraries implement as power-off.
+        self._can_stop_sending = hasattr(self._dll, "a32_stop_sending")
+        if self._can_stop_sending:
+            self._dll.a32_stop_sending.argtypes = [ptr]
+            self._dll.a32_stop_sending.restype = integer
         # Additive ABI-v2 capabilities. Older DLLs keep their functional path;
         # their status explicitly lacks native per-packet measurements.
         self.fast_control = all(hasattr(self._dll, n) for n in ('a32_control_state', 'a32_send_targets'))
@@ -164,7 +170,10 @@ class NativeHand:
         return {name: getattr(timing, name) for name, _ in timing._fields_}
 
     def enable_all(self, on=True):
-        self._call("a32_enable_all", int(bool(on)))
+        if on:
+            self._call("a32_enable_all", 1)
+        else:
+            self.estop()
 
     def home_slot(self, slot, iq_counts):
         self._call("a32_home_slot", int(slot), float(iq_counts))
@@ -173,7 +182,9 @@ class NativeHand:
         self._call("a32_home_reset_slot", int(slot))
 
     def estop(self):
-        self._call("a32_estop")
+        """Compatibility stop: discard pending targets without a disable frame."""
+        if self._can_stop_sending:
+            self._call("a32_stop_sending")
 
     def get_state(self):
         with self._lock:

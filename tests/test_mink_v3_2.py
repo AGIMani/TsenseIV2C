@@ -113,9 +113,13 @@ def test_web_records_raw_and_guarded_angles_and_keeps_corrected_history(tmp_path
             np.testing.assert_allclose(solver.previous_q, [result["pose"][n] for n in solver.joint_names])
     finally:
         s.close()
-    row = json.loads(s.recorder.path.read_text(encoding="utf-8").splitlines()[1])
-    assert row["collision_diagnostics"]["mode"] == "mink"
-    assert row["retarget_joint_angles_rad"] and row["output_joint_angles_rad"]
+    rows = [json.loads(line) for line in s.recorder.path.read_text(encoding="utf-8").splitlines()]
+    assert rows[1]["collision_diagnostics"]["mode"] == "mink"
+    angles = [row for row in rows if row["type"] == "joint_angles"]
+    assert {row["stage"] for row in angles} == {"retarget", "mink"}
+    assert len(angles) == 6
+    assert all(row["joints"] for row in angles)
+    assert angles[-1]["joints"] == result["mink_joint_angles_rad"]
 
 
 def test_invalid_mode_never_silently_disables_collision():

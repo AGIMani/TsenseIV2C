@@ -1,7 +1,7 @@
 """Default joint-space motion limits shared by all hand controllers."""
 
 # rad/s, rad/s², rad/s³; identical for all models, sides and joint types.
-DEFAULT_MOTION_LIMITS = (10.0, 80.0, 200.0)
+DEFAULT_MOTION_LIMITS = (20.0, 400.0, 2400.0)
 
 
 def configure_ruckig(parameters, names, *,

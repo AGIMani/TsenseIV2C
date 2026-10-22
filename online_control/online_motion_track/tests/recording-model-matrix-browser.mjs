@@ -33,8 +33,9 @@ try{
     const payload=new Uint8Array(484),v=new DataView(payload.buffer);v.setUint32(8,0x3ffff,true);v.setUint16(2,3,true);
     for(let i=0;i<18;i++){const o=12+24*i;payload[o+3]=2;v.setFloat32(o+4,-1,true);v.setFloat32(o+8,2,true);v.setFloat32(o+12,3,true);v.setFloat32(o+16,-1.5,true);v.setInt16(o+22,3500,true);}
     for(let i=0;i<2;i++){const o=444+20*i;payload[o]=5+4*i;payload[o+1]=5;v.setUint32(o+2,0x80000000,true);v.setUint16(o+6,0x8000,true);v.setUint16(o+8,0x8000,true);}
-    const sdk={connected:true,hand_side:side,telemetry_age_ms:1,self:[],mit:[]};
-    for(const c of channels)sdk[c.channel][c.index]={joint:c.joint.replace('left_hand_',side+'_hand_'),online:true,valid:true,position:1,target:1.5,iq:2,iq_ref:3,temperature_centi:3500};
+    const sdk={connected:true,hand_side:side,telemetry_age_ms:1,self:[],mit:[],
+      telemetry_format:'a32-native-sdk-state/v2',telemetry_units:{self_current:'A',external_current:'A'}};
+    for(const c of channels)sdk[c.channel][c.index]={joint:c.joint.replace('left_hand_',side+'_hand_'),online:true,valid:true,position:1,target:1.5,iq:2,iq_ref:3,temperature_centi:3500,current_unit:'A'};
     const text=await capture.evaluate(async({model,side,source,maps,block,is30,sdk,hex,decoded})=>{
       const {WorkerRecorder}=await import('/worker-recorder.js');
       const r=new WorkerRecorder(e=>{throw e;});
@@ -51,15 +52,15 @@ try{
       const apply=new Function('recorder','$','isA30','isA32Model','performance',block+';return applyFrameUpdate;')
         (r,()=>({value:side}),()=>is30,m=>m?.includes('v3_2'),performance);
       apply({frameId:7,packet:{source,session:r.id},hand:{label:side==='left'?'Left':'Right'},expected:side==='left'?'Left':'Right',timestamp_ms:0,inferredAt:0,requestStartedAt:0},
-        {points,tracking:true,pose:joints,retarget_joint_angles_rad:joints,actuation,solve_ms:1});
+        {points,tracking:true,pose:joints,retarget_joint_angles_rad:joints,direct_joint_angles_rad:joints,mink_joint_angles_rad:joints,actuation,solve_ms:1});
       if(is30){
         const command=r.record('conversion',{frame_id:7,hand_side:side,joints_hw:joints,linear_mm:Array(9).fill(1.5),rotary_deg:Array(11).fill(2)});
         r.record('downlink',{frame_id:7,command_id:command,hand_side:side,sent:true,linear_mm:Array(9).fill(1.5),rotary_deg:Array(11).fill(2)});
-        r.record('h7',{frame_id:7,hand_side:side,sent:true,joints_ui:joints});
+        r.record('h7',{frame_id:7,hand_side:side,sent:true,joints_ui:joints,ruckig_output_joint_angles_rad:joints,sample_ticks:1});
         r.record('telemetry',{...decoded,hand_side:side,payload_hex:hex,accepted:true});
       }else{
         r.record('a32_sdk_sample',{hand_side:side,hardware:sdk,sent:true});
-        r.record('h7',{frame_id:7,hand_side:side,source:'a32_sdk_successful_write',sent:true,joints_ui:joints,self:Array(18).fill(1.5),mit_pos:[2,2]});
+        r.record('h7',{frame_id:7,hand_side:side,source:'a32_sdk_successful_write',sent:true,joints_ui:joints,ruckig_output_joint_angles_rad:joints,sample_ticks:1,self:Array(18).fill(1.5),mit_pos:[2,2]});
       }
       r.record('control_disarm',{hand_side:side,reason:'matrix_end'});
       await r.stop('matrix_complete',{exportFile:false});
@@ -69,15 +70,21 @@ try{
     const rows=text.trim().split('\n').map(JSON.parse),end=rows.at(-1);
     assert.equal(end.dropped_events,0);assert(rows.every((r,i)=>r.seq===i+1));
     assert.equal(rows[0].metadata.sampling,'synthetic matrix capture');
+    assert.equal(rows[0].units.current,is30?'firmware_native':'per_sample');
+    if(!is30)assert.equal(rows[0].metadata.homing_current_unit,'counts');
     if(!is30)assert.equal(rows[0].metadata.hardware_location,'local Python service / native A3 SDK');
     await viewer.locator('#file').setInputFiles({name:model+'-'+side+'-'+source+'.jsonl',mimeType:'application/x-ndjson',buffer:Buffer.from(text)});
     await viewer.waitForFunction(()=>!document.querySelector('#file').disabled);
     const loaded=await viewer.evaluate(()=>({status:document.querySelector('#status').textContent,side:document.querySelector('#handSide').value,
       rows:Object.fromEntries(['raw','mp','retarget','control','conversion','downlink','telemetry','events'].map(k=>[k,state[k].length])),
-      charts:Object.fromEntries(['position','current','temperature'].map(k=>[k,document.querySelector('#'+k+'Range').textContent]))}));
+      currentUnit:motorCurrentAxisUnit(),currentValue:makeMotorSeries().current[0].points[0]?.[1],
+      angleStages:Object.fromEntries(JOINT_STAGES.map(s=>[s.key,angleStages[s.key].length])),
+      charts:Object.fromEntries(['joint','position','current','temperature'].map(k=>[k,document.querySelector('#'+k+'Range').textContent]))}));
     assert(!loaded.status.includes('读取失败'));assert.equal(loaded.side,side);
+    assert.equal(loaded.currentUnit,is30?'协议原值':'A');assert.equal(loaded.currentValue,2);
     for(const k of ['raw','mp','retarget','control','downlink','telemetry','events'])assert.equal(loaded.rows[k],1,`${model}/${side}/${source}/${k}`);
     assert.equal(loaded.rows.conversion,is30?2:1);
+    for(const [stage,count] of Object.entries(loaded.angleStages))assert.equal(count,1,`${model}/${side}/${source}/${stage}`);
     for(const value of Object.values(loaded.charts))assert.notEqual(value,'无数据');
     cases++;
   }

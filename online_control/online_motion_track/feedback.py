@@ -108,14 +108,16 @@ def _a30(payload, model, side, issues):
     return pose
 
 
-@lru_cache(maxsize=2)
-def _a32_device(model):
+@lru_cache(maxsize=4)
+def _a32_device(model, side):
     from a32_driver import A32Device
     # Construction loads calibration only. No NativeHand is instantiated.
-    return A32Device(model_id=model)
+    return A32Device(hand_side=side, model_id=model)
 
 
 def _a32(state, model, side, issues):
+    from a32_kinematics.mapper import model_joint_to_source_sign
+
     if not isinstance(state, dict):
         raise ValueError("A3.2 遥测需要 SDK 状态对象")
     if state.get("hand_side") not in (None, side):
@@ -126,14 +128,11 @@ def _a32(state, model, side, issues):
         if not isinstance(state.get(key), list) or len(state[key]) > count or any(
                 not isinstance(row, dict) for row in state[key]):
             raise ValueError(f"A3.2 {key} 遥测通道格式无效")
-    if side == "right":
-        issues.append("A3.2 右手硬件映射待标定")
-        return {}
     age = state.get("telemetry_age_ms")
     if not state.get("connected") or not _finite(age) or not 0 <= age < 500:
         issues.append("SDK 未连接或手部遥测已过期")
         return {}
-    device = _a32_device(model)
+    device = _a32_device(model, side)
     pose = {}
     for channel in device.channels:
         rows = state[channel["channel"]]
@@ -147,6 +146,14 @@ def _a32(state, model, side, issues):
         if channel["channel"] == "mit" and (not row.get("valid") or row.get("fault") or row.get("state") == 5):
             continue
         value = device.feedback_position(channel, value)
+        if channel["unit"] == "deg":
+            # Display finite rotary measurements using the model's bounds
+            # below, including overruns beyond the stricter command/SDK range.
+            # Control and feedback seeding still use the strict inverse API.
+            source = (value - channel["offset"]) / channel["direction"]
+            pose[channel["joint"]] = (math.radians(source) *
+                                      model_joint_to_source_sign(model, channel["joint"]))
+            continue
         try:
             q = device._inverse(channel, value)
         except (ValueError, ArithmeticError):
@@ -180,8 +187,15 @@ def feedback_pose(data):
             pose = _a30(_payload(data.get("telemetry"), (444, 484)), model, side, issues)
         else:
             pose = _a32(data.get("telemetry"), model, side, issues)
-        valid = {name: min(limits[name][1], max(limits[name][0], 0., float(q)))
-                 for name, q in pose.items() if name in limits and _finite(q)}
+        valid = {}
+        for name, q in pose.items():
+            if name not in limits or not _finite(q):
+                continue
+            low, high = limits[name]
+            # A3.2 swing is signed; retain the legacy display floor elsewhere.
+            if model not in A32_MODEL_IDS:
+                low = max(low, 0.)
+            valid[name] = min(high, max(low, float(q)))
         missing = [name for name in limits if name not in valid]
         if missing and not issues:
             issues.append("部分关节缺少有效反馈")

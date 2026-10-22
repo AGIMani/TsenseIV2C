@@ -1,0 +1,32 @@
+{
+  "repository": "https://github.com/realsenseai/hand_tracking_samples",
+  "commit": "75d5579aa258d97157d8a29b1c4da32f3d0a7608",
+  "license": "Apache-2.0",
+  "excerpts": [
+    {
+      "path": "include/misc_image.h",
+      "start_line": 48,
+      "end_line": 50,
+      "upstream_file_sha256": "4989c63b049a048af8dac43179aed71f39852559a4536d33560a22a0f96b3461"
+    },
+    {
+      "path": "include/misc_image.h",
+      "start_line": 409,
+      "end_line": 417,
+      "upstream_file_sha256": "4989c63b049a048af8dac43179aed71f39852559a4536d33560a22a0f96b3461"
+    },
+    {
+      "path": "include/physmodel.h",
+      "start_line": 163,
+      "end_line": 180,
+      "upstream_file_sha256": "a10d52935ee27a950e030924522cb519e54d83cb2b6fae061f63072103a04340"
+    },
+    {
+      "path": "include/physmodel.h",
+      "start_line": 345,
+      "end_line": 356,
+      "upstream_file_sha256": "a10d52935ee27a950e030924522cb519e54d83cb2b6fae061f63072103a04340"
+    }
+  ],
+  "adaptation": "online_control/online_motion_track/rgbd_fusion.py"
+}

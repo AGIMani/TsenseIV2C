@@ -264,6 +264,8 @@ class LightControlPipeline:
                 self._target_ready = False
                 self._target_block_reason = None
                 self._latest_ui = {}
+                self._ruckig_output_joint_angles_rad = None
+                self._direct_joint_angles_rad = None
                 self._latest_hardware = {}
                 self._latest_linear_mm = []
                 self._latest_rotary_deg = []
@@ -389,6 +391,8 @@ class LightControlPipeline:
                     return
                 start = dict(self._latest_ui)
                 self._ruckig_enabled = enabled
+                self._ruckig_output_joint_angles_rad = None
+                self._direct_joint_angles_rad = None
                 self._direct_filter_at = None
                 self._direct_filter_status = None
                 self._last_sample_time = None
@@ -450,6 +454,8 @@ class LightControlPipeline:
                 self._target_block_reason = None
                 self._target_ui = dict(current)
                 self._latest_ui = dict(current)
+                self._ruckig_output_joint_angles_rad = None
+                self._direct_joint_angles_rad = None
                 self._latest_hardware = hw
                 self._latest_linear_mm = list(linear)
                 self._latest_rotary_deg = list(rotary)
@@ -493,7 +499,12 @@ class LightControlPipeline:
                 "target_joint_angles_rad": dict(self._target_ui),
                 "direct_filter": self._direct_filter_status if not self._ruckig_enabled and self._allow_direct_downlink else None,
                 "ruckig_joint_angles_rad": dict(self._latest_ui),
+                "ruckig_output_joint_angles_rad": (getattr(self, "_ruckig_output_joint_angles_rad", None)
+                    if self._ruckig_enabled else None),
+                "direct_joint_angles_rad": (getattr(self, "_direct_joint_angles_rad", None)
+                    if not self._ruckig_enabled else None),
                 "hardware_joint_angles_rad": dict(self._latest_hardware),
+                "command_joint_angles_rad": convert_hardware_to_ui(self._latest_hardware, hand_side=self._hand_side),
                 "linear_strokes_mm": list(self._latest_linear_mm),
                 "rotary_positions_deg": list(self._latest_rotary_deg),
                 "last_send_ok": self._last_send_ok,
@@ -605,6 +616,8 @@ class LightControlPipeline:
 
         try:
             ui_pose = _finite_pose(pose)
+            ruckig_pose = dict(ui_pose) if use_ruckig else None
+            direct_pose = None
             if not use_ruckig and self._allow_direct_downlink:
                 current = self.current_ui_pose() or ui_pose
                 dt = self._period_s if self._direct_filter_at is None else now-self._direct_filter_at
@@ -612,6 +625,7 @@ class LightControlPipeline:
                     self._direct_filter.reset(current)
                 ui_pose = self._direct_filter.sample(ui_pose, dt)
                 self._direct_filter_at = now
+                direct_pose = dict(ui_pose)
             if sample_collision_guard is not None:
                 ui_pose, sample_collision_diag = sample_collision_guard.project(
                     ui_pose
@@ -670,6 +684,8 @@ class LightControlPipeline:
 
         with self._lock:
             self._latest_ui = dict(ui_pose)
+            self._ruckig_output_joint_angles_rad = ruckig_pose
+            self._direct_joint_angles_rad = direct_pose
             self._sample_frame_id = frame_id
             self._direct_filter_status = self._direct_filter.snapshot() if not use_ruckig and self._allow_direct_downlink else None
             self._latest_hardware = dict(hardware)
@@ -685,12 +701,14 @@ class LightControlPipeline:
             elif send_ok is False:
                 self._send_drops += 1
         if self.recorder is not None and self.recorder.active:
+            if direct_pose:
+                self.recorder.record_stage("direct", direct_pose, frame_id=frame_id, hand_side=side)
             self.recorder.record_h7(
                 joints_ui=convert_hardware_to_ui(hardware, hand_side=side),
                 joints_hw=hardware, frame_id=frame_id,
                 hand_side=side, sent=send_ok is True, usb_connected=self.is_connected,
                 ruckig_faults=faults, guard_limited=hardware != hardware_before_guard,
-                joints_before_guard=hardware_before_guard, joints_ruckig_ui=pose,
+                joints_before_guard=hardware_before_guard, joints_ruckig_ui=ruckig_pose,
                 control_dt_s=self._last_sample_dt if use_ruckig and self._elapsed_sampling else None,
             )
 
@@ -835,6 +853,8 @@ class LightControlPipeline:
             self._target_ui = dict(init)
             self._target_ready = False
             self._latest_ui = dict(init)
+            self._ruckig_output_joint_angles_rad = None
+            self._direct_joint_angles_rad = None
             self._latest_hardware = convert_ui_to_hardware(init, hand_side=side)
             linear, rotary = joint_angles_to_hand_positions(self._latest_hardware)
             self._latest_linear_mm = list(linear)

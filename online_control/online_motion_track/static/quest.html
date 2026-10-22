@@ -27,8 +27,8 @@
 </head>
 <body>
   <main id="overlay-root">
-    <h1>Quest 3 手部采集</h1>
-    <p>将头显的原生 25 个手部关节发送到在线控制页。进入 XR 后放下控制器，让双手保持在头显视野内；桌面页负责手型映射、预览和机械手控制。</p>
+    <h1 id="capture-title">Quest 3 手部采集</h1>
+    <p id="capture-description">将头显的原生 25 个手部关节发送到在线控制页。进入 XR 后放下控制器，让双手保持在头显视野内；桌面页负责手型映射、预览和机械手控制。</p>
     <p class="hint">固定配对码 123456，永久有效。收藏本页，下次自动连接；请先在电脑选择 Quest 输入并开始识别。</p>
     <label for="pair-token">固定配对码</label>
     <input id="pair-token" type="text" inputmode="numeric" pattern="[0-9]{6}" maxlength="6" autocomplete="off" spellcheck="false" value="123456" readonly>
@@ -43,7 +43,7 @@
       <button id="stop" class="secondary" disabled>停止采集</button>
     </div>
     <pre id="status" role="status" aria-live="polite">正在检查 WebXR…</pre>
-    <p class="hint">请使用 Quest Browser 打开可访问的 HTTPS 地址，并启用系统手部追踪。如果当前模式无法启动，请切换模式后再次点击进入。退出 XR、追踪丢失或网络过期时，桌面页会停止使用旧姿态。</p>
+    <p id="capture-connection-hint" class="hint">请使用 Quest Browser 打开可访问的 HTTPS 地址，并启用系统手部追踪。如果当前模式无法启动，请切换模式后再次点击进入。退出 XR、追踪丢失或网络过期时，桌面页会停止使用旧姿态。</p>
     <p class="hint"><a href="/">返回在线控制页</a></p>
     <canvas id="xr-canvas"></canvas>
   </main>

@@ -22,6 +22,8 @@ from pipeline_geometry import prepare_topo_points, landmarks_ok_for_retarget, th
 from session_logger import SessionJsonlLogger
 from hand_profiles import load_hand_profile
 from TsenseI_retargeting import TopoRetargeter
+from online_control.online_motion_track.optimized_skeleton import optimized_skeleton
+from online_control.online_motion_track.command_compensation import compensate_command_pose
 # Import the lightweight module directly: tracking.__init__ also imports
 # desktop-only OpenCV/HandOccNet/WiLoR backends, unused by browser detection.
 from wuji_mediapipe import _OneEuroLandmarkFilter, preprocess_wuji_world_points
@@ -40,9 +42,10 @@ class V2WebSession:
             raise ValueError("手别必须为 left 或 right")
         if collision_mode not in ("avoid", "stop", "off"):
             raise ValueError("V2 避碰模式必须为 avoid、stop 或 off")
-        if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion"):
+        if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
             raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove 或 leapmotion")
         self.input_source = input_source
+        self.mediapipe_filter_enabled = True
         self.lock = threading.RLock()
         self.closed = False
         self.direct_mode = False
@@ -70,17 +73,17 @@ class V2WebSession:
         self.log_dir = Path(log_dir or ROOT / "logs/control_sessions")
         try:
             if recording:
-                camera_source = {"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2"}.get(input_source, "browser-webcam")
+                camera_source = {"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2", "realsense_rgbd": "realsense-rgbd"}.get(input_source, "browser-webcam")
                 self.recorder.start(output_dir=self.log_dir, metadata={
                     "hand_side": side, "model_id": self.model_id, "source": f"web/{input_source}",
                     "input_source": input_source, "camera_source": camera_source, "self_collision_mode": collision_mode,
-                    "control_order": f"{input_source + ' metric' if input_source in ('webxr', 'wuji_glove', 'leapmotion') else 'MediaPipe/Wuji'} -> Topo -> collision -> Ruckig -> sample collision -> UI/HW -> DownlinkGuard -> linkage -> H7",
+                    "control_order": f"{input_source + ' metric' if input_source in ('webxr', 'wuji_glove', 'leapmotion', 'realsense_rgbd') else 'MediaPipe/Wuji'} -> Topo -> collision -> Ruckig -> sample collision -> UI/HW -> DownlinkGuard -> linkage -> H7",
                     "hardware_location": "Python service host", "kinematics_backend": "numpy",
                     "control_timing": self.control.snapshot()["control_timing"]})
                 self.frame_logger = SessionJsonlLogger(self.log_dir / "light_frames",
                     session_metadata={"hand_side": side, "model_id": self.model_id,
                         "input_source": input_source, "camera_source": camera_source, "self_collision_mode": collision_mode,
-                        "coordinate_path": f"{input_source + ' metric 21 points' if input_source in ('webxr', 'wuji_glove', 'leapmotion') else 'Wuji'} -> wrist -> one right X reflection -> shared left solver"})
+                        "coordinate_path": f"{input_source + ' metric 21 points' if input_source in ('webxr', 'wuji_glove', 'leapmotion', 'realsense_rgbd') else 'Wuji'} -> wrist -> one right X reflection -> shared left solver"})
             self.control.start()
         except Exception:
             self.control.close()
@@ -261,13 +264,21 @@ class V2WebSession:
             if timestamp <= self.last_timestamp or sequence <= self.last_sequence:
                 raise StaleFrameError("丢弃过期或重复帧")
             input_source = packet.get("source", self.input_source)
-            if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion"):
+            if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
                 raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove 或 leapmotion")
+            filter_enabled = packet.get("mediapipe_filter_enabled", self.mediapipe_filter_enabled)
+            if not isinstance(filter_enabled, bool):
+                raise ValueError("mediapipe_filter_enabled 必须为布尔值")
+            if filter_enabled != self.mediapipe_filter_enabled:
+                self.filter.reset()
+                self.normalized_filter.reset()
+                self.mediapipe_filter_enabled = filter_enabled
             if input_source != self.input_source:
                 self.filter.reset(); self.normalized_filter.reset(); self.solver.reset()
                 self.input_source = input_source
                 self.control.source = f"web_v2/{input_source}"
-            depth_source = f"{input_source}_metric" if input_source != "mediapipe" else "mediapipe_world"
+            depth_source = ("realsense_rgbd_fused" if input_source == "realsense_rgbd" else
+                            f"{input_source}_metric" if input_source != "mediapipe" else "mediapipe_world")
             hand = packet.get("hand")
             raw = normalized = world = filtered_normalized = source = topo = None
             label = None
@@ -275,7 +286,7 @@ class V2WebSession:
             try:
                 if hand is not None:
                     raw = points(hand["world"])
-                    normalized = points(hand["normalized"]) if input_source == "mediapipe" else None
+                    normalized = points(hand["normalized"]) if input_source in ("mediapipe", "realsense_rgbd") else None
                     label = hand.get("label")
                     if label not in ("Left", "Right"):
                         raise ValueError("检测手别无效")
@@ -284,19 +295,20 @@ class V2WebSession:
                         if timestamp - self.last_timestamp > 300:
                             self.filter.reset(); self.normalized_filter.reset()
                         world = (self.filter.filter(raw, timestamp / 1000)
-                                 if input_source == "mediapipe" else raw.copy())
+                                 if input_source == "mediapipe" and filter_enabled else raw.copy())
                         filtered_normalized = (self.normalized_filter.filter(normalized, timestamp / 1000)
-                                               if normalized is not None else None)
+                                               if normalized is not None and (input_source != "mediapipe" or filter_enabled)
+                                               else normalized.copy() if normalized is not None else None)
                         # Match Qt's remote-input path: preserve measured WebXR
                         # bone lengths. Wuji scaling/correction is camera-only.
-                        source = (world - world[0] if input_source in ("webxr", "wuji_glove", "leapmotion")
+                        source = (world - world[0] if input_source in ("webxr", "wuji_glove", "leapmotion", "realsense_rgbd")
                                   else preprocess_wuji_world_points(world))
                 if not match:
                     self.filter.reset(); self.normalized_filter.reset()
             except (ValueError, TypeError, KeyError):
                 apply_control(lambda: self.control.invalidate_target("网页关键点数据无效"))
                 raise
-            if self.recorder.active and input_source in ("webxr", "wuji_glove", "leapmotion"):
+            if self.recorder.active and input_source in ("webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
                 self.recorder.record_stage(f"{input_source}_raw", {}, frame_id=sequence, hand_side=self.side,
                     input_source=input_source, timestamp_ms=timestamp, capture_unix_ms=packet.get("capture_unix_ms"),
                     raw_webxr=packet.get("raw_webxr"), raw_wuji=packet.get("raw_wuji"), raw_leapmotion=packet.get("raw_leapmotion"), source_metadata=packet.get("source_metadata"),
@@ -341,7 +353,7 @@ class V2WebSession:
             if decision["allow_retarget"]:
                 try:
                     topo = prepare_topo_points(source, self.side)
-                    if input_source in ("webxr", "wuji_glove", "leapmotion"):
+                    if input_source in ("webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
                         self.recorder.record_stage(input_source, {}, frame_id=sequence, hand_side=self.side,
                             landmarks=topo.tolist(), depth_source=depth_source, timestamp_ms=int(timestamp))
                     else:
@@ -356,12 +368,12 @@ class V2WebSession:
                     if self.side == "right":
                         raw_pose = _to_right_joint_names(raw_pose)
                     self.recorder.record_retarget(raw_pose, frame_id=sequence, hand_side=self.side, solve_ms=solve_ms)
-                    safe = dict(raw_pose)
+                    safe = compensate_command_pose(raw_pose, self.profile.joint_limits(self.side))
                     if self.guard:
                         current = self.control.current_ui_pose()
                         if decision.get("reset_planner"):
                             self.guard.rebase(current)
-                        safe, collision = self.guard.project(raw_pose, current_values=current)
+                        safe, collision = self.guard.project(safe, current_values=current)
                     # Keep IK's raw history, as in the current Qt V2 code. Ruckig
                     # and collision states must not accumulate into IK latency.
                     def push():
@@ -384,10 +396,11 @@ class V2WebSession:
             if self.frame_logger:
                 self.frame_logger.record_frame({
                     "frame_id": sequence, "hand_side": self.side,
+                    "mediapipe_filter_enabled": input_source == "mediapipe" and filter_enabled,
                     "input_source": input_source, "source_metadata": packet.get("source_metadata"),
                     "raw_webxr": packet.get("raw_webxr"),
                     "raw_leapmotion": packet.get("raw_leapmotion"),
-                    "camera_size": packet.get("camera_size", [640,480]) if input_source == "mediapipe" else None,
+                    "camera_size": packet.get("camera_size", [640,480]) if input_source in ("mediapipe", "realsense_rgbd") else None,
                     "detected": hand is not None, "held_last_valid": False, "used_fallback_hand": False,
                     "detected_label": label, "expected_label": self.side.title(), "hand_selection_match": match,
                     "downstream_blocked_reason": snapshot.get("target_block_reason"),
@@ -398,12 +411,9 @@ class V2WebSession:
                     "wuji_points_21_m": source if input_source == "mediapipe" else None,
                     "topo_input_points_21_m": topo,
                     "retarget_ran": raw_pose is not None, "retarget_quality_ok": quality,
-                    "tracking_transition": snapshot["tracking_transition"], "retarget_joint_angles_rad": raw_pose,
-                    "collision_safe_target_joint_angles_rad": self.previous_safe,
-                    "ruckig_joint_angles_rad": snapshot["ruckig_joint_angles_rad"],
-                    "hardware_joint_angles_rad": snapshot["hardware_joint_angles_rad"],
+                    "tracking_transition": snapshot["tracking_transition"],
                     "linear_strokes_mm": snapshot["linear_strokes_mm"], "rotary_positions_deg": snapshot["rotary_positions_deg"],
-                    "joint_angles_rad": pose, "retarget_ms": solve_ms, "retarget_error": error,
+                    "retarget_ms": solve_ms, "retarget_error": error,
                     "thumb": thumb_diagnostics(source, topo, raw_pose), "self_collision": collision,
                     "downlink": {k: snapshot[k] for k in ("connected", "armed", "ruckig_enabled", "last_send_ok",
                         "sample_ticks", "send_ticks", "send_drops", "last_error", "homing_active", "homing_status")}})
@@ -411,13 +421,17 @@ class V2WebSession:
             self.last_seen = time.monotonic()
             tracking = not metric_discarded and raw_pose is not None and error is None and snapshot["target_ready"]
             return json_safe({"sequence": sequence, "tracking": tracking, "pose": pose, "points": topo,
+                "mediapipe_filter_enabled": input_source == "mediapipe" and filter_enabled,
                 **({"display_discarded": True, "discard_reason": "source_cancelled_or_expired"} if metric_discarded else {}),
                 "source": input_source, "depth_source": depth_source if hand else "none",
                 "source_metadata": packet.get("source_metadata"),
                 "message": ("输入已取消或过期，等待新数据" if metric_discarded else None) or error or snapshot.get("target_block_reason") or (
                     ("正在跟随 · 直接映射" if self.direct_mode else "正在跟随 · V2 碰撞与 Ruckig") if tracking else "等待有效手势 / 找零完成"),
                 "solve_ms": (time.perf_counter() - started) * 1000,
+                "optimized_points": optimized_skeleton(self.solver, raw_pose,
+                    shared_left_right=self.side == "right") if tracking else None,
                 "retarget_joint_angles_rad": raw_pose,
+                "ruckig_output_joint_angles_rad": snapshot.get("ruckig_output_joint_angles_rad"),
                 "collision_safe_target_joint_angles_rad": self.previous_safe if raw_pose is not None else None,
                 "collision": {"mode": self.collision_mode, **collision}, "hardware": snapshot,
                 "direct_mode": self.direct_mode})

@@ -1,0 +1,34 @@
+{
+  "_model_id": "TsenseI_v3_2_withid",
+  "_hand_side": "left",
+  "_joint_coordinate_version": "a32-signed-swing-v2",
+  "_swing_axis_alignment": "id-cad-direction-v2",
+  "motions": {
+    "动作1": {
+      "pose": {
+        "left_hand_pinky_DIP_joint": 0.005,
+        "left_hand_pinky_PIP_joint": 0.005,
+        "left_hand_pinky_MCP_joint": 0.005,
+        "left_hand_ring_DIP_joint": 0.005,
+        "left_hand_ring_PIP_joint": 0.005,
+        "left_hand_ring_MCP_joint": 0.005,
+        "left_hand_pinky_swing_joint": 0.0002564624135473168,
+        "left_hand_ring_swing_joint": -7.352454780789095e-05,
+        "left_hand_mid_DIP_joint": 0.006115533894977234,
+        "left_hand_mid_PIP_joint": 0.005,
+        "left_hand_mid_MCP_joint": 0.011519187656890771,
+        "left_hand_index_DIP_joint": 0.005,
+        "left_hand_index_PIP_joint": 0.005,
+        "left_hand_index_MCP_joint": 0.6457718232379019,
+        "left_hand_mid_swing_joint": 0.000976836824206584,
+        "left_hand_index_swing_joint": 0.0004332963092740797,
+        "left_hand_thumb_PIP_joint": 0.005,
+        "left_hand_thumb_MCP_joint": 0.005,
+        "left_hand_thumb_rotaback_joint2": 0.00031446607504285817,
+        "left_hand_thumb_rota_block_joint": 0.0
+      },
+      "transition": 1.0,
+      "interval": 0.2
+    }
+  }
+}

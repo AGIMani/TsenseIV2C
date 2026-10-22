@@ -47,7 +47,9 @@ try {
   await page.goto(url+'/?source=leapmotion');
   await page.addStyleTag({content:'#model-stage,#feedback-stage,#skeleton-stage{height:220px!important;min-height:220px!important;}'});
   await ready();
-  assert.equal(await page.locator('#input-source option').count(),4);
+  for (const source of ['mediapipe','webxr','wuji_glove','leapmotion','leapmotion_camera']) {
+    assert.equal(await page.locator(`#input-source option[value="${source}"]`).count(),1);
+  }
   assert.equal(await page.locator('#input-source').inputValue(),'leapmotion');
   assert(await page.locator('#leapmotion-input-panel').isVisible());
   assert(!(await page.locator('#camera-control').isVisible()));

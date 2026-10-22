@@ -45,14 +45,18 @@ def test_records_complete_control_chain(tmp_path: Path) -> None:
     assert recorder.stop(reason="test") == path
 
     rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines()]
+    assert rows[0]["units"]["current"] == "firmware_native"
     assert [row["type"] for row in rows] == [
-        "session", "mediapipe", "retarget", "h7", "session_end"
+        "session", "mediapipe", "retarget", "joint_angles", "h7", "joint_angles", "session_end"
     ]
     assert rows[1]["frame_id"] == rows[2]["frame_id"] == rows[3]["frame_id"] == 7
     assert len(rows[1]["landmarks"]) == 21
-    assert rows[2]["joints"]["left_hand_thumb_rota_joint"] == 0.25
+    assert rows[3]["joints"]["left_hand_thumb_rota_joint"] == 0.25
+    assert rows[3]["stage"] == "retarget"
+    assert "joints" not in rows[2]
     assert rows[2]["landmark_repairs"][0]["finger"] == "mid"
-    assert rows[3]["sent"] is True
+    assert rows[4]["sent"] is True
+    assert rows[5]["sent"] is True and rows[5]["stage"] == "sdk"
     assert rows[-1]["dropped_events"] == 0
     assert [row["seq"] for row in rows] == sorted(row["seq"] for row in rows)
 
@@ -139,7 +143,7 @@ def test_queue_overflow_is_reported_and_stop_drains(tmp_path: Path, monkeypatch)
     path = recorder.start(output_dir=tmp_path)
     try:
         for i in range(10):
-            recorder.record_retarget({}, frame_id=i, hand_side="left")
+            recorder.record_joint_angles("retarget", {"left_hand_thumb_rota_joint": .1}, frame_id=i, hand_side="left")
     finally:
         release_writer.set()
         recorder.stop()

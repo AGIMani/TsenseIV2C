@@ -1,4 +1,3 @@
-/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/a32_native.dir
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/Experimental.dir
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/Nightly.dir
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/Continuous.dir
@@ -27,6 +26,21 @@
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/ContinuousCoverage.dir
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/ContinuousMemCheck.dir
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/ContinuousSubmit.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/a32_native.dir
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/test.dir
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/edit_cache.dir
 /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/rebuild_cache.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/list_install_components.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/install.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/install/local.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles/install/strip.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/a3_sdk.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/test.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/edit_cache.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/rebuild_cache.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/list_install_components.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/install.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/install/local.dir
+/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/CMakeFiles/install/strip.dir

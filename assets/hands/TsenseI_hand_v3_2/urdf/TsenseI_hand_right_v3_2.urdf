@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<robot name="TsenseI_hand_v3_2_right" a32_joint_coordinates="a32-positive-swing-v1" a32_swing_axis_alignment="id-direction-v1" a32_thumb_zero_alignment="mechanical-stop-v1">
+<robot name="TsenseI_hand_v3_2_right" a32_joint_coordinates="a32-signed-swing-v2" a32_swing_axis_alignment="id-cad-direction-v2" a32_thumb_zero_alignment="reference-cad-v2">
   <link name="base_link">
     <inertial>
       <origin xyz="0.00189850004629675 -0.0818806172648888 -0.0255122812563732" rpy="0 -0 0" />
@@ -102,7 +102,7 @@
     </collision>
   </link>
   <joint name="right_hand_thumb_rotaback_joint2" type="revolute">
-    <origin xyz="0.0091878 -0.019669 -0.00042716" rpy="-0.25042009379455915 0 0.18193999999999999" />
+    <origin xyz="0.0091878 -0.019669 -0.00042716" rpy="2.7755575615628914e-17 0 0.18194000000000002" />
     <parent link="right_hand_thumb_rota_block_link" />
     <child link="right_hand_thumb_rotaback_link2" />
     <axis xyz="1 0 0" />
@@ -135,7 +135,7 @@
     <parent link="right_hand_thumb_rotaback_link2" />
     <child link="right_hand_thumb_MCP_link" />
     <axis xyz="0 -1 0" />
-    <limit lower="0.005" upper="1.3" effort="0" velocity="0" />
+    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_thumb_PIP_link">
     <inertial>
@@ -193,7 +193,7 @@
     <parent link="base_link" />
     <child link="right_hand_index_MCP_link" />
     <axis xyz="0 -1 0" />
-    <limit lower="0.005" upper="1.3" effort="0" velocity="0" />
+    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_index_swing_link">
     <inertial>
@@ -218,11 +218,11 @@
     </collision>
   </link>
   <joint name="right_hand_index_swing_joint" type="revolute">
-    <origin xyz="0.0134 0 0.01" rpy="-0.35000000000000003 0 0" />
+    <origin xyz="0.0134 0 0.01" rpy="-5.5511151231257839e-17 0 0" />
     <parent link="right_hand_index_MCP_link" />
     <child link="right_hand_index_swing_link" />
-    <axis xyz="1 0 0" />
-    <limit lower="0.0" upper="0.7" effort="0" velocity="0" />
+    <axis xyz="-1 -0 -0" />
+    <limit lower="-0.35" upper="0.35" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_index_PIP_link">
     <inertial>
@@ -309,7 +309,7 @@
     <parent link="base_link" />
     <child link="right_hand_mid_MCP_link" />
     <axis xyz="0 -1 0" />
-    <limit lower="0.005" upper="1.3" effort="0" velocity="0" />
+    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_mid_swing_link">
     <inertial>
@@ -334,11 +334,11 @@
     </collision>
   </link>
   <joint name="right_hand_mid_swing_joint" type="revolute">
-    <origin xyz="0.014875 0 0.01" rpy="-0.35000000000000003 0 0" />
+    <origin xyz="0.014875 0 0.01" rpy="-5.5511151231257839e-17 0 0" />
     <parent link="right_hand_mid_MCP_link" />
     <child link="right_hand_mid_swing_link" />
-    <axis xyz="1 0 0" />
-    <limit lower="0.0" upper="0.7" effort="0" velocity="0" />
+    <axis xyz="-1 -0 -0" />
+    <limit lower="-0.35" upper="0.35" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_mid_PIP_link">
     <inertial>
@@ -425,7 +425,7 @@
     <parent link="base_link" />
     <child link="right_hand_ring_MCP_link" />
     <axis xyz="0 -1 0" />
-    <limit lower="0.005" upper="1.3" effort="0" velocity="0" />
+    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_ring_swing_link">
     <inertial>
@@ -450,11 +450,11 @@
     </collision>
   </link>
   <joint name="right_hand_ring_swing_joint" type="revolute">
-    <origin xyz="0.0149 0 0.01" rpy="-0.35000000000000003 0 0" />
+    <origin xyz="0.0149 0 0.01" rpy="-5.5511151231257839e-17 0 0" />
     <parent link="right_hand_ring_MCP_link" />
     <child link="right_hand_ring_swing_link" />
-    <axis xyz="1 0 0" />
-    <limit lower="0.0" upper="0.7" effort="0" velocity="0" />
+    <axis xyz="-1 -0 -0" />
+    <limit lower="-0.35" upper="0.35" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_ring_PIP_link">
     <inertial>
@@ -541,7 +541,7 @@
     <parent link="base_link" />
     <child link="right_hand_pinky_swing_link" />
     <axis xyz="0 -1 0" />
-    <limit lower="0.005" upper="1.3" effort="0" velocity="0" />
+    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_pinky_MCP_link">
     <inertial>
@@ -566,11 +566,11 @@
     </collision>
   </link>
   <joint name="right_hand_pinky_swing_joint" type="revolute">
-    <origin xyz="0.016925 0 0.01" rpy="-0.35000000000000003 0 0" />
+    <origin xyz="0.016925 0 0.01" rpy="-5.5511151231257839e-17 0 0" />
     <parent link="right_hand_pinky_swing_link" />
     <child link="right_hand_pinky_MCP_link" />
-    <axis xyz="1 0 0" />
-    <limit lower="0.0" upper="0.7" effort="0" velocity="0" />
+    <axis xyz="-1 -0 -0" />
+    <limit lower="-0.35" upper="0.35" effort="0" velocity="0" />
   </joint>
   <link name="right_hand_pinky_PIP_link">
     <inertial>

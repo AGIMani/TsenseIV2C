@@ -61,7 +61,7 @@ class A32WebSession(WebSession):
             if action == "connect" and not device.is_connected:
                 self.control.start_recording(transport=data.get("transport", "usb"),
                     input_source=self.input_source,
-                    camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2"}.get(self.input_source, "browser-webcam"))
+                    camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2", "realsense_rgbd": "realsense-rgbd"}.get(self.input_source, "browser-webcam"))
             self.control.record_action("requested", request_action=action,
                                        request={k: v for k, v in data.items() if k != "session"})
             try:
@@ -164,10 +164,11 @@ class A32WebSession(WebSession):
         details = {"frame_id": result["sequence"], "timestamp_ms": packet["timestamp_ms"],
                    "capture_unix_ms": packet["capture_unix_ms"],
                    "tracking_session_id": packet.get("session"), "input_source": self.input_source,
-                   "direct_mode": self.control.direct_mode}
-        if self.input_source in ("webxr", "wuji_glove", "leapmotion"):
+                   "direct_mode": self.control.direct_mode,
+                   "mediapipe_filter_enabled": result.get("mediapipe_filter_enabled")}
+        if self.input_source in ("webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
             self.control.record_event(f"{self.input_source}_raw", **details, raw_webxr=packet.get("raw_webxr"), raw_wuji=packet.get("raw_wuji"), raw_leapmotion=packet.get("raw_leapmotion"),
-                source_metadata=packet.get("source_metadata"),
+                source_metadata=packet.get("source_metadata"), raw_detection=packet.get("raw_detection"),
                 world_landmarks=[hand["world"]] if hand else [],
                 handedness=[hand.get("label")] if hand else [])
         else:
@@ -189,11 +190,13 @@ class A32WebSession(WebSession):
             self.control.record_event("retarget_skipped", **details,
                 reason="no_hand" if not hand else "solve_rejected", message=result.get("message", ""))
         if result["tracking"]:
-            self.control.record_event("control_target", **details, joints=dict(self.control.target),
-                                      self_collision=result.get("collision"))
+            self.control.record_event("control_target", **details, self_collision=result.get("collision"))
         elif retarget:
             self.control.record_event("control_target_skipped", **details, reason="control_rejected",
                                       message=result.get("message", ""), self_collision=result.get("collision"))
+        for stage, key in (("direct", "direct_joint_angles_rad"), ("mink", "mink_joint_angles_rad")):
+            if result.get(key):
+                self.control.record_event(stage, joints=result[key], **details)
 
     def process(self, packet):
         return self._process(packet, touch_client=True)

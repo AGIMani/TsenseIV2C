@@ -13,7 +13,7 @@ from uuid import uuid4
 
 import numpy as np
 
-from .skeleton_angles import ANGLE_DEFINITIONS, ANGLE_KEYS, degrees, skeleton_joint_angles
+from .skeleton_angles import degrees
 from .pipeline import observation_depth_source
 
 DEFAULT_LOG_DIR = Path(__file__).resolve().parent / "logs"
@@ -49,9 +49,10 @@ class SessionRecorder:
         session = pipeline.session
         self.hand_side = session.hand_side
         self.input_source = input_source
+        self.model_id = session.profile.model_id
         self.joints = list(session.limits)
         self.columns = [(group, unit, key) for group, keys in (
-            ("skeleton", ANGLE_KEYS), ("retarget", self.joints), ("output", self.joints))
+            ("retarget", self.joints), ("direct", self.joints), ("mink", self.joints))
             for unit in ("rad", "deg") for key in keys]
         try:
             self._json = self.path.open("x", encoding="utf-8", newline="\n")
@@ -75,11 +76,11 @@ class SessionRecorder:
                 "calibration_path": str(calibration_path),
                 "calibration_sha256": hashlib.sha256(calibration).hexdigest(),
                 "calibration_yaml": calibration.decode("utf-8"),
-                "joint_names": self.joints, "angle_definitions": ANGLE_DEFINITIONS,
+                "joint_names": self.joints, "joint_stages": ["retarget", "direct", "ruckig", "mink", "sdk"],
                 "actuation": pipeline.stroke_mapper.description(),
-                "skeleton_angle_source": "metric world_points (source identified per frame); fallback to preprocessed normalized-Z points",
                 "retarget_angles": "URDF radians/degrees, after joint limits, BEFORE collision filter",
-                "output_angles": "Final displayed pose; may be collision-filtered or held from a previous frame",
+                "direct_angles": "Actual direct-mode output, absent when direct mode is disabled",
+                "mink_angles": "Actual Mink projection output, absent when Mink is disabled",
                 "coordinate_units": {"world_points": "meter", "topo_input_points": "meter",
                                      "normalized_points": "MediaPipe image coordinates only; null for WebXR"},
             })
@@ -96,48 +97,50 @@ class SessionRecorder:
         self._json.flush()
 
     def record_frame(self, frame_id, observation, result, *, capture_timestamp_ns, camera_size,
-                     input_source=None, source_metadata=None, raw_webxr=None):
+                     input_source=None, source_metadata=None, raw_webxr=None, mediapipe_filter_enabled=None):
         def attr(name):
             return None if observation is None else getattr(observation, name, None)
         world = attr("world_points")
         source = world if world is not None else attr("points")
-        angles = skeleton_joint_angles(source)
         retarget = result.retarget_pose
         depth = observation_depth_source(observation)
         input_source = input_source or attr("source") or self.input_source
-        groups = {
-            "skeleton_rad": angles, "skeleton_deg": degrees(angles),
-            "retarget_rad": retarget, "retarget_deg": degrees(retarget),
-            "output_rad": result.pose, "output_deg": degrees(result.pose),
-        }
+        stages = {"retarget": retarget, "direct": result.direct_pose, "mink": result.mink_pose}
+        groups = {f"{stage}_{unit}": values if unit == "rad" else degrees(values)
+                  for stage, values in stages.items() for unit in ("rad", "deg")}
+        elapsed = time.perf_counter() - self.started
         record = {
             "type": "frame", "frame_id": frame_id, "hand_side": self.hand_side,
             "input_source": input_source,
+            "mediapipe_filter_enabled": (attr("mediapipe_filter_enabled")
+                                         if mediapipe_filter_enabled is None else mediapipe_filter_enabled),
             "source_metadata": source_metadata if source_metadata is not None else attr("source_metadata"),
             "raw_webxr": raw_webxr if raw_webxr is not None else attr("raw_webxr"),
             "raw_wuji": (source_metadata or attr("source_metadata") or {}).get("raw_wuji"),
             "raw_leapmotion": (source_metadata or attr("source_metadata") or {}).get("raw_leapmotion"),
             "capture_timestamp_unix_ns": capture_timestamp_ns,
-            "session_elapsed_s": time.perf_counter() - self.started,
+            "session_elapsed_s": elapsed,
             "camera_size": camera_size, "detected": observation is not None,
             "detected_label": attr("detected_label"), "expected_label": attr("expected_label"),
             "held_last_valid": bool(attr("held_last_valid")),
             "used_fallback_hand": bool(attr("used_fallback_hand")),
             "tracking": result.tracking, "retarget_success": retarget is not None,
             "message": result.message, "depth_source": depth,
-            "raw_normalized_points_21": attr("raw_normalized_points") if input_source == "mediapipe" else None,
-            "smoothed_normalized_points_21": attr("normalized_points") if input_source == "mediapipe" else None,
+            "raw_normalized_points_21": attr("raw_normalized_points") if input_source in ("mediapipe", "realsense_rgbd") else None,
+            "smoothed_normalized_points_21": attr("normalized_points") if input_source in ("mediapipe", "realsense_rgbd") else None,
             "raw_world_points_21_m": attr("raw_world_points"),
             "smoothed_world_points_21_m": world,
             "source_points_21_m": source, "topo_input_points_21_m": result.points,
-            "skeleton_joint_angles_rad": angles, "skeleton_joint_angles_deg": groups["skeleton_deg"],
-            "retarget_joint_angles_rad": retarget, "retarget_joint_angles_deg": groups["retarget_deg"],
-            "output_joint_angles_rad": result.pose, "output_joint_angles_deg": groups["output_deg"],
             "solve_ms": result.solve_ms, "contacts": result.contacts,
             "collision_diagnostics": getattr(result, "collision_diagnostics", {}),
             "actuation": getattr(result, "actuation", {}),
         }
         self._write(record)
+        for stage, values in stages.items():
+            if values:
+                self._write({"type": "joint_angles", "stage": stage, "joints": values,
+                             "frame_id": frame_id, "model_id": self.model_id, "hand_side": self.hand_side,
+                             "t": elapsed, "capture_timestamp_unix_ns": capture_timestamp_ns})
         self._csv.writerow([frame_id, capture_timestamp_ns, self.hand_side, record["detected_label"],
                             depth, result.tracking, retarget is not None, record["held_last_valid"],
                             record["used_fallback_hand"], result.message] +

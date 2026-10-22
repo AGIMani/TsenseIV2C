@@ -11,6 +11,42 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from a32_driver.recording import default_channels, recording_metadata, telemetry_event
 
 
+def test_sdk_1_1_14_currents_are_recorded_in_amperes_without_second_conversion():
+    channels = default_channels()
+    state = {"connected": True, "telemetry_age_ms": 1,
+             "telemetry_format": "a32-native-sdk-state/v2",
+             "telemetry_units": {"self_current": "A", "external_current": "A"},
+             "self": [{"online": True, "position": 1., "iq": -.1374, "iq_ref": .2748,
+                       "current_unit": "A"} for _ in range(18)],
+             "mit": [{"online": True, "valid": True, "position": 1., "iq": -2.75,
+                      "current_unit": "A"} for _ in range(2)]}
+    original = copy.deepcopy(state)
+    event = telemetry_event(state, channels)
+    assert event["telemetry_format"] == "a32-native-sdk-state/v2"
+    assert all(row["current_unit"] == "A" for row in event["linear"] + event["rotary"])
+    assert event["linear"][0]["iq_meas"] == -.1374
+    assert event["linear"][0]["iq_ref"] == .2748
+    assert event["rotary"][0]["iq"] == -.1374
+    assert event["rotary"][4]["iq"] == -2.75
+    assert event["sdk_state"] == state == original
+    metadata = recording_metadata("TsenseI_v3_2", "left", channels)
+    assert metadata["telemetry_units"]["self_current"] == "A"
+    assert metadata["homing_current_unit"] == "counts"
+
+
+@pytest.mark.parametrize("format", [None, "a32-native-sdk-state/v1"])
+def test_old_state_captures_keep_native_self_current_units(format):
+    state = {"connected": True, "telemetry_age_ms": 1, "self": [
+        {"online": True, "position": 1., "iq": -100., "iq_ref": 200.}]}
+    if format is not None:
+        state["telemetry_format"] = format
+    event = telemetry_event(state, default_channels())
+    assert event["linear"][0]["iq_meas"] == -100.
+    assert event["linear"][0]["current_unit"] == "SDK native"
+    assert event["telemetry_units"]["self_current"] == "SDK native"
+    assert event["rotary"][4]["current_unit"] == "A"
+
+
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_all_linear_feedback_positions_are_negated_once_and_raw_sdk_is_preserved(side):
     channels = default_channels(side)

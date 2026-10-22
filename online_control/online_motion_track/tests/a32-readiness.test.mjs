@@ -26,8 +26,13 @@ test('A32 uses A30 startup gates: first telemetry, active tracking, no fresh-han
       assert.equal(elements.get('a32-arm').disabled, true);
       assert.match(elements.get('a32-arm').title, /一包有效/);
       panel.update({...panel.state, telemetry_seen: true, target_ready: false, hand_recent: false});
+      assert.equal(elements.get('a32-arm').disabled, true);
+      assert.match(elements.get('a32-arm').title, /新鲜完整反馈/);
+      assert.match(elements.get('a32-sdk-detail').textContent, /重新开启前需更新反馈/);
+      panel.update({...panel.state, feedback_valid: true, telemetry_age_ms: 0, seed_missing: []});
       assert.equal(elements.get('a32-arm').disabled, false);
-      assert.match(elements.get('a32-sdk-detail').textContent, /上次目标或初始姿态/);
+      panel.update({...panel.state, telemetry_units: {self_current: 'A', external_current: 'A'}});
+      assert.match(elements.get('a32-sdk-detail').textContent, /电流反馈 A · 找零 Iq 仍为码值/);
       for (const collision_mode of ['off', 'monitor']) {
         panel.update({...panel.state, collision_mode, sample_collision_ready: false});
         assert.equal(elements.get('a32-arm').disabled, false);

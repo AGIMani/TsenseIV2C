@@ -70,7 +70,8 @@ def test_braking_extrema_replan_before_crossing_position_limit(side, sign):
         initial = c.profile.init_pose(side); initial[joint] = sign*.349
         c._seed(initial)
         velocity = list(c.input.current_velocity)
-        velocity[c.names.index(joint)] = sign*.1
+        # Keep the braking distance above the 0.001 rad limit gap.
+        velocity[c.names.index(joint)] = sign*.2
         c.input.current_velocity = velocity
         target = dict(initial); target[joint] = sign*.3; target[other] = .2
         c.push(target, 1)

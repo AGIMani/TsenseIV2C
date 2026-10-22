@@ -183,7 +183,11 @@ def test_post_ruckig_collision_gate_reseeds_interpolator_to_accepted_pose(
 
     assert interp.synced == {"right_hand_index_MCP_joint": 0.2}
     assert usb.calls[-1][1]["right_hand_index_MCP_joint"] == 0.2
-    assert control.snapshot()["sample_collision"]["limited"]
+    snapshot = control.snapshot()
+    assert snapshot["sample_collision"]["limited"]
+    assert snapshot["ruckig_output_joint_angles_rad"]["right_hand_index_MCP_joint"] == .8
+    assert snapshot["ruckig_joint_angles_rad"]["right_hand_index_MCP_joint"] == .2
+    assert snapshot["direct_joint_angles_rad"] is None
 
 
 def test_control_boundary_forces_pinky_rotation_to_zero(monkeypatch):
@@ -382,7 +386,8 @@ def test_loss_cancels_inflight_target_and_resumes_from_accepted_pose(monkeypatch
         decision = control.observe_tracking_frame(True)
     generation = decision["generation"]
     assert control.push_target({name: 1.3}, tracking_generation=generation)
-    for i in range(1, 150):
+    # Lose observation during acceleration, before the faster trajectory brakes.
+    for i in range(1, 75):
         clock[0] = 0.06 + i * 0.002
         if i % 15 == 0:
             control.observe_tracking_frame(True)
@@ -461,3 +466,34 @@ def test_sample_safety_failure_blocks_old_target_and_all_physical_sends():
     assert not control.snapshot()["armed"]
     assert control.snapshot()["tracking_transition"]["phase"] == "blocked"
     assert not any(row[0] == "send" for row in usb.calls)
+
+
+def test_sdk_snapshot_and_log_use_post_guard_command_angles(tmp_path, monkeypatch):
+    import json
+    from utils.control_session_recorder import ControlSessionRecorder
+
+    joint = "left_hand_index_MCP_joint"
+    class ClippingGuard(_FakeGuard):
+        def filter(self, cfg, **kwargs):
+            return {**cfg, joint: .25}
+
+    recorder = ControlSessionRecorder()
+    path = recorder.start(output_dir=tmp_path)
+    usb = _FakeUsb()
+    control = LightControlPipeline(usb=usb, interpolator=_FakeInterpolator(),
+        downlink_guard=ClippingGuard(), hand_side="left", recorder=recorder)
+    monkeypatch.setattr(module, "joint_angles_to_hand_positions", lambda cfg: ([0.] * 14, [0.] * 7))
+    try:
+        control.set_tracking_active(True)
+        control.push_target({joint: .8}, frame_id=13)
+        assert control.set_armed(True)
+        control._control_tick(10.)
+        state = control.snapshot()
+        assert state["ruckig_output_joint_angles_rad"][joint] == .8
+        assert state["command_joint_angles_rad"][joint] == .25
+        assert usb.calls[-1][1][joint] == .25
+    finally:
+        recorder.stop()
+    angles = [row for row in map(json.loads, path.read_text().splitlines()) if row["type"] == "joint_angles"]
+    assert [(row["stage"], row["joints"][joint]) for row in angles] == [("ruckig", .8), ("sdk", .25)]
+    assert angles[-1]["sent"] is True and angles[-1]["frame_id"] == 13

@@ -92,7 +92,9 @@ def main():
     parser.add_argument("--ablation", action="store_true")
     args = parser.parse_args()
     current = _build_topo_config()
-    old = replace(current, lambda_smooth=2.5, lambda_reg=2.5, init_max_iters=1, topo_max_iters=2)
+    # Keep the historical baseline free of the newer fingertip position objective.
+    old = replace(current, lambda_fingertip=0, lambda_smooth=2.5, lambda_reg=2.5,
+                  init_max_iters=1, topo_max_iters=2)
     variants = {"before": old, "after": current}
     if args.ablation:
         variants.update(weights_only=replace(old, lambda_smooth=.1, lambda_reg=.1),

@@ -128,7 +128,7 @@ def test_physical_limit_clamp_changes_joint_pose_before_conversion(model_id):
     assert command["applied_pose"] == constrained
     assert command["joint_angles_rad"] == constrained
     assert set(command["clamped_joints_rad"]) == set(pose)
-    assert math.degrees(.005) - 1e-9 <= command["self"][6] <= math.degrees(.695) + 1e-9
+    assert math.degrees(-.34) - 1e-9 <= command["self"][6] <= math.degrees(.34) + 1e-9
     for c in device.channels:
         value = command["self" if c["channel"] == "self" else "mit_pos"][c["index"]]
         assert c["limits"][0] <= value <= c["limits"][1]
@@ -224,29 +224,40 @@ def test_initial_wait_can_home_without_previous_enable_and_cannot_send():
     assert device.get_state()["enabled"]
 
 
-@pytest.mark.parametrize("reason", ["timeout", "motor_error"])
-def test_homing_timeout_or_motor_error_requests_whole_hand_stop(reason):
+@pytest.mark.parametrize("reason", ["timeout", "motor_error", "stale", "offline"])
+def test_homing_error_stops_host_commands_without_disabling_motors(reason):
     device, backend = connected_device()
     device.home(slot=3)
+    before = list(backend.calls)
     if reason == "timeout":
         device._home_started -= device.home_timeout_s + 1
-    else:
+    elif reason == "motor_error":
         backend.state["self"][3]["homing"] = 3
+    else:
+        device._home_started -= 1
+        if reason == "stale":
+            backend.state["telemetry_age_ms"] = 501
+        else:
+            backend.state["self"][0]["online"] = False
     state = device.get_state()
     assert not state["enabled"] and not state["ready"]
-    assert "stop requested" in state["last_error"]
-    assert backend.calls[-1] == ("estop",)
+    assert "command sending stopped" in state["last_error"]
+    assert backend.calls == before
+    device.close()
 
 
-def test_home_watchdog_stops_without_browser_polling():
+def test_home_watchdog_blocks_commands_without_browser_polling_or_disable():
     device, backend = connected_device()
     device.home(slot=3)
     with device._lock:
         device._home_started -= device.home_timeout_s + 1
+    before = list(backend.calls)
     deadline = time.monotonic() + 1
-    while time.monotonic() < deadline and backend.calls[-1][0] != "estop":
+    while time.monotonic() < deadline and device._homing_slots:
         time.sleep(.01)
-    assert backend.calls[-1] == ("estop",)
+    assert not device._homing_slots
+    assert "homing timed out" in device._last_error
+    assert backend.calls == before
     device.close()
 
 
@@ -254,12 +265,12 @@ def test_explicit_reset_recovers_cancelled_home_without_claiming_done():
     device, backend = connected_device()
     device.home(slot=3)
     device.stop()
-    assert device.get_state()["homing"]  # estop does not rewrite firmware state.
+    assert device.get_state()["homing"]  # Host stop does not cancel firmware homing.
     with pytest.raises(A32DriverError, match="homing to complete"):
         device.enable_all()
     before = len(backend.calls)
     state = device.reset_home(slot=3)
-    assert backend.calls[before:] == [("estop",), ("home_reset", 3)]
+    assert backend.calls[before:] == [("home_reset", 3)]
     assert state["home_reset_pending"] and not state["enabled"] and not state["ready"]
     device.enable_all()  # Reset ACK is diagnostic, not a telemetry prerequisite.
     assert device.get_state()["enabled"]
@@ -270,11 +281,11 @@ def test_explicit_reset_recovers_cancelled_home_without_claiming_done():
     device.close()
 
 
-def test_reset_all_stops_first_and_never_resets_mit():
+def test_reset_all_does_not_disable_or_reset_mit():
     device, backend = connected_device()
     before = len(backend.calls)
     device.reset_home()
-    assert backend.calls[before:] == [("estop",)] + [("home_reset", i) for i in range(18)]
+    assert backend.calls[before:] == [("home_reset", i) for i in range(18)]
     assert not device.get_state()["enabled"]
 
 
@@ -314,53 +325,64 @@ def test_send_continues_with_missing_or_unready_feedback(fault):
 
 
 @pytest.mark.parametrize("model_id", ["TsenseI_v3_2", "TsenseI_v3_2_withid"])
-@pytest.mark.parametrize("telemetry", ["empty", "stale", "offline", "wait"])
-def test_enable_and_send_without_telemetry_or_homing(model_id, telemetry):
+@pytest.mark.parametrize("telemetry", ["empty", "stale", "offline", "partial", "nan", "outside", "mit_fault"])
+def test_enable_requires_current_complete_feedback_without_fallback(model_id, telemetry):
     device, backend = connected_device(model_id)
+    fallback = {n: (lo + hi) * .3 for n, (lo, hi) in device.joint_limits().items()}
+    device.enable_all()
+    device.send_joint_targets(fallback, clamp=False)
+    device.stop()
     if telemetry == "empty":
         backend.state.update(self=[], mit=[], telemetry_age_ms=-1)
     elif telemetry == "stale":
         backend.state["telemetry_age_ms"] = 999
     elif telemetry == "offline":
-        for row in backend.state["self"] + backend.state["mit"]:
-            row["online"] = False
+        backend.state["self"][2]["online"] = False
+    elif telemetry == "partial":
+        backend.state["mit"] = backend.state["mit"][:1]
+    elif telemetry == "nan":
+        backend.state["self"][2]["position"] = float("nan")
+    elif telemetry == "outside":
+        backend.state["self"][2]["position"] = 1.  # 1 mm beyond zero, not noise.
     else:
-        for row in backend.state["self"]:
-            row["homing"] = 0
-    fallback = {n: (lo + hi) * .3 for n, (lo, hi) in device.joint_limits().items()}
-    device.enable_all(fallback_pose=fallback)
-    assert device.get_state()["enabled"] and device.get_state()["command_ready"]
-    if telemetry != "wait":
-        assert len(device.get_state()["seed_missing"]) == 20
-        expected = device.prepare_targets(fallback)
-        assert backend.calls[-3][1] == pytest.approx(expected["self"])
-        assert backend.calls[-3][2] == pytest.approx(expected["mit_pos"])
-    sent = device.send_joint_targets(fallback, clamp=False)
-    assert sent["applied_pose"] == fallback
-    # Losing all telemetry must neither stop the stream nor reset its origin.
-    backend.state.update(self=[], mit=[], telemetry_age_ms=-1)
-    device.stop()
-    assert device.starting_pose({n: 0. for n in fallback}) == fallback
-    device.enable_all()
-    device.send_joint_targets(fallback, clamp=False)
-    device.reset_home()
-    assert device.get_state()["home_reset_pending"]
-    device.enable_all()  # No reset telemetry ACK is required either.
+        backend.state["mit"][0]["fault"] = 1
+    before = list(backend.calls)
+    with pytest.raises(A32DriverError, match="反馈"):
+        device.starting_pose(fallback)
+    for kwargs in ({}, {"fallback_pose": fallback}, {"start_pose": fallback}):
+        with pytest.raises(A32DriverError, match="反馈"):
+            device.enable_all(**kwargs)
+    assert device.get_state()["seed_missing"]
+    assert not device.get_state()["enabled"]
+    assert backend.calls == before
 
 
-def test_partial_feedback_only_overrides_available_starting_joints():
+def test_explicit_old_seed_cannot_override_new_feedback():
     device, backend = connected_device("TsenseI_v3_2_withid")
-    fallback = {n: (lo + hi) * .3 for n, (lo, hi) in device.joint_limits().items()}
-    backend.state["self"] = backend.state["self"][:1]
-    backend.state["self"][0]["position"] = -1.25
-    backend.state["mit"] = []
-    pose = device.starting_pose(fallback)
-    measured_name = next(c["joint"] for c in device.channels if c["channel"] == "self" and c["index"] == 0)
-    assert pose[measured_name] != fallback[measured_name]
-    assert {n: v for n, v in pose.items() if n != measured_name} == {n: v for n, v in fallback.items() if n != measured_name}
-    assert len(device.get_state()["seed_missing"]) == 19
-    device.enable_all(start_pose=pose)
-    assert backend.calls[-3][1][0] == pytest.approx(1.25)
+    old = {n: (lo + hi) * .3 for n, (lo, hi) in device.joint_limits().items()}
+    before = list(backend.calls)
+    with pytest.raises(A32DriverError, match="起步姿态与当前反馈不一致"):
+        device.enable_all(start_pose=old)
+    assert backend.calls == before and not device.get_state()["enabled"]
+
+
+def test_fresh_wait_feedback_can_seed_without_requiring_homing():
+    device, backend = connected_device()
+    for row in backend.state["self"]:
+        row["homing"] = 0
+    device.enable_all()
+    assert device.get_state()["enabled"] and not device.get_state()["ready"]
+
+
+def test_explicit_home_without_feedback_does_not_send_a_position_seed():
+    device, backend = connected_device()
+    backend.state.update(self=[], mit=[], telemetry_age_ms=-1)
+    try:
+        device.home(slot=3)
+        assert backend.calls == [("usb", "SIM_ONLY"), ("enable", True), ("home", 3, 80.)]
+        assert not device.get_state()["enabled"]
+    finally:
+        device.close()
 
 
 def test_disconnected_device_cannot_enable_or_send_without_telemetry():
@@ -372,34 +394,116 @@ def test_disconnected_device_cannot_enable_or_send_without_telemetry():
     assert device._backend is None
 
 
-def test_failed_send_disarms_and_best_effort_estops():
+def test_failed_send_revokes_host_permission_without_disable():
     device, backend = connected_device()
     device.enable_all()
     backend.fail_send = True
     with pytest.raises(A32DriverError, match="simulated link loss"):
         device.send_joint_targets({n: 0. for n in device.joint_limits()})
     assert not device.get_state()["enabled"]
-    assert backend.calls[-1] == ("estop",)
+    assert backend.calls[-1] == ("send",)
+    assert ("estop",) not in backend.calls and ("enable", False) not in backend.calls
+    before = list(backend.calls)
+    with pytest.raises(A32DriverError, match="not enabled"):
+        device.send_joint_targets({n: 0. for n in device.joint_limits()})
+    assert backend.calls == before
 
 
-def test_unexpected_disconnect_disarms_and_close_stops_before_disconnect():
+def test_unexpected_disconnect_and_close_never_disable_motors():
     device, backend = connected_device()
     device.enable_all()
     backend.state["connected"] = False
     assert not device.get_state()["enabled"]
     backend.state["connected"] = True
     device.close()
-    assert [c[0] for c in backend.calls[-3:]] == ["estop", "disconnect", "close"]
+    assert [c[0] for c in backend.calls[-2:]] == ["disconnect", "close"]
+    assert ("estop",) not in backend.calls and ("enable", False) not in backend.calls
 
 
-def test_right_hand_connection_blocked_without_loading_dll():
-    device = A32Device(hand_side="right")
-    with pytest.raises(A32DriverError, match="not calibrated"):
-        device.connect_usb()
-    with pytest.raises(A32DriverError, match="not calibrated"):
-        device.connect_eth("127.0.0.1")
-    assert device._backend is None
-    device.prepare_targets({n: 0. for n in device.joint_limits()})
+@pytest.mark.parametrize("model_id", ["TsenseI_v3_2", "TsenseI_v3_2_withid"])
+@pytest.mark.parametrize("action", ["stop", "emergency_stop", "disable_all", "disconnect", "close"])
+def test_every_stop_api_blocks_targets_without_sending_disable(model_id, action):
+    device, backend = connected_device(model_id)
+    device.enable_all()
+    pose = device.starting_pose()
+    device.send_joint_targets(pose)
+    before = list(backend.calls)
+    getattr(device, action)()
+    assert not device.get_state()["enabled"]
+    expected = [("disconnect",), ("close",)] if action == "close" else [("disconnect",)] if action == "disconnect" else []
+    assert backend.calls == before + expected
+    with pytest.raises(A32DriverError):
+        device.send_joint_targets(pose)
+    assert backend.calls == before + expected
+    if action not in ("disconnect", "close"):
+        device.enable_all(start_pose=pose)
+        device.send_joint_targets(pose)
+        assert backend.calls[-1] == ("send",)
+    device.close()
+    assert ("estop",) not in backend.calls and ("enable", False) not in backend.calls
+
+
+@pytest.mark.parametrize("operation", ["set_targets", "send_once", "enable_all", "home_slot"])
+def test_enable_and_home_errors_never_send_disable(monkeypatch, operation):
+    device, backend = connected_device()
+
+    def fail(*args):
+        raise A32DriverError("simulated command failure")
+
+    monkeypatch.setattr(backend, operation, fail)
+    with pytest.raises(A32DriverError, match="simulated command failure"):
+        if operation == "home_slot":
+            device.home(slot=3)
+        else:
+            device.enable_all()
+    assert not device.get_state()["enabled"]
+    device.close()
+    assert ("estop",) not in backend.calls and ("enable", False) not in backend.calls
+
+
+def test_home_monitor_read_error_never_sends_disable(monkeypatch):
+    device, backend = connected_device()
+    device.home(slot=3)
+    before = list(backend.calls)
+
+    def fail():
+        raise A32DriverError("simulated monitor failure")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(backend, "get_state", fail)
+        device._home_thread.join(timeout=1)
+        assert not device._home_thread.is_alive()
+        assert not device._homing_slots and not device._enabled
+        assert "homing monitor failed" in device._last_error
+        assert backend.calls == before
+    device.close()
+
+
+@pytest.mark.parametrize("has_stop_sending", [False, True])
+def test_native_python_stop_never_calls_legacy_disable_abi(has_stop_sending):
+    # Even a legacy library selected through A32_NATIVE_LIBRARY must never
+    # receive a32_estop or a32_enable_all(false) through the Python adapter.
+    hand = NativeHand.__new__(NativeHand)
+    hand._can_stop_sending = has_stop_sending
+    calls = []
+    hand._call = lambda *args: calls.append(args)
+    hand.estop()
+    hand.enable_all(False)
+    assert calls == ([("a32_stop_sending",)] * 2 if has_stop_sending else [])
+    hand.enable_all(True)
+    assert calls[-1] == ("a32_enable_all", 1)
+
+
+def test_right_hand_connection_uses_shared_calibrated_slot_map():
+    backend = SimulatedNativeHand()
+    device = A32Device(hand_side="right", model_id="TsenseI_v3_2_withid", backend=backend)
+    device.connect_usb("SIM_ONLY")
+    assert backend.calls == [("usb", "SIM_ONLY")]
+    assert device.get_state()["hand_side"] == "right"
+    pose = {n: 0. for n in device.joint_limits()}
+    command = device.prepare_targets(pose)
+    assert len(command["self"]) == 18 and len(command["mit_pos"]) == 2
+    device.close()
 
 
 @pytest.mark.parametrize("bad", [float("nan"), float("inf"), True, "0"])
@@ -411,13 +515,13 @@ def test_nonfinite_and_nonreal_targets_rejected_before_sdk(bad):
         device.prepare_targets(pose)
 
 
-@pytest.mark.skipif(sys.platform != "win32" or not (ROOT / "src/a32_driver/bin/a32_native.dll").is_file(),
-                    reason="Built Windows x64 SDK wrapper is not available")
+@pytest.mark.skipif(sys.platform != "linux" or not (ROOT / "src/a32_driver/bin/liba32_native.so").is_file(),
+                    reason="Built Linux SDK wrapper is not available")
 def test_real_native_dll_load_and_snapshot_without_hardware():
     native = NativeHand()
     try:
         state = native.get_state()
-        assert state["sdk_version"] == "1.1.0"
+        assert state["sdk_version"] == "1.1.15"
         assert not state["connected"] and not state["streaming"]
         assert len(state["self"]) == 18 and len(state["mit"]) == 2
         assert state["telemetry_age_ms"] == -1

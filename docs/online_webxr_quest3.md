@@ -53,18 +53,68 @@ A3.2 SDK 控制接口要求请求来自本机回环，因此电脑控制页继�
 证书包含当前电脑 IP；更换网络后重新启动即可更新。WebXR 需要安全上下文，
 仅能打开 HTTPS 页面不代表已完成证书信任。
 
-### USB 开发验证
+### USB ADB 直连：21 点接入口
 
-Quest 已开启开发者模式、USB 调试并授权 ADB 时，也可使用本机回环安全上下文：
+在 Quest 开启开发者模式，通过 USB 数据线连接 Ubuntu，并在头显内允许 USB 调试。
+安装 ADB 后启动专用入口：
 
-```powershell
-python online_control/online_motion_track/main.py --port 8766 --no-open
-adb reverse tcp:8766 tcp:8766
+```bash
+sudo apt install adb android-sdk-platform-tools-common
+adb devices -l
+bash migration/ubuntu/start-quest-adb.sh
 ```
 
-电脑打开 `http://localhost:8766/?source=webxr`，Quest 打开
-`http://localhost:8766/q`，使用自动填入的 `123456` 连接。此时 ADB 将 Quest 的该回环端口转发
-到电脑；停止验证后可用 `adb reverse --remove tcp:8766` 移除转发。
+电脑打开 `http://localhost:8766/?source=quest_adb`，选择「Quest 3 · USB ADB（21点）」、
+型号和实际手别，点击「开始识别」。Quest Browser 打开 `http://localhost:8766/q/adb`，
+使用自动填入的 `123456` 连接，然后点击「进入 XR 并开始采集」。USB 启动器使用独立 track
+环境，将默认端口 8766 的工作台重启为回环 HTTP；原 HTTPS 收藏此时需要换成上述 HTTP 地址。
+普通 `start-track.sh` 仍使用局域网 HTTPS。
+
+启动器检查 USB 设备状态并建立 `adb reverse tcp:8766 tcp:8766`。已有相同转发会复用；
+冲突转发不会被覆盖。多个 USB 设备时设置 `HAND_QUEST_ADB_SERIAL=<Quest序列号>`；
+要更换端口，设置 `HAND_QUEST_ADB_PORT=9001`，电脑和头显均使用新端口。
+`--check` 只运行无硬件软件检查，不调用 ADB。USB 断开或头显重启后，重新运行启动器。
+结束时停止电脑识别、退出服务，需要清理转发可执行：
+
+```bash
+adb -s <Quest序列号> reverse --remove tcp:8766
+```
+
+这条链路仍由 Quest Browser 的 WebXR 获取手部追踪；ADB 负责 USB 传输，不是骨架采集 API，
+无需额外原生 APK。头显将 25 关节映射为 MediaPipe 顺序的 21 点，在上传前去掉四个非拇指
+metacarpal；电脑接收每只手的 21×3 米制坐标，减去手腕平移，保留 WebXR 轴向、不镜像，
+接入现有重定向、记录和丢手处理。原 `/q` 和 25 点协议保持可用。
+
+新增同源接口：
+
+- `POST /api/quest-adb/pair`：`{"code":"123456"}`，返回当前控制会话的 `token`。
+- `POST /api/quest-adb/publish`：`{"token":"配对返回值","message":{...}}`。
+- 电脑仍使用 `/api/webxr/create`（附 `transport:"adb"`）和 `/api/webxr/latest`。
+  后端管线来源为 `webxr`，记录中用 `source_metadata.transport="adb"`、
+  `source_joint_count=21` 和原始 schema 区分 USB 21 点输入。
+
+每个流先发 `client_hello`，再发 `hand_skeleton`，结束发 `session_ended`。
+所有消息的 schema 为 `teleop.quest.adb.hand_skeleton.v1`，带 `stream_id`、递增安全整数
+`sequence`。骨架消息还必须带 `joint_set:"mediapipe-21"`、`units:"m"`、
+`coordinate_space:"webxr_local"` 或 `"webxr_local_floor"`、单调 `client_perf_ms`，以及：
+
+```json
+{"hands":[{"handedness":"left","tracked":false,"landmarks":[]}]}
+```
+
+以上表示未追踪。追踪时 `tracked:true`，`landmarks` 必须是恰好 21 个有限数值 xyz 三元组；
+顺序为 wrist，然后拇指 CMC/MCP/IP/tip，再依次食指、中指、无名指、小指 MCP/PIP/DIP/tip。
+可同时提供左右手，不能重复同一手别。空手、超时、旧序号、结束的流不会恢复有效输入；
+同一 `stream_id` 不允许从 21 点切换为 25 点协议。原始 21 点包保留在 `raw_webxr` 中。
+
+排错：`unauthorized` 需在头显授权，`offline` 需重连数据线；无设备时检查开发者模式、
+USB 数据线和 Linux udev 权限。确认 `adb devices -l` 带 `usb:`，启动器不会选用无线 ADB。
+头显只在这条已建立 reverse 的 USB 链路中使用 localhost；普通无线模式仍用局域网 HTTPS。
+若日志出现证书拒绝，说明仍在访问 HTTPS 地址。若发布返回 400，查看采集页和服务端具体错误；
+常见配对失效需先在电脑开始识别，再在头显重新连接，不能单凭 HTTP 状态判断为骨架格式错误。
+
+本机回环与 USB 转发方式参见 [Meta Browser 调试文档](https://developers.meta.com/vr/documentation/web/browser-remote-debugging/)
+和 [Android ADB reverse 文档](https://developer.android.com/develop/ui/views/layout/webapps/access-local-server)。
 
 ## 数据和精度
 

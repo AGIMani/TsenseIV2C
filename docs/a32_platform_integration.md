@@ -11,7 +11,7 @@
 | A3.2 | `TsenseI_v3_2` | SDK `daxian_hand_v3_2`，无 ID 外壳 | A3 C++ SDK 1.1.0 |
 | A3.2 with ID | `TsenseI_v3_2_withid` | `TsenseI_V3.2_hand_withid_fixed/urdf/TsenseI_left.urdf` | 同一 SDK，单独处理 URDF 方向 |
 
-两款模型的显示、20 个关节、重定向配置、动作文件和手别都有明确身份。左手接入 USB CDC 和 ETH TCP 5001；右手可预览、编辑和离线播放，SDK 的右手硬件表尚未标定，因此禁止右手连接实物。
+两款模型的显示、20 个关节、重定向配置、动作文件和手别都有明确身份。左右手均接入 USB CDC 和 ETH TCP 5001，共用 SDK 的 A3.2 槽位映射。
 
 **运行链路不调用 SDK 的任何 exe。** 项目内的 `a32_native.dll` 静态链接供应商 `a3_sdk.lib`，Python 用 `ctypes` 在同一进程调用 DLL。已完成原生库构建、离线加载、模拟设备测试及网页验证；本次没有连接实物或下发运动，实机验收仍需完成。
 

@@ -1,5 +1,6 @@
 """Offline tests of the official LeapC callback adapter; no device/robot access."""
 from copy import deepcopy
+from contextlib import contextmanager
 from pathlib import Path
 import sys
 import threading
@@ -39,7 +40,7 @@ def frame(sequence=1, hands=None, timestamp=1_000_000):
 class FakeSdk:
     Listener = object
     exceptions = NS(LeapTimeoutError=type('LeapTimeoutError', (Exception,), {}))
-    TrackingMode = NS(Desktop='desktop')
+    TrackingMode = NS(HMD='hmd')
 
     def __init__(self):
         self.connections = []
@@ -47,12 +48,27 @@ class FakeSdk:
         self.connect_gate = None
         self.connect_error = None
         self.disconnect_errors = 0
+        self.devices_available = True
+        self.hint_result = 0
+        self.hint_calls = []
+        self.device_closes = 0
+        self.subscribe_error = None
+        self.ffi = NS(NULL=None, new=lambda kind, value: value)
+        self.libleapc = NS(LeapSetDeviceHints=self.set_hints)
+
+    def set_hints(self, connection, device, hints):
+        assert connection.subscribed and connection.primary is device
+        assert connection.primary_tracking_mode == 'hmd'
+        assert hints[-1] is None
+        self.hint_calls.append(hints[:-1])
+        return self.hint_result
 
     def get_now(self):
         return self.native_now
 
-    def Connection(self, *, poll_timeout):
+    def Connection(self, *, poll_timeout, multi_device_aware):
         sdk = self
+        assert multi_device_aware is True
 
         class Connection:
             def __init__(self):
@@ -61,6 +77,34 @@ class FakeSdk:
                 self.closed = False
                 self.disconnect_calls = 0
                 self.tracking_mode_calls = 0
+                self.subscribed = False
+                self.primary = None
+                self.primary_tracking_mode = None
+                self.device = NS(id=1)
+                self.device.c_data_device = self.device
+
+                @contextmanager
+                def open_device():
+                    try:
+                        yield self.device
+                    finally:
+                        assert self.closed
+                        sdk.device_closes += 1
+                self.device.open = open_device
+
+            def get_devices(self):
+                return [self.device] if sdk.devices_available else []
+
+            def get_connection_ptr(self):
+                return self
+
+            def subscribe_events(self, device):
+                if sdk.subscribe_error:
+                    raise sdk.subscribe_error
+                self.subscribed = True
+
+            def set_primary_device(self, device):
+                self.primary = device
 
             def add_listener(self, listener):
                 self.listener = listener
@@ -78,7 +122,9 @@ class FakeSdk:
                 self.listener.on_connection_event(NS())
 
             def set_tracking_mode(self, mode):
-                assert mode == 'desktop'
+                assert mode == 'hmd'
+                if self.primary is not None:
+                    self.primary_tracking_mode = mode
                 self.tracking_mode_calls += 1
                 self.ready = True
 
@@ -339,6 +385,57 @@ def test_failed_cleanup_finishes_before_reconnect(reader):
     sdk.connections[0].listener.on_device_lost_event(NS())
     wait_until(lambda: len(sdk.connections) == 2 and sdk.connections[-1].ready)
     assert sdk.connections[0].closed and sdk.connections[0].disconnect_calls == 2
+
+
+def test_high_fidelity_is_submitted_after_hmd_and_reapplied_on_reconnect(reader):
+    relay, sdk, _ = reader
+    expected = [b'high_hand_fidelity']
+    wait_until(lambda: len(sdk.hint_calls) == 1)
+    assert sdk.hint_calls[0] == expected
+    metadata = relay.latest('left')['source_metadata']
+    assert metadata['tracking_mode'] == 'hmd'
+    assert relay.create('right', 'right')['tracking_mode'] == 'hmd'
+    status = metadata['device_hints']
+    assert status['status'] == 'submitted_unverified'
+    assert status['effective'] is None
+    assert status['device_id'] == 1
+    status['requested'].clear()
+    assert relay.latest('left')['source_metadata']['device_hints']['requested']
+    sdk.connections[0].listener.on_device_lost_event(NS())
+    wait_until(lambda: len(sdk.hint_calls) == 2)
+    assert sdk.hint_calls[1] == expected
+    assert sdk.device_closes == 1
+    relay.client.close()
+    assert sdk.device_closes == 2
+    assert relay.client._snapshot('left')['source_metadata']['device_hints']['status'] == 'inactive'
+
+
+def test_late_device_and_hint_rejection_do_not_prevent_tracking(reader):
+    relay, sdk, _ = reader
+    wait_until(lambda: len(sdk.hint_calls) == 1)
+    sdk.devices_available = False
+    sdk.hint_result = 0xe2010004
+    sdk.connections[0].listener.on_device_lost_event(NS())
+    wait_until(lambda: len(sdk.connections) == 2 and sdk.connections[-1].ready)
+    assert relay.latest('left')['source_metadata']['device_hints']['status'] == 'waiting_for_device'
+    sdk.devices_available = True
+    wait_until(lambda: len(sdk.hint_calls) == 2)
+    status = relay.latest('left')['source_metadata']['device_hints']
+    assert status['status'] == 'request_failed'
+    assert 'e2010004' in status['error']
+    assert status['effective'] is None
+    sdk.emit(frame())
+    assert relay.latest('left')['tracking']
+
+
+def test_failed_subscription_closes_device_and_connection(reader):
+    relay, sdk, _ = reader
+    wait_until(lambda: len(sdk.hint_calls) == 1)
+    sdk.subscribe_error = RuntimeError('subscription failed')
+    sdk.connections[0].listener.on_device_lost_event(NS())
+    wait_until(lambda: sdk.device_closes >= 2)
+    assert sdk.connections[1].closed
+    assert len(sdk.hint_calls) == 1
 
 
 def test_subscribe_and_commit_guard(reader):

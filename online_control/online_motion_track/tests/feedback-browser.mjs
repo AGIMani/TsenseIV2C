@@ -29,12 +29,18 @@ struct.pack_into('<I',partial_packet,8,0x3ffff & ~(1 << slot))
 device=A32Device(model_id='TsenseI_v3_2_withid')
 a32pose=load_hand_profile('TsenseI_v3_2_withid').init_pose('left')
 a32pose['left_hand_index_PIP_joint']=.55
-targets=device.prepare_targets(a32pose)
-state={'connected':True,'telemetry_age_ms':0,'hand_side':'left',
- 'self':[{'online':True,'position':v} for v in targets['self']],
- 'mit':[{'online':True,'valid':True,'fault':0,'position':v} for v in targets['mit_pos']]}
+swing_joints=[name for name in a32pose if '_swing_' in name]
+sdk_states=[]
+for angle in (-.2,0.,.2):
+ a32pose.update({name:angle for name in swing_joints})
+ targets=device.prepare_targets(a32pose,clamp=False)
+ state={'connected':True,'telemetry_age_ms':0,'hand_side':'left',
+  'self':[{'online':True,'position':v if i in (6,7,14,15) else -v,'target':12.}
+          for i,v in enumerate(targets['self'])],
+  'mit':[{'online':True,'valid':True,'fault':0,'position':v} for v in targets['mit_pos']]}
+ sdk_states.append({'angle':angle,'state':state})
 print(json.dumps({'payload':feedback(mapper,pose).hex(),'partialPayload':partial_packet.hex(),
- 'joint':'left_hand_index_PIP_joint','sdkState':state}))
+ 'joint':'left_hand_index_PIP_joint','sdkStates':sdk_states,'swingJoints':swing_joints}))
 `], {cwd: root, encoding: 'utf8'}));
 const server = spawn(python, ['-u', '-c', `
 import sys
@@ -74,13 +80,14 @@ window.feedbackTest = {get control(){return localControl;}, get viewer(){return 
   await page.goto(url + '/?model=TsenseI_v3_0_withid');
   await page.waitForFunction(() => window.feedbackTest && !document.querySelector('#start').disabled);
   assert.deepEqual(await page.locator('.workspace h2').allTextContents(),
-    ['原始关键点输入', '原始模型跟随', '真实模型反馈']);
+    ['原始关键点输入', '手势骨架', '原始模型跟随', '真实模型反馈']);
   assert.equal(await page.locator('#feedback-stage canvas').count(), 1);
   assert.equal(await page.evaluate(() => feedbackTest.feedback.robot.root.visible), false);
   const rects = await page.locator('.workspace > .panel').evaluateAll(nodes => nodes.map(n => {
     const r=n.getBoundingClientRect(); return {x:r.x,y:r.y,width:r.width,height:r.height};
   }));
-  assert(rects.every(r => r.y === rects[0].y && Math.abs(r.width-rects[0].width)<1 && r.height===rects[0].height));
+  assert(rects.every(r => Math.abs(r.width-rects[0].width)<1));
+  assert(rects[0].y===rects[1].y && rects[2].y===rects[3].y && rects[2].y>rects[0].y);
   await page.evaluate(({payload}) => {
     window.feedbackPayload=payload;
     window.feedFeedback = () => {
@@ -103,7 +110,7 @@ window.feedbackTest = {get control(){return localControl;}, get viewer(){return 
   await page.evaluate(joint => feedbackTest.viewer.setPose({[joint]: 1.1}), fixtures.joint);
   assert(Math.abs(await readAngle()-.55)<1e-4, 'target changes must not drive feedback');
   await mkdir(join(root,'logs/feedback_validation'),{recursive:true});
-  await page.locator('.workspace').screenshot({path:join(root,'logs/feedback_validation/three-columns.png')});
+  await page.locator('.workspace').screenshot({path:join(root,'logs/feedback_validation/four-panels.png')});
   await page.evaluate(payload => {window.feedbackPayload=payload;feedFeedback();}, fixtures.partialPayload);
   await page.waitForFunction(() => {
     const q=feedbackTest.feedback.robot.joints.get('left_hand_index_PIP_joint').motion.quaternion;
@@ -130,24 +137,40 @@ window.feedbackTest = {get control(){return localControl;}, get viewer(){return 
   await page.waitForFunction(() => document.querySelector('#feedback-status').textContent.includes('待标定'));
   await page.locator('#side').selectOption('left');
   await page.waitForFunction(() => !document.querySelector('#start').disabled);
-  await page.evaluate(state => {
-    window.feedSdk = () => feedbackTest.sdk.update({...state});
-    feedSdk(); window.feedbackFeedTimer=setInterval(feedSdk,100);
-  }, fixtures.sdkState);
-  await page.waitForFunction(() => document.querySelector('#feedback-dot').classList.contains('online'));
-  assert(Math.abs(await readAngle()-.55)<1e-4, 'SDK positions must independently drive the feedback URDF');
-  await page.evaluate(() => {
-    clearInterval(window.feedbackFeedTimer);
-    feedbackTest.sdk.update({connected:false});
-    feedbackTest.refresh();
-  });
+  for (const model of ['TsenseI_v3_2_withid', 'TsenseI_v3_2']) {
+    await page.locator('#hand-model').selectOption(model);
+    await page.waitForFunction(() => !document.querySelector('#start').disabled);
+    await page.evaluate(state => {
+      window.sdkFeedbackState = state;
+      window.feedSdk = () => feedbackTest.sdk.update({...window.sdkFeedbackState});
+      feedSdk(); window.feedbackFeedTimer=setInterval(feedSdk,100);
+    }, fixtures.sdkStates[0].state);
+    for (const {angle, state} of fixtures.sdkStates) {
+      await page.evaluate(state => {window.sdkFeedbackState=state;feedSdk();}, state);
+      await page.waitForFunction(({names, angle}) => {
+        if (!document.querySelector('#feedback-dot').classList.contains('online')) return false;
+        return names.every(name => {
+          const joint=feedbackTest.feedback.robot.joints.get(name);
+          const q=joint.motion.quaternion, axis=joint.vector;
+          const measured=2*Math.atan2(q.x*axis.x+q.y*axis.y+q.z*axis.z,q.w);
+          return Math.abs(measured-angle)<1e-4;
+        });
+      }, {names:fixtures.swingJoints, angle});
+    }
+    assert(Math.abs(await readAngle()-.55)<1e-4, 'SDK positions must independently drive the feedback URDF');
+    await page.evaluate(() => {
+      clearInterval(window.feedbackFeedTimer);
+      feedbackTest.sdk.update({connected:false});
+      feedbackTest.refresh();
+    });
+  }
   await page.locator('#input-source').selectOption('wuji_glove');
   assert.equal(await page.locator('#camera-title').innerText(), '原始关键点输入');
   await page.setViewportSize({width:390,height:844});
   assert(await page.evaluate(() => document.documentElement.scrollWidth<=innerWidth));
-  await page.locator('.workspace').screenshot({path:join(root,'logs/feedback_validation/three-columns-mobile.png')});
+  await page.locator('.workspace').screenshot({path:join(root,'logs/feedback_validation/four-panels-mobile.png')});
   assert.deepEqual(errors, []);
-  console.log('PASS: three columns, A30/SDK URDF feedback conversion, independent target/measurement, stale/disconnect, model/side switch, mobile');
+  console.log('PASS: four panels, A30/SDK URDF feedback conversion, signed swing in both A3.2 models, independent target/measurement, stale/disconnect, model/side switch, mobile');
 } finally {
   await browser?.close();
   server.kill();

@@ -10,12 +10,12 @@ const fixtures=Object.fromEntries([
   const started_at=new Date(Date.parse('2026-09-24T00:00:00Z')+index*86400000).toISOString();
   const name=`hand_control_${model}.jsonl`,header={type:'session',schema:'hand-control-session/v2',started_at,
     metadata:{model_id:modelId,hand_side:side,hand_name:`${model} 样机`}};
-  const text=[header,{type:'retarget',t:0,hand_side:side,joints:{}},
-    {type:'retarget',t:duration,hand_side:side,joints:{}},{type:'session_end',t:duration,duration_s:duration}].map(JSON.stringify).join('\n')+'\n';
+  const text=[header,{type:'joint_angles',stage:'retarget',t:0,hand_side:side,joints:{}},
+    {type:'joint_angles',stage:'retarget',t:duration,hand_side:side,joints:{}},{type:'session_end',t:duration,duration_s:duration}].map(JSON.stringify).join('\n')+'\n';
   return [model,{name,text,record:{id:`log:${started_at}:${model}:${side}`,model,side,name:`${model} 样机`,start:Date.parse(started_at),
     parts:[{index:1,count:null,start:Date.parse(started_at),end:Date.parse(started_at)+duration*1000,closed:true,filename:name}]}}];
 }));
-let parent='E:\\TsenseI_hand_logs';
+let parent='/tmp/TsenseI_hand_logs';
 const server=createServer(async(req,res)=>{
   const url=new URL(req.url,'http://localhost');
   if(url.pathname==='/data-viewer'){
@@ -35,7 +35,7 @@ const server=createServer(async(req,res)=>{
   }else res.writeHead(404).end();
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-const browser=await chromium.launch({executablePath:process.env.CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true});
 const page=await browser.newPage(),errors=[];page.on('pageerror',e=>errors.push(e.message));
 try{
   await page.goto(`http://127.0.0.1:${server.address().port}/data-viewer`);
@@ -52,10 +52,10 @@ try{
     assert((await page.locator('#usageTotals').textContent()).includes(model));
     assert((await page.locator('#usageLogFile').inputValue())==='');
   }
-  await page.locator('#usageParentPath').fill('C:\\CustomHandLogs');
+  await page.locator('#usageParentPath').fill('/tmp/CustomHandLogs');
   await page.locator('#usageSaveParent').click();
   await page.waitForFunction(()=>document.querySelector('#usageStatus').textContent.includes('已确认 A30、A32、V2'));
-  assert.equal(await page.locator('#usageParentPath').inputValue(),'C:\\CustomHandLogs');
+  assert.equal(await page.locator('#usageParentPath').inputValue(),'/tmp/CustomHandLogs');
   await page.locator('#usageModel').selectOption('A30');
   await page.waitForFunction(()=>document.querySelector('#usageStatus').textContent.includes('A30 文件夹：1 份'));
   await page.locator('#usageLogFile').selectOption(fixtures.A30.name);

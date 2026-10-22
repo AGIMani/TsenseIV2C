@@ -15,6 +15,10 @@ import { WebXRReceiver, questStatus } from "./webxr-receiver.js";
 import { WujiReceiver, wujiStatus } from "./wuji-receiver.js";
 import { LeapMotionReceiver, leapMotionStatus } from "./leapmotion-receiver.js";
 import { FeedbackPreview } from "./feedback-preview.js";
+import { bindCameraSelector } from "./camera-selector.js";
+import { openMediaPipeCamera, cameraCaptureLabel } from "./camera-stream.js";
+import { LeapCameraClient, leapCameraStatus } from "./leap-camera.js";
+import { RealSenseCameraClient, realSenseCameraStatus, realSenseFusionStatus, realSenseFrameFields } from "./realsense-camera.js";
 
 const $ = (id) => document.getElementById(id);
 const overlay = new CameraOverlay($("camera-overlay"), $("video"));
@@ -49,8 +53,12 @@ const modelLabel = () => isV2() ? "V2" : isA30() ? ($("hand-model").value.endsWi
 const jointSettings = new Map(); // Separate model/side settings, retained for this page lifetime.
 let viewer, feedbackViewer, feedbackTimer, skeleton, stream, client, session, framePipeline;
 let questReceiver;
-const isWebXR = () => $("input-source").value === "webxr";
-const inputSource = () => $("input-source").value;
+let leapCamera; // Native image client for Leap IR or paired RealSense RGB-D.
+let cameraOpening, browserCamera;
+const isLeapCamera = () => $("input-source").value === "leapmotion_camera";
+const isQuestAdb = () => $("input-source").value === "quest_adb";
+const isWebXR = () => ["webxr", "quest_adb"].includes($("input-source").value);
+const inputSource = () => isQuestAdb() ? "webxr" : isLeapCamera() ? "mediapipe" : $("input-source").value;
 const isWuji = () => inputSource() === "wuji_glove";
 const isLeapMotion = () => inputSource() === "leapmotion";
 const isMetricInput = () => isWebXR() || isWuji() || isLeapMotion();
@@ -71,8 +79,8 @@ const a32Panel = new A32SdkPanel({api, ensureSession: ensureControlSession,
 
 const feedbackPreview = new FeedbackPreview({
   request: data => api("/api/feedback-pose", data),
-  // The viewer also enforces the original URDF limits after zeroing negatives.
-  display: pose => feedbackViewer?.setPose(Object.fromEntries(
+  // A3.2 supports signed swing; the viewer enforces its URDF bounds.
+  display: pose => feedbackViewer?.setPose(isA32() ? pose : Object.fromEntries(
     Object.entries(pose).map(([name, angle]) => [name, Math.max(0, angle)]))),
   changed: renderFeedback,
 });
@@ -84,7 +92,7 @@ function renderFeedback(state) {
     live: "实测关节角 · 实时反馈",
     stale: "遥测已过期",
     incomplete: `缺少 ${state.missingCount || 0} 个关节反馈 · 缺失关节保持`,
-    unsupported: "右手硬件反馈映射待标定",
+    unsupported: "硬件反馈映射不可用",
     error: "遥测换算失败",
   };
   const holding = state.hasPose && !["live", "incomplete"].includes(state.status);
@@ -106,7 +114,7 @@ function refreshFeedback() {
     const age = state.telemetry_age_ms;
     feedbackPreview.update({
       connected: !!state.connected,
-      supported: $("side").value === "left",
+      supported: ["left", "right"].includes($("side").value),
       // Keep command samples and recording metadata out of the feedback path.
       telemetry: {self: state.self || [], mit: state.mit || [], connected: !!state.connected,
         telemetry_age_ms: age, hand_side: state.hand_side, model_id: state.model_id},
@@ -167,6 +175,8 @@ function refreshControls() {
   $("input-source").disabled = busy || stopping || controlBusy || !!session || recorder.active;
   $("collision-mode").disabled = busy || !!session || controlBusy || (directMode() && !isV2());
   $("recording").disabled = busy || !!session || recorder.active || !recordingAllowed;
+  $("overlay-smoothing").disabled = starting || stopping;
+  $("mediapipe-filter").disabled = starting || stopping;
   $("direct-preview").disabled = !supportsDirectMode() || !modelReady || starting || stopping || controlBusy || a32Panel.busy || !!hardware.homing_active || !!hardware.power_busy || !!a32Panel.state.homing_active;
   $("direct-preview-note").textContent = directMode()
     ? isV2() ? "低延迟滤波 · 可实时下发（无 Ruckig 限速）" : "直控 · 关节限位后直接映射 · Ruckig、碰撞处理和额外关节平滑已关闭"
@@ -359,29 +369,28 @@ function beginHardwarePolling() {
       recorder.record("planner_sample", {frame_id: status.sample_frame_id??status.frame_id,
         target_frame_id:status.frame_id,hand_side: $("side").value,
         direct_mode:status.direct_mode,ruckig_enabled:status.ruckig_enabled,
-        direct_filter:status.direct_filter,
         motion_limits:status.motion_limits,held_fingers:status.held_fingers,
         motion_synchronization:status.motion_synchronization,
         limit_recoveries:status.limit_recoveries,last_limit_event:status.last_limit_event,
         boundary_roundoffs:status.boundary_roundoffs,last_boundary_roundoff:status.last_boundary_roundoff,
         sample_ticks:status.sample_ticks,target_ready:status.target_ready,
         tracking_transition:status.tracking_transition,last_error:status.last_error,
-      joints: status.command_joint_angles_rad || status.ruckig_joint_angles_rad, target: status.target_joint_angles_rad,
         sample_collision: status.sample_collision, control_timing: status.control_timing,
         source: "received_server_sample"});
+      if (!status.direct_mode) recorder.record('ruckig', {
+        joints:status.ruckig_output_joint_angles_rad, frame_id:status.sample_frame_id??status.frame_id,
+        sample_ticks:status.sample_ticks, hand_side:$("side").value, source:'received_server_sample'});
+      if(current.model_id==='TsenseI_v2'&&status.direct_mode&&!localControl.armed){
+        showResponsePose(status.ruckig_joint_angles_rad);
+      }
+      if(current.model_id==='TsenseI_v2'&&status.direct_mode){
+        recorder.record('direct_filter',{joints:status.direct_joint_angles_rad,
+          frame_id:status.sample_frame_id??status.frame_id, hand_side:$("side").value,
+          sample_ticks:status.sample_ticks, source:'received_server_sample'});
+      }
       if(status.direct_mode&&status.direct_filter)recorder.record('direct_filter_detail',{
         ...status.direct_filter,frame_id:status.sample_frame_id??status.frame_id,sample_ticks:status.sample_ticks,
         hand_side:$("side").value,sent:false,source:'received_server_status'});
-      if(current.model_id==='TsenseI_v2'&&status.direct_mode&&!localControl.armed){
-        showResponsePose(status.ruckig_joint_angles_rad);
-        recorder.record('direct_filter',{joints:status.ruckig_joint_angles_rad,frame_id:status.sample_frame_id??status.frame_id,
-          hand_side:$("side").value,sample_ticks:status.sample_ticks,sent:false,stage:'checked',source:'browser_preview_sample'});
-      }
-      if (!directMode() && !status.direct_mode && !localControl.armed && Object.keys(status.ruckig_joint_angles_rad || {}).length)
-        recorder.record("h7", {frame_id: status.sample_frame_id??status.frame_id, hand_side: $("side").value,
-          joints_ui: status.ruckig_joint_angles_rad, joints_ruckig_ui: status.ruckig_joint_angles_rad,
-          joints_hw: status.hardware_joint_angles_rad, sent: false, usb_connected: localControl.connected,
-          ruckig_faults: [], guard_limited: null, source: "browser/preview_sample"});
       await localControl.sample(status, requestedAt);
       if(current.model_id==='TsenseI_v2'&&directMode()&&status.direct_mode&&localControl.armed
           &&localControl.lastSample===status.sample_ticks)showResponsePose(localControl.held);
@@ -403,6 +412,7 @@ async function ensureControlSession() {
     const token = generation;
     sessionPromise = api("/api/session", {model_id: $("hand-model").value, side: $("side").value,
       input_source: inputSource(),
+      camera_source: isLeapCamera() ? 'leapmotion_camera' : $('input-source').value === 'realsense_rgbd' ? 'realsense_rgbd' : 'browser',
       recording: false, collision_mode: $("collision-mode").value, direct_mode:directMode()}).then(async created => {
       if (token !== generation) {
         await api("/api/stop", {session: created.session});
@@ -496,8 +506,8 @@ async function ensureLocalRecording() {
     collision_protection_enabled: !directMode() || isV2() ? !["off", "monitor"].includes($("collision-mode").value) : false,
     control_order: (directMode() && !isV2() ? `MediaPipe -> retarget -> joint limits -> linkage/slot mapping -> ${isA32() ? "native A3.2 SDK" : "browser Web Serial (when armed)"}; no Ruckig, collision correction or extra joint smoothing` : isA32() ? "MediaPipe -> retarget -> model collision -> Ruckig -> sample collision -> A3.2 linkage/slot mapping -> native A3.2 SDK" : directMode() ? "MediaPipe -> retarget -> collision -> adaptive exponential filter -> sample collision -> linkage -> browser Web Serial (when armed)" : isA30()
       ? "MediaPipe -> retarget -> collision -> finger-group Ruckig -> sample collision -> linkage -> browser Web Serial -> UI from successful write; unarmed UI from planner preview stream"
-      : "MediaPipe -> retarget -> collision -> Ruckig -> sample collision -> UI/HW -> linkage -> browser Web Serial").replace("MediaPipe", isLeapMotion() ? "Leap Motion 2 -> 21" : isWuji() ? "Wuji Glove 21" : isWebXR() ? "Quest WebXR 25 -> 21" : "MediaPipe")});
-  $("record-status").textContent = "完整记录保存在本机浏览器 · 每段 512 MiB · 结束会话后写入已授权目录";
+      : "MediaPipe -> retarget -> collision -> Ruckig -> sample collision -> UI/HW -> linkage -> browser Web Serial").replace("MediaPipe", isLeapMotion() ? "Leap Motion 2 -> 21" : isWuji() ? "Wuji Glove 21" : isQuestAdb() ? "Quest USB ADB 21" : isWebXR() ? "Quest WebXR 25 -> 21" : "MediaPipe")});
+  $("record-status").textContent = "关节角与遥测记录保存在本机浏览器 · 每段 512 MiB · 结束后保存";
 }
 
 function showHomingReport(report = localControl.homeReport) {
@@ -564,7 +574,7 @@ async function api(path, data) {
 }
 function cameraError(error) {
   if (error.name === "NotAllowedError")
-    return "相机权限未开启。请在地址栏允许访问摄像头，再点击开始识别。";
+    return "相机权限未开启。请在地址栏允许访问摄像头，再打开视频来源或开始识别。";
   if (error.name === "NotFoundError")
     return "没有找到摄像头。请连接或启用电脑内置摄像头后重试。";
   if (error.name === "NotReadableError")
@@ -574,21 +584,10 @@ function cameraError(error) {
   return error.message || String(error);
 }
 
-async function enumerateCameras() {
-  if (!navigator.mediaDevices) return;
-  const selected = $("camera").value;
-  const devices = (await navigator.mediaDevices.enumerateDevices()).filter(
-    (d) => d.kind === "videoinput",
-  );
-  $("camera").replaceChildren(new Option("默认摄像头", ""));
-  devices.forEach((device, i) =>
-    $("camera").add(
-      new Option(device.label || `摄像头 ${i + 1}`, device.deviceId),
-    ),
-  );
-  if ([...$("camera").options].some((option) => option.value === selected))
-    $("camera").value = selected;
-}
+const cameraSelector = bindCameraSelector($("camera"), {
+  onError: error => notice(cameraError(error)),
+});
+function enumerateCameras() { return cameraSelector.refresh(); }
 
 async function loadModel() {
   updateCalibrationLink();
@@ -634,8 +633,16 @@ async function stop({
   stopping = true;
   localControl.disarm("识别已停止");
   ++generation;
+  cameraOpening?.abort();
+  cameraOpening = null;
+  browserCamera = null;
   questReceiver?.close();
   questReceiver = null;
+  leapCamera?.close();
+  leapCamera = null;
+  $("leap-camera-state").textContent = '已停止';
+  $("realsense-camera-state").textContent = '已停止';
+  $("realsense-fusion-state").textContent = '等待同帧深度约束';
   $("quest-pairing").hidden = true;
   $("quest-link").value = "";
   $("quest-token").textContent = "";
@@ -701,6 +708,8 @@ function schedule(token) {
     frameCallback = null;
     processFrame(token);
   };
+  // Native capture and long-poll supply the clock; never cap this input to display RAF/30 Hz.
+  if (isLeapCamera() || $("input-source").value === "realsense_rgbd") { queueMicrotask(callback); return; }
   const video=$("video");
   // Consume a frame decoded during inference without waiting another camera
   // period. Only one inference is in flight; unchanged frames use video time.
@@ -716,15 +725,39 @@ function schedule(token) {
 async function processFrame(token) {
   if (!active || token !== generation) return;
   const video = $("video");
-  if (video.readyState < 2 || video.currentTime === lastVideoTime) {
+  if (!leapCamera && (video.readyState < 2 || video.currentTime === lastVideoTime)) {
     schedule(token);
     return;
   }
   lastVideoTime = video.currentTime;
-  const timestamp_ms = performance.now(),
-    capture_unix_ms = Date.now();
+  let timestamp_ms = performance.now(), capture_unix_ms = Date.now();
   try {
-    const bitmap = await createImageBitmap(video);
+    const camera = leapCamera;
+    const rgbd = $("input-source").value === "realsense_rgbd";
+    const bitmap = camera ? await camera.read(session.session) : await createImageBitmap(video);
+    if (token !== generation) { bitmap?.close(); return; }
+    const cameraMeta = camera ? {...camera.meta} : null;
+    if (camera) {
+      timestamp_ms = performance.now();
+      capture_unix_ms = rgbd && Number.isFinite(cameraMeta.capture_unix_ms) ? cameraMeta.capture_unix_ms : Date.now() - (cameraMeta.age_ms || 0);
+      $(rgbd ? "realsense-camera-state" : "leap-camera-state").textContent = rgbd
+        ? realSenseCameraStatus(cameraMeta, camera.inferenceFps) : leapCameraStatus(cameraMeta, camera.inferenceFps);
+      $("camera-state").textContent = bitmap ? (rgbd ? 'RGB + 深度实时' : '红外实时') : (rgbd ? '等待 RGB + 深度' : '等待红外画面');
+      $("camera-placeholder").hidden = !!bitmap;
+      $("camera-caption").textContent = rgbd
+        ? `D455f RGB-D / ${cameraMeta.width || "—"} × ${cameraMeta.height || "—"} · 同帧深度融合`
+        : `LEAP IR / ${cameraMeta.width} × ${cameraMeta.height} · 目标 120 FPS`;
+      $("camera-caption").parentElement.classList.toggle('live', !!bitmap);
+    }
+    if (!bitmap) {
+      overlay.clear();
+      const frameId = sequence++, expected = $("side").value === 'left' ? 'Left' : 'Right';
+      framePipeline.offer({frameId, hand:null, expected, timestamp_ms, inferredAt:performance.now(),
+        packet:{session:session.session, sequence:frameId, timestamp_ms, capture_unix_ms,
+          mediapipe_filter_enabled: $("mediapipe-filter").checked,
+          hand:null, ...(rgbd ? realSenseFrameFields(cameraMeta) : {source:'mediapipe', source_metadata:{camera:cameraMeta}})}});
+      schedule(token); return;
+    }
     const bitmapReadyAt=performance.now();
     if (token !== generation) {
       bitmap.close();
@@ -736,6 +769,14 @@ async function processFrame(token) {
     );
     const detectionReadyAt=performance.now();
     if (token !== generation) return;
+    if (camera) {
+      camera.recordInference();
+      $(rgbd ? "realsense-camera-state" : "leap-camera-state").textContent = rgbd
+        ? realSenseCameraStatus(cameraMeta, camera.inferenceFps) : leapCameraStatus(cameraMeta, camera.inferenceFps);
+      if (cameraMeta.age_ms + detectionReadyAt - timestamp_ms >= cameraMeta.stale_after_ms) {
+        detection.result = {}; // Never reuse a hand from an expired camera observation.
+      }
+    }
     // Register before UI/log serialization so they cannot delay registration
     // past the next video tick. The previous inference has already completed.
     schedule(token);
@@ -762,13 +803,17 @@ async function processFrame(token) {
     // Inference and retarget overlap. The queue permits one request plus one
     // newest pending detection, preserving order without retaining old frames.
     const frameId = sequence++;
-    if (isControlModel()) localControl.observeHand(hand?.label === expected, timestamp_ms);
+    // RGB-D may have valid image landmarks but unusable depth. Only the
+    // accepted fused response can satisfy the local hand-confirmation gate.
+    if (isControlModel() && !rgbd) localControl.observeHand(hand?.label === expected, timestamp_ms);
     const packet = {
       session: session.session,
       sequence: frameId,
+      mediapipe_filter_enabled: $("mediapipe-filter").checked,
       timestamp_ms,
       capture_unix_ms,
-      camera_size: [video.videoWidth, video.videoHeight],
+      camera_size: cameraMeta ? [cameraMeta.width, cameraMeta.height] : [video.videoWidth, video.videoHeight],
+      ...(rgbd ? realSenseFrameFields(cameraMeta) : cameraMeta ? {source:'mediapipe', source_metadata:{camera:cameraMeta}} : {}),
       hand,
       inference_ms: detection.inference_ms || 0,
       ...(isV2() || isA32() ? {raw_detection: {
@@ -780,7 +825,10 @@ async function processFrame(token) {
     framePipeline.offer({packet,frameId,hand,expected,timestamp_ms,inferredAt:performance.now()});
     // Start transport before the canvas draw and log snapshot. Recording
     // remains ordered: fetch resolves asynchronously, after this raw record.
-    recorder.record("mediapipe_raw", {frame_id: frameId, tracking_session_id:session.session, timestamp_ms, infer_ms: detection.inference_ms || 0,
+    recorder.record(rgbd ? "realsense_rgbd_raw" : "mediapipe_raw", {frame_id: frameId, tracking_session_id:session.session, timestamp_ms, infer_ms: detection.inference_ms || 0,
+      mediapipe_filter_enabled: packet.mediapipe_filter_enabled,
+      overlay_smoothing_enabled: $("overlay-smoothing").checked,
+      ...(cameraMeta ? {camera:cameraMeta} : {}),
       capture_timing:{bitmap_ms:bitmapReadyAt-timestamp_ms,
         worker_roundtrip_ms:detectionReadyAt-bitmapReadyAt,capture_to_detection_ms:detectionReadyAt-timestamp_ms},
       normalized_landmarks: allNormalized,
@@ -789,6 +837,7 @@ async function processFrame(token) {
     overlay.setHands(
       result.landmarks || [],
       handedness[index]?.[0]?.categoryName === expected ? index : -1,
+      {timestampMs: timestamp_ms, labels: handedness.map(categories => categories[0]?.categoryName)},
     );
   } catch (error) {
     if (token !== generation) return;
@@ -801,16 +850,19 @@ function applyFrameUpdate(frame, update) {
     const {frameId,hand,expected,timestamp_ms} = frame;
     const fromWebXR = frame.packet?.source === "webxr";
     const source = frame.packet?.source || "mediapipe";
+    if (source === "realsense_rgbd" && isControlModel()) localControl.observeHand(
+      !!update.tracking && !!update.fused_world && !update.display_discarded && !update.background_discarded, timestamp_ms);
     if (update.points) recorder.record(source, {landmarks: update.points, frame_id: frameId,
+      mediapipe_filter_enabled: update.mediapipe_filter_enabled,
       hand_side: $("side").value, source,
       depth_source: update.depth_source || (source === "mediapipe" ? "mediapipe_world" : `${source}_metric`), timestamp_ms});
-    const rawPose = update.retarget_joint_angles_rad;
     if (isA32Model(update.actuation?.model_id)) {
       recorder.record("a32_conversion", {frame_id: frameId, ...update.actuation});
     }
     if (isA30() && update.actuation) {
       recorder.record("a30_conversion", {frame_id: frameId, ...update.actuation});
     }
+    const rawPose = update.retarget_joint_angles_rad;
     // A completed solve can still be rejected by collision/control gates.
     // Preserve the raw result independently of permission to move the hand.
     const hasRetarget=rawPose&&typeof rawPose==='object'&&Object.keys(rawPose).length>0&&Object.values(rawPose).every(Number.isFinite);
@@ -824,8 +876,12 @@ function applyFrameUpdate(frame, update) {
           : rawPose ? "invalid_retarget" : update.tracking ? "missing_retarget" : "solve_rejected",
         message: update.message || "", tracking: !!update.tracking});
     }
+    const context = {frame_id:frameId, tracking_session_id:frame.packet?.session,
+      hand_side:$("side").value, source};
+    if (update.mink_joint_angles_rad) recorder.record('mink', {...context, joints:update.mink_joint_angles_rad});
+    if (update.direct_joint_angles_rad) recorder.record('direct_command', {...context, joints:update.direct_joint_angles_rad});
     if(hasRetarget&&update.tracking){
-      recorder.record("control_target", {joints: update.collision_safe_target_joint_angles_rad || update.pose,
+      recorder.record("control_target", {
         frame_id: frameId, hand_side: $("side").value, self_collision: update.collision,
         pipeline_timing:{capture_to_response_ms:source==='mediapipe'?performance.now()-timestamp_ms:null,
           source_age_at_receive_ms:frame.sourceAgeMs??null,
@@ -840,7 +896,9 @@ function applyFrameUpdate(frame, update) {
     }
     // Mode switches may race an older /api/frame response. Never display the
     // wrong source or let a sampled trajectory overwrite direct targets.
-    if(!update.background_discarded&&!update.display_discarded&&(!(isControlModel()||isA32()||isA30())||!!update.direct_mode===directMode())) {
+    const displayCurrent = !update.background_discarded && !update.display_discarded
+      && (!(isControlModel() || isA32() || isA30()) || !!update.direct_mode === directMode());
+    if (displayCurrent) {
       if(!directMode() || !isV2())showResponsePose(update.hardware?.armed
         ? update.command_joint_angles_rad || update.pose : update.pose);
     }
@@ -863,15 +921,29 @@ function applyFrameUpdate(frame, update) {
       ? update.solve_ms.toFixed(1)
       : "—";
     $("tracking-dot").classList.toggle("online", update.tracking);
-    $("tracking-text").textContent = update.tracking
+    const plannerBlocked = isA30() && update.hardware?.tracking_transition?.phase === "blocked";
+    $("tracking-text").textContent = plannerBlocked
+      ? `手势已识别 · 模型保持：${update.hardware.last_error || "控制器已暂停"}` : update.tracking
       ? `${expected === "Left" ? "左手" : "右手"}已识别 · 正在跟随`
       : update.message;
-    $("tracking-text").title = update.message;
-    $("skeleton-status").textContent = update.tracking
-      ? fromWebXR ? "WebXR 25 → 21 点 · 实时" : source === "wuji_glove" ? "Wuji 21 点 · 实时" : source === "leapmotion" ? "Leap Motion 2 · 21 点 · 实时" : "21 点 · 实时"
-      : "未检测";
-    latestWorld = update.tracking ? hand?.world : null;
-    skeleton?.setPoints(latestWorld, hand?.label || expected);
+    $("tracking-text").title = plannerBlocked ? update.hardware.last_error || "控制器已暂停" : update.message;
+    if (displayCurrent) {
+      // Render the solved pose's calibrated 21 points, never raw camera landmarks.
+      const optimized = update.optimized_points;
+      latestWorld = update.tracking && hasRetarget && Array.isArray(optimized)
+        && optimized.length === 21 && optimized.every(p => Array.isArray(p)
+          && p.length === 3 && p.every(Number.isFinite)) ? optimized : null;
+      $("skeleton-status").textContent = latestWorld
+        ? `${fromWebXR ? (isQuestAdb() ? "USB ADB · 21 点" : "WebXR 25 → 21 点") : source === "wuji_glove" ? "Wuji 21 点" : source === "leapmotion" ? "Leap Motion 2 · 21 点" : source === "realsense_rgbd" ? "D455f 深度融合 · 21 点" : "21 点"} · 优化后 · ${expected === "Left" ? "左手" : "右手"}镜像 · 实时`
+        : update.tracking ? "等待优化结果" : "未检测";
+      skeleton?.setPoints(latestWorld, expected);
+    }
+    if (source === "realsense_rgbd") {
+      $("realsense-fusion-state").textContent = realSenseFusionStatus(update.depth_fusion, update.tracking);
+      recorder.record("realsense_depth_fusion", {frame_id:frameId, tracking_session_id:frame.packet?.session,
+        source, depth_fusion:update.depth_fusion, tracking:update.tracking,
+        realsense_frame_id:frame.packet?.realsense_frame_id, realsense_stream_id:frame.packet?.realsense_stream_id});
+    }
     ++fpsCount;
     const now = performance.now();
     if (now - fpsStart >= 1000) {
@@ -923,7 +995,7 @@ function offerQuestFrame(token, snapshot) {
 }
 
 function updateCalibrationLink() {
-  const params = new URLSearchParams({model: $("hand-model").value, side: $("side").value, source: inputSource()});
+  const params = new URLSearchParams({model: $("hand-model").value, side: $("side").value, source: isLeapCamera() ? 'leapmotion_camera' : inputSource()});
   $("calibration-link").href = '/calibration?' + params;
 }
 
@@ -931,17 +1003,36 @@ function configureInputSource() {
   updateCalibrationLink();
   const quest = isWebXR();
   const wuji = isWuji(), leap = isLeapMotion(), metric = isMetricInput();
+  const rgbd = $("input-source").value === "realsense_rgbd", nativeCamera = isLeapCamera() || rgbd;
   $("quest-input-panel").hidden = !quest;
   $("wuji-input-panel").hidden = !wuji;
   $("leapmotion-input-panel").hidden = !leap;
-  $("camera-control").hidden = metric;
+  $("leap-camera-panel").hidden = !isLeapCamera();
+  $("realsense-camera-panel").hidden = !rgbd;
+  $("camera-control").hidden = metric || nativeCamera;
+  $("overlay-smoothing-control").hidden = metric;
+  $("mediapipe-filter-control").hidden = inputSource() !== "mediapipe";
+  $("video").hidden = nativeCamera;
+  $("leap-camera-canvas").hidden = !nativeCamera;
+  $("leap-camera-canvas").setAttribute("aria-label", rgbd ? "D455f 深度融合 RGB 画面" : "Leap Motion 2 红外画面");
+  overlay.video = nativeCamera ? $("leap-camera-canvas") : $("video");
   $("camera-title").textContent = "原始关键点输入";
   $("video").parentElement.querySelector(".mirror-label").hidden = metric;
   const placeholder = $("camera-placeholder");
   placeholder.querySelector("h3").textContent = leap ? "用 Leap Motion 2 采集手势" : wuji ? "用 Wuji 手套采集手势" : quest ? "用 Quest 采集手势" : "让手势进入画面";
   placeholder.querySelector("p").textContent = leap ? "启动 Linux Ultraleap Tracking Service 后点击「开始识别」，将所选手放入设备视野" : wuji ? "连接手套后点击「开始识别」，在下方查看骨架与模型" : quest ? "开始识别后，按上方连接信息在 Quest 进入 XR" : "点击「开始识别」，允许浏览器使用相机";
   placeholder.querySelector(":scope > span").textContent = metric ? "在下方骨架视图查看 21 点与模型映射" : "建议保持手掌完整入镜";
-  $("quest-origin-note").textContent = location.protocol !== "https:" || ["localhost","127.0.0.1","[::1]"].includes(location.hostname)
+  if (isLeapCamera()) {
+    placeholder.querySelector('h3').textContent = '用 Leap Motion 2 红外相机识别手势';
+    placeholder.querySelector('p').textContent = '通过 USB 3 连接到服务所在电脑，点击「开始识别」；MediaPipe 从红外画面检测手部';
+  }
+  if (rgbd) {
+    placeholder.querySelector('h3').textContent = '用 D455f 深度约束修正 21 点骨架';
+    placeholder.querySelector('p').textContent = '通过 USB 3 连接到服务所在电脑，点击「开始识别」；同帧彩色与深度由 Linux 服务采集';
+  }
+  $("quest-origin-note").textContent = isQuestAdb()
+    ? "USB 模式：先连接 Quest 并允许 USB 调试，在电脑运行 bash migration/ubuntu/start-quest-adb.sh。启动器建立 ADB 转发；开始识别后，在头显打开上方 localhost 采集地址。每只手发送 21 个关节点（米）。"
+    : location.protocol !== "https:" || ["localhost","127.0.0.1","[::1]"].includes(location.hostname)
     ? "Quest 需要可访问且证书受信任的 HTTPS 地址。电脑可使用本机地址控制；头显请使用上方单独显示的局域网采集地址。电脑停止后，采集连接随之停止。"
     : "两台设备需使用同一 HTTPS 站点。放下控制器，将手保持在头显视野内；350 ms 无新数据会进入现有手势丢失处理。";
   refreshControls();
@@ -961,27 +1052,32 @@ async function start() {
   try {
     await ensureLocalRecording();
     if (!isMetricInput()) {
+    if (!isLeapCamera() && $("input-source").value !== "realsense_rgbd") {
     if (!window.isSecureContext || !navigator.mediaDevices?.getUserMedia)
       throw new Error(
         "访问公网摄像头需要 HTTPS。请使用本站的 https:// 地址；本机开发可使用 localhost。",
       );
     const selected = $("camera").value;
-    const acquired = await navigator.mediaDevices.getUserMedia({
-      audio: false,
-      video: {
-        width: { ideal: 640 },
-        height: { ideal: 480 },
-        frameRate: { ideal: 30, max: 30 },
-        ...(selected
-          ? { deviceId: { exact: selected } }
-          : { facingMode: "user" }),
+    const opening = new AbortController();
+    cameraOpening = opening;
+    const camera = await openMediaPipeCamera({
+      deviceId: selected, label: $("camera").selectedOptions[0]?.textContent || '', signal: opening.signal,
+      onStatus: message => {
+        if (token !== generation) return;
+        $("camera-state").textContent = '配置相机';
+        $("tracking-text").textContent = message;
       },
     });
+    const acquired = camera.stream;
     if (token !== generation) {
       acquired.getTracks().forEach((track) => track.stop());
       return;
     }
+    cameraOpening = null;
+    browserCamera = camera;
     stream = acquired;
+    diagnostics.record('camera_configured', {realSense: camera.realSense, maximum_fps: camera.maxFrameRate,
+      width: camera.settings.width, height: camera.settings.height, frameRate: camera.settings.frameRate});
     stream.getVideoTracks()[0].addEventListener("ended", () => {
       if (token === generation) {
         stop({ message: "摄像头已断开" });
@@ -993,6 +1089,10 @@ async function start() {
     if (token !== generation) return;
     $("camera-placeholder").hidden = true;
     $("camera-state").textContent = "启动中";
+    } else {
+      leapCamera = $("input-source").value === "realsense_rgbd"
+        ? new RealSenseCameraClient($("leap-camera-canvas")) : new LeapCameraClient($("leap-camera-canvas"));
+    }
     client = new DetectorClient();
     const ready = await client.ask({ type: "init" });
     if (token !== generation) return;
@@ -1004,6 +1104,7 @@ async function start() {
     }
     const created = (isControlModel() || isA32()) ? await ensureControlSession() : await api("/api/session", {
       input_source: inputSource(),
+      camera_source: isLeapCamera() ? 'leapmotion_camera' : $('input-source').value === 'realsense_rgbd' ? 'realsense_rgbd' : 'browser',
       model_id: $("hand-model").value,
       side: $("side").value,
       recording: false,
@@ -1019,9 +1120,9 @@ async function start() {
     if (isA32() && created.hardware) a32Panel.update(await api('/api/a32/control', {session: created.session, action: 'tracking_start'}));
     showResponsePose(created.pose);
     $("record-status").textContent = recorder.active
-      ? "完整记录保存在本机浏览器 · 每段 512 MiB · 结束会话后写入已授权目录"
+      ? "关节角与遥测记录保存在本机浏览器 · 每段 512 MiB · 结束后保存"
       : "角度记录已关闭";
-    if (!isMetricInput()) await enumerateCameras();
+    if (!isMetricInput() && !isLeapCamera() && $("input-source").value !== "realsense_rgbd") await enumerateCameras();
     if (token !== generation) return;
     starting = false;
     framePipeline = new LatestFrameQueue({
@@ -1091,18 +1192,23 @@ async function start() {
       return;
     }
     if (isWebXR()) {
-      const pairing = await api("/api/webxr/create", {session: created.session});
+      const adb = isQuestAdb();
+      const pairing = await api("/api/webxr/create", {session: created.session, transport: adb ? "adb" : "webxr"});
       if (token !== generation) return;
-      $("quest-link").value = pairing.entry_url ?? new URL(pairing.entry_path, location.href).href;
-      $("quest-link").placeholder = pairing.connection_error ? "局域网采集地址暂不可用" : "";
+      $("quest-link").value = adb
+        ? (pairing.adb_entry_url ?? pairing.entry_url ?? new URL(pairing.adb_entry_path || pairing.entry_path || "/q/adb", location.href).href)
+        : pairing.entry_url ?? new URL(pairing.entry_path, location.href).href;
+      $("quest-link").placeholder = pairing.connection_error ? (adb ? "请通过 Quest ADB 启动器连接" : "局域网采集地址暂不可用") : "";
       $("quest-copy").disabled = !$("quest-link").value;
-      $("quest-connection-note").textContent = pairing.connection_error || "电脑与 Quest 请连接同一局域网；在头显打开上方 HTTPS 地址。";
+      $("quest-connection-note").textContent = pairing.connection_error || (adb
+        ? "USB ADB · 21 点：请保持 USB 连接，用 Quest ADB 启动器建立转发后，在头显打开上方 localhost 采集地址，然后进入 XR。"
+        : "电脑与 Quest 请连接同一局域网；在头显打开上方 HTTPS 地址。");
       $("quest-token").textContent = pairing.pairing_code;
       $("quest-pairing").hidden = false;
       $("camera-state").textContent = "等待 Quest";
-      $("camera-caption").textContent = "QUEST / WEBXR 25 → 21";
+      $("camera-caption").textContent = adb ? "QUEST / USB ADB · 21" : "QUEST / WEBXR 25 → 21";
       $("gpu-badge").className = "chip ready";
-      $("gpu-badge").querySelector("span").textContent = "Quest WebXR";
+      $("gpu-badge").querySelector("span").textContent = adb ? "Quest USB ADB" : "Quest WebXR";
       questReceiver = new WebXRReceiver({session: created.session,
         staleAfterMs: pairing.stale_after_ms,
         combined:pairing.combined_frame===true, background:pairing.background_processing===true,
@@ -1110,11 +1216,11 @@ async function start() {
         onFrame: snapshot => offerQuestFrame(token, snapshot),
         onStatus: snapshot => {
           if (token !== generation) return;
-          $("quest-state").textContent = questStatus(snapshot);
+          $("quest-state").textContent = (adb ? "USB ADB · 21 点 · " : "") + questStatus(snapshot);
           $("camera-state").textContent = snapshot.hand ? "实时" : "等待 Quest";
           $("camera-placeholder").querySelector("h3").textContent = snapshot.hand ? "Quest 手势已连接" : "等待 Quest 手势";
           $("camera-placeholder").querySelector("p").textContent = snapshot.hand
-            ? "原生 25 关节已接入，在下方查看三维骨架" : "请在 Quest 进入 XR，并将所选手放入头显视野";
+            ? (adb ? "USB ADB 21 个关节点已接入，在下方查看三维骨架" : "原生 25 关节已接入，在下方查看三维骨架") : "请在 Quest 进入 XR，并将所选手放入头显视野";
         },
         onError: async error => {if (token === generation) {await stop({message:"Quest 输入已中断"});notice(error.message);}},
       });
@@ -1123,8 +1229,7 @@ async function start() {
       return;
     }
     $("camera-state").textContent = "实时";
-    $("camera-caption").textContent =
-      `CAMERA / ${$("video").videoWidth} × ${$("video").videoHeight}`;
+    $("camera-caption").textContent = isLeapCamera() ? 'LEAP MOTION 2 / 等待图像' : $("input-source").value === "realsense_rgbd" ? 'D455f RGB-D / 等待同帧图像' : cameraCaptureLabel(browserCamera);
     $("camera-caption").parentElement.classList.add("live");
     refreshControls();
     schedule(token);
@@ -1137,6 +1242,14 @@ async function start() {
 
 $("start").addEventListener("click", start);
 $("input-source").addEventListener("change", configureInputSource);
+$("overlay-smoothing").addEventListener("change", () => {
+  const enabled = $("overlay-smoothing").checked;
+  overlay.setSmoothingEnabled(enabled);
+  recorder.record("overlay_smoothing", {enabled});
+});
+$("mediapipe-filter").addEventListener("change", () => {
+  recorder.record("mediapipe_filter", {enabled: $("mediapipe-filter").checked});
+});
 $("quest-copy").addEventListener("click", async () => {
   try {await navigator.clipboard.writeText($("quest-link").value);notice("Quest 连接地址已复制");}
   catch (_) {$("quest-link").select();notice("请手动复制已选中的连接地址");}
@@ -1196,9 +1309,6 @@ $("emergency-hand").addEventListener("click", () => controlAction("emergency_sto
 $("close-control").addEventListener("click", () => stop());
 $("reset-view").addEventListener("click", () => viewer?.resetView());
 $("reset-feedback-view").addEventListener("click", () => feedbackViewer?.resetView());
-navigator.mediaDevices?.addEventListener("devicechange", () =>
-  enumerateCameras().catch(() => {}),
-);
 document.addEventListener("visibilitychange", () => {
   diagnostics.record("visibility_change",{visibility:document.visibilityState});diagnostics.flush();
   if (document.hidden && (active || starting || ["TsenseI_v2", ...A30_MODEL_IDS, ...A32_MODEL_IDS].includes(session?.model_id)))
@@ -1210,6 +1320,8 @@ window.addEventListener("pagehide", () => {
   localControl.disconnect().catch(() => {});
   recorder.flush();
   client?.close();
+  leapCamera?.close();
+  cameraOpening?.abort();
   stream?.getTracks().forEach((track) => track.stop());
   questReceiver?.close();
   if (session)
@@ -1307,7 +1419,7 @@ try {
   const requestedModel = new URLSearchParams(location.search).get("model");
   if (service.models?.includes(requestedModel)) $("hand-model").value = requestedModel;
   const requestedSource = new URLSearchParams(location.search).get("source");
-  if (["webxr", "wuji_glove", "leapmotion"].includes(requestedSource)) $("input-source").value = requestedSource;
+  if (["webxr", "quest_adb", "wuji_glove", "leapmotion", "leapmotion_camera", "realsense_rgbd"].includes(requestedSource)) $("input-source").value = requestedSource;
   const requestedSide = new URLSearchParams(location.search).get("side");
   if (["left", "right"].includes(requestedSide)) $("side").value = requestedSide;
   configureInputSource();

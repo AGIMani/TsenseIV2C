@@ -17,7 +17,7 @@ from ..safe_trajectory import SafeTrajectoryMixin
 
 
 class A30Control(SafeTrajectoryMixin):
-    def __init__(self, profile, side, collision_mode, *, start=True):
+    def __init__(self, profile, side, collision_mode, *, start=True, preview_only=False):
         self.profile, self.side, self.mode = profile, side, collision_mode
         self.mapper = A30StrokeMapper(side, model_id=profile.model_id)
         self.names = self.mapper.joint_names
@@ -34,6 +34,9 @@ class A30Control(SafeTrajectoryMixin):
         self.stream_active = False
         self.preview_stream_active = False
         self.direct_mode = False
+        # Only browser preview sessions may pause their simulated clock. Once
+        # feedback is rebased or a downlink stream opens, timeout faults latch.
+        self.preview_only = preview_only
         self.wire = b''
         self.produced_at = time.perf_counter()
         self.otg = GroupedRuckig(self.names, CONTROL_DT)
@@ -59,6 +62,7 @@ class A30Control(SafeTrajectoryMixin):
         if start: self.thread.start()
 
     def _seed(self, pose):
+        self.ruckig_output_joint_angles_rad = None
         self.pose = dict(pose)
         self.input.current_position = [pose[n] for n in self.names]
         self.input.current_velocity = [0.]*20; self.input.current_acceleration = [0.]*20
@@ -135,6 +139,7 @@ class A30Control(SafeTrajectoryMixin):
                 self.guard.filter.sync_pose_from_dict(pose)
                 if self.guard.filter.data.ncon:
                     raise ValueError("当前反馈姿态存在碰撞，请先调整实机")
+            self.preview_only = False
             self._seed(pose); self.target = dict(pose); self.epoch += 1
             if resume_from_commanded_pose:
                 # Keep the most recent accepted gesture while replacing only
@@ -192,8 +197,12 @@ class A30Control(SafeTrajectoryMixin):
     def step(self, dt, *, sample_at=None):
         with self.lock:
             if not self.valid: return
-            if not math.isfinite(dt) or dt <= 0 or dt > .1:
+            if not math.isfinite(dt) or dt <= 0 or (dt > .1 and not self.preview_only):
                 self.invalidate("控制采样超时"); return
+            if dt > .1:
+                # SDK startup / scheduler stalls may pause an offline preview.
+                # Advance one bounded step, never catch up with a large jump.
+                dt = CONTROL_DT
             if time.perf_counter()-self.target_at > .4:
                 self.hold_target()
             try:
@@ -238,6 +247,7 @@ class A30Control(SafeTrajectoryMixin):
             if preview:
                 self.preview_stream_active = True
             else:
+                self.preview_only = False
                 self.stream_active = True
         return StreamLease(self._records(epoch, preview=preview), lambda: self._release_stream(preview))
 
@@ -302,6 +312,8 @@ class A30Control(SafeTrajectoryMixin):
                     "feedback_clipped_joints": list(self.feedback_clipped_joints),
                     "feedback_position_limits": self.feedback_position_limits,
                     "ruckig_joint_angles_rad": dict(self.pose), "target_joint_angles_rad": dict(self.target),
+                    "ruckig_output_joint_angles_rad": (dict(self.ruckig_output_joint_angles_rad)
+                        if not self.direct_mode and self.ruckig_output_joint_angles_rad is not None else None),
                     "command_joint_angles_rad": dict(self.pose),
                     "hardware_joint_angles_rad": dict(self.pose), "linear_strokes_mm": actuation["linear_strokes_mm"],
                     "rotary_positions_deg": actuation["rotary_positions_deg"], "actuation": actuation,

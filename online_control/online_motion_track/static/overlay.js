@@ -1,3 +1,5 @@
+import { OverlaySmoothing } from './overlay-smoothing.js';
+
 // Normalized MediaPipe points -> mirrored, object-fit:contain video pixels.
 export function landmarkPixel(point, width, height, videoWidth, videoHeight) {
   const scale = Math.min(width / videoWidth, height / videoHeight);
@@ -12,16 +14,35 @@ export class CameraOverlay {
     this.video = video;
     this.hands = [];
     this.selected = -1;
+    this.rawHands = [];
+    this.smoothingEnabled = true;
+    this.smoothing = new OverlaySmoothing();
     this.resize = new ResizeObserver(() => this.draw());
     this.resize.observe(canvas.parentElement);
   }
-  setHands(hands = [], selected = -1) {
-    this.hands = hands;
+  setHands(hands = [], selected = -1, {timestampMs = performance.now(), labels = []} = {}) {
+    const width = this.video.videoWidth || this.video.width;
+    const height = this.video.videoHeight || this.video.height;
+    this.rawHands = hands.map(hand => Array.isArray(hand) ? hand.map(point => ({...point})) : []);
+    this.hands = this.smoothingEnabled
+      ? this.smoothing.update(hands, timestampMs, labels, width && height ? width / height : 1)
+      : this.rawHands;
     this.selected = selected;
     this.draw();
   }
+  setSmoothingEnabled(enabled) {
+    if (this.smoothingEnabled === enabled) return;
+    this.smoothingEnabled = enabled;
+    this.smoothing.reset();
+    this.hands = this.rawHands;
+    this.draw();
+  }
   clear() {
-    this.setHands();
+    this.smoothing.reset();
+    this.hands = [];
+    this.rawHands = [];
+    this.selected = -1;
+    this.draw();
   }
   draw() {
     const { canvas, video } = this;
@@ -38,7 +59,8 @@ export class CameraOverlay {
     const ctx = canvas.getContext("2d");
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, w, h);
-    if (!video.videoWidth || !video.videoHeight) return;
+    const videoWidth = video.videoWidth || video.width, videoHeight = video.videoHeight || video.height;
+    if (!videoWidth || !videoHeight) return;
     this.hands.forEach((hand, index) => {
       if (
         hand.length !== 21 ||
@@ -46,7 +68,7 @@ export class CameraOverlay {
       )
         return;
       const p = hand.map((point) =>
-        landmarkPixel(point, w, h, video.videoWidth, video.videoHeight),
+        landmarkPixel(point, w, h, videoWidth, videoHeight),
       );
       const selected = index === this.selected;
       ctx.strokeStyle = selected ? "#42e4e7" : "#bec9cd";

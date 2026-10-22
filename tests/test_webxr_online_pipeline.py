@@ -56,7 +56,7 @@ def test_webxr_metric_geometry_and_recording_across_profiles(model_id, side, tmp
     records = rows(session.recorder.path)
     assert records[0]["input_source"] == "webxr"
     assert records[0]["camera_source"] == "quest3-webxr"
-    tracked, missing = records[1:3]
+    tracked, missing = [row for row in records if row["type"] == "frame"]
     assert tracked["depth_source"] == "webxr_metric"
     assert tracked["raw_webxr"] == request["raw_webxr"]
     assert tracked["source_metadata"] == request["source_metadata"]
@@ -83,8 +83,9 @@ def test_switching_source_resets_metric_filter_and_keeps_mediapipe_default(tmp_p
     finally:
         session.close()
     records = rows(session.recorder.path)
-    assert records[1]["raw_normalized_points_21"] == camera["hand"]["normalized"]
-    assert records[2]["raw_normalized_points_21"] is None
+    frames = [row for row in records if row["type"] == "frame"]
+    assert frames[0]["raw_normalized_points_21"] == camera["hand"]["normalized"]
+    assert frames[1]["raw_normalized_points_21"] is None
 
 
 @pytest.mark.parametrize("side", ["left", "right"])
@@ -144,10 +145,12 @@ def test_a30_webxr_loss_uses_existing_hold_and_does_not_clear_fault(monkeypatch)
     pytest.importorskip("ruckig")
     from online_control.online_motion_track.a30 import session as module
     from online_control.online_motion_track.a30.control import A30Control
-    monkeypatch.setattr(module, "A30Control", lambda profile, side, mode: A30Control(profile, side, mode, start=False))
+    monkeypatch.setattr(module, "A30Control", lambda profile, side, mode, **kwargs:
+                        A30Control(profile, side, mode, start=False, **kwargs))
     session = module.A30WebSession(collision_mode="off", input_source="webxr")
     world = session.pipeline.session.retargeter.fk.compute()
     try:
+        assert session.control.preview_only
         assert session.process(webxr_packet(world))["tracking"]
         previous = dict(session.control.target)
         lost = webxr_packet(world, sequence=1)

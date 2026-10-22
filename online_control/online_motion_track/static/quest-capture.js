@@ -1,6 +1,10 @@
-import {SCHEMA, JOINT_SET, JOINT_NAMES, FINGER_CHAINS, collectHands,
+import {SCHEMA, JOINT_SET, ADB_SCHEMA, ADB_JOINT_SET, JOINT_NAMES, FINGER_CHAINS, collectHands, toAdbHand,
   tokenFromFragment, QuestPublisher} from './quest-capture-core.js';
 
+const adbMode = /^\/q\/adb\/?$/.test(location.pathname);
+const publishEndpoint = adbMode ? '/api/quest-adb/publish' : '/api/webxr/publish';
+const skeletonFormat = adbMode ? {joint_set: ADB_JOINT_SET, units: 'm'}
+  : {joint_set: JOINT_SET, joint_names: JOINT_NAMES};
 const startButton = document.getElementById('start');
 const stopButton = document.getElementById('stop');
 const tokenInput = document.getElementById('pair-token');
@@ -8,6 +12,12 @@ const pairButton = document.getElementById('pair-connect');
 const modeInput = document.getElementById('session-mode');
 const statusEl = document.getElementById('status');
 const canvas = document.getElementById('xr-canvas');
+if (adbMode) {
+  document.title = 'Quest 3 USB ADB · 21 点采集 · TsenseI';
+  document.getElementById('capture-title').textContent = 'Quest 3 · USB ADB 21 点采集';
+  document.getElementById('capture-description').textContent = '通过 USB ADB 将每只手的 21 个关节点发送到在线控制页（单位：米）。进入 XR 后放下控制器，让双手保持在头显视野内；桌面页负责手型映射、预览和机械手控制。';
+  document.getElementById('capture-connection-hint').textContent = '请先用电脑的 Quest ADB 启动器建立 USB 连接，再从头显 Quest Browser 打开 localhost 采集地址，并启用系统手部追踪。USB 拔出、退出 XR 或追踪丢失时，桌面页会停止使用旧姿态。';
+}
 let pairedToken = tokenFromFragment(location.hash), pairing = false, pairingAttempt = 0;
 const initialCode = '123456';
 // Resolve the current PC session on every page load instead of reusing a
@@ -31,7 +41,7 @@ function updateStatus(text) {
     note,
     `页面：${location.origin} · ${isSecureContext ? '安全上下文' : '需要 HTTPS'}`,
     `WebXR：${navigator.xr ? '可用' : '不可用'} · 会话：${c?.session ? '已进入' : c ? '正在启动 / 结束' : '未进入'}`,
-    `传输：${c?.network || '待连接'} · 原生关节：25 / 手`,
+    `传输：${adbMode ? 'USB ADB · ' : ''}${c?.network || '待连接'} · ${adbMode ? '发送：21 点 / 手' : '原生关节：25 / 手'}`,
     `左手：${c?.tracked.left ? '已追踪' : '未追踪'} · 右手：${c?.tracked.right ? '已追踪' : '未追踪'}`,
     `XR 帧：${c?.frames || 0} · 已发送：${c?.publisher.stats.sent || 0} · 已替换：${c?.publisher.stats.replaced || 0}`,
     `上传超时：${c?.publisher.stats.timedOut || 0} · 最近请求：${Math.round(c?.publisher.stats.requestMs || 0)} ms`,
@@ -54,7 +64,7 @@ async function pairComputer() {
   pairing = true; rememberToken(''); controls(false);
   updateStatus('正在连接电脑…');
   try {
-    const response = await fetch('/api/webxr/pair', {method:'POST',
+    const response = await fetch(adbMode ? '/api/quest-adb/pair' : '/api/webxr/pair', {method:'POST',
       headers:{'Content-Type':'application/json'}, body:JSON.stringify({code}),signal:AbortSignal.timeout(5000)});
     const result = await response.json();
     if (attempt !== pairingAttempt) return;
@@ -67,10 +77,12 @@ async function pairComputer() {
 
 function message(c, type, fields = {}) {
   return {
-    schema: SCHEMA, stream_id: c.streamId, type, sequence: c.sequence++,
+    schema: adbMode ? ADB_SCHEMA : SCHEMA, stream_id: c.streamId, type, sequence: c.sequence++,
     timestamp_ms: Date.now(), client_perf_ms: performance.now(),
-    coordinate_space: c.referenceSpaceType,
+    ...(!adbMode || ['webxr_local', 'webxr_local_floor'].includes(c.referenceSpaceType)
+      ? {coordinate_space: c.referenceSpaceType} : {}),
     connection_state: c.network === '已连接' ? 'open' : 'connecting',
+    ...(adbMode ? {...skeletonFormat, transport: 'adb'} : {}),
     ...fields,
   };
 }
@@ -181,20 +193,21 @@ function frameLoop(c, predictedTime, frame) {
     const pose = frame.getViewerPose(c.referenceSpace);
     // Viewer tracking loss makes joint poses unsafe to use, even if input sources remain.
     const hands = collectHands(frame, pose ? c.session.inputSources : [], c.referenceSpace);
-    for (const hand of hands) {
+    const wireHands = adbMode ? hands.map(toAdbHand) : hands;
+    for (const hand of wireHands) {
       const side = hand.handedness;
       if (c.tracked[side] !== hand.tracked) {
         c.tracked[side] = hand.tracked;
         c.publisher.offer(message(c, hand.tracked ? 'tracking_restored' : 'tracking_lost', {
-          handedness: side, reason: hand.tracked ? 'all_25_joints_valid' : 'hand_or_joint_unavailable',
+          handedness: side, reason: hand.tracked ? (adbMode ? 'all_21_joints_valid' : 'all_25_joints_valid') : 'hand_or_joint_unavailable',
         }));
       }
     }
     c.frames++;
     c.publisher.offer(message(c, 'hand_skeleton', {
-      joint_set: JOINT_SET, joint_names: JOINT_NAMES,
+      ...skeletonFormat,
       publisher_stats: {...c.publisher.stats},
-      xr_predicted_display_time_ms: predictedTime, session_state: c.session.visibilityState, hands,
+      xr_predicted_display_time_ms: predictedTime, session_state: c.session.visibilityState, hands: wireHands,
     }));
     // Queue the validated observation before local stereo rendering. A slow
     // draw must not delay publication or hide its cost from client_perf_ms.
@@ -208,7 +221,7 @@ function frameLoop(c, predictedTime, frame) {
 
 async function startXR() {
   if (current) return;
-  if (!isSecureContext || !navigator.xr) { updateStatus('请在 Quest Browser 中使用 HTTPS 打开本页。'); return; }
+  if (!isSecureContext || !navigator.xr) { updateStatus(adbMode ? '请用 Quest ADB 启动器建立 USB 连接，并在 Quest Browser 打开 localhost 采集页。' : '请在 Quest Browser 中使用 HTTPS 打开本页。'); return; }
   const token = pairedToken;
   if (!token) { updateStatus('请打开桌面页生成的 Quest 链接，或填写配对码。'); return; }
   const c = {
@@ -216,7 +229,7 @@ async function startXR() {
     ending: false, tracked: {left: false, right: false}, frames: 0,
     referenceSpaceType: 'webxr_page', network: '正在连接', renderer: null,
   };
-  c.publisher = new QuestPublisher({token,
+  c.publisher = new QuestPublisher({token, endpoint: publishEndpoint,
     onStatus(state, stats, error) {
       c.network = state === 'connected' ? '已连接' : `连接中断，自动重试：${errorText(error)}`;
       if (current === c && state === 'error') updateStatus();
@@ -233,7 +246,7 @@ async function startXR() {
       requiredFeatures: ['hand-tracking'], optionalFeatures: ['local-floor', 'dom-overlay'],
       domOverlay: {root: document.getElementById('overlay-root')},
     });
-    c.publisher.offer(message(c, 'client_hello', {joint_set: JOINT_SET, joint_names: JOINT_NAMES}));
+    c.publisher.offer(message(c, 'client_hello', skeletonFormat));
     const session = await sessionPromise;
     if (current !== c || c.ending) { await session.end().catch(() => {}); return; }
     c.session = session;
@@ -258,7 +271,7 @@ async function startXR() {
     }
     if (current !== c || c.ending) return;
     c.renderer = createRenderer(gl);
-    c.publisher.offer(message(c, 'session_started', {mode: c.mode, joint_set: JOINT_SET}));
+    c.publisher.offer(message(c, 'session_started', {mode: c.mode, ...skeletonFormat}));
     updateStatus('正在采集，请展示双手。');
     session.requestAnimationFrame((time, frame) => frameLoop(c, time, frame));
   } catch (error) {
@@ -283,7 +296,7 @@ window.addEventListener('pagehide', () => {
   c.ending = true;
   c.publisher.close();
   // A final higher sequence invalidates any HTTP request already travelling to the server.
-  navigator.sendBeacon?.('/api/webxr/publish', new Blob([JSON.stringify({
+  navigator.sendBeacon?.(publishEndpoint, new Blob([JSON.stringify({
     token: c.publisher.token, message: message(c, 'session_ended', {reason: 'page_hidden'}),
   })], {type: 'application/json'}));
   void c.session?.end().catch(() => {});
@@ -293,6 +306,6 @@ document.addEventListener('visibilitychange', () => {
   else if (document.visibilityState === 'hidden' && current) void finish(current, 'page_hidden', '页面进入后台，采集已停止。');
 });
 controls(false);
-updateStatus(!isSecureContext ? '需要 HTTPS 安全上下文。请使用与桌面页相同的 HTTPS 入口。'
+updateStatus(!isSecureContext ? (adbMode ? 'USB 模式需要 localhost 安全上下文。请用电脑的 Quest ADB 启动器建立转发，再在头显打开 localhost 采集入口。' : '需要 HTTPS 安全上下文。请使用与桌面页相同的 HTTPS 入口。')
   : !navigator.xr ? '当前浏览器未提供 WebXR，请使用 Quest Browser。' : undefined);
 if (!pairedToken) void pairComputer();

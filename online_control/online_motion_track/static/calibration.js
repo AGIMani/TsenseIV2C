@@ -5,11 +5,19 @@ import {LatestFrameQueue} from './latest-frame-queue.js';
 import {WebXRReceiver, questStatus} from './webxr-receiver.js';
 import {WujiReceiver, wujiStatus} from './wuji-receiver.js';
 import {LeapMotionReceiver, leapMotionStatus} from './leapmotion-receiver.js';
+import {LeapCameraClient, leapCameraStatus} from './leap-camera.js';
+import {RealSenseCameraClient, realSenseCameraStatus, realSenseFusionStatus, realSenseFrameFields} from './realsense-camera.js';
+import {openMediaPipeCamera, cameraCaptureLabel} from './camera-stream.js';
+import {bindCameraSelector} from './camera-selector.js';
 
 const $=id=>document.getElementById(id), copy=value=>structuredClone(value);
 let session=null, rows=[], baseline=[], inputPoints=[], revision=0, generation=0;
 let active=false, starting=false, loading=true, fileBusy=false, inputEpoch=0, sequence=0;
 let stream=null, detector=null, receiver=null, videoTimer=null, queue=null, inFlight=null;
+let leapCamera=null;
+let cameraOpening=null, browserCamera=null;
+const isLeapCamera=()=>$('input-source').value==='leapmotion_camera';
+const inputSource=()=>isLeapCamera()?'mediapipe':$('input-source').value;
 let dirty=false, solveFailed=false, settleTimer=null, settleCount=0, stableCount=0;
 const inputViewer=new CalibrationViewer($('input-stage'),{editable:true,
   onSelect:index=>selectPoint('input',index),onMove:(index,point)=>moveInput(index,point)});
@@ -86,7 +94,9 @@ function createQueue() {
       $('solve-ms').textContent=`${result.solve_ms.toFixed(1)} ms`;
       $('solve-status').textContent=active?'实时求解 · 模型跟随':'求解更新 · 当前输入姿态';
       renderJoints(result.pose);
-      if(item.url==='/api/frame')$('input-status').textContent=result.message;
+      if(item.url==='/api/frame')$('input-status').textContent=result.message+(item.packet.source==='realsense_rgbd'?' · '+realSenseFusionStatus(result.depth_fusion,result.tracking)+' · '+realSenseCameraStatus(item.packet.source_metadata?.camera,leapCamera?.inferenceFps)
+        :leapCamera?' · '+leapCameraStatus(leapCamera.meta,leapCamera.inferenceFps)
+        :browserCamera?' · '+cameraCaptureLabel(browserCamera):'');
       if(result.preset) {
         inputViewer.setTarget(result.preset.target);
         $('preset-detail').textContent=`${result.preset.label} · 拇指与目标间距 ${result.preset.gap_mm.toFixed(2)} mm。目标位置由骨架估算，可继续拖动调整。`;
@@ -118,7 +128,9 @@ function renderJoints(pose) {
 function sourceUI() {
   const source=$('input-source').value;
   $('camera-control').hidden=source!=='mediapipe';
-  $('source-help').textContent=source==='mediapipe'?'相机由当前浏览器直接采集；冻结后可拖动输入关键点。'
+  $('source-help').textContent=source==='mediapipe'?'相机由当前浏览器直接采集；RealSense 自动选择最高可用采集帧率，再开始识别。冻结后可拖动输入关键点。'
+    :source==='realsense_rgbd'?'D455f 的同帧 RGB + 深度由 Linux 服务采集；MediaPipe 提供 21 点初值，深度与骨长约束修正相对三维位置。深度不可用时保持姿态。'
+    :isLeapCamera()?'Leap Motion 2 左侧红外相机 → MediaPipe。目标采集 120 fps；识别速度取决于 GPU，三维点来自 MediaPipe 估计。'
     :source==='webxr'?'复用 Quest WebXR 配对。电脑与头显访问同一可信 HTTPS 站点，25 关节自动转为 21 点。'
     :source==='leapmotion'?'Linux 服务需安装 Ultraleap Tracking Service 和 LeapC SDK，并连接 Leap Motion 2；将「输入手别」所选手放入设备视野，接收 21 点骨架。'
     :'复用当前服务的 Wuji SDK / 桥接配置；接入后接收所选手套的 21 点骨架。';
@@ -128,16 +140,13 @@ function updateLinks() {
   const params=new URLSearchParams({model:$('hand-model').value,side:$('side').value,source:$('input-source').value});
   $('tracking-link').href='/?'+params;history.replaceState(null,'','/calibration?'+params);
 }
-async function cameras() {
-  if(!navigator.mediaDevices?.enumerateDevices)return;
-  const selected=$('camera').value, devices=await navigator.mediaDevices.enumerateDevices();
-  $('camera').replaceChildren(new Option('默认摄像头',''));
-  devices.filter(item=>item.kind==='videoinput').forEach((item,i)=>$('camera').add(new Option(item.label||`摄像头 ${i+1}`,item.deviceId)));
-  if([...$('camera').options].some(item=>item.value===selected))$('camera').value=selected;
-}
+const cameraSelector=bindCameraSelector($('camera'),{onError:error=>notice(error.message)});
+function cameras() {return cameraSelector.refresh();}
 function closeLocalInput() {
   generation++;active=false;starting=false;clearTimeout(settleTimer);clearTimeout(videoTimer);
+  cameraOpening?.abort();cameraOpening=null;browserCamera=null;
   receiver?.close();receiver=null;detector?.close();detector=null;
+  leapCamera?.close();leapCamera=null;$('leap-camera-canvas').hidden=true;
   stream?.getTracks().forEach(track=>track.stop());stream=null;$('video').srcObject=null;$('video').hidden=true;
   queue?.close();$('quest-pairing').hidden=true;
 }
@@ -155,25 +164,36 @@ async function startInput() {
   $('input-status').textContent='正在接入…';
   try {
     const state=await api('/api/calibration/input',{session:session.session,enabled:true,
-      source:$('input-source').value,side:$('input-side').value,calibration_rows:currentRows()});
+      source:inputSource(),camera_source:isLeapCamera()?'leapmotion_camera':$('input-source').value==='realsense_rgbd'?'realsense_rgbd':'browser',
+      side:$('input-side').value,calibration_rows:currentRows()});
     if(token!==generation)return;
     inputEpoch=state.input_epoch;sequence=0;clearPreset();
-    const source=$('input-source').value;
-    if(source==='mediapipe') {
+    const source=inputSource();
+    if(source==='mediapipe'||source==='realsense_rgbd') {
+      if(isLeapCamera()||source==='realsense_rgbd') {
+        leapCamera=source==='realsense_rgbd'?new RealSenseCameraClient($('leap-camera-canvas')):new LeapCameraClient($('leap-camera-canvas'));
+        $('leap-camera-canvas').ariaLabel=source==='realsense_rgbd'?'D455f 深度融合 RGB 画面':'Leap Motion 2 红外画面';
+        $('leap-camera-canvas').hidden=false;
+      } else {
       if(!navigator.mediaDevices?.getUserMedia)throw Error('相机需要 HTTPS 或 localhost，请从安全地址打开网页');
-      const acquired=await navigator.mediaDevices.getUserMedia({audio:false,video:{width:{ideal:640},height:{ideal:480},frameRate:{ideal:30,max:30},
-        ...($('camera').value?{deviceId:{exact:$('camera').value}}:{facingMode:'user'})}});
+      const opening=new AbortController();cameraOpening=opening;
+      const camera=await openMediaPipeCamera({deviceId:$('camera').value,label:$('camera').selectedOptions[0]?.textContent||'',signal:opening.signal,
+        onStatus:message=>{if(token===generation)$('input-status').textContent=message;}});
+      const acquired=camera.stream;
       if(token!==generation){acquired.getTracks().forEach(track=>track.stop());return;}
+      cameraOpening=null;browserCamera=camera;
       stream=acquired;$('video').srcObject=stream;$('video').hidden=false;await $('video').play();
       if(token!==generation)return;
       stream.getVideoTracks()[0].addEventListener('ended',()=>{if(token===generation)void stopInput().then(()=>notice('摄像头已断开'));});
+      }
       detector=new DetectorClient();const ready=await detector.ask({type:'init'});
       if(token!==generation)return;
       if(ready.fallbackReason)notice('浏览器 GPU 初始化失败，已使用 CPU 识别');
-      await cameras();if(token!==generation)return;
+      if(!isLeapCamera()&&source!=='realsense_rgbd')await cameras();if(token!==generation)return;
     }
-    starting=false;active=true;createQueue();refresh();$('input-status').textContent='输入已接入 · 等待所选手的关键点';
-    if(source==='mediapipe') {void cameraFrame(token,-1);return;}
+    starting=false;active=true;createQueue();refresh();
+    $('input-status').textContent=(browserCamera?cameraCaptureLabel(browserCamera)+' · ':'')+'输入已接入 · 等待所选手的关键点';
+    if(source==='mediapipe'||source==='realsense_rgbd') {void cameraFrame(token,-1);return;}
     const connection=await api(source==='webxr'?'/api/webxr/create':source==='leapmotion'?'/api/leapmotion/create':'/api/wuji/create',{session:session.session});
     if(token!==generation)return;
     if(source==='webxr') {
@@ -198,19 +218,30 @@ async function cameraFrame(token,lastTime) {
   if(token!==generation||!active)return;
   const video=$('video'), at=video.currentTime;
   try {
-    if(video.readyState>=2&&at!==lastTime) {
-      const timestamp_ms=performance.now(), bitmap=await createImageBitmap(video);
-      if(token!==generation){bitmap.close();return;}
-      const detection=await detector.ask({type:'frame',bitmap,timestamp_ms},[bitmap]);
+    const camera=leapCamera, rgbd=$('input-source').value==='realsense_rgbd';
+    if(camera||(video.readyState>=2&&at!==lastTime)) {
+      const bitmap=camera?await camera.read(session.session):await createImageBitmap(video);
+      if(token!==generation){bitmap?.close();return;}
+      const timestamp_ms=performance.now(), cameraMeta=camera?{...camera.meta}:null;
+      const capture_unix_ms=rgbd&&Number.isFinite(cameraMeta?.capture_unix_ms)?cameraMeta.capture_unix_ms:Date.now()-(cameraMeta?.age_ms||0);
+      if(camera)$('input-status').textContent=rgbd?realSenseCameraStatus(cameraMeta,camera.inferenceFps):leapCameraStatus(cameraMeta,camera.inferenceFps);
+      const detection=bitmap?await detector.ask({type:'frame',bitmap,timestamp_ms},[bitmap]):{result:{}};
       if(token!==generation)return;
+      if(camera&&bitmap) {
+        camera.recordInference();
+        if(cameraMeta.age_ms+performance.now()-timestamp_ms>=cameraMeta.stale_after_ms)detection.result={};
+      }
       const result=detection.result, labels=result.handedness||result.handednesses||[];
       const index=labels.findIndex(categories=>categories[0]?.categoryName===$('input-side').value.replace(/^./,s=>s.toUpperCase()));
       const xyz=points=>points.map(p=>[p.x,p.y,p.z]);
       const world=result.worldLandmarks?.[index], normalized=result.landmarks?.[index];
       const hand=world?.length===21&&normalized?.length===21?{world:xyz(world),normalized:xyz(normalized),label:labels[index][0].categoryName,score:labels[index][0].score}:null;
-      offer({frame:{source:'mediapipe',timestamp_ms,hand,capture_unix_ms:Date.now()}});
+      offer({frame:{source:'mediapipe',timestamp_ms,hand,capture_unix_ms,
+        camera_size:cameraMeta?[cameraMeta.width,cameraMeta.height]:[video.videoWidth,video.videoHeight],
+        ...(rgbd?realSenseFrameFields(cameraMeta):cameraMeta?{source_metadata:{camera:cameraMeta}}:{})}});
     }
-    videoTimer=setTimeout(()=>void cameraFrame(token,at),10);
+    if(camera)queueMicrotask(()=>void cameraFrame(token,at));
+    else videoTimer=setTimeout(()=>void cameraFrame(token,at),10);
   } catch(error) {if(token===generation){await stopInput().catch(()=>{});notice(`相机识别中断：${error.message}`);}}
 }
 function applyDescription(data,{resetInput=true}={}) {
@@ -233,7 +264,7 @@ async function load() {
     const descriptions=await Promise.all([inputViewer.load(side,model),staticViewer.load(side,model),resultViewer.load(side,model)]);
     inputViewer.robot.root.visible=false;staticViewer.zeroPose();inputViewer.zeroPose();
     $('point-link').replaceChildren(...descriptions[1].links.map(link=>new Option(link.name,link.name)));
-    session=await api('/api/session',{mode:'calibration',model_id:model,side,input_source:$('input-source').value,recording:false});
+    session=await api('/api/session',{mode:'calibration',model_id:model,side,input_source:inputSource(),camera_source:$('input-source').value==='realsense_rgbd'?'realsense_rgbd':'browser',recording:false});
     applyDescription(session);
     $('common-presets').replaceChildren();$('kapandji-presets').replaceChildren();
     for(const preset of session.presets) {

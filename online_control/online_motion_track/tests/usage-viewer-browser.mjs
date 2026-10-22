@@ -13,7 +13,7 @@ const server=createServer(async(req,res)=>{
   }catch(error){res.writeHead(500).end(error.message);}
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-const browser=await chromium.launch({executablePath:process.env.CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true});
 const page=await browser.newPage({viewport:{width:1500,height:1100}}),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 page.on('console',message=>console.log(message.text()));
@@ -52,8 +52,8 @@ try{
     metadata:{model_id:'TsenseI_v3_0',hand_side:'left',hand_name:'样机 01'}};
   const fixture=(index)=>({name:`fixture_part00${index}.jsonl`,mimeType:'application/x-ndjson',buffer:Buffer.from([
     {...header,recording_part:{index,count:2,session_id:header.session_id}},
-    {type:'retarget',t:index===1?0:60,hand_side:'left',joints:{left_hand_index_MCP_joint:.1}},
-    {type:'retarget',t:index===1?59:119,hand_side:'left',joints:{left_hand_index_MCP_joint:.2}},
+    {type:'joint_angles',stage:'retarget',t:index===1?0:60,hand_side:'left',joints:{left_hand_index_MCP_joint:.1}},
+    {type:'joint_angles',stage:'retarget',t:index===1?59:119,hand_side:'left',joints:{left_hand_index_MCP_joint:.2}},
     ...(index===2?[{type:'session_end',t:120,duration_s:120}]:[])].map(JSON.stringify).join('\n')+'\n')});
   await page.locator('#file').setInputFiles([fixture(2),fixture(1)]);
   await page.waitForFunction(()=>document.querySelector('#usageTotals').textContent.includes('0 时 2 分 0 秒'));
@@ -65,9 +65,10 @@ try{
   assert.equal(await page.locator('#usageRows input').inputValue(),'左手样机 A');
   // Every primary panel is a native keyboard-operable details element.
   assert.equal(await page.locator('section.panel,section.toolbar,div.panel').count(),0);
-  assert.equal(await page.locator('details[data-fold]').count(),12);
+  assert.equal(await page.locator('details[data-fold]').count(),13);
   await page.locator('details[data-fold="section-2"] summary').click();
-  await page.waitForFunction(()=>!document.querySelector('[data-fold="section-2"]').open);
+  await page.waitForFunction(()=>!document.querySelector('[data-fold="section-2"]').open
+    &&JSON.parse(localStorage.getItem('tsensei-viewer-folds')||'{}')['section-2']===false);
   await page.reload();
   assert.equal(await page.locator('#usageRows tr').count(),1);
   assert.equal(await page.locator('details[data-fold="section-2"]').getAttribute('open'),null);

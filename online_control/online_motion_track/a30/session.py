@@ -13,7 +13,7 @@ class A30WebSession(WebSession):
         # Rebase/mode/close must not slip between the two stages.
         self.lock = threading.RLock()
         try:
-            self.control = A30Control(self.pipeline.session.profile, side, collision_mode)
+            self.control = A30Control(self.pipeline.session.profile, side, collision_mode, preview_only=True)
         except Exception:
             super().close(); raise
 

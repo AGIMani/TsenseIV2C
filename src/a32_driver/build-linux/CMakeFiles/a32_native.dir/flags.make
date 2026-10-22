@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = -Da32_native_EXPORTS
 
-CXX_INCLUDES = 
+CXX_INCLUDES = -I/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/a3-cpp-sdk/include -I/home/hj/hand/hand-ubuntu24.04-20261006/hand/vendor/a3-cpp-sdk/include
 
 CXX_FLAGS = -O3 -DNDEBUG -fPIC -fvisibility=hidden -fvisibility-inlines-hidden -Wall -Wextra -Wpedantic -Wconversion
 

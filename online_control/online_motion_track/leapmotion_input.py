@@ -3,7 +3,7 @@ from copy import deepcopy
 import threading
 import time
 
-from .leapmotion_source import LeapMotionSource, STALE_AFTER_MS
+from .leapmotion_source import LeapMotionSource, STALE_AFTER_MS, TRACKING_MODE
 
 
 class LeapMotionInputRelay:
@@ -38,7 +38,7 @@ class LeapMotionInputRelay:
             raise ValueError('Leap Motion 手别必须为 left 或 right')
         with self.lock:
             self.channels[session] = dict(side=side, consumed=-1, snapshots={})
-        return dict(source='leapmotion', transport='leapc', tracking_mode='desktop',
+        return dict(source='leapmotion', transport='leapc', tracking_mode=TRACKING_MODE,
                     stale_after_ms=self.stale_after_ms)
 
     def close(self, session):

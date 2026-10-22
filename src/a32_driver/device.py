@@ -1,8 +1,8 @@
 """A3.2 calibrated device API shared by tracking and motion playback.
 
 All public poses are complete 20-joint URDF radians for ``model_id``. The
-hardware table is the vendor's confirmed left-hand table, independent of the
-URDF's ordering and of the legacy A30/V2 protocol.
+hardware table is the shared A3.2 slot table, independent of the selected
+URDF side and of the legacy A30/V2 protocol.
 """
 from __future__ import annotations
 
@@ -16,11 +16,8 @@ import time
 from typing import Mapping
 
 from a32_kinematics import A32StrokeMapper
-from a32_kinematics.joint_coordinates import is_finger_swing
-from a32_kinematics.a32_angles_to_inputs import (
-    a32_loop_kinematics, load_configuration, load_kinematic_model,
-)
 from .native import A32DriverError, NativeHand
+from .limits import sdk_channel_limits
 
 
 class A32Device:
@@ -28,23 +25,28 @@ class A32Device:
 
     ``backend`` is injectable for offline tests. Production uses NativeHand.
     Do trajectory planning in joint space before ``send_joint_targets``.
+    ``enabled`` is the software permission to send targets, not measured motor
+    power. All stop/error/close paths revoke that permission without sending
+    motor-disable commands; an already accepted motion or home may continue.
     """
 
     def __init__(self, hand_side="left", model_id="TsenseI_v3_2", *, backend=None,
                  hardware_config=None, telemetry_timeout_ms=500, home_timeout_s=30.):
         self.hand_side, self.model_id = hand_side, model_id
         self.mapper = A32StrokeMapper(hand_side, model_id=model_id)
-        self._model = load_kinematic_model()
-        self._geometry = load_configuration()["motors"]
-        self._source_index = dict(zip(self.mapper.joint_names, range(20)))
-        self._signs = {row["joint"]: row.get("source_sign", 1)
-                       for row in self.mapper.description()["channels"]}
         config_path = Path(hardware_config or Path(__file__).with_name("a32_hardware.json"))
         self._config = json.loads(config_path.read_text(encoding="utf-8"))
         self.channels = copy.deepcopy(self._config["channels"])
         for row in self.channels:
             row["joint"] = row["joint"].replace("left_hand_", f"{hand_side}_hand_")
         self._validate_config()
+        # Clamp before trajectory planning so the reported applied pose agrees
+        # with the SDK, including for older/custom hardware-map files.
+        for row in self.channels:
+            lo, hi = sdk_channel_limits(row["channel"], row["index"])
+            row["limits"] = [max(lo, row["limits"][0]), min(hi, row["limits"][1])]
+            if row["limits"][0] > row["limits"][1]:
+                raise A32DriverError(f"No SDK/calibration limit intersection: {row['joint']}")
         self._by_joint = {row["joint"]: row for row in self.channels}
         self._joint_limits = self._derive_joint_limits()
         self._backend = backend
@@ -68,8 +70,8 @@ class A32Device:
             raise ValueError("home_timeout_s must be between 1 and 120")
 
     def _validate_config(self):
-        if self._config.get("schema_version") != 1 or self._config.get("hand_side") != "left":
-            raise A32DriverError("A3.2 requires the version 1 left-hand hardware map")
+        if self._config.get("schema_version") != 1 or self._config.get("hand_side") not in ("left", "right"):
+            raise A32DriverError("A3.2 requires a version 1 hardware map")
         if {c["joint"] for c in self.channels} != set(self.mapper.joint_names) or len(self.channels) != 20:
             raise A32DriverError("A3.2 hardware map must name exactly the model's 20 joints")
         if {(c["channel"], c["index"]) for c in self.channels} != {
@@ -87,15 +89,7 @@ class A32Device:
     def _inverse(self, channel, value):
         name = channel["joint"]
         source = (float(value) - channel["offset"]) / channel["direction"]
-        if is_finger_swing(name):
-            return math.radians(source)
-        if channel["unit"] == "deg":
-            q = math.radians(source)
-        else:
-            i = self._source_index[name]
-            q = a32_loop_kinematics(self._geometry[i], self._model.axes[i], source / 1000.,
-                                    [max(0., self._model.lower[i]), self._model.upper[i]])["q"]
-        return float(q * self._signs[name])
+        return self.mapper.inverse_actuator(name, source)
 
     def _derive_joint_limits(self):
         result = {}
@@ -143,8 +137,8 @@ class A32Device:
         return self._backend
 
     def _permit_hardware(self):
-        if self.hand_side != "left" or not self._config.get("calibration_confirmed"):
-            raise A32DriverError("A3.2 right-hand hardware is not calibrated; offline preview only")
+        if not self._config.get("calibration_confirmed"):
+            raise A32DriverError("A3.2 hardware calibration is not confirmed")
 
     def connect_usb(self, port="auto"):
         with self._lock:
@@ -157,6 +151,7 @@ class A32Device:
             self._enabled, self._last_error = False, ""
             self._homing_slots.clear()
             self._last_targets = None
+            self._seed_missing = []
             return self.get_state()
 
     def connect_eth(self, host, port=5001):
@@ -170,6 +165,7 @@ class A32Device:
             self._enabled, self._last_error = False, ""
             self._homing_slots.clear()
             self._last_targets = None
+            self._seed_missing = []
             return self.get_state()
 
     @property
@@ -207,22 +203,17 @@ class A32Device:
                 sequence = raw.get("sequence", raw.get("rx_ok"))
                 new_frame = sequence is not None and sequence != self._home_sequence
                 if elapsed > self.home_timeout_s:
-                    home_error = "A3.2 homing timed out; whole-hand stop requested"
+                    home_error = "A3.2 homing timed out; command sending stopped (motor power unchanged)"
                 elif elapsed > self.telemetry_timeout_ms / 1000. and (not fresh or not online):
-                    home_error = "A3.2 homing feedback became stale/offline; whole-hand stop requested"
+                    home_error = "A3.2 homing feedback became stale/offline; command sending stopped (motor power unchanged)"
                 elif len(raw.get("self", [])) == 18 and any(
                         raw["self"][i].get("homing") == 3 for i in self._homing_slots):
-                    home_error = "A3.2 motor reported homing failure; whole-hand stop requested"
+                    home_error = "A3.2 motor reported homing failure; command sending stopped (motor power unchanged)"
                 elif elapsed >= .3 and fresh and online and new_frame and all(
                         raw["self"][i].get("homing") in (2, 254) for i in self._homing_slots):
                     self._homing_slots.clear()
                 if home_error:
-                    self._enabled = False
-                    self._homing_slots.clear()
-                    try:
-                        self._backend.estop()
-                    except Exception as exc:
-                        home_error += f"; SDK stop failed: {exc}"
+                    self._stop_commands()
                     self._last_error = home_error
             homing = not home_error and (bool(self._homing_slots) or
                 (fresh and not self._home_reset_pending and any(
@@ -301,22 +292,19 @@ class A32Device:
             return pose
 
     def starting_pose(self, fallback_pose=None):
-        """Use available feedback per joint; missing feedback never blocks motion.
+        """Seed every axis from fresh telemetry on the current connection.
 
-        Unmeasured axes use the last successfully written command, then the
-        caller's software pose, then the model's initial pose (as in A3.0).
-        This estimate is not a measurement of the physical hand.
+        ``fallback_pose`` is retained for API compatibility but never used.
+        A previous command/software pose cannot establish the hand's position
+        after reconnecting. Small endpoint noise and the application's inset
+        joint limits may be clamped only within 0.1 mm / 0.002 rad of feedback.
         """
         with self._lock:
-            if self._last_targets is not None:
-                fallback_pose = self._last_targets["applied_pose"]
-            elif fallback_pose is None:
-                from hand_profiles import load_hand_profile
-                fallback_pose = load_hand_profile(self.model_id).init_pose(self.hand_side)
-            pose = self.constrain_pose(fallback_pose)
+            pose, measured = {}, {}
             state = self.get_state()
             age = state.get("telemetry_age_ms", -1)
-            fresh = state.get("connected") and isinstance(age, Real) and 0 <= age <= self.telemetry_timeout_ms
+            fresh = (state.get("connected") and isinstance(age, Real)
+                     and not isinstance(age, bool) and 0 <= age <= self.telemetry_timeout_ms)
             missing = []
             for c in self.channels:
                 rows = state.get(c["channel"], [])
@@ -327,15 +315,33 @@ class A32Device:
                           and (c["channel"] != "mit" or (row.get("valid") and not row.get("fault"))))
                 if usable:
                     try:
-                        q = self._inverse(c, self.feedback_position(c, value))
+                        value = self.feedback_position(c, value)
+                        tolerance = .1 if c["unit"] == "mm" else math.degrees(.002)
+                        lower, upper = c["limits"]
+                        if not lower - tolerance <= value <= upper + tolerance:
+                            raise ValueError("feedback outside hardware limits")
+                        q = self._inverse(c, min(upper, max(lower, value)))
                         lo, hi = self._joint_limits[c["joint"]]
-                        if math.isfinite(q) and lo - .002 <= q <= hi + .002:
+                        if math.isfinite(q):
                             pose[c["joint"]] = min(hi, max(lo, q))
+                            measured[c["joint"]] = (value, tolerance)
                             continue
                     except (ValueError, ArithmeticError):
                         pass
                 missing.append(c["joint"])
+            if not missing:
+                # Verify the actual first command, including calibration and
+                # the narrower application limits, stays near the measurement.
+                targets = self.prepare_targets(pose, clamp=False)
+                for c in self.channels:
+                    value, tolerance = measured[c["joint"]]
+                    target = targets["self" if c["channel"] == "self" else "mit_pos"][c["index"]]
+                    if abs(target - value) > tolerance + 1e-9:
+                        missing.append(c["joint"])
             self._seed_missing = missing
+            if missing:
+                raise A32DriverError("A3.2 起步需要本次连接的新鲜、完整且有效的反馈；缺失或异常关节："
+                                     + ", ".join(missing))
             return pose
 
     def enable_all(self, *, start_pose=None, fallback_pose=None, send_initial_pose=True):
@@ -348,8 +354,17 @@ class A32Device:
                 raise A32DriverError("Wait for A3.2 homing to complete before enabling motion")
             # An explicit start_pose lets the planner and SDK use the same
             # collision-checked seed, even if telemetry changes between calls.
-            pose = self.starting_pose(fallback_pose) if start_pose is None else start_pose
-            targets = self.prepare_targets(pose, clamp=False)
+            targets = None
+            if send_initial_pose:
+                current = self.prepare_targets(self.starting_pose(), clamp=False)
+                targets = current if start_pose is None else self.prepare_targets(start_pose, clamp=False)
+                # A caller can supply the collision-checked planner seed, but
+                # it cannot bypass feedback checks or reuse a previous session.
+                for c in self.channels:
+                    key = "self" if c["channel"] == "self" else "mit_pos"
+                    tolerance = .1 if c["unit"] == "mm" else math.degrees(.002)
+                    if abs(targets[key][c["index"]] - current[key][c["index"]]) > tolerance:
+                        raise A32DriverError("A3.2 起步姿态与当前反馈不一致，请根据新反馈重新开启下发：" + c["joint"])
             self._enabled = False
             try:
                 if send_initial_pose:
@@ -358,10 +373,7 @@ class A32Device:
                 self._transport().enable_all(True)
             except Exception as exc:
                 self._last_error = str(exc)
-                try:
-                    self._transport().estop()
-                except Exception:
-                    pass
+                self._stop_commands()
                 raise
             if send_initial_pose:
                 self._last_targets = targets
@@ -370,12 +382,8 @@ class A32Device:
             return self.get_state()
 
     def disable_all(self):
-        with self._lock:
-            self._enabled = False
-            self._homing_slots.clear()
-            if self.is_connected:
-                self._transport().enable_all(False)
-            return self.get_state()
+        """Compatibility name: stop host commands without disabling motors."""
+        return self.stop()
 
     def home(self, slot=None, iq_counts=80.):
         with self._lock:
@@ -384,7 +392,9 @@ class A32Device:
             if slot is not None and (isinstance(slot, bool) or not isinstance(slot, int) or not 0 <= slot < 18):
                 raise ValueError("A3.2 home slot must be 0..17; MIT homing is not provided by the SDK")
             if not self._enabled:
-                self.enable_all()
+                # Explicit homing establishes position; it must not prepend a
+                # guessed or cached position command when feedback is absent.
+                self.enable_all(send_initial_pose=False)
             slots = range(18) if slot is None else [slot]
             before = self.get_state()
             self._home_sequence = before.get("sequence", before.get("rx_ok"))
@@ -413,16 +423,11 @@ class A32Device:
                     self.get_state()
                 except Exception as exc:
                     self._last_error = f"A3.2 homing monitor failed: {exc}"
-                    self._enabled = False
-                    self._homing_slots.clear()
-                    try:
-                        self._backend.estop()
-                    except Exception:
-                        pass
+                    self._stop_commands()
                     return
 
     def reset_home(self, slot=None):
-        """Explicitly stop and reset self homing state, without claiming home DONE.
+        """Stop host targets and reset self homing state without disabling motors.
 
         SDK homeSlot does not promise to reset SEEK/RELEASE after cancellation.
         This recovery operation is intentionally separate from stop/disconnect.
@@ -435,9 +440,7 @@ class A32Device:
                 raise A32DriverError("Connect A3.2 before resetting homing state")
             before = self._backend.get_state()
             self._home_reset_sequence = before.get("sequence", before.get("rx_ok"))
-            self._enabled = False
-            self._homing_slots.clear()
-            self._transport().estop()
+            self._stop_commands()
             self._home_reset_pending = True
             for index in range(18) if slot is None else [slot]:
                 self._transport().home_reset_slot(index)
@@ -484,12 +487,8 @@ class A32Device:
                     backend.set_targets(targets["self"], targets["mit_pos"])
                     backend.send_once()
             except Exception as exc:
-                self._enabled = False
+                self._stop_commands()
                 self._last_error = str(exc)
-                try:
-                    self._transport().estop()
-                except Exception:
-                    pass
                 raise
             self._last_targets = targets
             return targets
@@ -499,26 +498,24 @@ class A32Device:
 
     send_pose = send_joint_targets
 
+    def _stop_commands(self):
+        """Revoke host sending only; caller holds the device lock."""
+        self._enabled = False
+        self._homing_slots.clear()
+
     def emergency_stop(self):
+        """Legacy API: stop further targets, never send a motor-disable frame."""
         with self._lock:
-            self._enabled = False
-            self._homing_slots.clear()
-            if self._backend is not None:
-                self._backend.estop()
+            self._stop_commands()
             return self.get_state()
 
     stop = emergency_stop
 
     def disconnect(self):
         with self._lock:
-            self._enabled = False
-            self._homing_slots.clear()
+            self._stop_commands()
             if self._backend is not None:
-                try:
-                    if self.is_connected:
-                        self._backend.estop()
-                finally:
-                    self._backend.disconnect()
+                self._backend.disconnect()
             return self.get_state()
 
     def close(self):

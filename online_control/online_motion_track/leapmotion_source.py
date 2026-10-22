@@ -4,7 +4,9 @@ All LeapC objects are copied inside their callback. No camera, browser, robot or
 WSL APIs participate in acquisition; the same reader runs on native Ubuntu.
 """
 from copy import deepcopy
+from contextlib import ExitStack
 import importlib
+import logging
 import math
 import threading
 import time
@@ -12,6 +14,10 @@ import uuid
 
 STALE_AFTER_MS = 350
 FRAME_TIMEOUT_SECONDS = 5.
+TRACKING_MODE = 'hmd'
+# LEAP_HINT_HIGH_HAND_FIDELITY from LeapC.h (not exported by the Python binding).
+DEVICE_HINTS = ('high_hand_fidelity',)
+LOGGER = logging.getLogger(__name__)
 FINGERS = ('thumb', 'index', 'middle', 'ring', 'pinky')
 BONES = ('metacarpal', 'proximal', 'intermediate', 'distal')
 JOINT_MAPPING = ['arm.next_joint'] + [
@@ -79,6 +85,7 @@ def hand_frame(hand, *, sequence, timestamp_us, stream_id):
 
 class LeapMotionSource:
     """One reconnecting service connection shared by both hands and all sessions."""
+    device_hints = DEVICE_HINTS
     def __init__(self, *, clock=time.monotonic, sdk_loader=None, retry_delay=1.):
         self.clock = clock
         self.sdk_loader = sdk_loader or (lambda: importlib.import_module('leap'))
@@ -96,6 +103,9 @@ class LeapMotionSource:
         self.error = None
         self.frames = {}
         self.side_epochs = {'left': 0, 'right': 0}
+        self.hint_status = 'waiting_for_device'
+        self.hint_error = None
+        self.device_id = None
 
     def _notify(self):
         if self.on_change:
@@ -219,9 +229,29 @@ class LeapMotionSource:
             self.side_epochs = dict.fromkeys(('left', 'right'), self.epoch)
         self._notify()
 
+    def _configure_device(self, sdk, connection, device):
+        """Submit preferences, never claim that the service adopted them."""
+        try:
+            strings = [sdk.ffi.new('char[]', hint.encode('ascii')) for hint in self.device_hints]
+            # LeapC requires both NUL-terminated strings and a NULL array sentinel.
+            # Keep the allocated strings alive until the native call returns.
+            hints = sdk.ffi.new('const char*[]', strings + [sdk.ffi.NULL])
+            result = sdk.libleapc.LeapSetDeviceHints(
+                connection.get_connection_ptr(), device.c_data_device, hints)
+            if result != 0:
+                raise RuntimeError(f'LeapSetDeviceHints returned 0x{result:08x}')
+        except Exception as exc:
+            self.hint_status, self.hint_error = 'request_failed', str(exc)
+            LOGGER.warning('Leap device hints request failed: %s', exc)
+        else:
+            self.hint_status, self.hint_error = 'submitted_unverified', None
+            LOGGER.info('Leap device hints submitted (effective modes unverified): %s', self.device_hints)
+
     def _run(self, worker):
         while not worker['stop'].is_set():
             connection = listener = None
+            devices = ExitStack()
+            device = None
             try:
                 try:
                     sdk = self.sdk_loader()
@@ -237,8 +267,10 @@ class LeapMotionSource:
                     worker['generation'] = object()
                     worker['restart'].clear()
                     worker['last_tracking_at'] = None
+                    self.hint_status, self.hint_error = 'waiting_for_device', None
+                    self.device_id = None
                 self._clear(worker, 'connecting')
-                connection = sdk.Connection(poll_timeout=.1)
+                connection = sdk.Connection(poll_timeout=.1, multi_device_aware=True)
                 listener = self._listener(sdk, worker, worker['generation'])
                 connection.add_listener(listener)
                 # Explicit finally is needed: the binding's open() context does
@@ -250,7 +282,7 @@ class LeapMotionSource:
                     # owned connection without configuring a cancelled reader.
                     if not self._current(worker) or worker['restart'].is_set():
                         continue
-                    connection.set_tracking_mode(sdk.TrackingMode.Desktop)
+                    connection.set_tracking_mode(sdk.TrackingMode.HMD)
                 connected_at = self.clock()
                 while not worker['stop'].is_set() and not worker['restart'].wait(.1):
                     # A binding conversion exception can silently kill its
@@ -258,6 +290,25 @@ class LeapMotionSource:
                     poll_thread = getattr(connection, '_poll_thread', None)
                     if poll_thread is not None and not poll_thread.is_alive():
                         raise RuntimeError('Ultraleap SDK 采集线程已退出，正在重连')
+                    if device is None:
+                        # Select one camera; merging two cameras would mix frame
+                        # clocks and skeleton identities. Discover late arrivals
+                        # here rather than blocking the SDK callback thread.
+                        available = connection.get_devices()
+                        if available:
+                            with self.lock:
+                                if not self._current(worker) or worker['restart'].is_set():
+                                    continue
+                                device = devices.enter_context(available[0].open())
+                                self.device_id = device.id
+                                connection.subscribe_events(device)
+                                connection.set_primary_device(device)
+                                # Reapply HMD to the selected primary camera before
+                                # submitting its hints, including after hot-plug.
+                                connection.set_tracking_mode(sdk.TrackingMode.HMD)
+                                self._configure_device(sdk, connection, device)
+                                self.revision += 1
+                            self._notify()
                     self._check_frame_timeout(worker, connected_at)
             except (ImportError, OSError) as exc:
                 self._clear(worker, 'sdk_unavailable',
@@ -281,6 +332,9 @@ class LeapMotionSource:
                             connection.remove_listener(listener)
                         except Exception as exc:
                             self._clear(worker, 'sdk_error', f'Ultraleap 监听器清理失败：{exc}')
+                # Polling is stopped before closing the device handle, including
+                # failed setup, disconnects, and cancelled sessions.
+                devices.close()
             if worker['stop'].wait(self.retry_delay):
                 return
 
@@ -308,8 +362,11 @@ class LeapMotionSource:
             source_epoch=self.side_epochs[side], sequence=self.sequence,
             age_ms=age, stale_after_ms=STALE_AFTER_MS, tracking=fresh, stale=not fresh,
             event='stopping' if stopped else ('tracking_lost' if self.event == 'tracking' and item is None else self.event),
-            error=self.error, transport='leapc', tracking_mode='desktop')
+            error=self.error, transport='leapc', tracking_mode=TRACKING_MODE)
         metadata['raw_leapmotion'] = deepcopy(item['raw']) if item else None
+        metadata['device_hints'] = dict(requested=list(self.device_hints),
+            status='inactive' if stopped or not self.connected else self.hint_status,
+            error=self.hint_error, effective=None, device_id=self.device_id)
         return dict(source='leapmotion', revision=self.revision, age_ms=age,
             hand=deepcopy(item['hand']) if fresh else None, tracking=fresh,
             connected=self.connected and not stopped, source_metadata=metadata,

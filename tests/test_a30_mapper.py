@@ -9,15 +9,22 @@ import pytest
 
 sys.path[:0] = [str(Path(__file__).resolve().parents[1] / "src")]
 from a30_kinematics import A30StrokeMapper
-from a32_kinematics import A32StrokeMapper
+from a32_kinematics.a32_angles_to_inputs import load_configuration, load_kinematic_model
+from a32_kinematics.a32_fast import A32Converter
 from hand_profiles import load_hand_profile
 
 
 @pytest.mark.parametrize("side", ["left", "right"])
 @pytest.mark.parametrize("method", ["exact", "lut"])
-def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
+def test_retained_channels_match_original_a32_geometry_and_four_dips_are_direct(side, method):
     mapper = A30StrokeMapper(side, method=method)
-    reference = A32StrokeMapper(side, method=method)
+    # A3.0 retains the original unscaled geometry. A3.2's application mapper
+    # now uses SDK 1.1.9 normalized strokes, which must not change A3.0 motion.
+    model = load_kinematic_model()
+    indices = (3, 5, 7, 9, 11, 13, 15, 17, 19)
+    reference = A32Converter(model, load_configuration()).prepare(indices, method=method)
+    reference_names = tuple(model.q_names[i - 1].replace("left_hand_", f"{side}_hand_")
+                            for i in indices)
     assert mapper._prepared.n == 9
     assert not set(mapper._prepared.indices).intersection({4, 8, 12, 16, 20})
     assert set(mapper.joint_names) == set(load_hand_profile("TsenseI_v3_0").joint_limits(side))
@@ -27,16 +34,15 @@ def test_retained_channels_match_a32_and_four_dips_are_direct(side, method):
         pose = {n: rng.uniform(lo, hi) for n, (lo, hi) in zip(mapper.joint_names, mapper._limits)}
         before = dict(pose)
         target = mapper.convert(pose)
-        ref_pose = dict(zip(reference.joint_names, [pose[n] for n in mapper.joint_names]))
-        ref = reference.convert(ref_pose)
+        ref = reference([math.degrees(pose[name]) for name in reference_names])
         assert pose == before and target.clamped_joints_rad == {}
         assert len(target.linear_strokes_mm) == 9 and len(target.rotary_positions_deg) == 11
         assert not dips.intersection(target.linear_strokes_mm)
-        for name, ref_name in zip(mapper.joint_names, reference.joint_names):
-            if name in target.linear_strokes_mm:
-                assert target.linear_strokes_mm[name] == pytest.approx(ref.linear_strokes_mm[ref_name], abs=1e-9)
-            else:
-                assert target.rotary_positions_deg[name] == pytest.approx(math.degrees(pose[name]), abs=1e-12)
+        assert set(target.linear_strokes_mm) == set(reference_names)
+        for name, meters in zip(reference_names, ref):
+            assert target.linear_strokes_mm[name] == pytest.approx(meters * 1000., abs=1e-9)
+        for name in target.rotary_positions_deg:
+            assert target.rotary_positions_deg[name] == pytest.approx(math.degrees(pose[name]), abs=1e-12)
         assert f"{side}_hand_pinky_MCP_joint" in target.linear_strokes_mm
         assert f"{side}_hand_pinky_swing_joint" in target.rotary_positions_deg
 

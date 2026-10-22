@@ -2,7 +2,7 @@
 
 ## 支持范围与启动
 
-动作平台新增两个独立型号：`TsenseI_v3_2`（SDK 的 daxian_v32 裸手模型）和 `TsenseI_v3_2_withid`（用户提供的带 ID 模型）。两者各有左、右手模型、独立动作文件和 20 个关节控件。左手可以通过原生 SDK 控制实机；SDK 右手槽位尚未标定，右手保留离线预览、编辑和播放。
+动作平台新增两个独立型号：`TsenseI_v3_2`（SDK 的 daxian_v32 裸手模型）和 `TsenseI_v3_2_withid`（用户提供的带 ID 模型）。两者各有左、右手模型、独立动作文件和 20 个关节控件。左右手均可通过原生 SDK 控制实机，并共用 A3.2 的 18 个 SELF、2 个 MIT 槽位映射。
 
 ```powershell
 & E:/conda/envs/hand_dex/python.exe online_control/online_motion_play/server.py --no-browser

@@ -3,9 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "test:smoothing": "node --test tests/overlay.test.mjs tests/frame-processing.test.mjs && node tests/smoothing-browser.mjs",
+    "test:camera": "node --test tests/camera-stream.test.mjs tests/camera-selector.test.mjs tests/frame-processing.test.mjs",
     "test:a3-direct": "node --test tests/direct-preview.test.mjs tests/frame-display.test.mjs tests/a32-sdk-recording.test.mjs tests/a30-stream.test.mjs tests/collision-off-downlink.test.mjs && node tests/a3-direct-browser.mjs",
     "test:feedback": "node --test tests/feedback-preview.test.mjs && node tests/feedback-browser.mjs",
     "test:calibration": "node tests/calibration-browser.mjs",
+    "test:leap-camera": "node --test tests/leap-camera.test.mjs tests/frame-processing.test.mjs tests/overlay.test.mjs",
     "test:input-pipeline": "node --test tests/webxr-receiver.test.mjs tests/wuji-receiver.test.mjs tests/leapmotion-receiver.test.mjs tests/frame-processing.test.mjs tests/metric-frame-processing.test.mjs tests/frame-display.test.mjs tests/retarget-recording.test.mjs tests/latest-frame-queue.test.mjs tests/quest-capture.test.mjs tests/quest-frame-order.test.mjs",
     "test:webxr": "node --test tests/quest-capture.test.mjs tests/webxr-receiver.test.mjs && node tests/quest-capture-browser.mjs",
     "test:webxr-online": "node tests/webxr-browser.mjs",
@@ -19,7 +22,9 @@
     "test:a30-control": "node tests/a30-control-browser.mjs",
     "test:diagnostics": "node tests/diagnostic-browser.mjs",
     "test:usage": "node tests/usage-viewer-browser.mjs && node ../../tests/test_control_log_viewer.cjs",
-    "test:recording": "node --test tests/local-recorder.test.mjs tests/worker-recorder.test.mjs tests/latest-frame-queue.test.mjs tests/frame-processing.test.mjs tests/retarget-recording.test.mjs tests/recording-download.test.mjs tests/a32-sdk-recording.test.mjs && node tests/recording-browser.mjs && node tests/recording-model-matrix-browser.mjs"
+    "test:recording": "node --test tests/local-recorder.test.mjs tests/worker-recorder.test.mjs tests/latest-frame-queue.test.mjs tests/frame-processing.test.mjs tests/retarget-recording.test.mjs tests/recording-download.test.mjs tests/a32-sdk-recording.test.mjs && node tests/recording-browser.mjs && node tests/recording-model-matrix-browser.mjs",
+    "test:realsense": "node --test tests/realsense-camera.test.mjs tests/realsense-input.test.mjs tests/camera-stream.test.mjs tests/camera-selector.test.mjs tests/frame-processing.test.mjs",
+    "test:realsense-browser": "node tests/realsense-browser.mjs"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "1.0.1",

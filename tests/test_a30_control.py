@@ -31,7 +31,7 @@ def test_gesture_limits_for_every_axis(side):
                 assert "thumb_rota" in name, name
                 kind = "rotation"
             counts[kind] += 1
-            assert (v, a, j) == (10., 80., 200.), name
+            assert (v, a, j) == (20., 400., 2400.), name
         assert counts == {"flexion": 14, "swing": 4, "rotation": 2}
         import ruckig
         assert c.input.synchronization == ruckig.Synchronization.Time
@@ -457,6 +457,10 @@ def test_public_a30_api_never_opens_server_usb(mode):
     try:
         s=app.create({"model_id":"TsenseI_v3_0","recording":False,"collision_mode":mode})
         obj=app.get(s["session"])
+        with obj.control.lock:
+            assert obj.control.preview_only
+            obj.control.step(.3)
+            assert obj.control.valid and not obj.control.error
         request=lambda action,**kw:app.a30_command({"session":s["session"],"action":action,**kw})
         assert request("status")["ruckig_enabled"]
         request("tracking_start")
@@ -485,3 +489,73 @@ def test_lite_bundle_never_advertises_hardware_with_only_installed_libraries(mon
     from online_control.online_motion_track import main
     monkeypatch.setattr(main, "a30_collision_modes", lambda: ["off"])
     assert not main.a30_control_available()
+
+
+@pytest.mark.parametrize("model_id", ["TsenseI_v3_0", "TsenseI_v3_0_withid"])
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_offline_preview_resumes_after_scheduler_gap_without_catching_up(model_id, side):
+    profile = load_hand_profile(model_id)
+    preview = A30Control(profile, side, "off", start=False, preview_only=True)
+    reference = A30Control(profile, side, "off", start=False, preview_only=True)
+    try:
+        target = {**preview.pose, f"{side}_hand_index_PIP_joint": .5}
+        for c in (preview, reference):
+            c.push(target, 1)
+            c.step(.002)
+        preview.step(.3)
+        reference.step(.002)
+        assert preview.valid and not preview.error
+        assert preview.pose == pytest.approx(reference.pose)
+        assert preview.input.current_velocity == pytest.approx(reference.input.current_velocity)
+        assert preview.ticks == reference.ticks == 2
+        for _ in range(200):
+            preview.push(target, 2)
+            preview.step(.002)
+        assert preview.pose[f"{side}_hand_index_PIP_joint"] == pytest.approx(.5, abs=.01)
+        stream = preview.open_stream(preview.epoch, preview=True)
+        try:
+            record = next(stream)
+            assert len(record) == 108  # Display-only stream contains no USB payload.
+            assert struct.unpack_from('<I', record, 24)[0] == 1
+        finally:
+            stream.close()
+    finally:
+        preview.close()
+        reference.close()
+
+
+@pytest.mark.parametrize("handoff", ["feedback", "stream"])
+def test_preview_handoff_permanently_restores_hardware_timeout_protection(handoff):
+    c = A30Control(load_hand_profile("TsenseI_v3_0"), "left", "off",
+                   start=False, preview_only=True)
+    try:
+        if handoff == "feedback":
+            c.rebase(feedback(c.mapper, c.pose))
+        else:
+            stream = c.open_stream(c.epoch)
+            stream.close()
+        assert not c.preview_only
+        c.set_direct_mode(True)
+        c.set_direct_mode(False)
+        c.push({**c.pose, 'left_hand_index_PIP_joint': .5}, 1)
+        c.step(.002)
+        c.step(.3)
+        c.push(c.pose, 2)
+        c.step(.002)
+        assert not c.valid and not c.wire
+        assert c.error == "控制采样超时"
+    finally:
+        c.close()
+
+
+@pytest.mark.parametrize("dt", [0, -.1, float("nan"), float("inf")])
+def test_preview_still_latches_invalid_time(dt):
+    c = A30Control(load_hand_profile("TsenseI_v3_0"), "left", "off",
+                   start=False, preview_only=True)
+    try:
+        c.step(dt)
+        c.push(c.pose, 1)
+        c.step(.002)
+        assert not c.valid and not c.wire and c.phase == "blocked"
+    finally:
+        c.close()

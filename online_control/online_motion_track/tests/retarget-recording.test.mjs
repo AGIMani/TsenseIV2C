@@ -23,11 +23,17 @@ for(const [hand,reason] of [[null,'no_hand'],[{label:'Right'},'wrong_hand'],[{la
     assert.equal(rows[0].message,'held');assert.equal(rows[0].hand_side,'left');
   });
 }
-test('valid tracking records the solver and collision-safe targets separately',()=>{
+test('valid tracking records raw solver angles and collision metadata without redundant target angles',()=>{
   const rows=record({label:'Left'},{tracking:true,retarget_joint_angles_rad:{q:.1},
     collision_safe_target_joint_angles_rad:{q:.2},pose:{q:.3},solve_ms:10});
   assert.deepEqual(rows.map(r=>r.type),['retarget','control_target']);
-  assert.equal(rows[0].joints.q,.1);assert.equal(rows[1].joints.q,.2);
+  assert.equal(rows[0].joints.q,.1);assert.equal(rows[1].joints,undefined);
+});
+test('Mink and direct angles are recorded only when explicitly returned by their executed stage',()=>{
+  const rows=record({label:'Left'},{tracking:true,retarget_joint_angles_rad:{q:.1},
+    mink_joint_angles_rad:{q:.2},direct_joint_angles_rad:{q:.3}});
+  assert.deepEqual(rows.map(r=>r.type),['retarget','mink','direct_command','control_target']);
+  assert.equal(rows[1].joints.q,.2);assert.equal(rows[2].joints.q,.3);
 });
 test('missing raw output is distinguished from a rejected solve',()=>{
   const rows=record({label:'Left'},{tracking:true,pose:{q:.3}});

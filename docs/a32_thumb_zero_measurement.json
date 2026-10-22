@@ -1,0 +1,36 @@
+{
+  "reference": "A3.2 URDF/urdf/A3.1V6 26.8.4-2.urdf",
+  "reference_sha256": "84fc48faf5d89b97a8766be439fca469f9ab47c3e4bb5faf4cdde4583d3d23f3",
+  "method": "All joints at zero. Match palm-relative thumb MCP orientation using the two thumb base axes; preserve each model's link lengths and joint translations.",
+  "opening_definition": "3D angle between the +Z longitudinal axes of thumb MCP and middle MCP at q=0; not a screenshot projection or a motor angle.",
+  "thumb_middle_opening_deg": 46.893124983914774,
+  "models": {
+    "TsenseI_v3_2": {
+      "source": "vendor/a3-cpp-sdk/daxian_hand_v3_2/urdf/daxian_hand_left_v3_2.urdf",
+      "source_sha256": "86098a5c1b6de17a4b7cabe7a6c21edd2df5f6cbe31417de080e14bff4c40c45",
+      "origin_offsets_rad": {
+        "left_hand_thumb_rota_block_joint": 0.0,
+        "left_hand_thumb_rotaback_joint2": 0.0
+      },
+      "origin_offsets_deg": {
+        "left_hand_thumb_rota_block_joint": 0.0,
+        "left_hand_thumb_rotaback_joint2": 0.0
+      },
+      "orientation_residual_deg": 0.0
+    },
+    "TsenseI_v3_2_withid": {
+      "source": "TsenseI_V3.2_hand_withid_fixed/urdf/TsenseI_left.urdf",
+      "source_sha256": "aa59539b5c9d209d5156cedb78cd50e68d856c000c4718edd9b5bde72173271d",
+      "origin_offsets_rad": {
+        "left_hand_thumb_rota_block_joint": -0.10409343842285328,
+        "left_hand_thumb_rotaback_joint2": 0.36582211138764115
+      },
+      "origin_offsets_deg": {
+        "left_hand_thumb_rota_block_joint": -5.964114696634413,
+        "left_hand_thumb_rotaback_joint2": 20.96006303507653
+      },
+      "orientation_residual_deg": 0.00013675156381636863
+    }
+  },
+  "hardware_command_offsets_changed": false
+}

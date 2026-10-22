@@ -74,7 +74,10 @@
             <label for="input-source">关键点来源</label>
             <div class="select-wrap"><select id="input-source">
               <option value="mediapipe">MediaPipe · 相机</option>
+              <option value="realsense_rgbd">D455f 深度融合 · 21 点</option>
+              <option value="leapmotion_camera">Leap Motion 2 相机 · MediaPipe · 120 fps</option>
               <option value="webxr">Quest 3 · WebXR</option>
+              <option value="quest_adb">Quest 3 · USB ADB（21点）</option>
               <option value="wuji_glove">Wuji · 数据手套</option>
               <option value="leapmotion">Leap Motion 2 · 红外追踪</option>
             </select></div>
@@ -82,7 +85,7 @@
           <div class="control-item camera-control" id="camera-control">
             <label for="camera">视频来源</label>
             <div class="select-wrap">
-              <select id="camera">
+              <select id="camera" title="RealSense 会自动选择当前浏览器支持的最高采集帧率，再启动 MediaPipe；分辨率可能随帧率调整。">
                 <option value="">默认摄像头</option>
               </select>
             </div>
@@ -96,6 +99,14 @@
               </select>
             </div>
           </div>
+          <label id="overlay-smoothing-control" class="record-control" title="仅平滑相机画面叠加的骨架，不影响重定向输入">
+            <input id="overlay-smoothing" type="checkbox" checked />
+            <span class="switch"></span><span>画面骨架平滑</span>
+          </label>
+          <label id="mediapipe-filter-control" class="record-control" title="平滑送入重定向的 MediaPipe 关键点，可在识别中切换">
+            <input id="mediapipe-filter" type="checkbox" checked />
+            <span class="switch"></span><span>MediaPipe 输入滤波</span>
+          </label>
           <div class="preview-mode-control">
           <label class="record-control" title="A3 直控：限位后直接映射，关闭 Ruckig、碰撞处理和额外关节平滑；切换将结束当前会话">
             <input id="direct-preview" type="checkbox" aria-describedby="direct-preview-note" />
@@ -142,7 +153,7 @@
         </section>
         <section id="a32-sdk-panel" class="hardware-panel" hidden aria-label="A3.2 SDK 控制">
           <div class="hardware-heading"><strong>A3.2 · 本机 SDK 控制</strong><span id="a32-sdk-state">未连接</span></div>
-          <p class="hardware-note">两种模型使用同一套 A3.2 驱动。连接并收到首包有效遥测后，开始识别并手动开启实时下发；关闭碰撞保护或仅检测也可下发。一键找零可选，有反馈的关节参考实测位置；缺失反馈时从上次下发或初始姿态起步。找零仅覆盖 18 路自研电机。</p>
+          <p class="hardware-note">两种模型使用同一套 A3.2 驱动。开始识别后可手动开启实时下发；关闭碰撞保护或仅检测也可下发。每次开启均需本次连接的新鲜完整反馈，并从当前实测位置起步。找零可选，仅覆盖 18 路自研电机。</p>
           <div class="hardware-controls">
             <label for="a32-transport">连接方式</label><select id="a32-transport"><option value="usb">USB CDC</option><option value="eth">ETH TCP</option></select>
             <label for="a32-address">设备</label><input id="a32-address" type="text" placeholder="auto 或 /dev/ttyACM0">
@@ -151,9 +162,10 @@
             <button id="a32-home" class="secondary" disabled>18 路找零</button>
             <button id="a32-reset-home" class="secondary" disabled>复位找零状态</button>
             <button id="a32-arm" class="secondary" disabled>开启实时下发</button>
-            <button id="a32-stop" class="danger" disabled>停止并断电</button>
+            <button id="a32-stop" class="danger" disabled>停止下发</button>
           </div>
           <p id="a32-sdk-detail" class="hardware-note"></p>
+          <p class="hardware-note">A3.2 停止操作只停止后续下发，不发送失能；设备可能继续执行已接收的命令或找零。</p>
         </section>
         <details id="joint-enable-panel" class="joint-enable-panel" open>
           <summary>关节电源控制 <span id="joint-enable-count"></span></summary>
@@ -192,6 +204,16 @@
           <p id="diagnostic-status" class="hardware-note" role="status">正在开启本地诊断日志…</p>
           <p class="hardware-note">不需要勾选“记录角度”。日志只保存在此电脑，不上传服务器；选择目录后每秒写入 JSONL 文件，刷新页面后需重新选择目录。未选择目录也可直接下载，页面意外关闭后可恢复浏览器中的历史日志。</p>
         </details>
+        <section id="realsense-camera-panel" class="hardware-panel" hidden aria-label="D455f 深度融合">
+          <div class="hardware-heading"><strong>D455f 深度融合 · 21 点</strong><span id="realsense-camera-state" role="status">待开始 · RGB + 深度</span></div>
+          <p id="realsense-fusion-state" role="status">等待同帧深度约束</p>
+          <p class="hardware-note">服务所在 Ubuntu 电脑通过 USB 3 采集配对的彩色与深度帧。MediaPipe 识别 21 点，再结合有效深度与骨长约束修正三维骨架；深度不可用或帧过期时保持姿态。请关闭其他占用 D455f 的程序。普通相机方式仍可在「MediaPipe · 相机」中使用。</p>
+        </section>
+        <section id="leap-camera-panel" class="hardware-panel" hidden aria-label="Leap Motion 2 相机">
+          <div class="hardware-heading"><strong>Leap Motion 2 相机 → MediaPipe</strong><span id="leap-camera-state" role="status">待开始 · 目标 120 FPS</span></div>
+          <p class="hardware-note">使用服务所在电脑连接的 Leap Motion 2 左路红外画面。120 FPS 采集需 USB 3 数据线和接口；识别帧率取决于 GPU 与系统负载。三维关键点由 MediaPipe 估计，不使用 Leap 原生骨架。</p>
+          <a href="/leap-camera-preview.html" target="_blank" rel="noopener">检查红外画面与识别帧率 ↗</a>
+        </section>
         <section id="leapmotion-input-panel" class="hardware-panel" hidden aria-label="Leap Motion 2">
           <div class="hardware-heading"><strong>Leap Motion 2 · 21 点骨架输入</strong><span id="leapmotion-state" role="status">待开始</span></div>
           <p class="hardware-note">服务所在 Linux 需安装 Ultraleap Tracking Service 和 LeapC SDK，并能访问 USB 设备。选择与输入手一致的左右手，点击「开始识别」，将手放入设备视野。连接后仅预览骨架与模型；机械手实时下发需手动开启。</p>
@@ -227,6 +249,7 @@
             </div>
             <div class="camera-stage">
               <video id="video" playsinline muted autoplay></video>
+              <canvas id="leap-camera-canvas" width="512" height="512" hidden aria-label="Leap Motion 2 红外画面"></canvas>
               <canvas
                 id="camera-overlay"
                 aria-label="MediaPipe 21 个手部关节点"
@@ -260,7 +283,7 @@
             <div class="panel-heading">
               <div class="panel-title">
                 <span class="panel-number">02</span>
-                <h2 id="skeleton-title">手势骨架</h2>
+                <h2 id="skeleton-title">手势骨架（优化后）</h2>
               </div>
             </div>
             <div id="skeleton-stage" class="model-stage"></div>

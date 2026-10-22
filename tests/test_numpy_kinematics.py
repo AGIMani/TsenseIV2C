@@ -9,6 +9,36 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from online_control.online_motion_track.main import WebSession
 
 
+@pytest.mark.parametrize("model", ["TsenseI_v2", "TsenseI_v3_0", "TsenseI_v3_0_withid",
+                                  "TsenseI_v3_2", "TsenseI_v3_2_withid"])
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_default_profile_backend_matches_its_calibrated_fk_and_jacobian(model, side):
+    from hand_profiles import load_hand_profile
+    solver = load_hand_profile(model).create_retargeter(side)
+    assert solver.config.kinematics_backend == "numpy"
+    backend = solver._analytic_kinematics
+    q = solver.lower * .6 + solver.upper * .4
+    points, jacobian = backend.compute_points_and_jacobian(q)
+    def fk(values):
+        return solver.fk.compute(dict(zip(solver.joint_names, values)))
+    np.testing.assert_allclose(points, fk(q), atol=1e-12)
+    eps = 1e-6
+    numeric = np.stack([(fk(q + step) - fk(q - step)) / (2 * eps)
+                        for step in np.eye(len(q)) * eps], axis=-1)
+    np.testing.assert_allclose(jacobian, numeric, atol=1e-8, rtol=1e-5)
+
+
+def test_profile_respects_explicit_backend_and_disabled_analytic_options():
+    from dataclasses import replace
+    from hand_profiles import load_hand_profile
+    profile = load_hand_profile("TsenseI_v3_2")
+    options = {**profile.retarget_options, "kinematics_backend": "auto", "use_analytic_jacobian": False}
+    solver = replace(profile, retarget_options=options).create_retargeter()
+    assert solver.config.kinematics_backend == "auto"
+    assert solver._analytic_kinematics is None
+    assert profile.retarget_options != options
+
+
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_analytic_numpy_jacobian_against_independent_fk_finite_differences(side):
     session = WebSession(side, recording=False)

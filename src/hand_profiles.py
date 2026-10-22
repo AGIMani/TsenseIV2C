@@ -78,12 +78,16 @@ class HandModelProfile:
         reserved = {"robot_root", "urdf_path", "keypoints_path", "joint_names", "initial_joint_values"}
         if reserved.intersection(self.retarget_options):
             raise ValueError("retarget options must not override model assets")
+        # Profiles also power offline preview and calibration. Use the same
+        # portable analytic backend as the web pipeline, without requiring an
+        # optional Pinocchio installation. An explicit profile choice wins.
+        options = {"kinematics_backend": "numpy", **self.retarget_options}
         return TopoRetargeter(TopoRetargetConfig(
             robot_root=self.root, urdf_path=self.path("urdf", solver_side),
             keypoints_path=self.path("keypoints", solver_side), joint_names=names,
             initial_joint_values={name: self.init_pose(solver_side)[name] for name in names}
                 if self.model_id in A32_MODEL_IDS else None,
-            **self.retarget_options,
+            **options,
         ))
 
     def create_collision_filter(self, hand_side: str = "left"):

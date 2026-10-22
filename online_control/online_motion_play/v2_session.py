@@ -616,7 +616,12 @@ class V2Session:
             worker.join(timeout=2.)
         if sweep:
             sweep.join(timeout=2.)
-        self.usb.disconnect()
+        try:
+            self.usb.disconnect()
+        finally:
+            # Release native planners before Python/nanobind finalization,
+            # even when the closed session is still referenced by the bridge.
+            self._interpolator.shutdown()
 
     def _start_timeline(self, names, *, single_target=None, transition=None):
         if not names:

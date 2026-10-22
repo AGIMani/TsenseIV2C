@@ -116,6 +116,11 @@ def test_tracking_records_all_viewer_stages_and_wall_times(tmp_path, monkeypatch
     assert rows[-1]["reason"] == "disconnected"
     assert {"mediapipe_raw", "mediapipe", "retarget", "control_target", "conversion", "downlink",
             "h7", "telemetry", "sdk_status", "sdk_action"} <= {row["type"] for row in rows}
+    angles = [row for row in rows if row["type"] == "joint_angles"]
+    assert {row["stage"] for row in angles} == {"retarget", "ruckig", "sdk"}
+    assert len([row for row in angles if row["stage"] == "ruckig"]) == 3
+    assert len([row for row in angles if row["stage"] == "sdk" and row["sent"]]) == 4
+    assert all("joints" not in row for row in rows if row["type"] in {"retarget", "control_target", "h7"})
     raw = next(row for row in rows if row["type"] == "mediapipe_raw")
     assert raw["world_landmarks"] == [world.tolist()]
     assert raw["source_scope"] == "all_detected_hands"
@@ -189,6 +194,8 @@ def test_failed_write_is_distinguished_from_successful_command(tmp_path, monkeyp
     assert "link loss" in failed[0]["error"]
     assert len(failed[0]["sdk_targets"]["self"]) == 18
     assert any(row["type"] == "sdk_error" and "link loss" in row["error"] for row in rows)
+    assert len([row for row in rows if row.get("stage") == "sdk"]) == 1  # Enable seed only.
+    assert len([row for row in rows if row.get("stage") == "ruckig"]) == 1
 
 
 def test_connection_failure_log_is_finished_without_commands(tmp_path, monkeypatch):

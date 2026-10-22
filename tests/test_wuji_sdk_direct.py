@@ -346,6 +346,11 @@ def test_default_sdk_callback_reaches_real_application_a32_solver_without_bridge
         assert result['raw_wuji']['positions_xyz'] == world
         assert result['raw_wuji']['serial_number'] == 'WG_TEST'
         assert result['hand']['label'] == 'Left'
+        points = result['hand']['world']
+        assert points[2] == [(points[1][axis] + points[3][axis]) * .5 for axis in range(3)]
+        solved_input = result['update']['points']
+        for axis in range(3):
+            assert abs(solved_input[2][axis] - (solved_input[1][axis] + solved_input[3][axis]) * .5) < 1e-10
         assert result['update']['source'] == 'wuji_glove'
         assert result['update']['depth_source'] == 'wuji_glove_metric'
         assert result['update']['input_path'] == 'server_metric_worker'

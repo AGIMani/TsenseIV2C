@@ -64,14 +64,14 @@ CMAKE_BINARY_DIR = /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/b
 
 # The main recursive "all" target.
 all: CMakeFiles/a32_native.dir/all
+all: a3-cpp-sdk/all
 .PHONY : all
 
 # The main recursive "preinstall" target.
-preinstall:
+preinstall: a3-cpp-sdk/preinstall
 .PHONY : preinstall
 
 # The main recursive "clean" target.
-clean: CMakeFiles/a32_native.dir/clean
 clean: CMakeFiles/Experimental.dir/clean
 clean: CMakeFiles/Nightly.dir/clean
 clean: CMakeFiles/Continuous.dir/clean
@@ -100,33 +100,28 @@ clean: CMakeFiles/ContinuousTest.dir/clean
 clean: CMakeFiles/ContinuousCoverage.dir/clean
 clean: CMakeFiles/ContinuousMemCheck.dir/clean
 clean: CMakeFiles/ContinuousSubmit.dir/clean
+clean: CMakeFiles/a32_native.dir/clean
+clean: a3-cpp-sdk/clean
 .PHONY : clean
 
 #=============================================================================
-# Target rules for target CMakeFiles/a32_native.dir
+# Directory level rules for directory a3-cpp-sdk
 
-# All Build rule for target.
-CMakeFiles/a32_native.dir/all:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a32_native.dir/build.make CMakeFiles/a32_native.dir/depend
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a32_native.dir/build.make CMakeFiles/a32_native.dir/build
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles --progress-num=1,2,3 "Built target a32_native"
-.PHONY : CMakeFiles/a32_native.dir/all
+# Recursive "all" directory target.
+a3-cpp-sdk/all: a3-cpp-sdk/CMakeFiles/a3_sdk.dir/all
+a3-cpp-sdk/all: a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/all
+a3-cpp-sdk/all: a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/all
+.PHONY : a3-cpp-sdk/all
 
-# Build rule for subdir invocation for target.
-CMakeFiles/a32_native.dir/rule: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 3
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/a32_native.dir/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 0
-.PHONY : CMakeFiles/a32_native.dir/rule
+# Recursive "preinstall" directory target.
+a3-cpp-sdk/preinstall:
+.PHONY : a3-cpp-sdk/preinstall
 
-# Convenience name for target.
-a32_native: CMakeFiles/a32_native.dir/rule
-.PHONY : a32_native
-
-# clean rule for target.
-CMakeFiles/a32_native.dir/clean:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a32_native.dir/build.make CMakeFiles/a32_native.dir/clean
-.PHONY : CMakeFiles/a32_native.dir/clean
+# Recursive "clean" directory target.
+a3-cpp-sdk/clean: a3-cpp-sdk/CMakeFiles/a3_sdk.dir/clean
+a3-cpp-sdk/clean: a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/clean
+a3-cpp-sdk/clean: a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/clean
+.PHONY : a3-cpp-sdk/clean
 
 #=============================================================================
 # Target rules for target CMakeFiles/Experimental.dir
@@ -855,6 +850,110 @@ ContinuousSubmit: CMakeFiles/ContinuousSubmit.dir/rule
 CMakeFiles/ContinuousSubmit.dir/clean:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ContinuousSubmit.dir/build.make CMakeFiles/ContinuousSubmit.dir/clean
 .PHONY : CMakeFiles/ContinuousSubmit.dir/clean
+
+#=============================================================================
+# Target rules for target CMakeFiles/a32_native.dir
+
+# All Build rule for target.
+CMakeFiles/a32_native.dir/all: a3-cpp-sdk/CMakeFiles/a3_sdk.dir/all
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a32_native.dir/build.make CMakeFiles/a32_native.dir/depend
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a32_native.dir/build.make CMakeFiles/a32_native.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles --progress-num=1,2,3 "Built target a32_native"
+.PHONY : CMakeFiles/a32_native.dir/all
+
+# Build rule for subdir invocation for target.
+CMakeFiles/a32_native.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 9
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 CMakeFiles/a32_native.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 0
+.PHONY : CMakeFiles/a32_native.dir/rule
+
+# Convenience name for target.
+a32_native: CMakeFiles/a32_native.dir/rule
+.PHONY : a32_native
+
+# clean rule for target.
+CMakeFiles/a32_native.dir/clean:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a32_native.dir/build.make CMakeFiles/a32_native.dir/clean
+.PHONY : CMakeFiles/a32_native.dir/clean
+
+#=============================================================================
+# Target rules for target a3-cpp-sdk/CMakeFiles/a3_sdk.dir
+
+# All Build rule for target.
+a3-cpp-sdk/CMakeFiles/a3_sdk.dir/all:
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_sdk.dir/build.make a3-cpp-sdk/CMakeFiles/a3_sdk.dir/depend
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_sdk.dir/build.make a3-cpp-sdk/CMakeFiles/a3_sdk.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles --progress-num=4,5,6,7,8,9 "Built target a3_sdk"
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_sdk.dir/all
+
+# Build rule for subdir invocation for target.
+a3-cpp-sdk/CMakeFiles/a3_sdk.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 6
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a3-cpp-sdk/CMakeFiles/a3_sdk.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 0
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_sdk.dir/rule
+
+# Convenience name for target.
+a3_sdk: a3-cpp-sdk/CMakeFiles/a3_sdk.dir/rule
+.PHONY : a3_sdk
+
+# clean rule for target.
+a3-cpp-sdk/CMakeFiles/a3_sdk.dir/clean:
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_sdk.dir/build.make a3-cpp-sdk/CMakeFiles/a3_sdk.dir/clean
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_sdk.dir/clean
+
+#=============================================================================
+# Target rules for target a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir
+
+# All Build rule for target.
+a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/all: a3-cpp-sdk/CMakeFiles/a3_sdk.dir/all
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/build.make a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/depend
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/build.make a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles --progress-num=10,11 "Built target a3_test_protocol"
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/all
+
+# Build rule for subdir invocation for target.
+a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 8
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 0
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/rule
+
+# Convenience name for target.
+a3_test_protocol: a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/rule
+.PHONY : a3_test_protocol
+
+# clean rule for target.
+a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/clean:
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/build.make a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/clean
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/clean
+
+#=============================================================================
+# Target rules for target a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir
+
+# All Build rule for target.
+a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/all: a3-cpp-sdk/CMakeFiles/a3_sdk.dir/all
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/build.make a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/depend
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/build.make a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/build
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --progress-dir=/home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles --progress-num=12,13 "Built target a3_test_web_commands"
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/all
+
+# Build rule for subdir invocation for target.
+a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/rule: cmake_check_build_system
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 8
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles 0
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/rule
+
+# Convenience name for target.
+a3_test_web_commands: a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/rule
+.PHONY : a3_test_web_commands
+
+# clean rule for target.
+a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/clean:
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/build.make a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/clean
+.PHONY : a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/clean
 
 #=============================================================================
 # Special targets to cleanup operation of make.

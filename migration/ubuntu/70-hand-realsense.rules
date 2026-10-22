@@ -1,0 +1,4 @@
+# Native libusb access for the project's RealSense RGB-D camera.
+# Only Intel RealSense USB devices; no arbitrary USB or recursive sysfs chmod.
+# Product-family reference: realsenseai/librealsense config/99-realsense-libusb.rules.
+SUBSYSTEM=="usb", ENV{DEVTYPE}=="usb_device", ATTR{idVendor}=="8086", ATTR{product}=="*RealSense*", MODE="0660", GROUP="plugdev", TAG+="uaccess"

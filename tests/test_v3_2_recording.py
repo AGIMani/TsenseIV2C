@@ -87,21 +87,20 @@ def test_log_distinguishes_retarget_collision_output_and_held_frames(tmp_path, m
     assert records[0]["retarget_config"]["lambda_reg"] == pipeline.session.retargeter.config.lambda_reg
     assert records[0]["retarget_config"]["urdf_path"] == str(pipeline.session.retargeter.config.urdf_path)
     assert records[-1]["frame_count"] == 3
-    good, lost, wrong = records[1:4]
-    assert good["retarget_joint_angles_rad"] == raw
-    assert good["output_joint_angles_rad"] == result.pose
+    good, lost, wrong = [row for row in records if row["type"] == "frame"]
+    stages = [row for row in records if row["type"] == "joint_angles"]
+    assert len(stages) == 1
+    assert stages[0]["stage"] == "retarget" and stages[0]["joints"] == raw
+    assert stages[0]["frame_id"] == 0
     assert good["source_points_21_m"] == points.tolist()
-    assert good["retarget_joint_angles_deg"][next(iter(raw))] == pytest.approx(np.degrees(.2))
-    assert lost["skeleton_joint_angles_rad"] is None
-    assert lost["retarget_joint_angles_rad"] is None
-    assert lost["output_joint_angles_rad"] == result.pose
-    assert not wrong["tracking"] and wrong["retarget_joint_angles_rad"] is None
-    assert wrong["skeleton_joint_angles_rad"] is not None
+    assert not lost["tracking"] and not wrong["tracking"]
+    assert all("skeleton_joint_angles_rad" not in row and "output_joint_angles_rad" not in row for row in records)
     with recorder.csv_path.open(encoding="utf-8-sig", newline="") as f:
         rows = list(csv.DictReader(f))
     assert [r["frame_id"] for r in rows] == ["0", "1", "2"]
     assert rows[1][f"retarget.{next(iter(raw))}.rad"] == ""
     assert float(rows[0][f"retarget.{next(iter(raw))}.deg"]) == pytest.approx(np.degrees(.2))
+    assert not any(key.startswith(("skeleton.", "output.")) for key in rows[0])
 
 
 

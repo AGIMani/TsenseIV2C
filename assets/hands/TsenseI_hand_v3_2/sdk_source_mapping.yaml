@@ -1,18 +1,22 @@
 source: vendor/a3-cpp-sdk/daxian_hand_v3_2
 geometry_matches: true
 comparison: Original mesh geometry retained; bare swing axes aligned with ID; thumb
-  rotaback origin calibrated to mechanical stop; documented origin/axis and limit
+  zero restored to user-confirmed reference CAD; documented origin/axis and limit
   changes.
 sides:
   left:
     sdk_urdf_sha256: 86098a5c1b6de17a4b7cabe7a6c21edd2df5f6cbe31417de080e14bff4c40c45
-    installed_urdf_sha256: 8d4706983c736b3718783c17d0ac33a8dbeacb4670f749501472d8edee47fd2c
+    installed_urdf_sha256: 34776a7bdb97cad3f314329ddfd0f24859f7c60d2a9b1b740859a356fbb29686
   right:
     sdk_urdf_sha256: f9b3479a5dec9e40f6e7175d59d9c4b66c1a7de0d6deb449bf4db47ef9a03b05
-    installed_urdf_sha256: 1bc73c3bf26a771005156a4096cfb77b85682d199ea5517a99e631e09dc9c546
+    installed_urdf_sha256: 1985ad9dd8d28e6c2a51470327721b43a67258fce59a2bdfa9d70ee5dcacc8e6
 existing_keypoint_annotations_preserved: true
-joint_coordinate_version: a32-positive-swing-v1
-swing_axis_alignment: id-direction-v1
-thumb_zero_alignment: mechanical-stop-v1
-thumb_rotaback_origin_offset_rad: -0.25042009379455915
+joint_coordinate_version: a32-signed-swing-v2
+swing_axis_alignment: id-cad-direction-v2
+thumb_zero_alignment: reference-cad-v2
 collision_proxy_version: supporting_outer_hull_v1
+thumb_zero_reference: A3.2 URDF/urdf/A3.1V6 26.8.4-2.urdf
+thumb_zero_reference_sha256: 84fc48faf5d89b97a8766be439fca469f9ab47c3e4bb5faf4cdde4583d3d23f3
+thumb_origin_offsets_rad:
+  thumb_rota_block_joint: 0.0
+  thumb_rotaback_joint2: 0.0

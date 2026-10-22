@@ -17,13 +17,18 @@ from TsenseI_retargeting import TopoRetargeter
 @pytest.mark.parametrize("collision", [False, True])
 def test_fist_release_removes_solver_creep_and_preserves_collision(collision):
     config = runtime._build_topo_config()
-    old = replace(config, lambda_smooth=2.5, lambda_reg=2.5, init_max_iters=1, topo_max_iters=2)
+    # Historical response baseline predates independent fingertip position targets.
+    old = replace(config, lambda_fingertip=0, lambda_smooth=2.5, lambda_reg=2.5,
+                  init_max_iters=1, topo_max_iters=2)
     before = extension_case(old, collision=collision, frames=30)
     after = extension_case(config, collision=collision, frames=30)
     assert before["frames_to_5deg"]["physics"] >= (12 if collision else 7)
     assert after["frames_to_5deg"]["physics"] <= (6 if collision else 2)
     assert after["frames_to_5deg"]["solver"] <= 3
-    assert after["frames_to_5deg"]["ruckig"] >= 10  # OTG still enforces motion limits.
+    # The 20/400/2400 limits shorten the old ten-frame response, but OTG must
+    # still interpolate rather than instantly copy the collision-safe target.
+    assert after["trace"][0]["ruckig_error_deg"] > 5.
+    assert after["frames_to_5deg"]["ruckig"] > after["frames_to_5deg"]["physics"]
     assert max(r["solver_error_deg"] for r in after["trace"][-5:]) < .1
     if collision:
         assert any(r["contacts"] for r in after["trace"][:3])

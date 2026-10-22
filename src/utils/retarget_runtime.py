@@ -79,12 +79,15 @@ class ParamSpec:
 TOPO_PARAM_SPECS: tuple[ParamSpec, ...] = (
     ParamSpec("use_topo_optimization", "拓扑优化", "bool", 1.0, 0.0, 1.0, 1.0, "solver"),
     ParamSpec("pinch_enabled", "拇指与四指捏合", "bool", 1.0, 0.0, 1.0, 1.0, "weights"),
-    ParamSpec("pinch_full_ratio", "完整捏合/掌宽", "float", 0.08, 0.0, 1.49, 0.01, "weights"),
+    ParamSpec("pinch_full_ratio", "其余三指完整捏合/掌宽", "float", 0.15, 0.0, 1.49, 0.01, "weights"),
+    ParamSpec("pinch_index_full_ratio", "食指完整捏合/掌宽", "float", 0.15, 0.0, 1.49, 0.01, "weights"),
     ParamSpec("pinch_start_ratio", "开始吸合/掌宽", "float", 0.50, 0.01, 1.5, 0.01, "weights"),
-    ParamSpec("pinch_weight", "捏合权重", "float", 65.0, 0.0, 1000.0, 1.0, "weights"),
+    ParamSpec("pinch_weight", "其余三指捏合权重", "float", 65.0, 0.0, 1000.0, 1.0, "weights"),
+    ParamSpec("pinch_index_weight", "食指捏合权重", "float", 65.0, 0.0, 1000.0, 1.0, "weights"),
     ParamSpec("lambda_warm", "骨方向(初)", "float", 2.0, 0.0, 20.0, 0.1, "weights"),
     ParamSpec("lambda_smooth", "逆解先验(初)", "float", 0.1, 0.0, 20.0, 0.1, "weights"),
     ParamSpec("lambda_im", "交互网格", "float", 12.0, 0.0, 50.0, 0.5, "weights"),
+    ParamSpec("lambda_fingertip", "指尖位置", "float", 1.0, 0.0, 10.0, 0.1, "weights"),
     ParamSpec("kappa", "边衰减κ", "float", 30.0, 1.0, 100.0, 0.5, "weights"),
     ParamSpec(
         "interaction_graph_ema_alpha",
@@ -200,7 +203,8 @@ def set_param_value(key: str, value: Any, algo: RetargetAlgorithm | None = None)
     if key not in specs:
         return False
     spec = specs[key]
-    if key.startswith("pinch_") and spec.kind != "bool" and not np.isfinite(float(value)):
+    if ((key.startswith("pinch_") or key == "lambda_fingertip")
+            and spec.kind != "bool" and not np.isfinite(float(value))):
         return False
     if spec.kind == "bool":
         value = bool(value)
@@ -210,9 +214,10 @@ def set_param_value(key: str, value: Any, algo: RetargetAlgorithm | None = None)
         value = float(value)
         value = max(spec.minimum, min(spec.maximum, value))
     with _lock:
-        if key == "pinch_full_ratio" and value >= _topo_values["pinch_start_ratio"]:
+        if key in ("pinch_full_ratio", "pinch_index_full_ratio") and value >= _topo_values["pinch_start_ratio"]:
             return False
-        if key == "pinch_start_ratio" and value <= _topo_values["pinch_full_ratio"]:
+        if key == "pinch_start_ratio" and value <= max(
+                _topo_values["pinch_full_ratio"], _topo_values["pinch_index_full_ratio"]):
             return False
         _topo_values[key] = value
     _apply_runtime_params(algo)

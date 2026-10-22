@@ -9,6 +9,7 @@ import numpy as np
 from hand_profiles import A32_MODEL_IDS, HandModelSession
 from a32_kinematics import A32StrokeMapper
 from utils.mediapipe_frame import apply_mediapipe_transformations
+from online_control.online_motion_track.command_compensation import compensate_command_pose
 
 
 MODEL_ID = "TsenseI_v3_2"
@@ -28,6 +29,8 @@ def observation_depth_source(observation) -> str:
         return "wuji_glove_metric"
     if getattr(observation, "source", "mediapipe") == "leapmotion":
         return "leapmotion_metric"
+    if getattr(observation, "source", "mediapipe") == "realsense_rgbd":
+        return "realsense_rgbd_fused"
     return "mediapipe_world" if observation.world_points is not None else "normalized_z_fallback"
 
 
@@ -44,6 +47,8 @@ class PoseUpdate:
     retarget_pose: dict[str, float] | None = None  # Before optional collision filtering.
     collision_diagnostics: dict = field(default_factory=dict)
     actuation: dict = field(default_factory=dict)
+    mink_pose: dict[str, float] | None = None
+    direct_pose: dict[str, float] | None = None
 
 
 def prepare_points(points, hand_side: str) -> np.ndarray:
@@ -144,7 +149,8 @@ class MediaPipeHandPipeline:
         start = time.perf_counter()
         try:
             retarget_pose = self.session.retarget(points, collision=False)
-            target = guard.project(retarget_pose) if guard else retarget_pose
+            target = compensate_command_pose(retarget_pose, self.session.limits)
+            target = guard.project(target) if guard else target
             pose = self.session.set_pose(target, collision=mode == "filter")
             # Numerical contact integration may slightly exceed a URDF limit.
             # Validate/re-clamp its output before handing it to the renderer.
@@ -169,6 +175,8 @@ class MediaPipeHandPipeline:
             message = "正在跟随 · Wuji 手套 21 点骨架"
         elif depth == "leapmotion_metric":
             message = "正在跟随 · Leap Motion 2 三维 21 点骨架"
+        elif depth == "realsense_rgbd_fused":
+            message = "正在跟随 · D455f 深度约束 21 点骨架"
         elif depth != "mediapipe_world":
             message = "正在跟随 · 归一化 Z 回退（深度精度较低）"
         return PoseUpdate(pose, True, message, points, depth,
@@ -178,4 +186,6 @@ class MediaPipeHandPipeline:
                           ({"mode": "monitor", "contact_count": self.contacts,
                             "contacts": self.session.ensure_collision().contact_summary()}
                            if mode == "monitor" else {}),
-                          self.stroke_mapper.preview(pose))
+                          self.stroke_mapper.preview(pose),
+                          mink_pose=dict(target) if mode == "mink" and guard is not None else None,
+                          direct_pose=dict(pose) if self.collision_bypass else None)

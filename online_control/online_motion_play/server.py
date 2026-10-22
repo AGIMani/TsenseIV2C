@@ -332,6 +332,16 @@ class Handler(BaseHTTPRequestHandler):
         self.connection.settimeout(15)
         self.connection.setsockopt(socket.IPPROTO_TCP, socket.TCP_NODELAY, 1)
 
+    def handle_one_request(self):
+        # The browser may cancel a keep-alive socket while replacing a model.
+        # Limit this guard to transport shutdowns; malformed requests and other
+        # server failures retain their normal diagnostics.
+        try:
+            super().handle_one_request()
+        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError,
+                ssl.SSLEOFError, ssl.SSLZeroReturnError):
+            self.close_connection = True
+
     def log_message(self, *_args):
         pass
 

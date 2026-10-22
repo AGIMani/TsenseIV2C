@@ -57,7 +57,9 @@ def test_browser_points_drive_real_solver_and_recording(side, tmp_path):
     assert rows[0]["actuation"]["hardware_enabled"] is False
     assert rows[0]["actuation"]["method"] == "lut"
     assert rows[1]["actuation"]["valid"]
-    assert rows[-2]["retarget_joint_angles_rad"] is None
+    angles = [row for row in rows if row["type"] == "joint_angles"]
+    assert len(angles) == 5 and {row["stage"] for row in angles} == {"retarget"}
+    assert [row["frame_id"] for row in angles] == list(range(5))
 
 
 def test_web_session_rejects_stale_malformed_and_closed_frames():

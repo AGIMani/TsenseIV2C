@@ -1,8 +1,8 @@
-"""Map A3.2 project URDF radians to named mechanical inputs (mm / deg).
+"""Map A3.2 URDF radians to SDK 1.1.15 actuator inputs (mm / deg).
 
-These are geometry outputs, not firmware commands. Motor indices retain the
-source model's 1..20 numbering and are NOT V2 USB slots. Mirrored right-hand
-URDFs use equal joint coordinates, so geometry needs no additional sign flip.
+Motor indices retain the source model's 1..20 numbering and are NOT V2 USB
+slots. Mirrored right-hand URDFs use equal joint coordinates. Conversion and
+preview use pure Python SDK math and never load a device or native library.
 """
 from __future__ import annotations
 
@@ -12,9 +12,9 @@ from numbers import Real
 import time
 from typing import Mapping
 
-from .a32_angles_to_inputs import A32Error, load_configuration, load_kinematic_model
-from .a32_fast import default_converter
-from .joint_coordinates import COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, is_finger_swing, requested_limits, reverse_swing
+from .a32_angles_to_inputs import A32Error
+from .joint_coordinates import COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, requested_limits
+from . import sdk_stroke
 
 
 # Current project URDF uses functional names: MCP is Y-axis linear flexion,
@@ -27,15 +27,10 @@ A32_MODEL_IDS = ("TsenseI_v3_2", "TsenseI_v3_2_withid")
 
 
 def model_joint_to_source_sign(model_id: str, joint_name: str) -> float:
-    """Centered application swing -> original SDK mechanism angle.
-
-    Both installed variants now use the ID swing direction. After undoing
-    the positive offset with 0.350-q, negate all four swings to recover the
-    original bare SDK mechanism angle. Other axes retain their direction.
-    """
+    """Both application models use the SDK's direct signed swing commands."""
     if model_id not in A32_MODEL_IDS:
         raise ValueError(f"Unsupported A3.2 model: {model_id}")
-    return -1.0 if is_finger_swing(joint_name) else 1.0
+    return 1.0
 
 
 @dataclass(frozen=True)
@@ -53,7 +48,7 @@ class A32MotorTargets:
             "model_id": self.model_id, "hand_side": self.hand_side,
             "joint_coordinate_version": COORDINATE_VERSION,
             "swing_axis_alignment": SWING_AXIS_ALIGNMENT,
-            "method": self.method, "valid": True,
+            "method": self.method, "conversion": sdk_stroke.METHOD, "valid": True,
             "joint_angles_rad": dict(self.joint_angles_rad),
             "linear_strokes_mm": dict(self.linear_strokes_mm),
             "rotary_positions_deg": dict(self.rotary_positions_deg),
@@ -64,10 +59,9 @@ class A32MotorTargets:
 class A32StrokeMapper:
     """Create once per A3.2 session; convert complete 20-joint URDF poses.
 
-    lut is the project default (interpolation error bound <= 1e-9 m).
-    exact remains available with full branch/roundtrip checks. Strict
-    conversion rejects unreachable targets; preview explicitly clamps to
-    mechanism limits and reports the affected joints.
+    The historical lut/exact method selectors remain accepted; both now use
+    the SDK calibrated closed-loop solver. Strict conversion rejects angles
+    outside application limits; preview clamps and reports affected joints.
     """
     model_id = "TsenseI_v3_2"
 
@@ -79,22 +73,22 @@ class A32StrokeMapper:
         if model_id not in A32_MODEL_IDS:
             raise ValueError(f"Unsupported A3.2 model: {model_id}")
         self.model_id = model_id
+        if method not in ("lut", "exact"):
+            raise ValueError("A3.2 method must be lut or exact")
         self.method = method
-        model = load_kinematic_model()
-        config = load_configuration()
-        self._prepared = default_converter().prepare(method=method)
-        self.source_joint_names = model.q_names
+        self.source_joint_names = sdk_stroke.SOURCE_JOINT_NAMES
         self.joint_names = tuple(
             SOURCE_TO_PROJECT.get(name, name).replace("left_hand_", f"{hand_side}_hand_")
             for name in self.source_joint_names)
         self._name_set = frozenset(self.joint_names)
-        self._linear = tuple(p["type"] == "linear" for p in config["motors"])
+        self._linear = tuple(joint.linear for joint in sdk_stroke.JOINTS)
+        self._joint_indices = {name: i for i, name in enumerate(self.joint_names)}
         self._source_signs = tuple(model_joint_to_source_sign(model_id, name) for name in self.joint_names)
-        # Source geometry retains its signed CAD zero for linear inversion.
-        # Application limits/coordinates are shared with the installed URDFs.
+        # The SDK accepts the full linear domain up to 90 degrees. Keep the
+        # installed application range of .005..1.565 radians for flexion.
         limits = []
-        for name, (lo, hi), sign in zip(self.joint_names, self._prepared.limits_deg, self._source_signs):
-            bounds = sorted(reverse_swing(name, sign * math.radians(q)) for q in (lo, hi))
+        for name, joint in zip(self.joint_names, sdk_stroke.JOINTS):
+            bounds = [joint.lo, joint.hi]
             requested = requested_limits(name)
             if requested is not None:
                 bounds = [max(bounds[0], requested[0]), min(bounds[1], requested[1])]
@@ -108,8 +102,10 @@ class A32StrokeMapper:
             "model_id": self.model_id, "hand_side": self.hand_side,
             "joint_coordinate_version": COORDINATE_VERSION,
             "swing_axis_alignment": SWING_AXIS_ALIGNMENT,
-            "method": self.method, "coordinate_space": "urdf_radians",
-            "output_space": "mechanical_geometry", "hardware_enabled": False,
+            "method": self.method, "conversion": sdk_stroke.METHOD,
+            "sdk_stroke_source_sha256": sdk_stroke.SOURCE_SHA256,
+            "coordinate_space": "urdf_radians",
+            "output_space": "sdk_actuator_inputs", "hardware_enabled": False,
             "units": {"linear": "mm", "rotary": "deg"},
             "channels": [
                 {"motor_index": i + 1, "source_joint": source, "joint": name,
@@ -145,21 +141,29 @@ class A32StrokeMapper:
                 clamped[name] = value
             # Match the upstream epsilon handling at zero/limit endpoints.
             value = min(hi, max(lo, value))
-            angles.append(math.degrees(sign * reverse_swing(name, value)))
+            angles.append(math.degrees(sign * value))
             applied[name] = value
-        inputs = self._prepared(angles)
+        inputs = sdk_stroke.angles_deg_to_actuators(angles)
         linear, rotary = {}, {}
         for name, is_linear, value in zip(self.joint_names, self._linear, inputs):
             if is_linear:
-                linear[name] = float(value) * 1000.0
-            elif is_finger_swing(name):
-                # Both variants command the new positive coordinate directly.
-                # The ID CAD axis sign is only used by the source mechanism;
-                # applying it again here would swap the requested endpoints.
-                rotary[name] = math.degrees(applied[name])
+                linear[name] = value
             else:
-                rotary[name] = math.degrees(float(value))
+                rotary[name] = value
         return A32MotorTargets(self.hand_side, self.method, applied, linear, rotary, clamped, self.model_id)
+
+    def inverse_actuator(self, name: str, value: float) -> float:
+        """Convert one SDK actuator value (mm/deg) back to joint radians.
+
+        This uses the same calibrated SDK equation as forward conversion. Its
+        mathematical endpoints include zero for feedback and hardware limits;
+        callers apply the narrower application limits to the returned angle.
+        """
+        try:
+            index = self._joint_indices[name]
+        except (KeyError, TypeError) as exc:
+            raise ValueError(f"Unknown A3.2 joint: {name}") from exc
+        return sdk_stroke.inverse_actuator(index, value) * self._source_signs[index]
 
     def preview(self, joint_angles: Mapping[str, float]) -> dict:
         """Per-frame preview, including explicit failure instead of stale inputs."""
@@ -168,7 +172,8 @@ class A32StrokeMapper:
             result = self.convert(joint_angles, clamp=True).as_dict()
         except (ValueError, TypeError, ArithmeticError) as exc:
             result = {"model_id": self.model_id, "hand_side": self.hand_side,
-                      "method": self.method, "valid": False, "error": str(exc),
+                      "method": self.method, "conversion": sdk_stroke.METHOD,
+                      "valid": False, "error": str(exc),
                       "linear_strokes_mm": {}, "rotary_positions_deg": {}}
         result["conversion_ms"] = (time.perf_counter() - start) * 1000.0
         return result

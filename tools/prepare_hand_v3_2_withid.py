@@ -27,8 +27,8 @@ from generate_profile_collision import generate_profile
 from collision_outer_hull import VERSION as COLLISION_PROXY_VERSION
 from a32_kinematics.mapper import model_joint_to_source_sign
 from a32_kinematics.joint_coordinates import (
-    COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, THUMB_ZERO_ALIGNMENT,
-    THUMB_ROTABACK_ORIGIN_OFFSET, initial_pose, reverse_swing,
+    COORDINATE_VERSION, SWING_AXIS_ALIGNMENT,
+    thumb_zero_manifest, initial_pose, reverse_swing,
 )
 from apply_a32_joint_ranges import apply_urdf_coordinates
 from apply_a32_withid_inertials import (
@@ -101,8 +101,7 @@ def verify_sdk_bare(sdk_root: Path) -> None:
         "comparison": "non-collision XML attributes and visual mesh hashes after application joint coordinate transform; ignore robot label and mesh URI; generated collision envelopes verified separately",
         "joint_coordinate_version": COORDINATE_VERSION,
         "swing_axis_alignment": SWING_AXIS_ALIGNMENT,
-        "thumb_zero_alignment": THUMB_ZERO_ALIGNMENT,
-        "thumb_rotaback_origin_offset_rad": THUMB_ROTABACK_ORIGIN_OFFSET,
+        **thumb_zero_manifest("TsenseI_v3_2"),
         "sides": verified, "existing_keypoint_annotations_preserved": True,
     })
 
@@ -200,8 +199,8 @@ def prepare() -> None:
         "collision_scope": "different_fingers_only",
         "notes": ["Independent uploaded ID-shell URDF, meshes, landmarks and collision geometry.",
                   "Base STL scale and link geometry retained; application limits and swing origin/axis are transformed.",
-                  "Both variants command the positive model swing directly, clipped to 0.005..0.695 rad; default model swing is 0.",
-                  "Right is the supplied provisional XZ mirror; hardware connection supports left only.",
+                  "Both variants command signed model swing directly, clipped to -0.34..0.34 rad; thumb zero matches user reference CAD.",
+                  "Right is the supplied provisional XZ mirror; A3.2 hardware connection supports both sides.",
                   "21 point annotations and collision envelopes require hardware calibration."],
     }, preserve=True)
     generate_profile(MODEL_ID, profile_root=DEST)
@@ -209,13 +208,14 @@ def prepare() -> None:
     dump(manifest_path, {"source": "TsenseI_V3.2_hand_withid_fixed", "source_sha256": fingerprints,
         **inertial_manifest_fields(DEST),
         "geometry_changed": False, "joint_coordinate_version": COORDINATE_VERSION,
-        "joint_coordinate_change": "swing = 0.350 - old swing; application flexion limits",
+        "joint_coordinate_change": "swing = original ID swing; thumb origin alignment to user reference CAD; application flexion limits",
         "renames": {}, "right_mirror": "XZ; supplied provisional right, equal joint angles",
         "collision_proxy_version": COLLISION_PROXY_VERSION,
         "collision_proxy_scope": "15 verified low-complexity outer meshes; different fingers only",
         "collision_mesh_sha256": {path.relative_to(DEST).as_posix(): sha256(path)
                                   for path in sorted((DEST / "mjcf/collision_meshes").glob("*.stl"))},
         "legacy_source_joint_signs": {name: model_joint_to_source_sign(MODEL_ID, name) for name in names},
+        **thumb_zero_manifest(MODEL_ID),
         "axis_comparison": "Rz(+90deg) aligns bare root orientation to ID root; installed swing axis cosines > 0.9999 after bare alignment; original SDK swing axes are opposite to ID"})
 
 

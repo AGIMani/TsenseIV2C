@@ -5,9 +5,13 @@ source_urdf_sha256: 86098a5c1b6de17a4b7cabe7a6c21edd2df5f6cbe31417de080e14bff4c4
 source_package_sha256: bbc2e797db6e23ef9d32c9c5ef89446812ac560df120d56c9cb88aa31233a021
 geometry_changed: false
 right_mirror: 'YZ: M=diag(-1,1,1), rotation axes -M; equal q'
-joint_coordinate_version: a32-positive-swing-v1
-joint_coordinate_change: new bare swing = original SDK swing + 0.350; axes aligned
-  with ID; model [0, 0.7], default 0; command clipped to [0.005, 0.695]
-swing_axis_alignment: id-direction-v1
-thumb_zero_alignment: mechanical-stop-v1
-thumb_rotaback_origin_offset_rad: -0.25042009379455915
+joint_coordinate_version: a32-signed-swing-v2
+joint_coordinate_change: new bare swing = -original SDK swing; axes aligned with reference
+  ID CAD; model [-0.35, 0.35], default 0; command clipped to [-0.34, 0.34]
+swing_axis_alignment: id-cad-direction-v2
+thumb_zero_alignment: reference-cad-v2
+thumb_zero_reference: A3.2 URDF/urdf/A3.1V6 26.8.4-2.urdf
+thumb_zero_reference_sha256: 84fc48faf5d89b97a8766be439fca469f9ab47c3e4bb5faf4cdde4583d3d23f3
+thumb_origin_offsets_rad:
+  thumb_rota_block_joint: 0.0
+  thumb_rotaback_joint2: 0.0

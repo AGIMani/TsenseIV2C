@@ -3,6 +3,9 @@ set -euo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "$(readlink -f -- "${BASH_SOURCE[0]}")")" && pwd -P)"
 source "$SCRIPT_DIR/common.sh"
 hand_require_venv track
+if [[ -d /usr/lib/ultraleap-hand-tracking-service ]]; then
+  export LD_LIBRARY_PATH="/usr/lib/ultraleap-hand-tracking-service${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+fi
 export MUJOCO_GL=disable
 if [[ -z "${LEAPSDK_INSTALL_LOCATION:-}" ]]; then
   LEAPSDK_INSTALL_LOCATION="$("$HAND_PYTHON" -c 'import sysconfig; print(sysconfig.get_path("purelib"))')"

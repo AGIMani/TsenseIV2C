@@ -1,8 +1,8 @@
-"""Session-bound, latest-only Quest input using the Qt WebXR wire protocol.
+"""Session-bound, latest-only Quest input using separate 25/21-point protocols.
 
-Only the native 25 joints are accepted.  The server derives the compatibility
-view itself; its ``normalized`` slot contains metric points for legacy callers,
-and must never be treated as camera/image coordinates.
+The WebXR endpoint only accepts native 25 joints; ADB input explicitly supplies
+21 points.  The server derives the compatibility view itself; its ``normalized``
+slot contains metric points and must never be treated as image coordinates.
 """
 from __future__ import annotations
 
@@ -21,10 +21,14 @@ from webxr import (
     WEBXR_25_TO_MEDIAPIPE_21, WEBXR_PROTOCOL_SCHEMA, WEBXR_STALE_TIMEOUT_S,
     WebXRHandFrame, parse_webxr_message,
 )
+from .quest_adb_input import (
+    QUEST_ADB_JOINT_SET, QUEST_ADB_PROTOCOL_SCHEMA, QuestADBHandFrame,
+    parse_quest_adb_message,
+)
 
 
-def metric_hand(frame: WebXRHandFrame) -> dict | None:
-    """Map the same 25 -> 21 joints as Qt, retaining WebXR axes and metres.
+def metric_hand(frame: WebXRHandFrame | QuestADBHandFrame) -> dict | None:
+    """Produce 21 metric points, retaining WebXR axes and metres.
 
     Downstream pipelines already perform the hand-side MANO wrist alignment.
     Subtracting the wrist here removes large room offsets before filtering;
@@ -49,6 +53,7 @@ class _Channel:
     revision: int = 0
     consumed_revision: int = -1
     stream_id: str | None = None
+    protocol_schema: str = WEBXR_PROTOCOL_SCHEMA
     retired_streams: set[str] = field(default_factory=set)
     sequence: int = -1
     ended: bool = False
@@ -164,8 +169,16 @@ class WebXRInputRelay:
                 self.tokens.pop(channel.token, None)
 
     def publish(self, token: str, message: dict) -> dict:
-        if not isinstance(message, dict) or message.get("schema") != WEBXR_PROTOCOL_SCHEMA:
-            raise ValueError(f"WebXR schema 必须为 {WEBXR_PROTOCOL_SCHEMA}")
+        """Accept only the unchanged native 25-joint WebXR protocol."""
+        return self._publish(token, message, WEBXR_PROTOCOL_SCHEMA, parse_webxr_message)
+
+    def publish_quest_adb(self, token: str, message: dict) -> dict:
+        """Accept native 21-point input through the same bounded relay slot."""
+        return self._publish(token, message, QUEST_ADB_PROTOCOL_SCHEMA, parse_quest_adb_message)
+
+    def _publish(self, token: str, message: dict, schema: str, parser) -> dict:
+        if not isinstance(message, dict) or message.get("schema") != schema:
+            raise ValueError(f"Quest schema 必须为 {schema}")
         stream_id, sequence = message.get("stream_id"), message.get("sequence")
         if not isinstance(stream_id, str) or not 1 <= len(stream_id) <= 128:
             raise ValueError("WebXR stream_id 必须为 1..128 字符")
@@ -176,7 +189,7 @@ class WebXRInputRelay:
         json.dumps(message, allow_nan=False)
         # Validate before changing the latest slot, including native joint names,
         # completeness, finite coordinates, handedness and duplicate-hand checks.
-        parsed = parse_webxr_message(message)
+        parsed = parser(message)
         client_perf = message.get("client_perf_ms")
         if client_perf is not None and (isinstance(client_perf, bool)
                 or not isinstance(client_perf, (int, float)) or not math.isfinite(client_perf) or client_perf < 0):
@@ -190,6 +203,8 @@ class WebXRInputRelay:
                 raise ValueError("WebXR 配对已失效，请在控制页面重新创建")
             reason = None
             new_stream = stream_id != channel.stream_id
+            if not new_stream and schema != channel.protocol_schema:
+                raise ValueError("同一 Quest stream_id 不能切换 25 点与 21 点协议，请创建新的 stream_id")
             if stream_id in channel.retired_streams:
                 reason = "retired_stream"
             elif new_stream:
@@ -211,6 +226,7 @@ class WebXRInputRelay:
                 if channel.stream_id is not None:
                     channel.retired_streams.add(channel.stream_id)
                 channel.stream_id = stream_id
+                channel.protocol_schema = schema
                 channel.hand = None
                 channel.ended = False
                 channel.polled_snapshot = None
@@ -282,6 +298,9 @@ class WebXRInputRelay:
                     "transport_delay_ms": channel.transport_delay_ms,
                     "age_ms": age, "stale_after_ms": self.stale_after_ms,
                     "stale": not fresh, "event": channel.event, "tracking": hand is not None}
+        if channel.protocol_schema == QUEST_ADB_PROTOCOL_SCHEMA:
+            metadata.update(transport="adb", source_joint_set=QUEST_ADB_JOINT_SET,
+                            source_joint_count=21, joint_mapping=list(range(21)))
         if channel.discard_reason:
             metadata["discard_reason"] = channel.discard_reason
         return {"revision": channel.revision, "age_ms": age, "connected": connected,

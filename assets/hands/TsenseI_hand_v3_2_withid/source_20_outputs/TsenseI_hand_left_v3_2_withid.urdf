@@ -1,0 +1,392 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="TsenseI_hand_v3_2_withid_left">
+  <!--Current middle-DIP-standard CAD. Exactly 20 output joints. Sliders and rods are retained as rigid visual detail at the adopted zero; this is finger pose kinematics, not nonlinear internal linkage simulation.-->
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/base_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="base_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="Left_hand_palm_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/Left_hand_palm_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="Left_hand_palm_link_color">
+        <color rgba="0.79 0.85 0.90 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_thumb_rota_block_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_thumb_rota_block_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_thumb_rota_block_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_thumb_rotaback_link2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_thumb_rotaback_link2.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_thumb_rotaback_link2_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_thumb_MCP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_thumb_MCP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_thumb_MCP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_thumb_PIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_thumb_PIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_thumb_PIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_index_MCP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_index_MCP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_index_MCP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_index_swing_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_index_swing_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_index_swing_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_index_PIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_index_PIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_index_PIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_index_DIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_index_DIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_index_DIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_mid_MCP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_mid_MCP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_mid_MCP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_mid_swing_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_mid_swing_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_mid_swing_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_mid_PIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_mid_PIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_mid_PIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_mid_DIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_mid_DIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_mid_DIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_ring_MCP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_ring_MCP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_ring_MCP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_ring_swing_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_ring_swing_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_ring_swing_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_ring_PIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_ring_PIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_ring_PIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_ring_DIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_ring_DIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_ring_DIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_pinky_MCP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_pinky_MCP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_pinky_MCP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_pinky_swing_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_pinky_swing_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_pinky_swing_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_pinky_PIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_pinky_PIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_pinky_PIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <link name="left_hand_pinky_DIP_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="meshes/left/left_hand_pinky_DIP_link.STL" scale="1 1 1" />
+      </geometry>
+      <material name="left_hand_pinky_DIP_link_color">
+        <color rgba="0.69 0.74 0.78 1" />
+      </material>
+    </visual>
+  </link>
+  <joint name="Left_hand_palm_joint" type="fixed">
+    <origin xyz="0.023699999999999999 0.0064999999999999997 0.044138006984399999" rpy="0 0 0" />
+    <parent link="base_link" />
+    <child link="Left_hand_palm_link" />
+    <axis xyz="0 0 0" />
+  </joint>
+  <joint name="left_hand_thumb_rota_block_joint" type="revolute">
+    <origin xyz="0.020095209458105473 -0.018319894388608274 0.034425784821471982" rpy="0.409849353962845 0.035990946425296544 -1.099842689237515" />
+    <parent link="base_link" />
+    <child link="left_hand_thumb_rota_block_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="2.09" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_thumb_rotaback_joint2" type="revolute">
+    <origin xyz="0.025906534761571742 -3.4694469519536142e-18 -0.010516065096279111" rpy="1.5707963267949003 -1.1774916255348222 -0.55582153100282139" />
+    <parent link="left_hand_thumb_rota_block_link" />
+    <child link="left_hand_thumb_rotaback_link2" />
+    <axis xyz="0 0 -1" />
+    <limit effort="1.0" lower="0.0" upper="1.7400000000000002" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_thumb_MCP_joint" type="revolute">
+    <origin xyz="0.051777369955726356 -1.3877787807814457e-17 0.0054157007354755024" rpy="0.5275107839615536 -0.9084965891297635 -2.3106248516321068" />
+    <parent link="left_hand_thumb_rotaback_link2" />
+    <child link="left_hand_thumb_MCP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_thumb_PIP_joint" type="revolute">
+    <origin xyz="-0.0053114137218719798 0.025846448194579846 -0.0045110466755894085" rpy="1.6792123247455493e-15 2.4424906541753444e-15 0.12903783821924114" />
+    <parent link="left_hand_thumb_MCP_link" />
+    <child link="left_hand_thumb_PIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_index_MCP_joint" type="revolute">
+    <origin xyz="0.027106823283284235 -0.026576387592038783 0.087815835680192231" rpy="1.4508509931644693 0.42625833852372441 3.084615774699254" />
+    <parent link="base_link" />
+    <child link="left_hand_index_MCP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_index_swing_joint" type="revolute">
+    <origin xyz="0.01819644753826806 0.019340354107076171 -0.00099999999999282954" rpy="1.5707963267948957 -0.033882791931409972 2.0005586058915599" />
+    <parent link="left_hand_index_MCP_link" />
+    <child link="left_hand_index_swing_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="-0.35" upper="0.35" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_index_PIP_joint" type="revolute">
+    <origin xyz="0.041023546156784746 3.4694469519536142e-18 -0.026999999999999597" rpy="1.5707963267948963 -1.1967399807955119 3.1077098616583827" />
+    <parent link="left_hand_index_swing_link" />
+    <child link="left_hand_index_PIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_index_DIP_joint" type="revolute">
+    <origin xyz="-0.0053114137261469213 0.025846448194837987 -0.0045110466755889644" rpy="-2.7755575615628914e-17 0 0.12903783821920917" />
+    <parent link="left_hand_index_PIP_link" />
+    <child link="left_hand_index_DIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_mid_MCP_joint" type="revolute">
+    <origin xyz="0.02719999953837687 -0.00049999877805580509 0.088138007230611604" rpy="1.5707963267948968 0.4297622790966602 -3.1415926535897896" />
+    <parent link="base_link" />
+    <child link="left_hand_mid_MCP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_mid_swing_joint" type="revolute">
+    <origin xyz="0.017305157670401285 0.018931832119254491 -0.00099998783788761165" rpy="1.570796326794897 0.033883077619299762 2.0005586058915852" />
+    <parent link="left_hand_mid_MCP_link" />
+    <child link="left_hand_mid_swing_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="-0.35" upper="0.35" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_mid_PIP_joint" type="revolute">
+    <origin xyz="0.041023559408067872 2.1684043449710089e-19 -0.026019547123553179" rpy="1.5707963267948974 -1.1967399807954628 -3.1077095759704942" />
+    <parent link="left_hand_mid_swing_link" />
+    <child link="left_hand_mid_PIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_mid_DIP_joint" type="revolute">
+    <origin xyz="-0.0053114137261472405 0.025846448194837821 -0.0017315940115265904" rpy="-5.5511151231257827e-17 0 0.12903783821923204" />
+    <parent link="left_hand_mid_PIP_link" />
+    <child link="left_hand_mid_DIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_ring_MCP_joint" type="revolute">
+    <origin xyz="0.027106823283282962 0.023481417630913871 0.080906629963767754" rpy="1.6667660125609922 0.42864098926106586 -3.1087726476133142" />
+    <parent link="base_link" />
+    <child link="left_hand_ring_MCP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_ring_swing_joint" type="revolute">
+    <origin xyz="0.018196447538267047 0.019340354107075949 -0.00099999999999785677" rpy="1.5707963267948961 -0.03388279193139021 2.0005586058915599" />
+    <parent link="left_hand_ring_MCP_link" />
+    <child link="left_hand_ring_swing_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="-0.35" upper="0.35" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_ring_PIP_joint" type="revolute">
+    <origin xyz="0.04102354615678494 -1.7347234759768071e-18 -0.026999999999998935" rpy="1.570796326794895 -1.1967399807954981 3.107709861658404" />
+    <parent link="left_hand_ring_swing_link" />
+    <child link="left_hand_ring_PIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_ring_DIP_joint" type="revolute">
+    <origin xyz="-0.0053114137258253313 0.025846448194971533 -0.0045110466755893131" rpy="-2.7755575615628914e-17 0 0.12903783821922418" />
+    <parent link="left_hand_ring_PIP_link" />
+    <child link="left_hand_ring_DIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_pinky_MCP_joint" type="revolute">
+    <origin xyz="0.0271068232832797 0.044704606014039389 0.070250121398440751" rpy="1.7043559433280713 0.42725082875541354 -3.0931711956586163" />
+    <parent link="base_link" />
+    <child link="left_hand_pinky_MCP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_pinky_swing_joint" type="revolute">
+    <origin xyz="0.018196447538267484 0.019340354107076102 -0.0010000000000004935" rpy="1.5707963267948957 -0.080896324855458834 2.0005586058915581" />
+    <parent link="left_hand_pinky_MCP_link" />
+    <child link="left_hand_pinky_swing_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="-0.35" upper="0.35" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_pinky_PIP_joint" type="revolute">
+    <origin xyz="0.038626320568843936 0 -0.02181000000000018" rpy="1.5707963267948963 -1.3258211702687228 3.0606963287343296" />
+    <parent link="left_hand_pinky_swing_link" />
+    <child link="left_hand_pinky_PIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+  <joint name="left_hand_pinky_DIP_joint" type="revolute">
+    <origin xyz="-0.0063815055464910009 0.025204810461647131 -0.006034842938728309" rpy="-0.0062711979857275647 0.025075123623853113 -0.00012198116402359176" />
+    <parent link="left_hand_pinky_PIP_link" />
+    <child link="left_hand_pinky_DIP_link" />
+    <axis xyz="0 0 1" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
+  </joint>
+</robot>

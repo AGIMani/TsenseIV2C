@@ -80,7 +80,7 @@ test('manual A3 arm immediately opens its validated epoch stream without waiting
   const {c, state, writes} = fixture('TsenseI_v3_0', 'off');
   const names = Object.keys(state.ruckig_joint_angles_rad);
   const seeded = {...state, control_stream: true, server_time: 1, control_joint_names: names,
-    motion_limits: Object.fromEntries(names.map(name => [name, {velocity: 10, acceleration: 80, jerk: 200}]))};
+    motion_limits: Object.fromEntries(names.map(name => [name, {velocity: 20, acceleration: 400, jerk: 2400}]))};
   const packet = new Uint8Array(220), view = new DataView(packet.buffer);
   view.setUint32(0, 216, true);
   packet.set([71, 84, 82, 49], 4);

@@ -1,5 +1,6 @@
 """Build a relocatable pure Python playback server bundle without environments or credentials."""
 import argparse
+import json
 from pathlib import Path
 import shutil
 import tarfile
@@ -49,6 +50,20 @@ def files():
             continue
         if path.is_file() and (path.suffix.lower() in (".cpp", ".h", ".hpp", ".json", ".so", ".sh") or path.name in ("CMakeLists.txt", "SDK_LICENSE.txt")):
             yield path, "app/" + path.relative_to(ROOT).as_posix()
+    # Native CMake resolves ../../../vendor/a3-cpp-sdk. Include only imported
+    # source dependencies and test inputs, never the vendor CAD or binaries.
+    sdk = ROOT / "vendor/a3-cpp-sdk"
+    source_manifest = json.loads((sdk / "sdk-source.json").read_text(encoding="utf-8"))
+    sdk_files = {"CMakeLists.txt", "LICENSE", "CHANGELOG.md", "COMPAT.md", "README.md", "README.en.md",
+                 "examples/CommandJson.h", "linux/99-a3-h7-cdc.rules"}
+    for relative in sorted(source_manifest["files"]):
+        path = Path(relative)
+        if path.is_absolute() or ".." in path.parts:
+            raise ValueError(f"Invalid SDK source path: {relative}")
+        if relative in sdk_files or path.parts[0] in ("include", "src", "cmake", "tests"):
+            yield sdk / relative, "app/vendor/a3-cpp-sdk/" + relative
+    yield sdk / "sdk-source.json", "app/vendor/a3-cpp-sdk/sdk-source.json"
+    yield sdk / "README-migration.txt", "app/vendor/a3-cpp-sdk/README-migration.txt"
     for path in sorted((ROOT / "src/a32_kinematics/model").glob("*")):
         if path.suffix.lower() in (".mat", ".urdf"):
             yield path, "app/" + path.relative_to(ROOT).as_posix()

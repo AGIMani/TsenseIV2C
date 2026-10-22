@@ -68,3 +68,30 @@ assets/hands/_backups/
 # Keep repository instructions and entry documentation.
 !AGENTS.md
 !README.md
+
+# Pinned A3.2 SDK sources and Linux adapter documentation.
+!vendor/a3-cpp-sdk/*.md
+!vendor/a3-cpp-sdk/*.bat
+!src/a32_driver/native_linux/README.md
+/src/a32_driver/build-linux/
+
+# Exclude compressed archives and installer bundles (case-insensitive).
+*.[zZ][iI][pP]
+*.[rR][aA][rR]
+*.7[zZ]
+*.[tT][aA][rR]
+*.[gG][zZ]
+*.[bB][zZ]2
+*.[xX][zZ]
+*.[tT][gG][zZ]
+*.[tT][bB][zZ]
+*.[tT][bB][zZ]2
+*.[tT][xX][zZ]
+*.[zZ][sS][tT]
+*.[tT][zZ][sS][tT]
+*.[lL][zZ]
+*.[lL][zZ][mM][aA]
+*.[cC][aA][bB]
+*.[iI][sS][oO]
+*.[dD][eE][bB]
+*.[rR][pP][mM]

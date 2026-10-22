@@ -55,10 +55,13 @@ export class LocalRecorder {
     this.info = {id: this.id, name: `${this.options.prefix || "hand_control"}_${stamp}.jsonl`, started: Date.now(), ended: false, parts: []};
     const tx = this.db.transaction("sessions", "readwrite"); tx.objectStore("sessions").put(this.info); await complete(tx);
     this.active = true;
+    const a32 = ["TsenseI_v3_2", "TsenseI_v3_2_withid"].includes(metadata.model_id);
     this.record("session", {schema: this.options.schema || "hand-control-session/v2", session_id:this.id, started_at: new Date().toISOString(),
-      joint_unit: "rad", landmark_unit: "m", units: {linear: "mm", rotary: "deg", temperature: "degC", current: "firmware_native"},
+      joint_unit: "rad", landmark_unit: "m", units: {linear: "mm", rotary: "deg", temperature: "degC", current: a32 ? "per_sample" : "firmware_native"},
       feedback_correlation: "latest successful host write before receive; not a firmware acknowledgement", metadata: {
       ...metadata, timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+      ...(a32 ? {current_unit_source: "per-motor current_unit / sample telemetry_units; unmarked legacy SELF remains native",
+        homing_current_unit: "counts"} : {}),
       hardware_location: metadata.hardware_location || "visitor browser Web Serial", recording_location: "visitor IndexedDB/download",
       sampling: metadata.sampling || (this.options.schema==='hand-diagnostic/v1'
         ? "diagnostic events; selected streams sampled at most once per second; not a full control recording"

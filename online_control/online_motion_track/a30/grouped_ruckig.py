@@ -59,6 +59,26 @@ class GroupedRuckig:
         for _, solver, _, _ in self.solvers:
             solver.reset()
 
+    @staticmethod
+    def _update_group(solver, parameters, output):
+        try:
+            result = solver.update(parameters, output)
+        except ruckig.RuckigError as exc:
+            if '[ruckig] error in step 2 ' not in str(exc):
+                raise
+        else:
+            if result != ruckig.Result.ErrorSynchronizationCalculation:
+                return result
+        # Near a resting target, step 2 can fail at the continuous minimum
+        # synchronization time (captured with Ruckig 0.19.4). Retry once with
+        # the duration rounded to a control tick, using the SAME starting
+        # position/velocity/acceleration, target, limits and finger time sync.
+        # The normal extrema/collision checks still validate the new candidate.
+        # Any failed retry propagates to the controller's existing stop path.
+        solver.reset()
+        parameters.duration_discretization = ruckig.DurationDiscretization.Discrete
+        return solver.update(parameters, output)
+
     def update(self, parameters, output):
         values = {field: getattr(parameters, field) for field in self.fields}
         result = ruckig.Result.Finished
@@ -71,10 +91,15 @@ class GroupedRuckig:
                 # retry; numerical replanning must not perturb this group.
                 status = self._results[key]
             else:
+                # A failed solve can overwrite group_output; do not retain a
+                # cache key that would later reuse it as a successful sample.
+                self._requests.pop(key, None)
+                self._results.pop(key, None)
                 for field, subset in zip(self.fields, request[1:]):
                     setattr(group_input, field, list(subset))
                 group_input.synchronization = ruckig.Synchronization.Time
-                status = solver.update(group_input, group_output)
+                group_input.duration_discretization = ruckig.DurationDiscretization.Continuous
+                status = self._update_group(solver, group_input, group_output)
                 if status in (ruckig.Result.Working, ruckig.Result.Finished):
                     self._requests[key] = request
                     self._results[key] = status

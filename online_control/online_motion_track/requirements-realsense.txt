@@ -1,0 +1,2 @@
+# Optional native RGB-D input. Install only in the track environment.
+pyrealsense2==2.58.4.10922

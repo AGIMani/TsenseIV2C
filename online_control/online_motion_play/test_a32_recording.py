@@ -44,6 +44,8 @@ def test_full_command_telemetry_and_action_log(tmp_path, model):
     recorder.stop("disconnected")
     log = rows(path)
     assert log[0]["metadata"]["model_id"] == model
+    assert log[0]["units"]["current"] == "per_sample"
+    assert log[0]["metadata"]["telemetry_format"] == "a32-native-sdk-state/v2"
     assert len(log[0]["metadata"]["slot_maps"]["linear"]) == 14
     assert len(log[0]["metadata"]["slot_maps"]["rotary"]) == 6
     assert log[-1]["type"] == "session_end"
@@ -93,9 +95,10 @@ def test_recording_keeps_zero_ui_swing_and_clipped_command_separate(tmp_path):
     recorder.stop()
     log = rows(path)
     conversion = next(row for row in log if row["type"] == "conversion")
-    frame = next(row for row in log if row["type"] == "h7")
-    assert conversion["joints_hw"] == frame["joints_hw"] == {name: .005}
-    assert frame["joints_ui"] == {name: 0.}
+    frame = next(row for row in log if row["type"] == "joint_angles" and row["stage"] == "sdk")
+    assert conversion["joints_hw"] == frame["joints"] == {name: .005}
+    assert frame["sent"] is True
+    assert all("joints_ui" not in row for row in log if row["type"] == "h7")
 
 
 def test_cached_feedback_emits_status_at_stale_boundary(tmp_path):

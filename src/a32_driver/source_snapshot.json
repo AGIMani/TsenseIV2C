@@ -1,13 +1,18 @@
 {
-  "sdk_version": "1.1.0",
+  "sdk_version": "1.1.15",
   "abi_version": 2,
-  "platform": "windows-x64",
-  "compiler": "MSVC 19.51, C++17, Release /MD",
-  "source_sdk": "D:/Qtworks/a3-cpp-sdk",
-  "static_library_sha256": "613D585FAF14CBF52F47DC71AA095A1B22198C58C8A07D3E7C62E0E4505EBBAB",
-  "hardware_config_sha256": "1B292EC07B483A8865AF1710E8492100DAF398192B86F9C34B70BF658F8989F9",
-  "api_header_sha256": "B02FA27775D849467F3201C219D9FF9AB042AC248F21EFEEB558F6BA9F010039",
-  "types_header_sha256": "34C9717E7AB1C7D89510B0E04200CF52FE10A850AC56FAD63E9A6CFBA9AD8195",
-  "native_dll_file": "bin/a32_native_timed.dll",
-  "native_dll_sha256": "9544F5E88533BCDAE8259D5322569989231F1765F4A22781928EC982B9CC8090"
+  "platform": "linux",
+  "source_sdk": "vendor/a3-cpp-sdk",
+  "source_repository": "https://github.com/AGIMani/a3.2_cpp_sdk",
+  "source_ref": "fd676e5a3296e5e3ada2734d290acc443206e000",
+  "source_archive": "a3.2_cpp_sdk-main.zip",
+  "source_archive_sha256": "aad3365c2e536fa9be32f03fed0b3f4bc445a63e3615de48d4052b5ce8cc6056",
+  "imported_source_manifest": "vendor/a3-cpp-sdk/sdk-source.json",
+  "native_implementation": "a3-sdk-protocol-linux-abi2/1.0",
+  "native_library_file": "bin/liba32_native.so",
+  "native_library_sha256": "c777a44976bdcb686ad171b45a7ff19ae305c21a9a3321626b80f7082fce9dd6",
+  "hardware_config_sha256": "0aca186af226fc9c46f68c7215630f58a30123086de579ccd96c83bfa73f7d93",
+  "conversion": "sdk-1.1.15-calibrated-linkage",
+  "conversion_source": "vendor/a3-cpp-sdk/src/Stroke.cpp",
+  "conversion_source_sha256": "b06f545a97146ea3fc5fb5086ff11d7230566e1c248a3b0fb1d94f32b6e196a2"
 }

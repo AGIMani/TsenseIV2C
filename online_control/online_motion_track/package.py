@@ -30,7 +30,7 @@ def files(*, full=False):
         yield HERE / name, name
     for name in ("a32_platform_integration.md", "A32_NATIVE_SDK.md", "a32_motion_play.md", "a32_integration_validation.md",
                  "a32_motion_recording.md", "a32_connection_diagnostics.md", "a32_joint_ranges.md", "a32_gesture_control_policy.md",
-                 "online_webxr_quest3.md", "webxr_quest3_input.md", "leapmotion2_input.md", "online_control_latency.md", "motion_limits.md"):
+                 "online_webxr_quest3.md", "webxr_quest3_input.md", "leapmotion2_input.md", "realsense_rgbd_input.md", "online_control_latency.md", "motion_limits.md"):
         yield ROOT / "docs" / name, "docs/" + name
     for path in sorted((ROOT / 'online_control/shared').glob('*')):
         if path.suffix in ('.py', '.js', '.json'):
@@ -58,6 +58,20 @@ def files(*, full=False):
             continue
         if path.is_file() and (path.suffix.lower() in (".py", ".json", ".cpp", ".h", ".hpp", ".so", ".sh", ".md") or path.name in ("CMakeLists.txt", "SDK_LICENSE.txt")) and "build" not in path.parts:
             yield path, "app/" + path.relative_to(ROOT).as_posix()
+    # Native CMake resolves ../../../vendor/a3-cpp-sdk. Include only imported
+    # source dependencies and test inputs, never the vendor CAD or binaries.
+    sdk = ROOT / "vendor/a3-cpp-sdk"
+    source_manifest = json.loads((sdk / "sdk-source.json").read_text(encoding="utf-8"))
+    sdk_files = {"CMakeLists.txt", "LICENSE", "CHANGELOG.md", "COMPAT.md", "README.md", "README.en.md",
+                 "examples/CommandJson.h", "linux/99-a3-h7-cdc.rules"}
+    for relative in sorted(source_manifest["files"]):
+        path = Path(relative)
+        if path.is_absolute() or ".." in path.parts:
+            raise ValueError(f"Invalid SDK source path: {relative}")
+        if relative in sdk_files or path.parts[0] in ("include", "src", "cmake", "tests"):
+            yield sdk / relative, "app/vendor/a3-cpp-sdk/" + relative
+    yield sdk / "sdk-source.json", "app/vendor/a3-cpp-sdk/sdk-source.json"
+    yield sdk / "README-migration.txt", "app/vendor/a3-cpp-sdk/README-migration.txt"
     for path in sorted((ROOT / "online_control/online_motion_track/pipeline_v3_0").glob("*.py")):
         yield path, "app/" + path.relative_to(ROOT).as_posix()
     for folder in ("TsenseI_hand_v3_0", "TsenseI_hand_v3_0_withid", "TsenseI_hand_v3_2_withid"):
@@ -80,8 +94,15 @@ def files(*, full=False):
     yield HERE / "safe_trajectory.py", web + "safe_trajectory.py"
     yield HERE / "collision_queries.py", web + "collision_queries.py"
     yield HERE / "webxr_input.py", web + "webxr_input.py"
-    for name in ("wuji_input.py", "wuji_transport.py", "wuji_sdk_source.py", "source_worker.py", "leapmotion_input.py", "leapmotion_source.py"):
+    yield HERE / "quest_adb_input.py", web + "quest_adb_input.py"
+    for name in ("wuji_input.py", "wuji_transport.py", "wuji_sdk_source.py", "source_worker.py", "leapmotion_input.py", "leapmotion_source.py", "leap_camera.py",
+                 "realsense_source.py", "rgbd_fusion.py", "rgbd_input.py"):
         yield HERE / name, web + name
+    for path in sorted((ROOT / "vendor/realsense-hand-tracking").iterdir()):
+        if path.is_file():
+            yield path, "app/" + path.relative_to(ROOT).as_posix()
+    yield HERE / "requirements-realsense.txt", "requirements-realsense.txt"
+    yield ROOT / "migration/ubuntu/70-hand-realsense.rules", "migration/ubuntu/70-hand-realsense.rules"
     for path in sorted((HERE / "static").rglob("*")):
         if path.is_file():
             yield path, web + path.relative_to(HERE).as_posix()

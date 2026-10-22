@@ -19,13 +19,14 @@ test('invalid record length fails before writing',async()=>{
 function control(){
   const c=new A30BrowserHandControl({now:()=>1000});c.side='left';c.connected=c.armed=true;
   c.epoch=1;c.lastSample=-1;c.lastSentAt=999;c.handAt=c.telemetryAt=1000;
-  c.clockAnchor={server:10,local:1000};c.freshTelemetry=()=>true;c.accepted=true;
-  c.held={};c.limits={};
+  c.clockAnchor={server:10,local:1000};c.accepted=true;
+  c.latest=protocol.telemetry(new Uint8Array(484));
+  c.held={};c.limits={};c.motionLimits={};
   const linear={},rotary={};
   for(const n of protocol.LINEAR_NAMES)linear['left_hand_'+n]=0;
   for(const n of protocol.ROTARY_NAMES)rotary['left_hand_'+n]=0;
   const names=[...Object.keys(linear),...Object.keys(rotary)];
-  for(const n of names){c.held[n]=0;c.limits[n]=[-1,1];}
+  for(const n of names){c.held[n]=0;c.limits[n]=[-1,1];c.motionLimits[n]={velocity:4};}
   const wire=protocol.positions(0,linear,rotary,'left'),bytes=new Uint8Array(108+wire.length),v=new DataView(bytes.buffer);
   bytes.set(new TextEncoder().encode('GTR1'));v.setUint32(4,1,true);v.setUint32(8,5,true);v.setFloat64(16,10,true);v.setUint32(24,1,true);bytes.set(wire,108);
   let writes=0;c.writer={write:async()=>{writes++;}};
@@ -35,8 +36,23 @@ test('tracking streams exact server bytes without the old 20ms gate',async()=>{
   const x=control();await x.c.streamSample(x.bytes,x.names,x.c.job);assert.equal(x.writes(),1);
   await x.c.streamSample(x.bytes,x.names,x.c.job);assert.equal(x.writes(),1);
 });
-test('tracking rejects stale, corrupt and out-of-range streams before USB',async()=>{
-  for(const change of [x=>x.v.setFloat64(16,9,true),x=>x.bytes[110]^=1,x=>x.v.setFloat32(28,4,true)]){
-    const x=control();change(x);await assert.rejects(x.c.streamSample(x.bytes,x.names,x.c.job));assert.equal(x.writes(),0);
+test('tracking rejects corrupt stream bytes before USB',async()=>{
+  const x=control();x.bytes[110]^=1;
+  await assert.rejects(x.c.streamSample(x.bytes,x.names,x.c.job),/校验失败/);
+  assert.equal(x.writes(),0);
+});
+test('tracking discards stale and out-of-range samples and rebases before USB',async()=>{
+  for(const change of [x=>x.v.setFloat64(16,9,true),x=>x.v.setFloat32(28,4,true)]){
+    const x=control(),held={...x.c.held},rebases=[];
+    x.c.rebaseControl=async(pose,telemetry,options)=>{
+      rebases.push({pose:{...pose},options});
+      return {ruckig_joint_angles_rad:held,browser_epoch:2,motion_limits:x.c.motionLimits};
+    };
+    change(x);await x.c.streamSample(x.bytes,x.names,x.c.job);
+    assert.equal(x.writes(),0);
+    assert.deepEqual(rebases,[{pose:held,options:{resume_from_commanded_pose:true}}]);
+    assert.equal(x.c.epoch,2);
+    assert.equal(x.c.lastSample,-1);
+    assert.equal(x.c.armed,true);
   }
 });

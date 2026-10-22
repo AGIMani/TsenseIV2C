@@ -1,5 +1,6 @@
 """A32 native downlink lifecycle; no hardware is connected by these tests."""
 from pathlib import Path
+import json
 import sys
 import time
 from contextlib import nullcontext
@@ -164,10 +165,73 @@ def test_unprotected_mode_retains_sdk_telemetry_and_motor_fault_gates(collision_
 def test_shared_motion_limits_cover_all_a32_axes(model_id, side):
     item, _ = control(model_id, side)
     try:
-        assert item.input.max_velocity == [10.] * 20
-        assert item.input.max_acceleration == [80.] * 20
-        assert item.input.max_jerk == [200.] * 20
+        assert item.input.max_velocity == [20.] * 20
+        assert item.input.max_acceleration == [400.] * 20
+        assert item.input.max_jerk == [2400.] * 20
         assert item.PERIOD == .002
+    finally:
+        item.close()
+
+
+@pytest.mark.parametrize('side', ['left', 'right'])
+def test_captured_sync_failure_recovers_before_guard_and_sdk_write(side):
+    capture = json.loads((ROOT / 'tests/fixtures/ruckig_sync_step2.json').read_text())
+    item, device = control(capture['model_id'], side)
+    checked = []
+    try:
+        item.arm(True)
+        indices = item.otg.groups[capture['finger']]
+        for field in ('current_position', 'current_velocity', 'current_acceleration',
+                      'target_position', 'target_velocity', 'target_acceleration'):
+            values = list(getattr(item.input, field))
+            for index, value in zip(indices, capture[field]):
+                values[index] = value
+            setattr(item.input, field, values)
+        item.pose = dict(zip(item.names, item.input.current_position))
+        item.target = dict(zip(item.names, item.input.target_position))
+        item.target_at = time.monotonic()
+        item.frame_id = capture['frame_id']
+        def check(pose):
+            checked.append(dict(pose))
+            return dict(pose)
+        item.guard.project = check
+
+        item.step(capture['control_dt_s'])
+        assert item.armed and device.enabled and not item.last_error
+        assert len(device.writes) == 1 and checked == device.writes
+        assert item.pose == device.writes[-1]
+        assert item.ruckig_output_joint_angles_rad is not None
+        assert item.limit_recoveries == 0
+        for index, target in zip(indices, capture['target_position']):
+            assert item.pose[item.names[index]] == pytest.approx(target, abs=1e-10)
+        for name, value in device.writes[-1].items():
+            lo, hi = item.limits[name]
+            assert lo <= value <= hi
+        for _ in range(20):
+            item.step(.002)
+        assert item.armed and not item.last_error and len(device.writes) == 21
+    finally:
+        item.close()
+
+
+@pytest.mark.parametrize('as_exception', [True, False])
+def test_unrecoverable_sync_failure_stops_without_sending(as_exception):
+    import ruckig
+    item, device = control()
+    calls = []
+    def fail(parameters, output):
+        calls.append(parameters.duration_discretization)
+        if as_exception:
+            raise ruckig.RuckigError('[ruckig] error in step 2 in dof: 0')
+        return ruckig.Result.ErrorSynchronizationCalculation
+    try:
+        item.arm(True)
+        indices, _, parameters, output = item.otg.solvers[0]
+        item.otg.solvers[0] = (indices, SimpleNamespace(update=fail, reset=lambda: None), parameters, output)
+        item.step(.002)
+        assert calls == [ruckig.DurationDiscretization.Continuous, ruckig.DurationDiscretization.Discrete]
+        assert not item.armed and not device.enabled and not device.writes
+        assert item.last_error
     finally:
         item.close()
 
@@ -376,11 +440,10 @@ def test_missing_hand_finishes_last_target_and_resumes():
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
-def test_real_driver_tracks_with_missing_motors_after_first_packet_and_resumes(model_id):
-    from a32_driver import A32Device
+def test_real_driver_waits_for_current_feedback_before_start_and_resume(model_id):
+    from a32_driver import A32Device, A32DriverError
     from test_a32_driver import SimulatedNativeHand
     backend = SimulatedNativeHand()
-    backend.state.update(self=[], mit=[], telemetry_age_ms=0)
     device = A32Device(model_id=model_id, backend=backend)
     device.connect_usb("SIM_ONLY")
     item = A32Control(load_hand_profile(model_id), "left", "off", device=device, start=False)
@@ -389,21 +452,27 @@ def test_real_driver_tracks_with_missing_motors_after_first_packet_and_resumes(m
     try:
         assert item.snapshot()["telemetry_seen"]
         backend.state["telemetry_age_ms"] = -1
-        seed = device.constrain_pose(item.pose)
-        target = {**seed, "left_hand_index_PIP_joint": .6}
-        item.push(target, 1)
+        before = list(backend.calls)
+        with pytest.raises(A32DriverError, match="反馈"):
+            item.arm(True)
+        assert not item.armed and backend.calls == before
+        backend.state["telemetry_age_ms"] = 0
         item.arm(True)
-        assert item.pose == seed and len(item.snapshot()["seed_missing"]) == 20
-        item.push(target, 2)
+        seed = dict(item.pose)
+        item.push({**seed, "left_hand_index_PIP_joint": .6}, 1)
         for _ in range(8):
             item.step(.005)
         assert item.armed and item.ticks == 8
-        previous = dict(item.pose)
-        assert previous["left_hand_index_PIP_joint"] > seed["left_hand_index_PIP_joint"]
+        assert item.pose["left_hand_index_PIP_joint"] > seed["left_hand_index_PIP_joint"]
         item.stop()
-        item.push(target, 2)
+        backend.state["self"][0]["online"] = False
+        before = list(backend.calls)
+        with pytest.raises(A32DriverError, match="反馈"):
+            item.arm(True)
+        assert not item.armed and backend.calls == before
+        backend.state["self"][0]["online"] = True
         item.arm(True)
-        assert item.pose == previous
+        assert item.pose == seed  # Fresh stationary feedback, not the last command.
         item.step(.005)
         assert item.armed and item.ticks == 9
     finally:

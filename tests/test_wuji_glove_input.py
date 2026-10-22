@@ -70,6 +70,36 @@ def test_reject_invalid_frames(change):
         validate_frame(raw, "left")
 
 
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_thumb_second_point_is_midpoint_independent_of_its_measured_position(side):
+    raw = sample(side)["frame"]
+    raw["positions_xyz"][0] = [.1, -.2, .3]
+    raw["positions_xyz"][1] = [.12, -.19, .34]
+    raw["positions_xyz"][3] = [.16, -.17, .38]
+    expected = np.array(raw["positions_xyz"]) - raw["positions_xyz"][0]
+    expected[2] = (expected[1] + expected[3]) * .5
+    for outlier in ([.8, -.9, .7], [-.7, .8, -.6], raw["positions_xyz"][1]):
+        raw["positions_xyz"][2] = list(outlier)
+        before = deepcopy(raw)
+        hand = validate_frame(raw, side)
+        np.testing.assert_allclose(hand["world"], expected, atol=1e-15)
+        assert len(hand["world"]) == 21 and hand["label"] == side.title()
+        assert raw == before
+
+
+def test_relay_carries_corrected_points_and_unmodified_raw_measurements(relay):
+    r, _, wire = relay
+    wire[0]["frame"]["positions_xyz"][2] = [.5, -.4, .3]
+    raw = deepcopy(wire[0]["frame"])
+    latest = r.latest("pc")
+    consumed = r.consume("pc", latest["revision"])
+    for snapshot in (latest, consumed):
+        world = np.array(snapshot["hand"]["world"])
+        np.testing.assert_allclose(world[2], (world[1] + world[3]) * .5)
+        assert snapshot["raw_wuji"] == raw
+        assert snapshot["source_metadata"]["raw_wuji"] == raw
+
+
 def test_age_deduplication_delayed_consumption_and_reconnect(relay):
     r, now, wire = relay
     first = r.latest("pc")
@@ -176,7 +206,10 @@ def test_application_uses_server_observation_not_browser_forgery():
         request = {"session": token, "sequence": 0, "timestamp_ms": 1000., "capture_unix_ms": 1_700_000_000_000,
                    "source": "wuji_glove", "wuji_revision": snap["revision"],
                    "hand": {"label": "Right", "world": [[999, 999, 999]] * 21}}
-        assert app.frame(request)["tracking"]
+        result = app.frame(request)
+        assert result["tracking"]
+        pts = np.array(result["points"])
+        np.testing.assert_allclose(pts[2], (pts[1] + pts[3]) * .5, atol=1e-12)
         assert not app.frame(request | {"sequence": 1, "timestamp_ms": 1010.})["tracking"]
         app.remove(token)
         assert token not in app.wuji.channels

@@ -95,6 +95,51 @@ rebuild_cache:
 rebuild_cache/fast: rebuild_cache
 .PHONY : rebuild_cache/fast
 
+# Special rule for the target list_install_components
+list_install_components:
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Available install components are: \"Unspecified\""
+.PHONY : list_install_components
+
+# Special rule for the target list_install_components
+list_install_components/fast: list_install_components
+.PHONY : list_install_components/fast
+
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
+
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
+
+# Special rule for the target install/strip
+install/strip: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip
+
+# Special rule for the target install/strip
+install/strip/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --cyan "Installing the project stripped..."
+	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
+.PHONY : install/strip/fast
+
 # The main all target
 all: cmake_check_build_system
 	$(CMAKE_COMMAND) -E cmake_progress_start /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux/CMakeFiles /home/hj/hand/hand-ubuntu24.04-20261006/hand/src/a32_driver/build-linux//CMakeFiles/progress.marks
@@ -125,19 +170,6 @@ preinstall/fast:
 depend:
 	$(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
-
-#=============================================================================
-# Target rules for targets named a32_native
-
-# Build rule for target.
-a32_native: cmake_check_build_system
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a32_native
-.PHONY : a32_native
-
-# fast build rule for target.
-a32_native/fast:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/a32_native.dir/build.make CMakeFiles/a32_native.dir/build
-.PHONY : a32_native/fast
 
 #=============================================================================
 # Target rules for targets named Experimental
@@ -503,6 +535,58 @@ ContinuousSubmit/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/ContinuousSubmit.dir/build.make CMakeFiles/ContinuousSubmit.dir/build
 .PHONY : ContinuousSubmit/fast
 
+#=============================================================================
+# Target rules for targets named a32_native
+
+# Build rule for target.
+a32_native: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a32_native
+.PHONY : a32_native
+
+# fast build rule for target.
+a32_native/fast:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/a32_native.dir/build.make CMakeFiles/a32_native.dir/build
+.PHONY : a32_native/fast
+
+#=============================================================================
+# Target rules for targets named a3_sdk
+
+# Build rule for target.
+a3_sdk: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a3_sdk
+.PHONY : a3_sdk
+
+# fast build rule for target.
+a3_sdk/fast:
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_sdk.dir/build.make a3-cpp-sdk/CMakeFiles/a3_sdk.dir/build
+.PHONY : a3_sdk/fast
+
+#=============================================================================
+# Target rules for targets named a3_test_protocol
+
+# Build rule for target.
+a3_test_protocol: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a3_test_protocol
+.PHONY : a3_test_protocol
+
+# fast build rule for target.
+a3_test_protocol/fast:
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/build.make a3-cpp-sdk/CMakeFiles/a3_test_protocol.dir/build
+.PHONY : a3_test_protocol/fast
+
+#=============================================================================
+# Target rules for targets named a3_test_web_commands
+
+# Build rule for target.
+a3_test_web_commands: cmake_check_build_system
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 a3_test_web_commands
+.PHONY : a3_test_web_commands
+
+# fast build rule for target.
+a3_test_web_commands/fast:
+	$(MAKE) $(MAKESILENT) -f a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/build.make a3-cpp-sdk/CMakeFiles/a3_test_web_commands.dir/build
+.PHONY : a3_test_web_commands/fast
+
 a32_native_linux.o: a32_native_linux.cpp.o
 .PHONY : a32_native_linux.o
 
@@ -558,6 +642,10 @@ help:
 	@echo "... clean"
 	@echo "... depend"
 	@echo "... edit_cache"
+	@echo "... install"
+	@echo "... install/local"
+	@echo "... install/strip"
+	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
 	@echo "... Continuous"
@@ -589,6 +677,9 @@ help:
 	@echo "... NightlyTest"
 	@echo "... NightlyUpdate"
 	@echo "... a32_native"
+	@echo "... a3_sdk"
+	@echo "... a3_test_protocol"
+	@echo "... a3_test_web_commands"
 	@echo "... a32_native_linux.o"
 	@echo "... a32_native_linux.i"
 	@echo "... a32_native_linux.s"

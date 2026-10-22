@@ -10,7 +10,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(ROOT / "tools")]
 from hand_profiles import HandModelSession, load_hand_profile
 from TsenseI_retargeting.fk.urdf import UrdfModel
 from prepare_hand_v3_2 import RENAMES, right_name, SOURCE_URDF, MIRROR
-from a32_kinematics.joint_coordinates import legacy_to_model, thumb_rotaback_origin_offset
+from a32_kinematics.joint_coordinates import legacy_to_model, thumb_origin_offset
 
 
 def test_source_manifest_matches_current_cad_package():
@@ -52,7 +52,7 @@ def test_rename_preserves_cad_kinematics_and_pinky_chain():
         q = {j.name: j.lower + fraction * (j.upper - j.lower) for j in old.joints if j.type != "fixed"}
         a = old.forward_kinematics(q)
         b = new.forward_kinematics({RENAMES.get(k, k): legacy_to_model("TsenseI_v3_2", k, v)
-                                   - thumb_rotaback_origin_offset("TsenseI_v3_2", k)
+                                   - thumb_origin_offset("TsenseI_v3_2", k)
                                    for k, v in q.items()})
         for link, pose in a.items():
             np.testing.assert_allclose(b[RENAMES.get(link, link)], pose, atol=1e-12)
@@ -107,10 +107,17 @@ def test_mjcf_matches_urdf_fk_limits_and_contacts(side):
 
 
 @pytest.mark.parametrize("side", ["left", "right"])
-def test_profile_retarget_and_hardware_placeholder(side):
+def test_profile_retarget_and_hardware_placeholder(side, monkeypatch):
+    import TsenseI_retargeting.toporetarget as topo
+
+    def unavailable(*args, **kwargs):
+        raise AssertionError("The default profile must not need optional Pinocchio")
+
+    monkeypatch.setattr(topo, "_PinocchioKeypointKinematics", unavailable)
     session = HandModelSession(hand_side=side)
     solver = session.profile.create_retargeter(side)
     assert len(solver.joint_names) == 20
+    assert solver.config.kinematics_backend == "numpy"
     assert solver._analytic_kinematics is not None
     points = solver.fk.compute()
     assert points.shape == (21, 3)
@@ -127,13 +134,9 @@ def test_profile_retarget_and_hardware_placeholder(side):
         session.set_pose({next(iter(session.limits)): float("nan")})
 
 
-def test_keypoint_mirroring_and_no_v2_state_mutation():
-    profile = load_hand_profile("TsenseI_v3_2")
-    from TsenseI_retargeting.fk.fk import RobotKeypointFK
-    a, b = [RobotKeypointFK(profile.path("urdf", s), profile.path("keypoints", s)) for s in ("left", "right")]
-    q = {n: .12 for n in a.model.joint_names()}
-    np.testing.assert_allclose(b.compute({right_name(k): v for k, v in q.items()}),
-                               a.compute(q) @ MIRROR, atol=1e-12)
+def test_model_sessions_do_not_mutate_v2_state():
+    # Mirrored generated keypoints and preservation of independent left/right
+    # calibration are covered together in test_a32_models_integration.py.
     from config_path import HAND_MODEL_DIR
     from joint_schema import URDF_JOINT_MAP
     before = (HAND_MODEL_DIR, dict(URDF_JOINT_MAP))

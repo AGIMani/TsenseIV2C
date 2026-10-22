@@ -18,7 +18,7 @@ fixed_joints: {}
 # Keep landmark smoothing, graph stabilization and all URDF limits enabled.
 retarget:
   pinch_enabled: true
-  pinch_full_ratio: 0.08
+  pinch_full_ratio: 0.25
   pinch_start_ratio: 0.50
   pinch_weight: 65.0
   lambda_smooth: 0.1

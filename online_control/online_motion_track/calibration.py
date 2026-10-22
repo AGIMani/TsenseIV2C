@@ -117,7 +117,7 @@ class CalibrationSession:
         with self.lock:
             self._touch()
             source, side = data.get('source', self.input_source), data.get('side', self.input_side)
-            if source not in ('mediapipe', 'webxr', 'wuji_glove', 'leapmotion') or side not in ('left', 'right'):
+            if source not in ('mediapipe', 'webxr', 'wuji_glove', 'leapmotion', 'realsense_rgbd') or side not in ('left', 'right'):
                 raise ValueError('输入源或手别无效')
             if type(data.get('enabled')) is not bool:
                 raise ValueError('enabled 必须为布尔值')
@@ -151,6 +151,46 @@ class CalibrationSession:
                 self.input_points = align_world_landmarks(filtered, self.reference, self.input_side, self.side)
             return dict(**self._solve(), tracking=valid, message=message, source=self.input_source,
                         sequence=sequence, edit_revision=packet.get('edit_revision'), input_epoch=self.input_epoch)
+
+    def process_metric(self, packet, commit):
+        """Keep an expired metric observation out of the editable draft too."""
+        if not callable(commit):
+            raise TypeError('metric processing requires a commit callback')
+        with self.lock:
+            previous_points = self.input_points.copy()
+            previous_result = deepcopy(self.result)
+            previous_data = deepcopy(self.data)
+            previous_sequence, previous_timestamp = self.last_sequence, self.last_timestamp
+
+            def restore():
+                self.input_points, self.result, self.data = previous_points, previous_result, previous_data
+                self.last_sequence, self.last_timestamp = previous_sequence, previous_timestamp
+                # The expired solve can leave an IK warm start even if the
+                # draft arrays are restored. Build a fresh estimator for the
+                # next valid frame; do not re-solve the discarded observation.
+                self.engine = PreviewSolver(self.config)
+                self.filter.reset()
+
+            try:
+                response = self.process(packet)
+                try:
+                    accepted = commit(lambda: None)
+                except ValueError:
+                    accepted = False
+            except Exception:
+                restore()
+                raise
+            if accepted:
+                return response
+            restore()
+            return dict(response, tracking=False, display_discarded=True,
+                        discard_reason='source_cancelled_or_expired',
+                        message='输入已取消或过期，保持上次标定结果',
+                        pose={**self.result['joint_values'], **self.profile.fixed_joints},
+                        result_points=self.result['points'].tolist(),
+                        input_points=self.input_points.tolist(),
+                        solve_ms=self.result['elapsed_ms'],
+                        delta=self.result['delta'] if np.isfinite(self.result['delta']) else None)
 
     def update(self, data):
         with self.lock:

@@ -137,7 +137,8 @@ class ControlSessionRecorder:
                     "started_at": datetime.now(timezone.utc).astimezone().isoformat(),
                     "joint_unit": "rad",
                     "landmark_unit": "m",
-                    "units": {"linear": "mm", "rotary": "deg", "temperature": "degC", "current": "firmware_native"},
+                    "units": {"linear": "mm", "rotary": "deg", "temperature": "degC",
+                              "current": "per_sample" if (metadata or {}).get("telemetry_format") == "a32-native-sdk-state/v2" else "firmware_native"},
                     "feedback_correlation": "latest successful host write before receive; not a firmware acknowledgement",
                     "metadata": {"model_id": "TsenseI_v2", **dict(metadata or {}),
                                  "time_fields": {"t": "monotonic seconds since session start",
@@ -195,58 +196,42 @@ class ControlSessionRecorder:
             landmarks=_landmark_rows(landmarks),
         )
 
-    def record_retarget(
-        self,
-        joints: Mapping[str, Any],
-        *,
-        frame_id: int,
-        hand_side: str,
-        solve_ms: float | None = None,
-        landmark_repairs: Sequence[Mapping[str, Any]] | None = None,
-    ) -> None:
-        self._record(
-            "retarget",
-            frame_id=int(frame_id),
-            hand_side=str(hand_side),
-            solve_ms=_finite_float(solve_ms),
-            joints=_joint_dict(joints),
-            landmark_repairs=[dict(item) for item in (landmark_repairs or ())],
-        )
+    def record_joint_angles(self, stage, joints, *, frame_id=None, hand_side=None, **details):
+        if stage not in {"retarget", "direct", "ruckig", "mink", "sdk"}:
+            return None
+        if stage == "sdk" and details.get("sent") is not True:
+            return None
+        joints = _joint_dict(joints)
+        if not joints:
+            return None
+        return self._record("joint_angles", stage=stage, joints=joints,
+                            frame_id=frame_id, hand_side=hand_side,
+                            **{k: v for k, v in details.items() if k in {"model_id", "sent"} and v is not None})
 
-    def record_h7(
-        self,
-        *,
-        joints_ui: Mapping[str, Any],
-        joints_hw: Mapping[str, Any],
-        frame_id: int,
-        hand_side: str,
-        sent: bool,
-        usb_connected: bool,
-        ruckig_faults: Any = None,
-        guard_limited: bool | None = None,
-        joints_before_guard: Mapping[str, Any] | None = None,
-        joints_ruckig_ui: Mapping[str, Any] | None = None,
-        control_dt_s: float | None = None,
-    ) -> None:
-        self._record(
-            "h7",
-            control_dt_s=_finite_float(control_dt_s),
-            frame_id=int(frame_id),
-            hand_side=str(hand_side),
-            sent=bool(sent),
-            usb_connected=bool(usb_connected),
-            guard_limited=guard_limited,
-            ruckig_faults=list(ruckig_faults or ()),
-            joints_ui=_joint_dict(joints_ui),
-            joints_hw=_joint_dict(joints_hw),
-            joints_before_guard=_joint_dict(joints_before_guard),
-            joints_ruckig_ui=_joint_dict(joints_ruckig_ui),
-        )
+    def record_retarget(self, joints, *, frame_id, hand_side, **details):
+        self._record("retarget", frame_id=frame_id, hand_side=hand_side, **details)
+        return self.record_joint_angles("retarget", joints, frame_id=frame_id, hand_side=hand_side)
+
+    def record_h7(self, *, joints_ui, joints_hw, frame_id, hand_side, sent,
+                  usb_connected, joints_ruckig_ui=None, **details):
+        self._record("h7", frame_id=frame_id, hand_side=hand_side, sent=bool(sent),
+                     usb_connected=bool(usb_connected),
+                     control_dt_s=_finite_float(details.get("control_dt_s")),
+                     guard_limited=details.get("guard_limited"),
+                     ruckig_faults=list(details.get("ruckig_faults") or ()))
+        if joints_ruckig_ui:
+            self.record_joint_angles("ruckig", joints_ruckig_ui, frame_id=frame_id, hand_side=hand_side)
+        if sent:
+            self.record_joint_angles("sdk", joints_ui, frame_id=frame_id, hand_side=hand_side, sent=True)
 
     def record_stage(self, stage: str, joints: Mapping[str, Any], *,
                      frame_id: int, hand_side: str, **details: Any) -> None:
         if not self.active:
             return
+        if stage in {"retarget", "direct", "ruckig", "mink", "sdk"}:
+            return self.record_joint_angles(stage, joints, frame_id=frame_id, hand_side=hand_side, **details)
+        if stage in {"control_target", "filter_candidate", "direct_filter", "direct_command"}:
+            return self._record(stage, frame_id=frame_id, hand_side=hand_side, **details)
         self._record(stage, joints=_joint_dict(joints), frame_id=frame_id,
                      hand_side=hand_side, **details)
 

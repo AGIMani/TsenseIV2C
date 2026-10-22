@@ -12,7 +12,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(ROOT / "tools")]
 from a32_kinematics import A32StrokeMapper, model_joint_to_source_sign
 from hand_profiles import A32_MODEL_IDS, HandModelSession, load_hand_profile
 from TsenseI_retargeting.fk.urdf import UrdfModel, axis_angle_matrix
-from a32_kinematics.joint_coordinates import is_finger_swing, requested_limits, reverse_swing
+from a32_kinematics.joint_coordinates import is_finger_swing, requested_limits, reverse_swing, thumb_origin_offset
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
@@ -46,24 +46,36 @@ def test_sdk_bare_provenance_retains_existing_calibrated_landmarks():
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_id_import_retains_every_joint_frame_mesh_and_base_scale(side):
     profile = load_hand_profile("TsenseI_v3_2_withid")
-    source = UrdfModel(ROOT / f"TsenseI_V3.2_hand_withid_fixed/urdf/TsenseI_{side}.urdf")
+    source = UrdfModel(profile.root / "source_20_outputs/TsenseI_hand_left_v3_2_withid.urdf")
+    if side == "right":
+        # Source snapshot is intentionally the supplied left CAD; the installed
+        # right model is its equal-angle XZ mirror.
+        source = UrdfModel(profile.root / "urdf/TsenseI_hand_right_v3_2_withid.urdf")
     target = UrdfModel(profile.path("urdf", side))
     assert len(source.joints) == len(target.joints)
     for a, b in zip(source.joints, target.joints, strict=True):
         assert (a.name, a.parent, a.child, a.type) == (b.name, b.parent, b.child, b.type)
-        assert (b.lower, b.upper) == (requested_limits(a.name) or (a.lower, a.upper))
-        np.testing.assert_allclose(a.origin @ axis_angle_matrix(a.axis, .35) if is_finger_swing(a.name) else a.origin,
-                                   b.origin, atol=1e-14)
-        np.testing.assert_array_equal(-a.axis if is_finger_swing(a.name) else a.axis, b.axis)
+        expected_limits = requested_limits(a.name) or (a.lower, a.upper)
+        if expected_limits[0] is None:
+            assert (b.lower, b.upper) == expected_limits
+        else:
+            np.testing.assert_allclose((b.lower, b.upper), expected_limits, atol=1e-14)
+        expected_origin = (a.origin if profile.root.joinpath("urdf/TsenseI_hand_left_v3_2_withid.urdf").read_text().find("middle-dip-standard-20-outputs-v1") >= 0
+                           else a.origin @ axis_angle_matrix(a.axis, thumb_origin_offset(profile.model_id, a.name)))
+        np.testing.assert_allclose(expected_origin, b.origin, atol=1e-14)
+        np.testing.assert_array_equal(a.axis, b.axis)
     for link, meshes in source.visual_meshes_by_link().items():
         for a, b in zip(meshes, target.visual_meshes_by_link()[link], strict=True):
             assert hashlib.sha256(a.path.read_bytes()).digest() == hashlib.sha256(b.path.read_bytes()).digest()
             np.testing.assert_array_equal(a.origin, b.origin)
             np.testing.assert_array_equal(a.scale, b.scale)
-    np.testing.assert_array_equal(target.visual_meshes_by_link()["base_link"][0].scale, [.001] * 3)
+    np.testing.assert_array_equal(target.visual_meshes_by_link()["base_link"][0].scale,
+                                  [1.] * 3 if profile.root.joinpath("source_20_outputs").exists() else [.001] * 3)
     manifest = yaml.safe_load((profile.root / "source_mapping.yaml").read_text(encoding="utf-8"))
     for name, digest in manifest["source_sha256"].items():
-        path = ROOT / "TsenseI_V3.2_hand_withid_fixed" / name
+        path = profile.root / "source_20_outputs" / Path(name).name
+        if name.startswith("meshes/"):
+            path = profile.root / "source_20_outputs" / name
         assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
 
 
@@ -82,8 +94,8 @@ def test_bare_and_id_swing_axes_have_same_direction_after_root_alignment(side):
         assert cosine > .95
         if is_finger_swing(name):
             assert cosine > .9999
-            assert model_joint_to_source_sign("TsenseI_v3_2", name) == -1
-            assert model_joint_to_source_sign("TsenseI_v3_2_withid", name) == -1
+            assert model_joint_to_source_sign("TsenseI_v3_2", name) == 1
+            assert model_joint_to_source_sign("TsenseI_v3_2_withid", name) == 1
             swings.append(name)
     assert swings == [f"{side}_hand_{f}_swing_joint" for f in ("index", "mid", "ring", "pinky")]
     # Different frames and link dimensions are deliberate; same names do not
@@ -93,7 +105,7 @@ def test_bare_and_id_swing_axes_have_same_direction_after_root_alignment(side):
     assert load_hand_profile("TsenseI_v3_2_withid").right_hand_provisional
 
 
-def test_id_right_and_keypoints_are_equal_angle_xz_mirrors():
+def test_id_right_frames_are_equal_angle_xz_mirrors():
     profile = load_hand_profile("TsenseI_v3_2_withid")
     left, right = (UrdfModel(profile.path("urdf", side)) for side in ("left", "right"))
     reflection = np.diag([1, -1, 1, 1])
@@ -105,9 +117,44 @@ def test_id_right_and_keypoints_are_equal_angle_xz_mirrors():
         for name, transform in a.items():
             reflected_name = name.replace("left_hand", "right_hand").replace("Left_hand", "Right_hand")
             np.testing.assert_allclose(b[reflected_name], reflection @ transform @ reflection, atol=1e-12)
+
+
+@pytest.mark.parametrize("model_id", A32_MODEL_IDS)
+def test_generated_right_keypoints_are_equal_angle_mirrors(model_id, tmp_path):
     from TsenseI_retargeting.fk.fk import RobotKeypointFK
-    a, b = (RobotKeypointFK(profile.path("urdf", side), profile.path("keypoints", side)) for side in ("left", "right"))
-    np.testing.assert_allclose(b.compute(), a.compute() @ reflection[:3, :3], atol=1e-12)
+    from sync_all_right_keypoints import prepare, right_name
+
+    profile = load_hand_profile(model_id)
+    installed = {side: profile.path("keypoints", side).read_bytes() for side in ("left", "right")}
+    # Stored annotations are independently calibrated per hand. Exercise the
+    # explicit mirror operation without overwriting either hand's calibration.
+    _, _, mirrored = prepare(profile.root / "hand_profile.yaml")
+    generated = tmp_path / "right_keypoints.yaml"
+    generated.write_text(yaml.safe_dump(mirrored), encoding="utf-8")
+    left = RobotKeypointFK(profile.path("urdf", "left"), profile.path("keypoints", "left"))
+    right = RobotKeypointFK(profile.path("urdf", "right"), generated)
+    reflection = np.diag([-1, 1, 1] if model_id == "TsenseI_v3_2" else [1, -1, 1])
+    rng = np.random.default_rng(39)
+    poses = [profile.init_pose("left")]
+    poses += [{name: rng.uniform(lo, hi) for name, (lo, hi) in left.model.joint_limits().items()}
+              for _ in range(5)]
+    for pose in poses:
+        np.testing.assert_allclose(right.compute({right_name(name): value for name, value in pose.items()}),
+                                   left.compute(pose) @ reflection, atol=1e-12)
+    assert installed == {side: profile.path("keypoints", side).read_bytes() for side in ("left", "right")}
+
+
+@pytest.mark.parametrize("model_id", A32_MODEL_IDS)
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_retargeter_loads_each_hands_own_calibration(model_id, side):
+    profile = load_hand_profile(model_id)
+    before = {hand: profile.path("keypoints", hand).read_bytes() for hand in ("left", "right")}
+    expected = yaml.safe_load(before[side])["keypoints"]
+    solver = profile.create_retargeter(side)
+    assert solver.keypoint_path == profile.path("keypoints", side)
+    actual = {point.id: point.to_dict() for point in solver.fk.keypoints.keypoints}
+    assert actual == {point["id"]: point for point in expected}
+    assert before == {hand: profile.path("keypoints", hand).read_bytes() for hand in ("left", "right")}
 
 
 @pytest.mark.parametrize("side", ["left", "right"])
@@ -152,7 +199,7 @@ def test_retarget_collision_and_motor_preview_are_finite(model_id, side):
 
 @pytest.mark.parametrize("method", ["exact", "lut"])
 @pytest.mark.parametrize("side", ["left", "right"])
-def test_id_mapper_commands_same_positive_swing_without_second_reversal(method, side):
+def test_id_mapper_commands_same_signed_swing_without_second_reversal(method, side):
     bare = A32StrokeMapper(side, method=method)
     shell = A32StrokeMapper(side, method=method, model_id="TsenseI_v3_2_withid")
     assert load_hand_profile(A32_MODEL_IDS[0]).joint_limits(side) == load_hand_profile(A32_MODEL_IDS[1]).joint_limits(side)
@@ -165,11 +212,11 @@ def test_id_mapper_commands_same_positive_swing_without_second_reversal(method, 
     assert actual.linear_strokes_mm == expected.linear_strokes_mm
     assert actual.rotary_positions_deg == expected.rotary_positions_deg
     assert actual.as_dict()["model_id"] == shell.model_id
-    assert sum(row["source_sign"] == -1 for row in shell.description()["channels"]) == 4
+    assert all(row["source_sign"] == 1 for row in shell.description()["channels"])
     pose[f"{side}_hand_index_swing_joint"] = .9
     clipped = shell.preview(pose)
-    assert clipped["clamped_joints_rad"][f"{side}_hand_index_swing_joint"] == .7
-    assert clipped["rotary_positions_deg"][f"{side}_hand_index_swing_joint"] == pytest.approx(np.rad2deg(.7))
+    assert clipped["clamped_joints_rad"][f"{side}_hand_index_swing_joint"] == .35
+    assert clipped["rotary_positions_deg"][f"{side}_hand_index_swing_joint"] == pytest.approx(np.rad2deg(.35))
 
 
 def test_mapper_rejects_wrong_model_identity():

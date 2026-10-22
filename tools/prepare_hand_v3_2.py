@@ -28,8 +28,8 @@ from generate_right_hand_urdf import _matrix_to_rpy
 from TsenseI_retargeting.fk.urdf import UrdfModel, rpy_matrix
 from apply_a32_joint_ranges import apply_urdf_coordinates
 from a32_kinematics.joint_coordinates import (
-    COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, THUMB_ZERO_ALIGNMENT,
-    THUMB_ROTABACK_ORIGIN_OFFSET, initial_pose, reverse_swing,
+    COORDINATE_VERSION, SWING_AXIS_ALIGNMENT,
+    thumb_zero_manifest, initial_pose, reverse_swing,
 )
 
 SDK_ROOT = Path(os.environ.get("A32_SDK_ROOT", ROOT / "vendor/a3-cpp-sdk"))
@@ -267,7 +267,7 @@ def prepare_configs() -> None:
                      "init_max_iters": 2, "topo_max_iters": 3},
         "mirror_axis": "x",
         "notes": ["SDK meshes and functional joint names retained; application joint ranges are versioned.",
-                  "PIP/DIP 0.005..1.565, MCP 0.005..1.3; bare swing axes aligned with ID, model = original SDK swing + 0.350; model 0..0.7, default 0, command 0.005..0.695 rad.",
+                  "PIP/DIP/MCP 0.005..1.565; commands intersect mechanism limits; swing aligned with reference ID CAD, model -0.35..0.35, command -0.34..0.34 rad; thumb zero matches user reference CAD.",
                   "Keypoints are draft until manually calibrated; collision proxies are geometric approximations."],
     }, preserve=True)
     write_source_mapping()
@@ -281,9 +281,8 @@ def write_source_mapping() -> None:
         "source_package_sha256": source_fingerprint(),
         "geometry_changed": False, "joint_coordinate_version": COORDINATE_VERSION,
         "swing_axis_alignment": SWING_AXIS_ALIGNMENT,
-        "thumb_zero_alignment": THUMB_ZERO_ALIGNMENT,
-        "thumb_rotaback_origin_offset_rad": THUMB_ROTABACK_ORIGIN_OFFSET,
-        "joint_coordinate_change": "bare swing = original SDK swing + 0.350; axes aligned with ID; application flexion limits",
+        **thumb_zero_manifest("TsenseI_v3_2"),
+        "joint_coordinate_change": "bare swing = -original SDK swing; axes aligned with reference ID CAD; thumb zero restored to reference CAD; application flexion limits",
         "right_mirror": "YZ: M=diag(-1,1,1), rotation axes -M; equal q",
     })
 

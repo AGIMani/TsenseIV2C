@@ -10,13 +10,24 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT / "src"), str(ROOT / "online_control/online_motion_track/pipeline_v2")]
 from control_pipeline import LightControlPipeline
 from utils import control_clock
+from utils.motion_limits import DEFAULT_MOTION_LIMITS
 from utils.ruckig_interpolator import PhaseSynchronizedRuckigInterpolator, RuckigJointInterpolator
 
 JOINT = "left_hand_mid_PIP_joint"
+REFERENCE_MOTION_LIMITS = (4.0, 30.0, 200.0)
+
+
+def set_flexion_limits(monkeypatch, limits):
+    # The fixed response-time oracle below was measured with these explicit
+    # limits. Product defaults and developer-shell overrides may change.
+    for suffix, value in zip(("VEL", "ACC", "JERK"), limits):
+        monkeypatch.setenv(f"RUCKIG_FLEXION_{suffix}", str(value))
 
 
 @pytest.mark.parametrize("factory", [PhaseSynchronizedRuckigInterpolator, RuckigJointInterpolator])
-def test_step_response_depends_on_elapsed_time_not_number_of_calls(factory):
+def test_step_response_depends_on_elapsed_time_not_number_of_calls(factory, monkeypatch):
+    set_flexion_limits(monkeypatch, REFERENCE_MOTION_LIMITS)
+
     def reach(schedule, elapsed):
         interp = factory([JOINT])
         interp.seed_ramp({JOINT: 1.2}, {JOINT: 0.0})
@@ -37,17 +48,22 @@ def test_step_response_depends_on_elapsed_time_not_number_of_calls(factory):
     assert old > ideal * 5
 
 
-def test_variable_steps_preserve_motion_constraints_and_phase_path():
+@pytest.mark.parametrize("limits", [REFERENCE_MOTION_LIMITS, DEFAULT_MOTION_LIMITS],
+                         ids=["reference", "shared-defaults"])
+def test_variable_steps_preserve_motion_constraints_and_phase_path(limits, monkeypatch):
+    set_flexion_limits(monkeypatch, limits)
     names = [JOINT, "left_hand_index_MCP_joint"]
     interp = PhaseSynchronizedRuckigInterpolator(names)
     interp.seed_ramp(dict.fromkeys(names, 0.0), {names[0]: 1.2, names[1]: .6})
+    velocity, acceleration, jerk = limits
     for n in range(80):
         pose = interp.sample(delta_time=(.002, .015, .008)[n % 3])
         assert not interp.last_faults
         assert pose[names[1]] == pytest.approx(pose[names[0]] / 2, abs=1e-8)
-        assert max(abs(v) for v in interp._output.new_velocity) <= 4 + 1e-8
-        assert max(abs(a) for a in interp._output.new_acceleration) <= 30 + 1e-8
-        assert max(abs(j) for j in interp._output.new_jerk) <= 200 + 1e-8
+        assert max(abs(v) for v in interp._output.new_velocity) <= velocity + 1e-8
+        assert max(abs(a) for a in interp._output.new_acceleration) <= acceleration + 1e-8
+        assert max(abs(j) for j in interp._output.new_jerk) <= jerk + 1e-8
+    assert pose == pytest.approx({names[0]: 1.2, names[1]: .6})
 
 
 def test_control_uses_elapsed_time_and_holds_after_long_pause():

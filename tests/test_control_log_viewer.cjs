@@ -47,6 +47,19 @@ assert.equal(run('makeMotorSeries().position[0].points.length'),30);
 assert.equal(run('makeMotorSeries().position[1].points.length'),29);
 assert.equal(run('makeMotorSeries().position[4].points.length'),1);
 assert.equal(run('makeMotorSeries().temperature[0].points.length'),29);
+// Curve checkboxes affect drawing, tooltip series and automatic Y bounds only.
+const positionChecks=get('positionLegend').children.map(label=>label.children[0]);
+assert.equal(positionChecks.length,5);assert(positionChecks.every(input=>input.checked));
+for(const index of [0,1,2,4]){positionChecks[index].checked=false;positionChecks[index].listeners.change();}
+assert.equal(run('chartModels.get($("positionCanvas")).series.length'),1);
+assert.equal(run('chartModels.get($("positionCanvas")).series[0].name'),'回传实际');
+assert.equal(run('chartModels.get($("positionCanvas")).ymin'),-.2);
+assert.equal(run('chartModels.get($("positionCanvas")).ymax'),28.8);
+assert.equal(run('makeMotorSeries().position.length'),5); // Stored/exported data is retained.
+positionChecks[3].checked=false;positionChecks[3].listeners.change();
+assert.equal(run('chartModels.has($("positionCanvas"))'),false);
+for(const input of positionChecks){input.checked=true;input.listeners.change();}
+assert.equal(run('chartModels.get($("positionCanvas")).series.length'),5);
 assert(get('sessionStats').innerHTML.includes('回传帧'));
 assert(!get('sessionStats').innerHTML.includes('<img'));
 assert.equal(get('motor').options.length,21);
@@ -122,8 +135,8 @@ consume({type:'telemetry',t:.01,seq:3,hand_side:'left',accepted:true,linear:[{po
 consume({type:'mediapipe_raw',t:0,world_landmarks:[],normalized_landmarks:[]});
 run('selectLoadedData()');
 assert.equal(get('handSide').value,'left');
-assert.equal(get('stageConversion').checked,true);
-assert.equal(run('makeJointSeries().find(s=>s.name.includes("转换输入HW")).points[0][1]'),.4);
+assert.equal(run('makeJointSeries().some(s=>s.points.length)'),false); // Conversion is auxiliary, not a pipeline angle stage.
+assert(!html.includes('id="stageConversion"'));
 assert.equal(run('makeMotorSeries().current[0].points.length'),1);
 assert(get('dataNotice').textContent.includes('未检测到手'));
 assert(get('dataNotice').textContent.includes('会话头'));
@@ -225,9 +238,10 @@ consume({type:'direct_filter_detail',t:1.002,filtered_joint_angles_rad:{left_han
 consume({type:'h7',t:1.002,direct_mode:true,joints_ui:{left_hand_mid_PIP_joint:.25},joints_ruckig_ui:{left_hand_mid_PIP_joint:.25}});
 get('finger').value='mid';run('selectLoadedData()');
 for(const wrapper of get('jointChecks').children)for(const input of wrapper.children)if(typeof input==='object')input.checked=input.value==='mid_PIP';
-get('stageFilterCandidate').checked=true;get('stageRuckig').checked=true;
-assert(run('makeJointSeries().some(s=>s.name.includes("直接滤波")&&s.points.some(p=>p[1]===.25))'));
-assert(run('makeJointSeries().some(s=>s.name.includes("滤波候选")&&s.points.some(p=>p[1]===.27))'));
+get('stageDirect').checked=true;get('stageRuckig').checked=true;
+assert(run('makeJointSeries().some(s=>s.name.includes("数据直出")&&s.points.some(p=>p[1]===.25))'));
+assert(!html.includes('id="stageFilterCandidate"'));
+assert(run('makeJointSeries().find(s=>s.stage==="mink").points.length')===0);
 assert(run('makeJointSeries().filter(s=>s.name.includes("Ruckig")).every(s=>s.points.length===0)'));
 assert(get('dataNotice').textContent.includes('未写入真机'));
 run('inspectFrame(1.002)');
@@ -474,6 +488,40 @@ for(const model of ['TsenseI_v3_2','TsenseI_v3_2_withid']){
   assert.equal(run('normalizeA32Telemetry(state.telemetry[0])===state.telemetry[0]'),true);
   assert.equal(JSON.stringify(legacy),original);
 }
+// Captured browser batching: transport rows used receipt time while canonical
+// SDK angles retained per-write times. The header was created 13 ms after t=0.
+run('resetData()');
+const batchHeader={type:'session',t:.013,started_at:'2026-10-09T11:48:07.132Z',
+  metadata:{model_id:'TsenseI_v3_2_withid',hand_side:'left'}};
+consume(batchHeader);
+const batchOrigin=1791546487119;
+const batchedWrites=[1791546499114.0715,1791546499116.0933].map((sent_at_unix_ms,i)=>({
+  type:'h7',t:12.032,seq:3423+i*3,tick:501+i,sample_ticks:501+i,source:'a32_sdk_successful_write',
+  sent:true,sent_at_unix_ms,self:[10.105538496415798-i*.009973616883503],mit_pos:[0,0]}));
+for(const row of batchedWrites){
+  consume(row);
+  consume({type:'joint_angles',stage:'sdk',t:(row.sent_at_unix_ms-batchOrigin)/1000,seq:row.seq+2,
+    tick:row.tick,sent:true,source:row.source,sent_at_unix_ms:row.sent_at_unix_ms,joints:{left_hand_pinky_DIP_joint:.5}});
+}
+run('selectLoadedData()');
+assert.equal(run('state.downlink.length'),2);
+assert.equal(run('state.downlink[0].t'),(batchedWrites[0].sent_at_unix_ms-batchOrigin)/1000);
+assert.equal(run('state.downlink[1].t'),run('angleStages.sdk[1].t'));
+assert.equal(run('state.h7[0].t'),run('state.downlink[0].t'));
+assert.equal(run('state.downlink[0].recorded_t'),12.032);
+assert.equal(run('state.downlink[0].self[0]'),batchedWrites[0].self[0]);
+assert.equal(batchedWrites[0].t,12.032);
+assert(get('dataNotice').textContent.includes('还原 2 条 SDK 下发记录'));
+const restoredDownlink=run('JSON.stringify(state.downlink)');
+run('selectLoadedData()');assert.equal(run('JSON.stringify(state.downlink)'),restoredDownlink);
+// Legacy files without canonical SDK angles use the session clock origin.
+run('resetData()');consume(batchHeader);batchedWrites.forEach(consume);run('selectLoadedData()');
+assert.equal(run('state.downlink[0].t'),(batchedWrites[0].sent_at_unix_ms-batchOrigin)/1000);
+// Already fixed downloads need no correction marker.
+run('resetData()');consume(batchHeader);
+consume({...batchedWrites[0],t:(batchedWrites[0].sent_at_unix_ms-batchOrigin)/1000});run('selectLoadedData()');
+assert.equal(run('state.downlink[0].recorded_t'),undefined);
+
 // Browser A3.2 downloads use native SDK snapshots and joint-keyed conversions.
 run('resetData()');
 consume({type:'session',metadata:{model_id:'TsenseI_v3_2_withid',hand_side:'left'}});
@@ -574,6 +622,119 @@ for(const model of ['TsenseI_v3_0','TsenseI_v3_0_withid'])for(const side of ['le
   consume({type:'serial_disconnect',t:3,hand_side:side,first_error:'synthetic lost link'});
   run('inspectFrame(3)');assert.equal(JSON.parse(get('frameDetail').textContent).other_event.first_error,'synthetic lost link');
 }
+// Five joint-angle stages coexist with the original auxiliary data panels.
+assert.deepEqual([...html.matchAll(/id="(stage[^\"]+)"/g)].map(m=>m[1]),
+  ['stageRetarget','stageDirect','stageRuckig','stageMink','stageH7']);
+assert.equal(run('eventWallMillis({t:1,sent_at_unix_ms:1780000000123.5})'),1780000000123.5);
+assert.equal(run('eventWallSource({t:1,sent_at_unix_ms:1780000000123.5})'),'recorded_host_time');
+for(const stage of ['stageControl','stageFilterCandidate','stageConversion','stageMediaPipeAngle','stageDirectFilter'])assert(!html.includes(`id="${stage}"`));
+for(const model of ['TsenseI_v3_0','TsenseI_v3_0_withid','TsenseI_v3_2','TsenseI_v3_2_withid','TsenseI_v2'])for(const side of ['left','right']){
+  run('resetData()');get('finger').value='index';
+  consume({type:'session',schema:'hand-control-session/v2',started_at:sessionStart,metadata:{model_id:model,hand_side:side}});
+  for(const [i,stage] of ['retarget','direct','ruckig','mink','sdk'].entries()){
+    consume({type:'joint_angles',stage,t:2+i*.01,frame_id:99,model_id:model,hand_side:side,
+      joints:{[`${side}_hand_index_swing_joint`]:i*.1},...(stage==='sdk'?{sent:true}:{}),landmarks:['not an angle payload']});
+  }
+  for(const sent of [false,undefined,1])consume({type:'joint_angles',stage:'sdk',t:3,hand_side:side,joints:{[`${side}_hand_index_swing_joint`]:9},sent});
+  consume({type:'a32_sdk_sample',t:3,hand_side:side,sent:true,hardware:{connected:false}});
+  consume({type:'control_target',t:3,hand_side:side,joints:{[`${side}_hand_index_swing_joint`]:9}});
+  consume({type:'conversion',t:3,hand_side:side,joints_hw:{[`${side}_hand_index_swing_joint`]:9},linear_mm:[2],rotary_deg:[3]});
+  consume({type:'telemetry',t:3,hand_side:side,accepted:true,linear:[{pos_act_mm:1,pos_ref_mm:2,iq_meas:4,mcu_temp_c:35}],rotary:[]});
+  run('selectLoadedData();inspectFrame(2)');
+  assert.equal(get('handSide').value,side);
+  assert.equal(run('makeJointSeries().length'),5);
+  assert.equal(run('makeJointSeries().filter(s=>s.points.length===1).length'),5);
+  assert.equal(run('angleStages.sdk.length'),1);
+  assert.equal(run('angleStages.mink.length'),1);
+  assert.equal(run('angleStages.retarget[0].landmarks'),undefined);
+  assert.equal(run('state.conversion.length'),1);assert.equal(run('state.telemetry.length'),1);
+  assert.equal(run('chartModels.get($("jointCanvas")).fullXmax'),3);
+  const detail=JSON.parse(get('frameDetail').textContent);
+  assert.equal(detail.joint_angle_stages.sdk.sent,true);assert.equal(detail.joint_angle_stages.retarget.frame_id,99);
+  assert(!get('dataNotice').textContent.includes('文件已读取，但没有动作'));
+  get('exportJoints').click();
+}
+const jointExport=exported;
+run('resetData()');get('finger').value='index';
+consume({type:'session',metadata:{model_id:'TsenseI_v3_2',hand_side:'right'}});
+consume({type:'joint_angles',stage:'ruckig',t:4,model_id:'TsenseI_v3_2',joints:{left_hand_index_swing_joint:0}});
+consume({type:'joint_angles',stage:'ruckig',t:4.1,joints:{left_hand_index_swing_joint:null}});
+consume({type:'joint_angles',stage:'ruckig',t:4.2,joints:{left_hand_index_swing_joint:.2}});
+consume({type:'joint_angles',stage:'conversion',t:4.3,joints:{left_hand_index_swing_joint:4}});
+run('selectLoadedData()');
+assert.equal(get('handSide').value,'left');
+assert.equal(run('angleStages.ruckig.length'),3);
+assert.equal(run('JSON.stringify(seriesSegments(makeJointSeries().find(s=>s.stage==="ruckig")).map(s=>s.length))'),'[1,1]');
+assert.equal(run('makeJointSeries().find(s=>s.stage==="ruckig").sampleAt(4.1)'),null);
+assert(get('dataNotice').textContent.includes('Mink 输出'));
+assert(get('dataNotice').textContent.includes('会话头'));
+assert.equal(run('angleStages.mink.length'),0);
+assert.equal(run('angleStages.sdk.length'),0);
+consume({type:'direct_command',t:5,hand_side:'left',joints:{left_hand_index_swing_joint:.3}});
+consume({type:'h7',t:5.01,hand_side:'left',direct_mode:false,sent:false,joints_ui:{left_hand_index_swing_joint:8},joints_ruckig_ui:{left_hand_index_swing_joint:.4}});
+consume({type:'h7',t:5.02,hand_side:'left',direct_mode:true,sent:true,joints_ui:{left_hand_index_swing_joint:.5},joints_ruckig_ui:{left_hand_index_swing_joint:8}});
+assert.equal(run('angleStages.direct.length'),1);
+assert.equal(run('angleStages.ruckig.at(-1).joints.left_hand_index_swing_joint'),.4);
+assert.equal(run('angleStages.sdk.length'),1);
+assert.equal(run('angleStages.sdk[0].joints.left_hand_index_swing_joint'),.5);
+run('resetData()');assert.equal(run('Object.values(angleStages).flat().length'),0);
+jointExport.text().then(csv=>{
+  assert(csv.includes('"stage","t_s","frame_id","hand_side","model_id","joint","angle_rad","sent"'));
+  const rows=csv.replace(/^\uFEFF/,'').split(/\r?\n/);
+  assert.equal(rows.length,6);assert.equal(rows.filter(r=>r.startsWith('"sdk"')).length,1);
+  assert(!csv.includes('landmarks'));
+}).catch(error=>{console.error(error);process.exitCode=1;});
+
+// SDK 1.1.15 values are already amperes. Preserve old SELF values/units even
+// under a newer header, and never join different units into one curve.
+const currentUnitExports=[];
+for(const model of ['TsenseI_v3_2','TsenseI_v3_2_withid']){
+  run('resetData()');
+  consume({type:'session',metadata:{model_id:model,hand_side:'left',telemetry_format:'a32-native-sdk-state/v2',
+    telemetry_units:{self_current:'A',external_current:'A'}}});
+  const sample=(t,format,unit,value)=>({type:'telemetry',t,hand_side:'left',linear_feedback_sign:-1,
+    ...(format?{telemetry_format:format}:{}),linear:[{channel:'self',online:true,measurement_valid:true,
+      position:1,pos_act_mm:-1,iq_meas:value,iq_ref:value*2,...(unit?{current_unit:unit}:{})}],rotary:[]});
+  consume(sample(0,'a32-native-sdk-state/v1',null,-100));
+  consume(sample(1,'a32-native-sdk-state/v2','A',-.1374));
+  consume(sample(2,null,null,-120));
+  // Re-exported legacy captures use v2 with explicit native units.
+  consume(sample(3,'a32-native-sdk-state/v2','SDK native',-130));
+  get('motor').value='linear:0';run('selectLoadedData()');
+  assert.equal(run('motorCurrentUnit(state.telemetry[0],"linear",0)'),'SDK native');
+  assert.equal(run('motorCurrentUnit(state.telemetry[1],"linear",0)'),'A');
+  assert.equal(run('motorCurrentUnit(state.telemetry[2],"linear",0)'),'SDK native');
+  assert.equal(run('motorCurrentUnit(state.telemetry[3],"linear",0)'),'SDK native');
+  assert.equal(run('makeMotorSeries().current.find(s=>s.name==="实测 iq / A").points[0][1]'),-.1374);
+  assert.equal(run('makeMotorSeries().current.find(s=>s.name==="实测 iq / A").sampleAt(2)'),null);
+  assert.equal(run('JSON.stringify(seriesSegments(makeMotorSeries().current.find(s=>s.name==="实测 iq / 协议原值")).map(s=>s.length))'),'[1,2]');
+  assert(run('motorCurrentAxisUnit()').includes('不可直接比较'));
+  assert(get('dataNotice').textContent.includes('找零 Iq 参数仍为码值'));
+  get('exportMotor').click();currentUnitExports.push(exported);
+  const modern={connected:true,telemetry_age_ms:1,telemetry_format:'a32-native-sdk-state/v2',
+    telemetry_units:{self_current:'A',external_current:'A'},self:[{online:true,position:1,iq:-.1374,iq_ref:.2748,current_unit:'A'}]};
+  consume({type:'a32_sdk_sample',t:4,hardware:modern});
+  assert.equal(run('motorCurrentUnit(state.telemetry.at(-1),"linear",0)'),'A');
+  assert.equal(run('state.telemetry.at(-1).linear[0].iq_meas'),-.1374);
+}
+Promise.all(currentUnitExports.map(blob=>blob.text())).then(csvs=>{
+  for(const csv of csvs){
+    const [header,...events]=csv.replace(/^\uFEFF/,'').split(/\r?\n/).map(line=>line.split(',').map(value=>value.replace(/^"|"$/g,'')));
+    const index=Object.fromEntries(header.map((name,i)=>[name,i]));
+    assert.equal(events.length,4);
+    for(const t of [0,2,3]){
+      const row=events.find(event=>event[index.t_s]===String(t));
+      assert.equal(row[index.current_unit],'SDK native');
+      assert.equal(row[index.iq_measured_native],String([-100,0,-120,-130][t]));
+      assert.equal(row[index.iq_measured_a],'');
+    }
+    const row=events.find(event=>event[index.t_s]==='1');
+    assert.equal(row[index.current_unit],'A');assert.equal(row[index.iq_measured_a],'-0.1374');
+    assert.equal(row[index.iq_ref_a],'-0.2748');assert.equal(row[index.iq_measured_native],'');
+    assert.equal(row[index.iq_ref_native],'');
+  }
+}).catch(error=>{console.error(error);process.exitCode=1;});
+
 Promise.all([a32Export.text(),...missingTelemetryExports.map(blob=>blob.text())]).then(([csv,...gapCsvs])=>{
   assert(csv.includes('"wall_time","wall_time_unix_ms","wall_time_source","control_period_ms"'));
   assert(csv.includes('"2026-09-28T06:00:01.001Z","'+(epoch+1001.25)+'","recorded_host_time"'));

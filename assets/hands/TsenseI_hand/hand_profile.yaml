@@ -19,9 +19,11 @@ fixed_joints:
   left_hand_pinky_rota_joint: 0.0
 retarget:
   pinch_enabled: true
-  pinch_full_ratio: 0.08
+  pinch_full_ratio: 0.15
+  pinch_index_full_ratio: 0.15
   pinch_start_ratio: 0.50
   pinch_weight: 65.0
+  pinch_index_weight: 65.0
   # Keep small historical priors: strong priors plus collision feedback cause
   # slow fist-to-open response. Desktop Form3 defaults use the same values.
   lambda_smooth: 0.1

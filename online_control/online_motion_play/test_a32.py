@@ -66,7 +66,9 @@ class FakeDevice:
         self.enabled = True
 
     def starting_pose(self, fallback_pose=None):
-        return dict(self.pose if self.ready else fallback_pose)
+        if not self.ready:
+            raise ValueError("A3.2 起步需要完整有效的反馈")
+        return dict(self.pose)
 
     def send_joint_targets(self, pose, *, clamp):
         assert clamp is True
@@ -96,9 +98,9 @@ def test_playback_uses_shared_motion_limits(tmp_path, model_id, side):
     value = A32Session(tmp_path, side, model_id=model_id,
                        device=FakeDevice(side, model_id), clock=Clock(), start=False)
     try:
-        assert value.input.max_velocity == [10.] * 20
-        assert value.input.max_acceleration == [80.] * 20
-        assert value.input.max_jerk == [200.] * 20
+        assert value.input.max_velocity == [20.] * 20
+        assert value.input.max_acceleration == [400.] * 20
+        assert value.input.max_jerk == [2400.] * 20
         assert value.planner.delta_time == .01
     finally:
         value.close()
@@ -176,29 +178,18 @@ def test_control_checkbox_waits_for_explicit_target_without_sending(tmp_path, mo
         value.close()
 
 
-def test_no_feedback_allows_enable_realtime_and_synchronized_playback(session):
+@pytest.mark.parametrize("control", ["a32Enable", "realtimeJointControl", "isConnectOffline"])
+def test_no_feedback_blocks_enable_realtime_and_synchronized_playback(session, control):
     session.device.ready = False
     session.dispatch("connect", {})
     widget(session, session.names[0], .2)
-    fallback = dict(session.pose)
-    widget(session, "a32Enable")
-    assert session.snapshot()["controls"]["realtimeJointControl"]["enabled"]
-    assert session.snapshot()["controls"]["isConnectOffline"]["enabled"]
-    widget(session, "realtimeJointControl", True)
-    assert session.pose == fallback
-    widget(session, session.names[0], .4)
-    tick(session)
-    assert session.armed and session.device.calls[-1][0] == "send"
-    widget(session, "isConnectOffline", True)
-    pose = {**session.pose, session.names[0]: .3}
-    session.persist({"one": {"pose": pose, "transition": .4, "interval": 0}})
-    widget(session, "motionstreamplay")
-    for _ in range(500):
-        tick(session)
-        if not session.playback:
-            break
-    assert session.armed and session.sync and not session.playback
-    assert session.device.calls[-1][1] == pytest.approx(pose)
+    before = list(session.device.calls)
+    with pytest.raises(ValueError, match="反馈"):
+        widget(session, control, True)
+    assert not session.armed and session.device.calls == before
+    session.device.ready = True
+    widget(session, control, True)
+    assert session.device.enabled
 
 
 def test_page_hidden_pauses_without_disconnect_and_checkbox_rearms(session):
@@ -439,15 +430,15 @@ def test_legacy_motion_coordinates_convert_once_without_rewriting_source(tmp_pat
         migrated = session.validate_file(payload)
         assert payload == original
         pose = migrated["old"]["pose"]
-        assert pose["left_hand_index_swing_joint"] == pytest.approx(.55 if model_id == "TsenseI_v3_2" else .15)
-        assert pose["left_hand_index_MCP_joint"] == 1.3
+        assert pose["left_hand_index_swing_joint"] == pytest.approx(-.2 if model_id == "TsenseI_v3_2" else .2)
+        assert pose["left_hand_index_MCP_joint"] == 1.4
         assert pose["left_hand_index_DIP_joint"] == 1.565
         assert pose["left_hand_index_PIP_joint"] == .005
         current = session.payload(migrated)
         assert current["_joint_coordinate_version"] == COORDINATE_VERSION
         assert current["_swing_axis_alignment"] == SWING_AXIS_ALIGNMENT
         assert session.validate_file(current) == migrated
-        current["motions"]["old"]["pose"]["left_hand_index_swing_joint"] = -.1
+        current["motions"]["old"]["pose"]["left_hand_index_swing_joint"] = -.4
         with pytest.raises(ValueError):
             session.validate_file(current)
         payload["motions"]["old"]["pose"]["left_hand_index_MCP_joint"] = 999
@@ -457,7 +448,64 @@ def test_legacy_motion_coordinates_convert_once_without_rewriting_source(tmp_pat
         session.close()
 
 
-def test_existing_positive_motion_keeps_numeric_command_when_bare_axis_is_aligned(tmp_path):
+@pytest.mark.parametrize("model_id", MODEL_IDS)
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_mcp_editor_keeps_requested_angles_with_sdk_scaled_downlink(tmp_path, model_id, side):
+    from a32_driver import A32Device
+
+    device = A32Device(side, model_id=model_id)
+    session = A32Session(tmp_path, side, model_id=model_id, device=device, start=False)
+    try:
+        controls = {row["name"]: row for row in session.snapshot()["joints"]}
+        for finger in ("thumb", "index", "mid", "ring", "pinky"):
+            name = f"{side}_hand_{finger}_MCP_joint"
+            assert session.limits[name] == (.005, 1.565)
+            assert (controls[name]["min"], controls[name]["max"]) == (.005, 1.565)
+            widget(session, name, 1.565)
+        assert all(session.pose[f"{side}_hand_{finger}_MCP_joint"] == 1.565
+                   for finger in ("thumb", "index", "mid", "ring", "pinky"))
+        pose = dict(session.pose)
+        targets = session._preview_targets(pose)
+        for channel in device.channels:
+            name = channel["joint"]
+            if not name.endswith("_MCP_joint"):
+                continue
+            upper = 1.565
+            assert targets["applied_pose"][name] == pytest.approx(upper, abs=1e-10, rel=0)
+            assert targets["self"][channel["index"]] == pytest.approx(controls[name]["downlink"]["at_ui_max"])
+        assert session.pose == pose
+        assert device._backend is None
+    finally:
+        session.close()
+
+
+@pytest.mark.parametrize("model_id", MODEL_IDS)
+def test_positive_motion_preserves_pose_and_migrates_only_once(tmp_path, model_id):
+    from a32_kinematics.joint_coordinates import POSITIVE_COORDINATE_VERSION, POSITIVE_SWING_AXIS_ALIGNMENT
+    session = A32Session(tmp_path, model_id=model_id, device=FakeDevice(model_id=model_id), start=False)
+    try:
+        for old_angle in (0., .35, .7):
+            pose = {name: old_angle if is_finger_swing(name) else value for name, value in session.pose.items()}
+            data = {"_model_id": model_id, "_hand_side": "left",
+                    "_joint_coordinate_version": POSITIVE_COORDINATE_VERSION,
+                    "_swing_axis_alignment": POSITIVE_SWING_AXIS_ALIGNMENT,
+                    "motions": {"old": {"pose": pose, "transition": .1, "interval": .2}}}
+            original = copy.deepcopy(data)
+            migrated = session.validate_file(data)
+            assert data == original
+            for name, value in migrated["old"]["pose"].items():
+                if is_finger_swing(name):
+                    assert value == pytest.approx(.35 - old_angle)
+            assert session.validate_file(session.payload(migrated)) == migrated
+        for invalid in (-.1, .71, float("nan"), True):
+            data["motions"]["old"]["pose"]["left_hand_index_swing_joint"] = invalid
+            with pytest.raises(ValueError):
+                session.validate_file(data)
+    finally:
+        session.close()
+
+
+def test_existing_signed_motion_keeps_numeric_command(tmp_path):
     device = FakeDevice()
     session = A32Session(tmp_path, device=device, start=False)
     try:
@@ -533,3 +581,49 @@ def test_remote_offline_edit_allowed_but_connected_widget_and_import_rejected(br
     finally:
         bridge.dispatch("disconnect", {})
         bridge.dispatch("model", {"model_id": "TsenseI_v2"})
+
+
+@pytest.mark.parametrize("model_id", MODEL_IDS)
+@pytest.mark.parametrize("control", ["realtimeJointControl", "isConnectOffline"])
+def test_real_driver_reconnect_rebases_playback_from_new_feedback(tmp_path, model_id, control):
+    import sys
+    root = Path(__file__).resolve().parents[2]
+    sys.path.insert(0, str(root / "tests"))
+    from test_a32_driver import SimulatedNativeHand
+    from a32_driver import A32Device
+    case = json.loads((root / "tests/fixtures/a32_reconnect_feedback.json").read_text())
+    backend = SimulatedNativeHand()
+    device = A32Device(model_id=model_id, backend=backend)
+    value = A32Session(tmp_path, model_id=model_id, device=device, clock=Clock(), start=False,
+                       recording_dir=tmp_path / "logs")
+    try:
+        value.dispatch("connect", {})
+        widget(value, control, True)
+        device.send_joint_targets(case["previous_pose"], clamp=False)
+        value.pose = dict(case["previous_pose"])
+        value._reset_planner()
+        value.dispatch("disconnect", {})
+        value.dispatch("connect", {})
+        backend.state = copy.deepcopy(case["feedback"])
+        before = len(backend.calls)
+        widget(value, control, True)
+        seed = dict(value.pose)
+        assert seed == pytest.approx(device.starting_pose())
+        assert value.target_pose == seed
+        for _ in range(3):
+            tick(value)
+        assert backend.calls[before:] == [("enable", True)]
+        target = {**seed, "left_hand_index_PIP_joint": .2}
+        if control == "isConnectOffline":
+            value.persist({"new": {"pose": target, "transition": .1, "interval": 0}})
+            widget(value, "motionstreamplay")
+        else:
+            widget(value, "left_hand_index_PIP_joint", .2)
+        tick(value)
+        own = next(call[1] for call in backend.calls[before:] if call[0] == "targets")
+        for channel in device.channels:
+            if channel["unit"] == "mm":
+                assert own[channel["index"]] < .1
+    finally:
+        value.close()
+    assert ("estop",) not in backend.calls and ("enable", False) not in backend.calls

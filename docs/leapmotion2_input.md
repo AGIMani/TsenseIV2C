@@ -1,4 +1,99 @@
-# Leap Motion Controller 2：第四种 21 点输入
+# Leap Motion Controller 2：骨架与相机输入
+
+## 红外相机 → MediaPipe（2026-10-10）
+
+工作台和动态标定页新增 **Leap Motion 2 相机 · MediaPipe · 120 fps**。
+先停止当前输入，再选择此项并开始识别。也可打开
+`https://127.0.0.1:8766/?source=leapmotion_camera`；相机检查页是
+`https://127.0.0.1:8766/leap-camera-preview.html`，支持红外画面、21 点叠加和独立帧率统计。
+设备接在运行服务的 Ubuntu 电脑上，仍使用 `bash migration/ubuntu/start-track.sh` 启动。
+
+此入口通过 LeapC `eLeapPolicyFlag_Images` 读取相机 0（左路）的 8 位灰度图像，
+复制原生缓冲区后送入网页现有 MediaPipe Worker。灰度扩展为 RGB，21 点与三维估计
+均来自 MediaPipe；原有 **Leap Motion 2 · 红外追踪** 仍使用官方原生骨架。
+接入依据见 [官方图像接口说明](https://docs.ultraleap.com/api-reference/tracking-api/leapc-guide/images.html)。
+当前使用原始广角红外图，尚未做畸变校正或左右双目三角测量；Z 坐标是模型估计，
+提高采集帧率不等于提高深度精度，边缘画面和遮挡下的效果需要单独测量。
+
+相机连接在 HMD 模式下请求 `fast_hand_motion`、`high_hand_fidelity`，
+通过 `LeapSetDeviceHints` 提交，以 `NULL` 结束数组。原有骨架入口保持只请求
+`high_hand_fidelity`。这些 [Hints](https://docs.ultraleap.com/api-reference/tracking-api/group/group___hints.html)
+是服务偏好，不是强制设置摄像头帧率的 API，也不能宣称已被采纳。
+
+- 120 fps 采集需要 USB 3 数据线和接口，实际协商速度可用 `lsusb -t` 检查。
+- 页面分别显示相机采集 FPS 和 MediaPipe 识别 FPS；后者取决于浏览器、GPU 与负载，不能保证 120 次推理/秒。
+- 采集与推理并行，只保留最新图像。不会重复旧图来凑帧，也不受显示器 60 Hz 刷新率限流。
+- 图像超过 350 ms、设备断开或停止会话时不再输出该图像的手部结果。最后一个相机会话停止后释放应用的 LeapC 连接。
+- 采集统计按实际收到的 ImageEvent 计算，窗口约 2 秒，至少测量 1 秒才显示。
+  低于目标 98% 会提示未达目标；小幅抖动仍显示实际测量值。
+- 浏览器需要支持 MediaPipe 图像处理所需的 WebGL；GPU 不可用时会尝试现有 CPU 回退。
+  若回退也失败，相机检查页保留红外预览并明确显示“MediaPipe 未运行”，不会把采集成功当成识别成功。
+
+本机 USB 3 / 5 Gbps 的 10 秒 HTTP 实测：512×512，收到 1,196 幅独立图像；
+稳定段传输 119.35 fps，末次采集 119.37 fps，重复帧 0，图像龄期中位数 9.11 ms。
+数据保存在 `runtime/ubuntu/leap-camera-benchmark.json`。这是一次短时测量，不代表持续负载下每个时刻都能达到 120 fps。
+本次 Codex 内嵌浏览器禁用 WebGL，已验证实拍画面，但网页 MediaPipe 端到端性能仍需在可用的 GPU 浏览器中验证。
+另外，将用户放入视野的手掌采样 6 帧，使用工作台同一份 `hand_landmarker.task`
+和临时目录中的 MediaPipe 1.0.1 CPU 运行时离线检测，6/6 均输出左手的完整 21 点，
+单次推理 22.41–27.71 ms。这不是网页实时 FPS，也不是 120 fps 推理验证。
+结果见 `runtime/ubuntu/leap-camera-mediapipe-check.json`；临时检测依赖未安装到 track/play 环境。
+
+补充延迟测量：以 Leap 图像原生时间戳为起点，经过正式 HTTPS 图像接口、灰度转 RGB，
+到本机 MediaPipe CPU 返回结果为终点，8 秒采样 486 帧。跳过前 5 帧后总延迟中位数
+31.94 ms、P95 36.43 ms；图像收到时的龄期中位数 17.31 ms，推理中位数 13.43 ms。
+此次实时采样未检出手，因此不能将该数字当成有手时的总延迟。
+结合此前有手的 22–28 ms 推理耗时，有手全链路可粗估为 39–45 ms，但仍需同步实测。
+不包含重定向求解、机械手下发或机械响应，也不是网页 Worker 的延迟。
+完整统计见 `runtime/ubuntu/leap-camera-latency.json`。
+
+接口：创建 `/api/session` 时传 `input_source: "mediapipe"`、
+`camera_source: "leapmotion_camera"`；`POST /api/leap-camera/frame` 传
+`session` 和上次 `after_revision`（初次为 -1）。二进制响应为 4 字节小端 JSON 长度、
+UTF-8 元数据、`width × height` 个 gray8 像素；`has_frame: false` 时像素为空。
+该接口复用同源/会话校验。推理结果仍走 `/api/frame`，附带 `source_metadata.camera`；
+停止沿用 `/api/stop`，标定页冻结输入也会释放相机。
+
+## 原生 Ubuntu Hint 配置（2026-10-09）
+
+工作台使用头显模式 `TrackingMode.HMD`，通过同一条启用 `multi_device_aware`
+的 LeapC 采集连接，在设备打开、订阅并设为 primary 后，先请求 HMD，再调用
+`LeapSetDeviceHints`，只发送 `high_hand_fidelity`（`LEAP_HINT_HIGH_HAND_FIDELITY`）。
+请求列表位于 `leapmotion_source.py` 的 `DEVICE_HINTS`；每次设备/服务重连后重新设置模式和 Hint。
+绑定未导出该字符串宏，因此使用头文件对应的 ASCII 字符串；CFFI 为字符串自动补 NUL，
+并以 `ffi.NULL` 结束 `const char*[]` 数组。对应的原生调用为：
+
+```c
+LeapSetTrackingMode(connection, eLeapTrackingMode_HMD);
+const char *hints[] = { LEAP_HINT_HIGH_HAND_FIDELITY, NULL };
+LeapSetDeviceHints(connection, device, hints);
+```
+
+设备应按头显方式朝向前方手部操作区域。Hint 是追踪偏好，服务决定实际使用的模型；
+它不是 Z 轴校准参数，不能替代实际精度测量。
+`source_metadata.device_hints` 返回 requested、status、error、device_id 和 effective：
+`submitted_unverified` 仅表示 LeapC 调用成功，effective 保持 null；
+`request_failed` 表示调用失败，错误会记录，但骨架采集继续。
+只订阅第一台枚举到的设备，避免多个相机的时钟和手部身份混入同一条骨架流。
+
+启动方式仍为 `bash migration/ubuntu/start-track.sh`。track 启动器和 binding 安装器设置
+Linux LeapC 动态库搜索路径；仅在 track 环境安装 binding，不影响 play 环境。
+这些 Hint 是连接期间的 API 请求，不是 `/etc/ultraleap/hand_tracker_config.json` 配置键。
+
+本机实测（2026-10-09 18:53，原生 Ubuntu 24.04 / Linux 服务 6.2.0 / LMC2）：
+`get_tracking_mode()` 返回 `TrackingMode.HMD`，服务日志记录
+`HintResolver accepted hints: high_hand_fidelity`，选择 `ldat-436727.ldat`。
+20 秒内收到 1,721 个追踪事件，包含手部检测，单条连接未中断。
+随后通过实际工作台 HTTPS 接口进行两轮各 12 秒的启停采集，均收到持续递增的帧序号，
+没有采集错误；每轮日志均再次确认 HMD 和高保真 Hint。该两轮未检测到所选右手。
+当前链路协商为 USB 2.0 / 480 Mbps，服务设置为 `256x512x90`、90 fps；
+服务也明确提示 USB 2.0 会降低追踪质量，应使用 USB 3 数据线和接口。
+此前日志曾记录视频接收失败、缺失帧后重置设备；本次短时恢复不能证明长期稳定性或深度精度。
+关闭诊断连接后，该连接的 Hint 不再参与选择；工作台下次开始识别时自动重提。
+本次相关 Python 回归 273 项、网页输入 JavaScript 测试 19 项及 track 启动检查通过。
+
+参考：[官方 Hint 列表](https://docs.ultraleap.com/api-reference/tracking-api/group/group___hints.html)、
+[接口约束](https://docs.ultraleap.com/api-reference/tracking-api/group/group___functions.html)、
+[模型适用范围](https://docs.ultraleap.com/hand-tracking/Hyperion/trackingmodels.html)。
 
 网页手势映射工作台及 `/calibration` 动态标定页新增 **Leap Motion 2**，来源标识为 `leapmotion`，与 MediaPipe、Quest WebXR、Wuji 手套并列。设备连接到运行 Python 网页服务的 Linux 主机，浏览器读取该服务收到的骨架；浏览器所在电脑的 USB 设备不会自动传给服务器。
 
@@ -8,7 +103,7 @@ Leap Motion Controller 2
     → 米制 21 点 → 现有输入验证与 retarget → 模型预览 / 原有控制流程
 ```
 
-适配器面向原生 Ubuntu，默认桌面放置（`TrackingMode.Desktop`）。Python binding 是可选依赖，只在开始读取 Leap 输入时导入；普通服务启动和其他输入源不要求安装它。接入采集不等于开启机械手输出，实物连接与下发仍由工作台原有操作决定。
+适配器面向原生 Ubuntu，当前使用头显模式（`TrackingMode.HMD`）。Python binding 是可选依赖，只在开始读取 Leap 输入时导入；普通服务启动和其他输入源不要求安装它。接入采集不等于开启机械手输出，实物连接与下发仍由工作台原有操作决定。
 
 ## 适用环境与当前验证范围
 

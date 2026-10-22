@@ -8,8 +8,9 @@ const base = process.env.WEB_URL || 'http://127.0.0.1:8872';
 const output = fileURLToPath(new URL('../../../logs/a32_integration_qa/', import.meta.url));
 await mkdir(output, {recursive: true});
 const browser = await chromium.launch({headless: true,
-  executablePath: process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
-  args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream']});
+  ...(process.env.CHROME_PATH ? {executablePath: process.env.CHROME_PATH} : {}),
+  args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream',
+    '--use-angle=swiftshader', '--enable-unsafe-swiftshader']});
 const errors = [];
 const page = await browser.newPage({viewport: {width: 1440, height: 1100}});
 page.on('pageerror', error => errors.push(error.message));
@@ -24,11 +25,13 @@ try {
     assert.equal(await page.locator('#collision-mode').inputValue(), 'stop');
     await page.screenshot({path: `${output}/${model}-left.png`, fullPage: true});
     // A local session owns its SDK instance, but creation is preview-only.
-    const lifecycle = await page.evaluate(async model => {
+    // This explicit API session has no UI heartbeat. Make its requests from
+    // Node so real mesh rendering cannot consume the 3-second idle lease.
+    const lifecycle = await (async () => {
       const post = async (path, data) => {
-        const r = await fetch(path, {method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data)});
+        const r = await page.request.post(base + path, {data, headers: {Origin: new URL(base).origin}});
         const result = await r.json();
-        if (!r.ok) throw new Error(result.error);
+        if (!r.ok()) throw new Error(result.error);
         return result;
       };
       const created = await post('/api/session', {model_id: model, side: 'left', recording: false, collision_mode: 'stop'});
@@ -37,7 +40,7 @@ try {
         capture_unix_ms: Date.now(), camera_size: [640, 480], hand: null});
       await post('/api/stop', {session: created.session});
       return {created, status, frame};
-    }, model);
+    })();
     assert.equal(lifecycle.status.connected, false);
     assert.equal(lifecycle.status.armed, false);
     assert.equal(lifecycle.frame.tracking, false);
@@ -60,4 +63,8 @@ try {
   }
   assert.deepEqual(errors, []);
   console.log('A32_BROWSER_OK: both models, real meshes, left/right, SDK panel, camera inference/frame/stop, session, missing-hand hold, mobile layout');
+} catch (error) {
+  console.error({errors, state: await page.locator('#camera-state').textContent(),
+    notice: await page.locator('#notice').textContent()});
+  throw error;
 } finally { await browser.close(); }

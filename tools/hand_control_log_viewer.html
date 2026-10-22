@@ -26,6 +26,8 @@
     .controls { display:grid; gap:13px; align-content:start; }
     .checks { display:flex; flex-wrap:wrap; gap:8px 14px; }
     .chart { min-width:0; }
+    .chart-legend { display:flex; flex-wrap:wrap; gap:6px 18px; margin:0 0 10px; font-size:12px; }
+    .chart-legend i { display:inline-block; width:14px; height:3px; vertical-align:middle; margin-right:6px; }
     .canvas-wrap { position:relative; width:100%; height:360px; }
     .canvas-wrap.mp { height:280px; }
     .canvas-wrap canvas { position:absolute; inset:0; display:block; width:100%; height:100%; border-radius:9px; }
@@ -54,7 +56,7 @@
 <body>
 <main>
   <h1>手部控制全链路数据查看器</h1>
-  <div class="hint">本页完全本地运行。选择 <code>E:\TsenseI_hand_logs\A30、A32、V2</code> 中的日志（可多选），文件不会上传。</div>
+  <div class="hint">本页完全本地运行。选择 A30、A32、V2 日志目录中的文件（可多选），文件不会上传。</div>
 
   <details class="panel " open data-fold="section-1"><summary>日志选择与视图设置</summary><div class="fold-body toolbar">
     <label>数据文件 <input id="file" type="file" multiple accept=".jsonl,.json,text/plain"></label>
@@ -82,7 +84,7 @@
         <button id="usageOpenLog" type="button">打开所选日志</button>
       </div>
       <div class="chart-tools">
-        <label>日志父目录 <input id="usageParentPath" type="text" autocomplete="off" placeholder="例如 E:\TsenseI_hand_logs"></label>
+        <label>日志父目录 <input id="usageParentPath" type="text" autocomplete="off" placeholder="日志父目录的 Linux 绝对路径"></label>
         <button id="usageSaveParent" type="button">确认并创建 A30 / A32 / V2</button>
         <span id="usageLogParent" class="hint"></span>
       </div>
@@ -111,14 +113,11 @@
         </select>
       </label>
       <div><div class="hint">阶段</div><div class="checks">
-        <label><input id="stageRetarget" type="checkbox" checked>Retarget 原始输出</label>
-        <label><input id="stageH7" type="checkbox" checked><span id="h7StageLabel">H7 下发（UI 空间）</span></label>
-        <label><input id="stageControl" type="checkbox">物理处理后控制目标</label>
-        <label><input id="stageRuckig" type="checkbox">Ruckig 输出（限幅前）</label>
-        <label><input id="stageDirectFilter" type="checkbox" checked>直接滤波输出（碰撞后）</label>
-        <label><input id="stageFilterCandidate" type="checkbox">滤波候选（碰撞前，状态采样）</label>
-        <label><input id="stageConversion" type="checkbox">角度转换输入（HW 空间）</label>
-        <label title="正常屈曲为正，反向伸展为负"><input id="stageMediaPipeAngle" type="checkbox">输入骨架带符号角</label>
+        <label><input id="stageRetarget" type="checkbox" checked>MediaPipe → Retarget</label>
+        <label><input id="stageDirect" type="checkbox" checked>数据直出（如有）</label>
+        <label><input id="stageRuckig" type="checkbox" checked>Ruckig 输出</label>
+        <label><input id="stageMink" type="checkbox" checked>Mink 输出（如有）</label>
+        <label><input id="stageH7" type="checkbox" checked><span id="h7StageLabel">SDK 下发（关节空间）</span></label>
       </div></div>
       <div><div class="hint">关节（可多选）</div><div id="jointChecks" class="checks"></div></div>
       <div id="jointStats" class="metrics"></div>
@@ -131,6 +130,7 @@
         <button id="jointZoomReset" type="button">复位</button>
         <span id="jointRange" class="range-label">全范围</span>
       </div>
+      <div id="jointLegend" class="chart-legend" aria-label="关节角曲线图例"></div>
       <div class="canvas-wrap">
         <canvas id="jointCanvas" class="plot-base"></canvas>
         <canvas id="jointCrosshair" class="crosshair-layer"></canvas>
@@ -181,6 +181,7 @@
       <label>时间 / s <input id="inspectTime" type="number" min="0" step="0.001" value="0"></label>
       <button id="inspect" type="button">查看此时数据</button>
       <button id="exportMotor" type="button">导出所选电机 CSV</button>
+      <button id="exportJoints" type="button">导出所选关节 CSV</button>
     </div>
     <pre id="frameDetail" style="white-space:pre-wrap;max-height:420px;overflow:auto">加载日志后可检查识别帧、转换、下发和回传原始字段。</pre>
   </div></details>
@@ -273,19 +274,20 @@ const FINGERS = {
   ring:  [["ring_swing","摆动 swing"],["ring_MCP","MCP"],["ring_PIP","PIP"],["ring_DIP","DIP"]],
   pinky: [["pinky_rota","旋转 rota"],["pinky_swing","摆动 swing"],["pinky_MCP","MCP"],["pinky_PIP","PIP"],["pinky_DIP","DIP"]]
 };
-const MP_ANGLE_TRIPLETS = {
-  thumb_MCP:[1,2,3], thumb_PIP:[2,3,4],
-  index_MCP:[0,5,6], index_PIP:[5,6,7], index_DIP:[6,7,8],
-  mid_MCP:[0,9,10], mid_PIP:[9,10,11], mid_DIP:[10,11,12],
-  ring_MCP:[0,13,14], ring_PIP:[13,14,15], ring_DIP:[14,15,16],
-  pinky_MCP:[0,17,18], pinky_PIP:[17,18,19], pinky_DIP:[18,19,20]
-};
 const MP_NAMES = ["腕 wrist","拇指 CMC","拇指 MCP","拇指 IP","拇指指尖","食指 MCP","食指 PIP","食指 DIP","食指指尖","中指 MCP","中指 PIP","中指 DIP","中指指尖","无名指 MCP","无名指 PIP","无名指 DIP","无名指指尖","小指 MCP","小指 PIP","小指 DIP","小指指尖"];
 const WEBXR_NAMES = ["wrist", "thumb-metacarpal", "thumb-phalanx-proximal", "thumb-phalanx-distal", "thumb-tip",
   ...["index-finger", "middle-finger", "ring-finger", "pinky-finger"].flatMap(finger=>
     ["metacarpal", "phalanx-proximal", "phalanx-intermediate", "phalanx-distal", "tip"].map(joint=>`${finger}-${joint}`))];
 const COLORS = ["#54d4a0","#ffbe76","#74b9ff","#ff7675","#a29bfe","#00cec9","#fd79a8","#ffeaa7","#81ecec","#fab1a0"];
 const state = { meta:null, retarget:[], skipped:[], planner:[], h7:[], mp:[], raw:[], control:[], filtered:[], filterDetail:[], conversion:[], downlink:[], telemetry:[], board:[], sdk:[], sdkEvents:[], events:[], end:null, counts:{}, inferredModel:null };
+const JOINT_STAGES = [
+  {key:"retarget",id:"stageRetarget",label:"MediaPipe → Retarget"},
+  {key:"direct",id:"stageDirect",label:"数据直出"},
+  {key:"ruckig",id:"stageRuckig",label:"Ruckig 输出"},
+  {key:"mink",id:"stageMink",label:"Mink 输出"},
+  {key:"sdk",id:"stageH7",label:"SDK 下发"}
+];
+const angleStages = Object.fromEntries(JOINT_STAGES.map(stage=>[stage.key,[]]));
 const chartModels = new WeakMap();
 const chartViews = new WeakMap();
 const interactionControllers = new WeakMap();
@@ -318,9 +320,9 @@ const A32_CHANNELS = [
   {"joint":"left_hand_thumb_rotaback_joint2","channel":"mit","index":0,"unit":"deg"},
   {"joint":"left_hand_thumb_rota_block_joint","channel":"mit","index":1,"unit":"deg"}
 ];
-for(const [id,title] of [["position","转换 → 下发 → 回传目标 / 实际位置"],["current","电流：实测 / 目标 / 重力补偿（协议原值）"],["temperature","直线电机 MCU 温度 / °C"],["controlPeriod","控制周期 / ms（成功写入间隔包含暂停时间）"]]) {
+for(const [id,title] of [["position","转换 → 下发 → 回传目标 / 实际位置"],["current","电流：实测 / 目标 / 重力补偿（单位见图例）"],["temperature","直线电机 MCU 温度 / °C"],["controlPeriod","控制周期 / ms（成功写入间隔包含暂停时间）"]]) {
   const section=document.createElement("details");section.className="panel chart";section.open=true;section.dataset.fold=id;
-  section.innerHTML=`<summary>${title}</summary><div class="fold-body"><div class="chart-tools"><button id="${id}ZoomIn">横轴＋ 放大</button><button id="${id}ZoomOut">横轴－ 缩小</button><button id="${id}ZoomReset">复位</button><span id="${id}Range" class="range-label"></span></div><div class="canvas-wrap"><canvas id="${id}Canvas" class="plot-base"></canvas><canvas id="${id}Crosshair" class="crosshair-layer"></canvas><div id="${id}Tooltip" class="chart-tooltip"></div></div></div>`;
+  section.innerHTML=`<summary>${title}</summary><div class="fold-body"><div class="chart-tools"><button id="${id}ZoomIn">横轴＋ 放大</button><button id="${id}ZoomOut">横轴－ 缩小</button><button id="${id}ZoomReset">复位</button><span id="${id}Range" class="range-label"></span></div><div id="${id}Legend" class="chart-legend" aria-label="${title}曲线显示"></div><div class="canvas-wrap"><canvas id="${id}Canvas" class="plot-base"></canvas><canvas id="${id}Crosshair" class="crosshair-layer"></canvas><div id="${id}Tooltip" class="chart-tooltip"></div></div></div>`;
   $("motorCharts").append(section);
 }
 const USAGE_KEY='tsensei-hand-usage-v1';
@@ -464,24 +466,25 @@ function sessionWallMillis(time){
 }
 function eventWallMillis(row){
   if(!row)return null;
-  const explicit=validWallMillis(finiteValue(row.wall_time_unix_ms));
+  const explicit=validWallMillis(finiteValue(row.wall_time_unix_ms)??finiteValue(row.sent_at_unix_ms));
   if(explicit!==null)return explicit;
   for(const key of ["wall_time","at"]){const parsed=Date.parse(row[key]||"");if(Number.isFinite(parsed))return parsed;}
   return sessionWallMillis(row.t);
 }
 function eventWallSource(row){
   if(!row||eventWallMillis(row)===null)return "unavailable";
-  return validWallMillis(finiteValue(row.wall_time_unix_ms))!==null||["wall_time","at"].some(key=>Number.isFinite(Date.parse(row[key]||"")))
+  return validWallMillis(finiteValue(row.wall_time_unix_ms)??finiteValue(row.sent_at_unix_ms))!==null||["wall_time","at"].some(key=>Number.isFinite(Date.parse(row[key]||"")))
     ?"recorded_host_time":"derived_from_started_at_and_t";
 }
 function wallIso(ms){return ms===null?null:new Date(ms).toISOString();}
 function elapsedDuration(){return Math.max(0,finiteValue(state.end?.t)||0,usageScan.max);}
 function writeSuccessLabel(){return isA32Log()?"SDK 写入成功":"串口写入成功";}
-function resetData(){usageScan={min:Infinity,max:0,sides:new Set()};for(const key of ["retarget","skipped","planner","h7","mp","raw","control","filtered","filterDetail","conversion","downlink","telemetry","board","sdk","sdkEvents","events"])state[key]=[];state.meta=null;state.end=null;state.counts={};state.inferredModel=null;}
+function resetData(){for(const stage of JOINT_STAGES)angleStages[stage.key]=[];usageScan={min:Infinity,max:0,sides:new Set()};for(const key of ["retarget","skipped","planner","h7","mp","raw","control","filtered","filterDetail","conversion","downlink","telemetry","board","sdk","sdkEvents","events"])state[key]=[];state.meta=null;state.end=null;state.counts={};state.inferredModel=null;}
 function isA30Log(){return ["TsenseI_v3_0","TsenseI_v3_0_withid"].includes(state.meta?.metadata?.model_id)||state.inferredModel==="TsenseI_v3_0";}
-function isA32Log(){return ["TsenseI_v3_2","TsenseI_v3_2_withid"].includes(state.meta?.metadata?.model_id);}
+function isA32Log(){return ["TsenseI_v3_2","TsenseI_v3_2_withid"].includes(state.meta?.metadata?.model_id||state.inferredModel);}
 function availableSides(){
   const counts={left:0,right:0};
+  for(const stage of JOINT_STAGES)for(const row of angleStages[stage.key])if(row.hand_side in counts)counts[row.hand_side]++;
   for(const key of ["telemetry","downlink","conversion","retarget","h7","mp","control","filtered","filterDetail","sdk"])
     for(const row of state[key])if(row.hand_side in counts)counts[row.hand_side]++;
   return counts;
@@ -532,10 +535,31 @@ function selectLoadedMpSource(){
     if(hand)$("mpHand").value=hand.value;
   }
 }
+function restoreSdkWriteTimes(){
+  // Older browser logs timestamp h7 batches on receipt, but their canonical
+  // SDK angles already carry the actual write clock. Recover that same origin
+  // without changing samples, interpolating values, or using SDK status polls.
+  const anchor=angleStages.sdk.find(row=>!row.source_type&&Number.isFinite(row.sent_at_unix_ms)&&Number.isFinite(row.t));
+  const started=Date.parse(state.meta?.started_at||"");
+  const origin=anchor?anchor.sent_at_unix_ms-anchor.t*1000:
+    Number.isFinite(started)?started-(finiteValue(state.meta?.t)||0)*1000:null;
+  if(origin===null)return;
+  const restore=row=>{
+    if(row.source!=="a32_sdk_successful_write"||!Number.isFinite(row.sent_at_unix_ms))return;
+    const time=(row.sent_at_unix_ms-origin)/1000;
+    if(Math.abs(time-row.t)<1e-9)return;
+    row.recorded_t??=row.t;row.t=time;row.time_source="sdk_write";
+  };
+  for(const rows of [state.h7,state.downlink]){
+    rows.forEach(restore);rows.sort((a,b)=>a.t-b.t||(a.seq||0)-(b.seq||0));
+  }
+  for(const stage of JOINT_STAGES)for(const row of angleStages[stage.key])if(row.source_type==="h7")restore(row);
+}
 function selectLoadedData(){
+  restoreSdkWriteTimes();
   const counts=availableSides(),preferred=state.meta?.metadata?.hand_side;
   $("handSide").value=counts[preferred]>0?preferred:counts.right>counts.left?"right":"left";
-  $("stageConversion").checked=state.conversion.length>0&&!state.retarget.length&&!state.h7.length;
+  for(const stage of JOINT_STAGES)angleStages[stage.key].sort((a,b)=>a.t-b.t||(a.seq||0)-(b.seq||0));
   selectLoadedMpSource();
   setMotors();setJointChecks();drawAll(true);inspectFrame(0);
 }
@@ -558,16 +582,19 @@ function updateDataNotice(){
   }
   if(state.counts.control_target_skipped)messages.push(`${state.counts.control_target_skipped} 帧已完成 Retarget，但后续控制未接受；原始求解角度已保留，不代表真机已执行。`);
   if(state.meta?.metadata?.offline_replay)messages.push("离线滤波回放：滤波曲线为模拟计算，未写入真机；原始日志事件保留。延迟结果不包含串口和机械响应。");
-  if(state.meta?.metadata?.telemetry_format==="a32-native-sdk-state/v1")messages.push(`A3.2 原生 SDK 记录：14 路直线＋6 路旋转；遥测为 SDK 最新缓存的抽样，离线、过期或缺测区间的曲线断开，CSV 测量列留空；原始缓存值保留供排查。已保存 ${state.sdk.length} 条状态；逐帧详情可查看在线标志、找零状态和错误。`);
+  if(/^a32-native-sdk-state\/v[12]$/.test(state.meta?.metadata?.telemetry_format||""))messages.push(`A3.2 原生 SDK 记录：14 路直线＋6 路旋转；遥测为 SDK 最新缓存的抽样，离线、过期或缺测区间的曲线断开，CSV 测量列留空；原始缓存值保留供排查。已保存 ${state.sdk.length} 条状态；逐帧详情可查看在线标志、找零状态和错误。`);
   if(state.counts.a32_sdk_sample){
     const connected=state.sdk.filter(r=>r.sdk_state?.connected).length;
     messages.push(`A3.2 浏览器记录：${state.counts.a32_sdk_sample} 次 SDK 状态采样，${connected} 次已连接；回传曲线来自采样时的 SDK 缓存，并非每个硬件数据包。成功下发仅统计实际写入事件，不重复计入状态采样的 sent 标记。`);
     if(!connected)messages.push("此文件 SDK 始终未连接，没有有效硬件回传；已有的骨架、关节和转换结果仍可查看。");
   }
+  if(isA32Log())messages.push("电流按每条记录的单位显示：SDK 1.1.15 的 SELF/MIT 反馈为 A，旧版或无单位标记的 SELF 保留协议原值；混合单位分开画线，不能比较数值大小。找零 Iq 参数仍为码值。CSV 的 _a 列保存安培，_native 列保存旧原值，不重复换算。");
+  const restoredTimes=state.downlink.filter(row=>row.time_source==="sdk_write").length;
+  if(restoredTimes)messages.push(`已按实际写入时间还原 ${restoredTimes} 条 SDK 下发记录，消除浏览器批量接收时间造成的假阶跃；逐帧详情中的 recorded_t 保留原记录时间，原文件不变。`);
   if(state.counts.a30_conversion)messages.push(`A3.0 求解/预览转换 ${state.counts.a30_conversion} 条已加载；与实际下发前的 conversion 分开保留，预览转换不代表已写入机械手。`);
   const sdkGaps=state.sdkEvents.filter(r=>r.type==="a32_sdk_recording_gap").reduce((n,r)=>n+(finiteValue(r.count)||0),0);
   if(sdkGaps)messages.push(`浏览器遗漏 ${sdkGaps} 条 SDK 下发采样，请检查服务端完整控制日志。`);
-  if(state.meta&&!state.raw.length&&!state.mp.length&&!state.retarget.length&&!state.conversion.length&&!state.h7.length&&!state.telemetry.length)
+  if(state.meta&&!state.raw.length&&!state.mp.length&&!state.retarget.length&&!state.conversion.length&&!state.h7.length&&!state.telemetry.length&&!JOINT_STAGES.some(stage=>angleStages[stage.key].length))
     messages.push(`文件已读取，但没有动作或电机回传数据。${state.end?.reason?`结束原因：${state.end.reason}。`:""}`);
   if(state.meta?.started_at)messages.push("曲线横轴使用单调时间 t（秒）。逐帧及 CSV 保留主机绝对时间；旧日志或任意十字轴位置的绝对时间由 started_at + t 推算并标明来源，系统时钟调整不会改变控制周期。");
   if(state.meta?.metadata?.read_only_capture)messages.push("本文件为只读状态采样，没有下发动作；未接收到遥测时，电机曲线为空。");
@@ -578,7 +605,7 @@ function updateDataNotice(){
     messages.push(`诊断日志是低频抽样记录，当前文件仅包含 ${state.raw.length} 条原始检测、${state.retarget.length} 条 Retarget、${state.telemetry.length} 条遥测；这些数量不等于运行时总帧数。查看密集控制曲线请加载 hand_control 文件。`);
     if(!state.h7.length)messages.push("诊断日志未保存 H7 逐帧目标，H7 曲线为空。");
   }
-  if(state.filtered.length)messages.push(`已捕获 ${state.filtered.length} 个直接滤波样本。勾选“物理处理后控制目标”对比滤波前输入；逐帧详情可查看滤波参数、候选值和 sent 标记。`);
+  if(state.filtered.length)messages.push(`已捕获 ${state.filtered.length} 个直出路径样本；逐帧详情保留旧日志中的滤波参数与 sent 标记。`);
   const retargetRows=sideRows(state.retarget);
   const gaps=retargetRows.slice(1).filter((r,i)=>r.t-retargetRows[i].t>RETARGET_GAP_S).length;
   if(gaps)messages.push(state.meta?.schema==="hand-diagnostic/v1"
@@ -590,7 +617,10 @@ function updateDataNotice(){
   if(state.raw.length&&!state.raw.some(r=>(r.normalized_landmarks||[]).some(h=>h.length)||(r.world_landmarks||[]).some(h=>h.length)))
     messages.push(`${state.raw.length} 次关键点采集均未检测到手，因此没有识别点和 retarget 曲线。`);
   if(state.conversion.length&&!state.retarget.length&&!state.h7.length)
-    messages.push("此日志包含手动/直接控制数据：关节图可显示角度转换输入（HW 空间）；下方显示行程、回传、电流和温度。");
+    messages.push("此日志包含转换中间量；下方保留行程、回传、电流和温度。转换输入不代替缺失的五个关节角阶段。");
+  const missingStages=JOINT_STAGES.filter(stage=>!sideRows(angleStages[stage.key]).some(row=>Object.values(row.joints).some(Number.isFinite)));
+  if(missingStages.length)messages.push(`当前手侧未记录关节角阶段：${missingStages.map(stage=>stage.label).join("、")}。直出和 Mink 仅在实际经过对应阶段时出现，缺失阶段不补零或代用其他数据。`);
+  messages.push("SDK 关节角仅显示 sent=true 的实际成功写入；预览、失败写入和状态轮询不计入，不代表机械手实测角度。");
   $("dataNotice").textContent=messages.join(" ");$("dataNotice").hidden=!messages.length;
 }
 function a32Channels(){
@@ -630,7 +660,8 @@ function a32Telemetry(row){
   const hardware=row.hardware,age=finiteValue(hardware.telemetry_age_ms);
   const fresh=hardware.connected===true&&age!==null&&age>=0&&age<=500;
   const result={...row,type:"telemetry",source_type:row.type,sdk_state:hardware,sampled:true,
-    telemetry_seq:hardware.sequence,tick_ms:hardware.tick_ms,telemetry_age_ms:age,accepted:true};
+    telemetry_seq:hardware.sequence,tick_ms:hardware.tick_ms,telemetry_age_ms:age,accepted:true,
+    telemetry_format:hardware.telemetry_format||row.telemetry_format,telemetry_units:hardware.telemetry_units||row.telemetry_units};
   for(const kind of ["linear","rotary"])result[kind]=a32Slots(kind).map(c=>{
     const values=hardware[c.channel]||[],raw=values.find(r=>r.joint===c.joint)||values.find(r=>(r.slot??r.index)===c.index)||values[c.index]||{};
     const usable=fresh&&raw.online===true&&(c.channel!=="mit"||raw.valid===true);
@@ -713,6 +744,32 @@ function repairLegacySignedZero(row) {
   return result;
 }
 
+function captureAngleStage(row,stage,joints){
+  if(!Object.hasOwn(angleStages,stage)||!joints||typeof joints!=="object"||Array.isArray(joints)||!Number.isFinite(row.t))return;
+  if(stage==="sdk"&&row.sent!==true)return;
+  const angles=Object.fromEntries(Object.entries(joints).filter(([name])=>/^(left|right)_hand_.+_joint\d*$/.test(name)).map(([name,value])=>[name,finiteValue(value)]));
+  if(!Object.keys(angles).length)return;
+  const inferredSide=Object.keys(angles)[0].startsWith("right_")?"right":"left";
+  const sample={type:"joint_angles",stage,t:row.t,hand_side:row.hand_side||inferredSide,joints:angles};
+  for(const key of ["frame_id","seq","model_id","tracking_session_id","source","browser_epoch","sample_ticks","tick","sample_at","planner_at","sent_at_unix_ms","written_at","wall_time","wall_time_unix_ms","at"])if(row[key]!=null)sample[key]=row[key];
+  if(stage==="sdk")sample.sent=true;
+  if(row.type!=="joint_angles")sample.source_type=row.type;
+  angleStages[stage].push(sample);
+}
+function captureAngleStages(row){
+  if(row.type==="joint_angles")captureAngleStage(row,row.stage,row.joints);
+  else if(row.type==="retarget")captureAngleStage(row,"retarget",row.joints);
+  else if(["direct","direct_command","direct_filter"].includes(row.type))captureAngleStage(row,"direct",row.joints||row.joint_angles_rad||row.joints_ui);
+  else if(row.type==="ruckig")captureAngleStage(row,"ruckig",row.joints||row.joint_angles_rad);
+  else if(row.type==="mink")captureAngleStage(row,"mink",row.joints||row.joint_angles_rad);
+  else if(row.type==="h7"){
+    if(!row.direct_mode)captureAngleStage(row,"ruckig",row.joints_ruckig_ui);
+    captureAngleStage(row,"sdk",row.joints_ui);
+  }
+  // Neither control_target nor conversion proves Mink ran. A cached SDK poll
+  // with sent=true also does not establish that a fresh write succeeded.
+}
+
 function consume(row) {
   // Directory diagnostic logs use event/elapsed_ms; downloaded logs use type/t.
   row={...row,type:row.type||row.event,t:finiteValue(row.t)??(finiteValue(row.elapsed_ms)??0)/1000,
@@ -726,14 +783,20 @@ function consume(row) {
   if(row.type==="board_telemetry"&&typeof row.payload_hex==="string"&&/^[0-9a-f]{16}$/i.test(row.payload_hex))
     row={...row,...A3Telemetry.boardTelemetry(Uint8Array.from(row.payload_hex.match(/../g),b=>parseInt(b,16)))};
   if(row.type==="telemetry")row=repairLegacySignedZero(row);
-  if(row.type==="telemetry"&&(isA32Log()||row.telemetry_format==="a32-native-sdk-state/v1"||["TsenseI_v3_2","TsenseI_v3_2_withid"].includes(row.model_id)))
+  if(row.type==="telemetry"&&(isA32Log()||/^a32-native-sdk-state\/v[12]$/.test(row.telemetry_format||"")||["TsenseI_v3_2","TsenseI_v3_2_withid"].includes(row.model_id)))
     row=normalizeA32Telemetry(row);
   if(row.type!=='session'){
     if(Number.isFinite(row.t)){usageScan.min=Math.min(usageScan.min,row.t);usageScan.max=Math.max(usageScan.max,row.t);}
     if(['left','right'].includes(row.hand_side))usageScan.sides.add(row.hand_side);
   }
   state.counts[row.type]=(state.counts[row.type]||0)+1;
+  captureAngleStages(row);
   if (row.type === "session") state.meta=row;
+  else if (row.type === "joint_angles") {
+    if(row.model_id&&!state.inferredModel)state.inferredModel=row.model_id;
+    // Canonical angles live in their five-stage store; auxiliary panels retain
+    // their original conversion, telemetry and timing event formats.
+  }
   else if (["a30_conversion","a32_conversion"].includes(row.type)) {
     state.conversion.push({...row,type:"conversion",source_type:row.type,joints_hw:row.joint_angles_rad||{},
       ...Object.fromEntries(["linear","rotary"].map(kind=>[kind==="linear"?"linear_mm":"rotary_deg",
@@ -810,33 +873,13 @@ function exactJointSampler(rows,joint,maxGap=Infinity) { return time=>{
   }
   const value=findJoint(row.joints,joint);return Number.isFinite(value)?[row.t,value]:null;
 }; }
-function vecSub(a,b){return [a[0]-b[0],a[1]-b[1],a[2]-b[2]];}
-function vecDot(a,b){return a[0]*b[0]+a[1]*b[1]+a[2]*b[2];}
-function vecCross(a,b){return [a[1]*b[2]-a[2]*b[1],a[2]*b[0]-a[0]*b[2],a[0]*b[1]-a[1]*b[0]];}
-function vecUnit(a){const n=Math.hypot(a[0],a[1],a[2]);return n>1e-12?a.map(v=>v/n):[0,0,0];}
-function signedMediaPipeAngle(row,joint) {
-  const triple=MP_ANGLE_TRIPLETS[joint],P=row?.points;if(!triple||!P||P.length<21)return null;
-  const [a,b,c]=triple;
-  const across0=vecUnit(vecSub(P[5],P[17])),forward=vecUnit(vecSub(P[9],P[0]));
-  const normal=vecUnit(vecCross(across0,forward)),axis=vecUnit(vecCross(forward,normal));
-  const proximal=vecUnit(vecSub(P[b],P[a])),distal=vecUnit(vecSub(P[c],P[b]));
-  if(Math.hypot(...axis)<1e-9||Math.hypot(...proximal)<1e-9||Math.hypot(...distal)<1e-9)return null;
-  // 约定：正常屈曲为正，反向伸展/超伸为负。
-  return -Math.atan2(vecDot(vecCross(proximal,distal),axis),vecDot(proximal,distal));
-}
-function mediaPipeAnglePoints(joint){return sideRows(state.mp).map(row=>[row.t,signedMediaPipeAngle(row,joint)]).filter(p=>Number.isFinite(p[1]));}
-function exactMediaPipeAngleSampler(joint){const rows=sideRows(state.mp);return time=>{const row=nearestRow(rows,time);if(!row)return null;const value=signedMediaPipeAngle(row,joint);return Number.isFinite(value)?[row.t,value]:null;};}
 function makeJointSeries() {
-  const selected=selectedJoints(), series=[]; let color=0;
-  for (const joint of selected) {
-    if ($("stageMediaPipeAngle").checked && MP_ANGLE_TRIPLETS[joint]) series.push({name:`${joint} · 输入骨架有符号`, color:COLORS[color++%COLORS.length], dash:false, points:mediaPipeAnglePoints(joint), sampleAt:exactMediaPipeAngleSampler(joint)});
-    if ($("stageRetarget").checked) series.push({name:`${joint} · retarget`, color:COLORS[color++%COLORS.length], dash:false, maxGap:RETARGET_GAP_S, points:jointPoints(sideRows(state.retarget),joint), sampleAt:exactJointSampler(sideRows(state.retarget),joint,RETARGET_GAP_S)});
-    if ($("stageControl").checked) {const points=jointPoints(sideRows(state.control),joint);series.push({name:`${joint} · 控制目标${state.filtered.length?'（保持）':''}`,color:COLORS[color++%COLORS.length],points:state.filtered.length?heldPoints(points):points,sampleAt:exactJointSampler(sideRows(state.control),joint)});}
-    if ($("stageRuckig").checked) series.push(valueSeries(`${joint} · Ruckig`,sideRows(state.h7).filter(r=>!r.direct_mode),r=>findJoint(r.joints_ruckig_ui||{},joint),COLORS[color++%COLORS.length]));
-    if ($("stageDirectFilter").checked) series.push({name:`${joint} · 直接滤波${state.meta?.metadata?.offline_replay?'（离线回放）':''}`,color:COLORS[color++%COLORS.length],points:jointPoints(sideRows(state.filtered),joint),sampleAt:exactJointSampler(sideRows(state.filtered),joint)});
-    if ($("stageFilterCandidate").checked) series.push(valueSeries(`${joint} · 滤波候选`,sideRows(state.filterDetail),r=>findJoint(r.filtered_joint_angles_rad||{},joint),COLORS[color++%COLORS.length]));
-    if ($("stageConversion").checked) series.push(valueSeries(`${joint} · 转换输入HW`,sideRows(state.conversion),r=>findJoint(r.joints_hw||{},joint),COLORS[color++%COLORS.length]));
-    if ($("stageH7").checked) series.push({name:`${joint} · ${isA32Log()?"SDK下发":"H7目标"}`, color:COLORS[color++%COLORS.length], dash:true, points:jointPoints(sideRows(state.h7),joint), sampleAt:exactJointSampler(sideRows(state.h7),joint)});
+  const selected=selectedJoints(),series=[];let color=0;
+  for(const joint of selected)for(const stage of JOINT_STAGES){
+    if(!$(stage.id).checked)continue;
+    const rows=sideRows(angleStages[stage.key]);
+    const seriesItem=valueSeries(`${joint} · ${stage.label}`,rows,row=>findJoint(row.joints,joint),COLORS[color++%COLORS.length],stage.key==="sdk",{breakOnMissing:true});
+    series.push({...seriesItem,stage:stage.key,maxGap:RETARGET_GAP_S,sampleAt:exactJointSampler(rows,joint,RETARGET_GAP_S)});
   }
   return series;
 }
@@ -885,14 +928,37 @@ function motorFeedbackRows(){
   }).map(row=>({...row,sdk_gap:true}));
   return [...rows,...gaps].sort((a,b)=>a.t-b.t||(a.seq||0)-(b.seq||0));
 }
+function motorCurrentUnit(row,kind,index){
+  const slot=row[kind]?.[index]||{},hardware=row.sdk_state||row.hardware||{};
+  const channel=slot.channel||a32Slots(kind)[index]?.channel;
+  const key=channel==="mit"?"external_current":"self_current";
+  const explicit=slot.current_unit||row.telemetry_units?.[key]||hardware.telemetry_units?.[key];
+  if(explicit)return explicit==="A"?"A":"SDK native";
+  if(channel==="mit")return "A";
+  // Never relabel an unmarked/v1 historical SELF sample from a newer session header.
+  return (row.telemetry_format||hardware.telemetry_format)==="a32-native-sdk-state/v2"?"A":"SDK native";
+}
+function motorCurrentUnits(kind,index){
+  if(!isA32Log())return ["SDK native"];
+  const units=[...new Set(telemetryRows().filter(row=>row[kind]?.[index]).map(row=>motorCurrentUnit(row,kind,index)))];
+  return units.length?units:["SDK native"];
+}
+function motorCurrentAxisUnit(){
+  const {kind,index}=motorSelection(),units=motorCurrentUnits(kind,index);
+  return units.length>1?"单位见图例（不可直接比较）":units[0]==="A"?"A":"协议原值";
+}
 function makeMotorSeries(){
   const {kind,index}=motorSelection(),field=kind==="linear"?"linear_mm":"rotary_deg";
   const feedback=motorFeedbackRows(),converted=sideRows(state.conversion),sent=sideRows(state.downlink).filter(r=>r.sent),failed=sideRows(state.downlink).filter(r=>!r.sent);
   const actual=kind==="linear"?"pos_act_mm":"pos_actual_mm",current=kind==="linear"?"iq_meas":"iq";
   const measured=(name,key,color,dash=false)=>valueSeries(name,feedback,row=>motorFeedbackValue(row,kind,index,key),color,dash,{breakOnMissing:isA32Log()||isA30Log()});
+  const fields=[["实测 iq",current,COLORS[0],false],["目标 iq_ref","iq_ref",COLORS[1],true],...(kind==="linear"?[["重力补偿 grav_iq","grav_iq",COLORS[2],false]]:[])];
+  const currentSeries=isA32Log()?motorCurrentUnits(kind,index).flatMap(unit=>fields.map(([name,key,color,dash])=>
+    valueSeries(`${name} / ${unit==="A"?"A":"协议原值"}`,feedback,row=>motorCurrentUnit(row,kind,index)===unit?motorFeedbackValue(row,kind,index,key):null,
+      color,dash,{breakOnMissing:true}))):fields.map(([name,key,color,dash])=>measured(name,key,color,dash));
   return {
     position:[valueSeries("转换结果",converted,r=>r[field]?.[index],COLORS[0]),valueSeries(writeSuccessLabel(),sent,r=>r[field]?.[index],COLORS[1],true),measured("回传目标","pos_ref_mm",COLORS[2]),measured("回传实际",actual,COLORS[3]),valueSeries("写入失败",failed,r=>r[field]?.[index],COLORS[6],true)],
-    current:[measured("实测 iq",current,COLORS[0]),measured("目标 iq_ref","iq_ref",COLORS[1],true),...(kind==="linear"?[measured("重力补偿 grav_iq","grav_iq",COLORS[2])]:[])],
+    current:currentSeries,
     temperature:[measured("MCU 温度","mcu_temp_c",COLORS[1])]
   };
 }
@@ -907,6 +973,35 @@ function makeControlPeriodSeries(){
     valueSeries("成功写入间隔",intervals,row=>row.write_interval_ms,COLORS[1],true)];
 }
 
+const MOTOR_VISIBILITY_KEY="tsensei-viewer-motor-hidden-series";
+const hiddenMotorSeries=new Set();
+try{
+  const saved=JSON.parse(window.localStorage.getItem(MOTOR_VISIBILITY_KEY)||"[]");
+  if(Array.isArray(saved))for(const key of saved)if(typeof key==="string")hiddenMotorSeries.add(key);
+}catch{}
+function selectedMotorSeries(id,series){
+  const legend=$(id+"Legend"),signature=JSON.stringify(series.map(s=>[s.name,!!s.points.length]));
+  if(legend.dataset.signature!==signature){
+    legend.dataset.signature=signature;legend.replaceChildren();
+    series.forEach((s,index)=>{
+      const key=`${id}:${index}`,input=Object.assign(document.createElement("input"),
+        {type:"checkbox",id:`${id}Series${index}`,checked:!hiddenMotorSeries.has(key)});
+      input.addEventListener("change",()=>{
+        if(input.checked)hiddenMotorSeries.delete(key);else hiddenMotorSeries.add(key);
+        try{window.localStorage.setItem(MOTOR_VISIBILITY_KEY,JSON.stringify([...hiddenMotorSeries]));}catch{}
+        drawAll(false);
+      });
+      const label=document.createElement("label"),swatch=document.createElement("i");swatch.style.background=s.color;
+      label.append(input,swatch,s.name+(s.points.length?"":"（无数据）"));legend.append(label);
+    });
+  }
+  return series.filter((s,index)=>!hiddenMotorSeries.has(`${id}:${index}`));
+}
+function drawMotorChart(id,series,emptyText,unit){
+  const selected=selectedMotorSeries(id,series);
+  drawChart($(id+"Canvas"),selected,selected.length?emptyText:"请勾选要显示的曲线",unit);
+}
+
 function inspectFrame(time=Number($("inspectTime").value)||0){
   $("inspectTime").value=time.toFixed(6);
   const down=nearestRow(sideRows(state.downlink),time),feedback=nearestRow(telemetryRows(),time),conversion=down?.command_id?state.conversion.find(r=>r.seq===down.command_id):
@@ -919,6 +1014,8 @@ function inspectFrame(time=Number($("inspectTime").value)||0){
   $("frameDetail").textContent=JSON.stringify({selected_time_s:time,selected_wall_time:wallIso(sessionWallMillis(time)),
     selected_wall_time_source:sessionWallMillis(time)===null?"unavailable":"derived_from_started_at_and_t",
     selected_motor:$("motor").value,
+    joint_angle_correlation:"各阶段显示距离所选时间最近的实际样本；相同 frame_id 才对应同一输入帧。",
+    joint_angle_stages:Object.fromEntries(JOINT_STAGES.map(stage=>[stage.key,nearestRow(sideRows(angleStages[stage.key]),time)])),
     command_sample:nearestRow(sideRows(state.h7),time)??null,
     direct_filter:nearestRow(sideRows(state.filtered),time)??null,
     direct_filter_detail:nearestRow(sideRows(state.filterDetail),time)??null,
@@ -933,18 +1030,35 @@ function inspectFrame(time=Number($("inspectTime").value)||0){
 function exportMotorCsv(){
   const {kind,index,unit}=motorSelection(),field=kind==="linear"?"linear_mm":"rotary_deg";
   const rows=[["type","t_s","event_seq","frame_id","command_id","wire_seq","telemetry_seq","device_tick_ms","sent","accepted","position_unit","command_position","target_position","actual_position","iq_measured_native","iq_ref_native","grav_iq_native","mcu_temp_c","joint_suffix","online","raw_position","raw_target","external_motor_deg","external_output_rpm","external_bus_v","decode_issues","wall_time","wall_time_unix_ms","wall_time_source","control_period_ms","measurement_valid"]];
+  if(isA32Log())rows[0].push("current_unit","iq_measured_a","iq_ref_a","grav_iq_a");
   const events=[...sideRows(state.conversion),...sideRows(state.downlink),...telemetryRows(),...sideRows(state.h7)].sort((a,b)=>a.t-b.t||(a.seq||0)-(b.seq||0));
   for(const r of events){
     const s=r[kind]?.[index]||{},feedback=key=>motorFeedbackValue(r,kind,index,key);
+    const amperes=isA32Log()&&motorCurrentUnit(r,kind,index)==="A",nativeCurrent=key=>amperes?null:feedback(key);
     rows.push([r.type,r.t,r.seq,r.frame_id,r.command_id,r.wire_seq,r.telemetry_seq,r.tick_ms,r.sent,r.accepted,unit,r[field]?.[index],
-      feedback("pos_ref_mm"),feedback(kind==="linear"?"pos_act_mm":"pos_actual_mm"),feedback(kind==="linear"?"iq_meas":"iq"),
-      feedback("iq_ref"),feedback("grav_iq"),feedback("mcu_temp_c"),s.joint_suffix,s.online,s.position,isA32Log()?(s.target??s.pos_ref):s.pos_ref,s.motor_position_deg,
+      feedback("pos_ref_mm"),feedback(kind==="linear"?"pos_act_mm":"pos_actual_mm"),nativeCurrent(kind==="linear"?"iq_meas":"iq"),
+      nativeCurrent("iq_ref"),nativeCurrent("grav_iq"),feedback("mcu_temp_c"),s.joint_suffix,s.online,s.position,isA32Log()?(s.target??s.pos_ref):s.pos_ref,s.motor_position_deg,
       feedback("velocity"),feedback("vbus_v"),JSON.stringify((r.decode_issues||[]).filter(x=>x.joint_suffix===s.joint_suffix)),
       wallIso(eventWallMillis(r)),eventWallMillis(r),eventWallSource(r),controlPeriodMs(r),
       r.type==="telemetry"&&isA32Log()?a32FeedbackValid(r,s)&&finiteValue(feedback(kind==="linear"?"pos_act_mm":"pos_actual_mm"))!==null:s.measurement_valid]);
+    if(isA32Log())rows.at(-1).push(r[kind]?.[index]?motorCurrentUnit(r,kind,index):null,
+      amperes?feedback(kind==="linear"?"iq_meas":"iq"):null,amperes?feedback("iq_ref"):null,amperes?feedback("grav_iq"):null);
   }
   const csv=rows.map(row=>row.map(v=>v==null||typeof v==="number"&&!Number.isFinite(v)?"":'"'+String(v).replace(/"/g,'""')+'"').join(",")).join("\r\n");
   const url=URL.createObjectURL(new Blob(["\uFEFF",csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");a.href=url;a.download=`${$("handSide").value}_${kind}_${index}.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function exportJointCsv(){
+  const rows=[["stage","t_s","frame_id","hand_side","model_id","joint","angle_rad","sent","wall_time","wall_time_source"]];
+  const selected=selectedJoints(),events=JOINT_STAGES.filter(stage=>$(stage.id).checked).flatMap(stage=>sideRows(angleStages[stage.key])).sort((a,b)=>a.t-b.t||(a.seq||0)-(b.seq||0));
+  for(const row of events)for(const joint of selected){
+    const value=findJoint(row.joints,joint);if(value===null)continue;
+    rows.push([row.stage,row.t,row.frame_id,row.hand_side,row.model_id||state.meta?.metadata?.model_id,joint,value,row.sent,
+      wallIso(eventWallMillis(row)),eventWallSource(row)]);
+  }
+  const csv=rows.map(row=>row.map(value=>value==null?"":'"'+String(value).replace(/"/g,'""')+'"').join(",")).join("\r\n");
+  const url=URL.createObjectURL(new Blob(["\uFEFF",csv],{type:"text/csv;charset=utf-8"})),a=document.createElement("a");
+  a.href=url;a.download=`${$("handSide").value}_joint_angles.csv`;a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
 
 function downsample(points,max=5000) {
@@ -996,7 +1110,7 @@ function drawChart(canvas, series, emptyText, unit) {
   for(const s of series) for(const p of s.points){xmin=Math.min(xmin,p[0]);xmax=Math.max(xmax,p[0]);ymin=Math.min(ymin,p[1]);ymax=Math.max(ymax,p[1]);count++;}
   if(!count) { chartModels.delete(canvas); const label=$(canvas.id.replace("Canvas","Range"));if(label)label.textContent="无数据";ctx.fillStyle="#91a4be"; ctx.textAlign="center"; ctx.fillText(emptyText,W/2,H/2); return; }
   // One session clock for all charts, even when their first/last samples differ.
-  xmin=0;xmax=Math.max(xmax,finiteValue(state.end?.t)||0,...["mp","raw","retarget","control","h7","conversion","downlink","telemetry","sdk","sdkEvents"].map(key=>finiteValue(state[key].at(-1)?.t)||0));
+  xmin=0;xmax=Math.max(xmax,elapsedDuration(),finiteValue(state.end?.t)||0,...["mp","raw","retarget","control","h7","conversion","downlink","telemetry","sdk","sdkEvents"].map(key=>finiteValue(state[key].at(-1)?.t)||0));
   if(xmax<=xmin) xmax=xmin+1; if(ymax<=ymin){ymin-=.1;ymax+=.1;} const pad=(ymax-ymin)*.08; ymin-=pad;ymax+=pad;
   const fullXmin=xmin,fullXmax=xmax,fullYmin=ymin,fullYmax=ymax,saved=chartViews.get(canvas);
   if(saved){
@@ -1028,7 +1142,7 @@ function drawChart(canvas, series, emptyText, unit) {
     const pts=downsample(s.points);ctx.strokeStyle=s.color;ctx.fillStyle=s.color;ctx.lineWidth=1.7;ctx.setLineDash(s.dash?[7,4]:[]);ctx.beginPath();pts.forEach((p,i)=>{const x=X(p[0]),y=Y(p[1]);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
     if(pts.length===1){ctx.beginPath();ctx.arc(X(pts[0][0]),Y(pts[0][1]),3,0,Math.PI*2);ctx.fill();}
   });ctx.restore();ctx.setLineDash([]);
-  let lx=L; ctx.textAlign="left"; series.forEach(s=>{ctx.fillStyle=s.color;ctx.fillRect(lx,T-26,14,3);ctx.fillStyle="#dfe8f5";ctx.fillText(s.name,lx+19,T-20);lx+=ctx.measureText(s.name).width+43;});
+  let lx=L; ctx.textAlign="left"; (canvas.id==="mpCanvas"?series:[]).forEach(s=>{ctx.fillStyle=s.color;ctx.fillRect(lx,T-26,14,3);ctx.fillStyle="#dfe8f5";ctx.fillText(s.name,lx+19,T-20);lx+=ctx.measureText(s.name).width+43;});
   const model={series,emptyText,xmin,xmax,ymin,ymax,visibleMin:hasVisible?visibleMin:null,visibleMax:hasVisible?visibleMax:null,autoY,fullXmin,fullXmax,fullYmin,fullYmax,L,R,T,B,W,H,unit};
   chartModels.set(canvas,model);
   const rangeLabel=$(canvas.id.replace("Canvas","Range"));
@@ -1168,18 +1282,14 @@ function escapeHtml(v){return String(v).replace(/[&<>"\']/g,c=>({"&":"&amp;","<"
 function metric(label,value,cls="") { label=escapeHtml(label);value=escapeHtml(value);return `<div class="metric ${cls}"><span>${label}</span><b>${value}</b></div>`; }
 function updateStats() {
   const joint=selectedJoints()[0], host=$("jointStats");
-  const vals=sideRows(state.retarget).map(r=>findJoint(r.joints,joint)).filter(Number.isFinite);
+  const vals=sideRows(angleStages.retarget).map(r=>findJoint(r.joints,joint)).filter(Number.isFinite);
   let jointMetrics=metric("所选关节","无 retarget 数据");
   if(vals.length){
   const delta=vals.at(-1)-vals[0], run=longestIncreasing(vals);
   jointMetrics=metric("起点",vals[0].toFixed(4))+metric("终点",vals.at(-1).toFixed(4))+metric("总变化",`${delta>=0?"+":""}${delta.toFixed(4)}`,delta>.15?"warn":"")+metric("最长连续递增",`${run} 帧`,run>=10?"warn":"");
-  if($("stageMediaPipeAngle").checked&&MP_ANGLE_TRIPLETS[joint]){
-    const mpAngles=state.mp.map(row=>signedMediaPipeAngle(row,joint)).filter(Number.isFinite),negative=mpAngles.filter(value=>value<0).length;
-    if(mpAngles.length)jointMetrics+=metric("输入骨架负角帧",`${negative} / ${mpAngles.length}`,negative?"warn":"")+metric("输入骨架最小角",`${mpAngles.reduce((best,value)=>Math.min(best,value),Infinity).toFixed(4)} rad`,negative?"warn":"");
-  }
   }
   host.innerHTML=jointMetrics;
-  const guard=state.h7.filter(x=>x.guard).length, faults=state.h7.filter(x=>x.faults.length).length, sent=state.h7.filter(x=>x.sent).length;
+  const guard=state.h7.filter(x=>x.guard).length, faults=state.h7.filter(x=>x.faults.length).length;
   const depth=[...new Set(state.mp.map(x=>x.depth).filter(Boolean))].join(" / ")||"—";
   const duration=elapsedDuration();
   const diagnostic=state.meta?.schema==="hand-diagnostic/v1";
@@ -1188,11 +1298,11 @@ function updateStats() {
   const periods=sideRows(state.h7).map(controlPeriodMs).filter(value=>value!==null).sort((a,b)=>a-b);
   const periodMetrics=periods.length?metric("平均控制周期",`${(periods.reduce((sum,value)=>sum+value,0)/periods.length).toFixed(3)} ms`)+metric("P95 控制周期",`${periods[Math.ceil(periods.length*.95)-1].toFixed(3)} ms`)+metric("最大控制周期",`${periods.at(-1).toFixed(3)} ms`):"";
   const sdkErrors=state.sdkEvents.filter(row=>["sdk_error","a32_sdk_error"].includes(row.type)).length;
-  $("sessionStats").innerHTML=metric("原始检测帧",state.raw.length.toLocaleString())+metric("Retarget 输入帧",state.mp.length.toLocaleString())+metric("转换记录",state.conversion.length.toLocaleString())+metric(writeSuccessLabel(),state.downlink.filter(r=>r.sent).length.toLocaleString())+metric("写入失败",state.downlink.filter(r=>!r.sent).length.toLocaleString())+metric("回传帧",state.telemetry.length.toLocaleString())+metric("重复 / 旧帧",state.telemetry.filter(r=>r.accepted===false).length.toLocaleString())+metric("跳过求解",state.counts.retarget_skipped||0)+metric("Retarget 帧",state.retarget.length.toLocaleString())+metric(isA32Log()?"SDK 控制 tick":"H7 tick",state.h7.length.toLocaleString())+metric("成功下发",sent.toLocaleString())+metric("Guard 限幅",guard.toLocaleString(),guard?"warn":"")+metric("Ruckig 故障 tick",faults.toLocaleString(),faults?"warn":"")+metric("深度来源",depth)+metric("记录时长",`${duration.toFixed(3)} s`)+metric(isA32Log()?"SDK 传输":"H7 串口",connection)+metric("结束原因",reason,!state.end?"warn":"")+metric("丢弃记录",String(dropped),dropped?"warn":"")+periodMetrics+(isA32Log()?metric("SDK 错误",sdkErrors,sdkErrors?"warn":""):"");
+  $("sessionStats").innerHTML=metric("原始检测帧",state.raw.length.toLocaleString())+metric("Retarget 输入帧",state.mp.length.toLocaleString())+metric("转换记录",state.conversion.length.toLocaleString())+metric(writeSuccessLabel(),state.downlink.filter(r=>r.sent).length.toLocaleString())+metric("写入失败",state.downlink.filter(r=>!r.sent).length.toLocaleString())+metric("回传帧",state.telemetry.length.toLocaleString())+metric("重复 / 旧帧",state.telemetry.filter(r=>r.accepted===false).length.toLocaleString())+metric("跳过求解",state.counts.retarget_skipped||0)+metric("Retarget 帧",angleStages.retarget.length.toLocaleString())+metric(isA32Log()?"SDK 控制 tick":"H7 tick",state.h7.length.toLocaleString())+metric("成功下发",angleStages.sdk.length.toLocaleString())+metric("Guard 限幅",guard.toLocaleString(),guard?"warn":"")+metric("Ruckig 故障 tick",faults.toLocaleString(),faults?"warn":"")+metric("深度来源",depth)+metric("记录时长",`${duration.toFixed(3)} s`)+metric(isA32Log()?"SDK 传输":"H7 串口",connection)+metric("结束原因",reason,!state.end?"warn":"")+metric("丢弃记录",String(dropped),dropped?"warn":"")+periodMetrics+(isA32Log()?metric("SDK 错误",sdkErrors,sdkErrors?"warn":""):"");
   const start=wallIso(sessionWallMillis(0)),end=state.end?.ended_at||wallIso(sessionWallMillis(duration));
   $("sessionTimeRange").textContent=start?`会话时间：${state.meta.started_at} → ${end} · 相对时间 0–${duration.toFixed(3)} s（末端无绝对时间时按 t 推算）`:"日志没有会话开始时间，仅显示相对秒数。";
   $("writeSemantics").textContent=isA32Log()?"回传目标来自 SDK target；成功下发表示 SDK sendOnce 返回成功。回传关联为观测前最近的主机写入，不是固件逐条确认。":"回传目标来自 pos_ref；成功下发表示串口写入成功。回传关联为接收前最近的主机写入，不是固件逐条确认。";
-  $("h7StageLabel").textContent=isA32Log()?"SDK 下发（关节空间）":"H7 下发（UI 空间）";
+  $("h7StageLabel").textContent="SDK 下发（关节空间）";
 }
 
 for(const id of CHART_IDS){
@@ -1205,12 +1315,14 @@ for(const id of CHART_IDS){
 function drawAll(resetView=false){
   updateLandmarkOptions();
   for(const id of CHART_IDS){const canvas=$(id+"Canvas");if(resetView)chartViews.delete(canvas);interactionControllers.get(canvas)?.clear();}
-  drawChart($("jointCanvas"),makeJointSeries(),"请选择数据文件与关节","rad");
+  const jointSeries=makeJointSeries();
+  $("jointLegend").innerHTML=jointSeries.map(series=>`<span><i style="background:${series.color}"></i>${escapeHtml(series.name)}${series.points.length?"":"（无数据）"}</span>`).join("");
+  drawChart($("jointCanvas"),jointSeries,"请选择数据文件与关节","rad");
   const mpUnit=$("mpSource").value==="normalized"?"归一化":"m";$("mpTitle").textContent=$("mpSource").value==="webxr_world"?"WebXR 原始 world / m（25 关节）":$("mpSource").value==="wuji_world"?"Wuji 手套骨架 / m（21 点）":`关键点坐标 / ${mpUnit}`;
   drawChart($("mpCanvas"),makeMpSeries(),"此阶段无关键点记录",mpUnit);
   const series=makeMotorSeries();
-  for(const id of ["position","current","temperature"])drawChart($(id+"Canvas"),series[id],id==="temperature"?"该电机没有有效温度回传":"此阶段无记录（旧日志不含行程和遥测）",id==="position"?motorSelection().unit:id==="current"?"协议原值":"°C");
-  drawChart($("controlPeriodCanvas"),makeControlPeriodSeries(),"此日志未记录控制周期，且不足两次成功写入","ms");
+  for(const id of ["position","current","temperature"])drawMotorChart(id,series[id],id==="temperature"?"该电机没有有效温度回传":"此阶段无记录（旧日志不含行程和遥测）",id==="position"?motorSelection().unit:id==="current"?motorCurrentAxisUnit():"°C");
+  drawMotorChart("controlPeriod",makeControlPeriodSeries(),"此日志未记录控制周期，且不足两次成功写入","ms");
   updateStats();updateDataNotice();
 }
 function resetAllZoom(){drawAll(true);}
@@ -1235,7 +1347,7 @@ $("file").addEventListener("change",async e=>{
   finally{$("file").disabled=false;e.target.value='';}
 });
 $("finger").addEventListener("change",setJointChecks);
-for(const id of ["stageMediaPipeAngle","stageRetarget","stageH7","stageControl","stageRuckig","stageDirectFilter","stageFilterCandidate","stageConversion","landmark","mpSource","mpHand","motor","includeRejected","handSide"])$(id).addEventListener("change",()=>{drawAll(true);inspectFrame();});
+for(const id of [...JOINT_STAGES.map(stage=>stage.id),"landmark","mpSource","mpHand","motor","includeRejected","handSide"])$(id).addEventListener("change",()=>{drawAll(true);inspectFrame();});
 document.querySelectorAll(".coord").forEach(x=>x.addEventListener("change",()=>drawAll(true)));
 window.addEventListener("resize",()=>drawAll(false));
 $("resetAllZoom").addEventListener("click",resetAllZoom);
@@ -1246,6 +1358,7 @@ $("autoFitY").addEventListener("change",()=>{
 });
 $("inspect").addEventListener("click",()=>inspectFrame());
 $("exportMotor").addEventListener("click",exportMotorCsv);
+$("exportJoints").addEventListener("click",exportJointCsv);
 async function loadLocalCatalog(){
   const model=$('usageModel').value;
   if(location.protocol==='file:'){

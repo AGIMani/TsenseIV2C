@@ -1,6 +1,12 @@
 // The joint order and wire format are shared with src/tracking/webxr_capture.html.
 export const SCHEMA = 'teleop.webxr.hand_skeleton.v1';
 export const JOINT_SET = 'webxr-hand-25';
+export const ADB_SCHEMA = 'teleop.quest.adb.hand_skeleton.v1';
+export const ADB_JOINT_SET = 'mediapipe-21';
+// Omit the four non-thumb metacarpals to match the desktop's 21-point input.
+export const WEBXR_25_TO_MEDIAPIPE_21 = Object.freeze([
+  0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24,
+]);
 export const JOINT_NAMES = Object.freeze([
   'wrist', 'thumb-metacarpal', 'thumb-phalanx-proximal', 'thumb-phalanx-distal', 'thumb-tip',
   ...['index', 'middle', 'ring', 'pinky'].flatMap(finger => [
@@ -54,12 +60,20 @@ export function collectHands(frame, inputSources, referenceSpace) {
   return ['left', 'right'].map(side => found.get(side) || missingHand(side));
 }
 
+export function toAdbHand(hand) {
+  const joints = WEBXR_25_TO_MEDIAPIPE_21.map(index => hand.joints[index]);
+  const tracked = joints.every(joint => joint?.valid && Array.isArray(joint.position)
+    && joint.position.length === 3 && joint.position.every(Number.isFinite));
+  return {handedness: hand.handedness, tracked,
+    landmarks: tracked ? joints.map(joint => [...joint.position]) : []};
+}
+
 // One HTTP request in flight, one replaceable skeleton, and a bounded event queue.
 // The hello is retried until acknowledged so a frame cannot precede stream creation.
 export class QuestPublisher {
-  constructor({token, fetchImpl = (...args) => globalThis.fetch(...args), now = () => performance.now(),
+  constructor({token, endpoint = '/api/webxr/publish', fetchImpl = (...args) => globalThis.fetch(...args), now = () => performance.now(),
     onStatus = () => {}, onFatal = () => {}, maxFrameAgeMs = 250, timeoutMs = 2000, retryMs = 500}) {
-    Object.assign(this, {token, fetchImpl, now, onStatus, onFatal, maxFrameAgeMs, timeoutMs, retryMs});
+    Object.assign(this, {token, endpoint, fetchImpl, now, onStatus, onFatal, maxFrameAgeMs, timeoutMs, retryMs});
     this.pending = null;
     this.events = [];
     this.running = false;
@@ -140,7 +154,7 @@ export class QuestPublisher {
         const timer = setTimeout(() => controller.abort(),
           handshake || terminal ? this.timeoutMs : Math.min(this.timeoutMs, budget));
         try {
-          const response = await this.fetchImpl('/api/webxr/publish', {
+          const response = await this.fetchImpl(this.endpoint, {
             method: 'POST', headers: {'Content-Type': 'application/json'},
             body: JSON.stringify({token: this.token, message: item.message}),
             signal: controller.signal, cache: 'no-store',

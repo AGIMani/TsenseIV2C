@@ -1,0 +1,13 @@
+#pragma once
+
+#define A3_SDK_VERSION_MAJOR @PROJECT_VERSION_MAJOR@
+#define A3_SDK_VERSION_MINOR @PROJECT_VERSION_MINOR@
+#define A3_SDK_VERSION_PATCH @PROJECT_VERSION_PATCH@
+#define A3_SDK_VERSION "@PROJECT_VERSION@"
+
+namespace a3 {
+
+/** 本 SDK 编译版本，不是 H7 固件版本。 */
+inline const char *sdkVersion() noexcept { return A3_SDK_VERSION; }
+
+} // namespace a3

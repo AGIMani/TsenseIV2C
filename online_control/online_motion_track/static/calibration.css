@@ -13,7 +13,7 @@
 .cal-controls>label:nth-child(3) {flex:1.4;min-width:160px}
 .cal-source-panel {display:flex;align-items:center;gap:22px;justify-content:space-between;min-height:82px;padding:16px 4px}
 .cal-source-panel p {margin:6px 0 0;color:#71838a;font-size:12px}
-.cal-source-panel #video {width:160px;height:104px;object-fit:contain;background:#203038;border-radius:8px;transform:scaleX(-1)}
+.cal-source-panel #video,.cal-source-panel #leap-camera-canvas {width:160px;height:104px;object-fit:contain;background:#203038;border-radius:8px;transform:scaleX(-1)}
 #quest-pairing {display:flex;align-items:center;gap:14px;flex-wrap:wrap;max-width:650px}
 #quest-link {width:250px}
 #quest-code {letter-spacing:3px;font-size:20px;color:#356d7e}

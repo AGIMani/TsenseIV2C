@@ -6,7 +6,9 @@ import {fileURLToPath} from 'node:url';
 import assert from 'node:assert/strict';
 
 const root=fileURLToPath(new URL('../../../',import.meta.url));
-const fixture=JSON.parse(execFileSync(process.env.HAND_PYTHON||'E:/conda/envs/hand_dex/python.exe',[
+const adb=process.env.QUEST_TRANSPORT==='adb';
+const apiPrefix=adb?'/api/quest-adb':'/api/webxr';
+const fixture=JSON.parse(execFileSync(process.env.HAND_PYTHON||'python3',[
   '-c',`import sys,json
 sys.path[:0]=['.','src','src/tracking']
 from hand_profiles import load_hand_profile
@@ -15,11 +17,11 @@ p=load_hand_profile('TsenseI_v3_2');s=p.create_retargeter('left')
 points=s.fk.compute(p.init_pose()).tolist()
 native=[[0,0,0] for _ in range(25)]
 for i,j in enumerate(WEBXR_25_TO_MEDIAPIPE_21):native[j]=points[i]
-print(json.dumps({'names':list(WEBXR_HAND_JOINT_NAMES),'positions':native}))`
+print(json.dumps({'names':list(WEBXR_HAND_JOINT_NAMES),'positions':native,'landmarks':points}))`
 ],{cwd:root,encoding:'utf8'}));
 const browser=await chromium.launch({headless:true,
   args:process.env.HAND_BROWSER_SWIFTSHADER==='1'?['--use-angle=swiftshader','--enable-unsafe-swiftshader']:[],
-  executablePath:process.env.CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe'});
+  executablePath:process.env.CHROME_PATH||undefined});
 const viewport=process.env.HAND_BROWSER_COMPACT==='1'?{width:960,height:800}:{width:1440,height:1100};
 const page=await browser.newPage({viewport});
 const errors=[],responses=[];let legacyFrameRequests=0;
@@ -37,38 +39,45 @@ await page.addInitScript(()=>{
   if(navigator.mediaDevices)navigator.mediaDevices.getUserMedia=()=>{window.cameraRequests++;throw Error('WebXR must not request camera');};
 });
 try {
-  await page.goto((process.env.WEB_URL||'http://127.0.0.1:18866')+'/?source=webxr');
+  await page.goto((process.env.WEB_URL||'http://127.0.0.1:18866')+`/?source=${adb?'quest_adb':'webxr'}`);
   await page.waitForFunction(()=>!document.querySelector('#start').disabled);
-  assert.equal(await page.locator('#input-source').inputValue(),'webxr');
+  assert.equal(await page.locator('#input-source').inputValue(),adb?'quest_adb':'webxr');
   await page.locator('label').filter({has:page.locator('#recording')}).click();
   await page.locator('#start').click();
   await page.locator('#quest-pairing').waitFor({state:'visible'});
   const code=await page.locator('#quest-token').innerText();
   assert.equal(code,'123456');
-  assert((await page.locator('#quest-link').inputValue()).endsWith('/q'));
-  const {token}=await page.evaluate(async code=>(await fetch('/api/webxr/pair',{
-    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})})).json(),code);
+  assert((await page.locator('#quest-link').inputValue()).endsWith(adb?'/q/adb':'/q'));
+  if(adb) assert.match(await page.locator('#camera-caption').innerText(),/USB ADB/);
+  const {token}=await page.evaluate(async({code,apiPrefix})=>(await fetch(`${apiPrefix}/pair`,{
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({code})})).json(),{code,apiPrefix});
   assert(token.length>=32);
-  await page.evaluate(async({fixture,token})=>{
+  await page.evaluate(async({fixture,token,adb,apiPrefix})=>{
     let sequence=0;
-    const send=async(type,hands)=>fetch('/api/webxr/publish',{
+    const send=async(type,hands)=>fetch(`${apiPrefix}/publish`,{
       method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({token,message:{
-        schema:'teleop.webxr.hand_skeleton.v1',type,stream_id:'browser-integration-test',sequence:sequence++,
+        schema:adb?'teleop.quest.adb.hand_skeleton.v1':'teleop.webxr.hand_skeleton.v1',type,stream_id:'browser-integration-test',sequence:sequence++,
         timestamp_ms:Date.now(),client_perf_ms:performance.now(),coordinate_space:'webxr_local_floor',
-        joint_set:'webxr-hand-25',joint_names:fixture.names,hands,
+        joint_set:adb?'mediapipe-21':'webxr-hand-25',units:'m',
+        ...(adb?{transport:'adb'}:{joint_names:fixture.names}),hands,
       }})});
     window.questTestSend=send;
     await send('session_started');
-    const hand={handedness:'left',tracked:true,joints:fixture.names.map((name,i)=>({
+    const hand=adb?{handedness:'left',tracked:true,landmarks:fixture.landmarks.map(point=>point.map((v,k)=>v+[1,1.5,-.5][k]))}
+      :{handedness:'left',tracked:true,joints:fixture.names.map((name,i)=>({
       name,valid:true,position:fixture.positions[i].map((v,k)=>v+[1,1.5,-.5][k]),orientation:[0,0,0,1],radius:.005,
     }))};
     const pump=async()=>{await send('hand_skeleton',[hand]);if(window.questTestRunning)window.questTestTimer=setTimeout(pump,20);};
     window.questTestRunning=true;void pump();
-  },{fixture,token});
+  },{fixture,token,adb,apiPrefix});
   await page.waitForFunction(()=>document.querySelector('#tracking-text').textContent.includes('正在跟随'),{timeout:30000});
   await page.waitForFunction(()=>Number(document.querySelector('#fps').textContent)>=1);
   assert.equal(await page.evaluate(()=>window.cameraRequests),0);
   assert(responses.some(r=>r.tracking&&r.source==='webxr'&&r.depth_source==='webxr_metric'));
+  if(adb){
+    assert(responses.some(r=>r.tracking&&r.source_metadata?.transport==='adb'&&r.source_metadata?.source_joint_count===21));
+    assert.match(await page.locator('#skeleton-status').innerText(),/USB ADB · 21 点/);
+  }
   assert.equal(legacyFrameRequests,0,'A3.2 consumes background solves without replaying the skeleton');
   // A single delayed desktop poll must signal loss without destroying the
   // pairing or requiring another click to restart tracking.
@@ -114,7 +123,7 @@ try {
   assert.equal(await page.locator('#quest-input-panel').isVisible(),false);
   assert.deepEqual(errors,[]);
   assert.equal(legacyFrameRequests,0,'source loss and recovery must not resume the legacy replay path');
-  console.log(`PASS: Quest synthetic -> real retarget -> UI, ${responses.length} frames, lost input, stop, source switch; zero camera requests; screenshots ${process.env.HAND_BROWSER_SCREENSHOTS==='0'?'skipped':'captured'}`);
+  console.log(`PASS: Quest ${adb?'USB ADB 21':'WebXR 25'} synthetic -> real retarget -> UI, ${responses.length} frames, lost input, stop, source switch; zero camera requests; screenshots ${process.env.HAND_BROWSER_SCREENSHOTS==='0'?'skipped':'captured'}`);
   const summarize=key=>{const values=responses.map(r=>r[key]).filter(Number.isFinite).sort((a,b)=>a-b);
     return {count:values.length,p50:values[Math.floor(values.length*.5)]??null,p95:values[Math.floor(values.length*.95)]??null};};
   console.log(JSON.stringify({scenario:'synthetic_quest_background_ui',observed_results:responses.length,

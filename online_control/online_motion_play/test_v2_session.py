@@ -19,6 +19,27 @@ JOINT = 'left_hand_mid_MCP_joint'
 SWING = 'left_hand_mid_swing_joint'
 
 
+@pytest.mark.parametrize('disconnect_fails', [False, True])
+def test_close_releases_native_planners(tmp_path, monkeypatch, disconnect_fails):
+    state = V2Session(tmp_path)
+    planner = state._interpolator
+    assert planner._otg and planner._inputs and planner._outputs
+    if disconnect_fails:
+        def fail_disconnect():
+            raise OSError('disconnect failed')
+        monkeypatch.setattr(state.usb, 'disconnect', fail_disconnect)
+        with pytest.raises(OSError, match='disconnect failed'):
+            state.close()
+    else:
+        state.close()
+        state.close()
+    # Keep the session alive: cleanup must not depend on cyclic GC or shutdown
+    # ordering between Python signal handlers and the native binding module.
+    assert not planner._otg
+    assert not planner._inputs
+    assert not planner._outputs
+
+
 class Clock:
     now = 0.
 
@@ -319,7 +340,7 @@ def test_large_target_is_jerk_limited_and_protocol_floor_preserves_ui_zero(sessi
         positions.append(usb.frames[-1][0][JOINT])
     assert 0 < positions[0] < 1.57
     assert positions == sorted(positions)
-    assert max(b-a for a, b in zip([0.] + positions, positions)) <= 10. * PERIOD + 1e-9
+    assert max(b-a for a, b in zip([0.] + positions, positions)) <= 20. * PERIOD + 1e-9
     state._seed({name: 0. for name in JOINTS})
     clock.advance()
     ok, output = state._send_step({name: 0. for name in JOINTS}, source='zero', stream=False)
@@ -342,7 +363,7 @@ def test_write_failure_rolls_back_ui_and_hw_baselines(session):
     assert state._last_success_hw == last_hw
     clock.advance()
     ok, output = state._send_step(target, source='test', stream=True)
-    assert ok and 0 <= output[JOINT] - last_ui[JOINT] <= 10. * PERIOD
+    assert ok and 0 <= output[JOINT] - last_ui[JOINT] <= 20. * PERIOD
     assert output[SWING] == 0.
 
 

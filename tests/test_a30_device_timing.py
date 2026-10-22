@@ -76,9 +76,9 @@ def test_playback_1khz_does_not_change_shared_500hz_or_limits(device):
     d, _ = device
     assert d.CONTROL_DT == d.ruckig.delta_time == .001
     assert CONTROL_HZ == 500 and CONTROL_DT == .002
-    assert d.input.max_velocity == [10.] * 20
-    assert d.input.max_acceleration == [80.] * 20
-    assert d.input.max_jerk == [200.] * 20
+    assert d.input.max_velocity == [20.] * 20
+    assert d.input.max_acceleration == [400.] * 20
+    assert d.input.max_jerk == [2400.] * 20
     assert d.input.synchronization == Synchronization.Time
     p = InputParameter(20)
     configure_ruckig(p, d.mapper.joint_names, acceleration=15., jerk=120.)
@@ -225,9 +225,9 @@ def test_1khz_retargeting_preserves_velocity_acceleration_jerk_and_duration(devi
         assert d.armed, d.error
         v, a = d.input.current_velocity, d.input.current_acceleration
         assert all(abs(x) <= limit + 1e-8 for x, limit in zip(v, d.input.max_velocity))
-        assert all(abs(x) <= 80 + 1e-8 for x in a)
-        assert all(abs(x - y) <= 80 * .001 + 1e-8 for x, y in zip(v, previous_v))
-        assert all(abs(x - y) <= 200 * .001 + 1e-8 for x, y in zip(a, previous_a))
+        assert all(abs(x) <= 400 + 1e-8 for x in a)
+        assert all(abs(x - y) <= 400 * .001 + 1e-8 for x, y in zip(v, previous_v))
+        assert all(abs(x - y) <= 2400 * .001 + 1e-8 for x, y in zip(a, previous_a))
         assert all(lo - 1e-10 <= d.pose[n] <= hi + 1e-10 for n, (lo, hi) in zip(d.mapper.joint_names, d.mapper._limits))
         previous_v, previous_a = v, a
         if i == 500:

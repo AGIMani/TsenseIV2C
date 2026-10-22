@@ -12,16 +12,18 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(ROOT / "tools")]
 from a32_kinematics import A32StrokeMapper, A32Error
-from a32_kinematics.a32_angles_to_inputs import MODEL_DIR, a32_angles_to_inputs, load_configuration, load_kinematic_model
-from hand_profiles import load_hand_profile
+from a32_kinematics.a32_angles_to_inputs import MODEL_DIR
+from hand_profiles import A32_MODEL_IDS, load_hand_profile
 from a32_kinematics.joint_coordinates import initial_pose, reverse_swing
+from a32_kinematics import sdk_stroke
 
 
-def test_project_default_is_fast_lut_with_explicit_exact_available():
+def test_legacy_method_selectors_use_versioned_sdk_conversion():
     mapper = A32StrokeMapper()
     assert mapper.method == "lut"
     assert mapper.description()["method"] == "lut"
-    assert mapper._prepared.lookup_error_bound_m.max() <= 1e-9
+    assert mapper.description()["conversion"] == "sdk-1.1.15"
+    assert not hasattr(mapper, "_prepared")
     assert A32StrokeMapper(method="exact").method == "exact"
 
 
@@ -32,8 +34,8 @@ def test_named_outputs_match_reference_and_units(side, method, tolerance_mm):
     pose = {n: sum(limits) / 2 for n, limits in zip(mapper.joint_names, mapper._limits)}
     before = dict(pose)
     result = mapper.convert(pose)
-    expected, _ = a32_angles_to_inputs(load_kinematic_model(), load_configuration(),
-                                      [math.degrees(pose[n]) for n in mapper.joint_names])
+    expected = sdk_stroke.angles_deg_to_actuators(
+        [math.degrees(pose[n]) for n in mapper.joint_names])
     assert pose == before
     assert len(result.linear_strokes_mm) == 14 and len(result.rotary_positions_deg) == 6
     assert result.clamped_joints_rad == {}
@@ -41,9 +43,9 @@ def test_named_outputs_match_reference_and_units(side, method, tolerance_mm):
     for channel, value in zip(mapper.description()["channels"], expected):
         name = channel["joint"]
         if channel["type"] == "linear":
-            assert result.linear_strokes_mm[name] == pytest.approx(value * 1000, abs=tolerance_mm, rel=0)
+            assert result.linear_strokes_mm[name] == pytest.approx(value, abs=tolerance_mm, rel=0)
         else:
-            assert result.rotary_positions_deg[name] == pytest.approx(math.degrees(value), abs=1e-12)
+            assert result.rotary_positions_deg[name] == pytest.approx(value, abs=1e-12)
     assert f"{side}_hand_pinky_MCP_joint" in result.linear_strokes_mm
     assert f"{side}_hand_pinky_swing_joint" in result.rotary_positions_deg
 
@@ -55,15 +57,14 @@ def test_pinky_flexion_and_signed_swing_remain_independent(side, method):
     pose = load_hand_profile("TsenseI_v3_2").init_pose(side)
     mcp, swing = (f"{side}_hand_pinky_{part}_joint" for part in ("MCP", "swing"))
     pose[mcp] = 1.0  # Legal flexion must not be clamped to swing's 0.35 rad.
-    expected, _ = a32_angles_to_inputs(load_kinematic_model(), load_configuration(),
-                                      math.degrees(pose[mcp]), 17)
-    for angle in (.005, .15, .35, .55, .695):
+    expected = sdk_stroke.joint_angle_deg_to_actuator(16, math.degrees(pose[mcp]))
+    for angle in (-.35, -.15, 0., .15, .35):
         pose[swing] = angle
         strict = mapper.convert(pose)
         preview = mapper.preview(pose)
         assert preview["valid"] and not preview["clamped_joints_rad"]
         assert preview["joint_angles_rad"][mcp] == 1.0
-        assert strict.linear_strokes_mm[mcp] == pytest.approx(expected[0] * 1000, abs=1e-6, rel=0)
+        assert strict.linear_strokes_mm[mcp] == pytest.approx(expected, abs=1e-6, rel=0)
         assert preview["linear_strokes_mm"][mcp] == strict.linear_strokes_mm[mcp]
         assert strict.rotary_positions_deg[swing] == pytest.approx(math.degrees(angle), abs=1e-12)
         assert preview["rotary_positions_deg"][swing] == strict.rotary_positions_deg[swing]
@@ -97,10 +98,32 @@ def test_strict_limits_and_explicit_preview_clamp():
     preview = mapper.preview(pose)
     assert preview["valid"] and pose["left_hand_index_MCP_joint"] == 1.57
     assert set(preview["clamped_joints_rad"]) == {"left_hand_index_MCP_joint"}
-    assert preview["clamped_joints_rad"]["left_hand_index_MCP_joint"] == 1.3
+    assert preview["clamped_joints_rad"]["left_hand_index_MCP_joint"] == 1.565
     pose["left_hand_index_MCP_joint"] = float("nan")
     failed = mapper.preview(pose)
     assert not failed["valid"] and not failed["linear_strokes_mm"]
+
+
+@pytest.mark.parametrize("model_id", A32_MODEL_IDS)
+@pytest.mark.parametrize("side", ["left", "right"])
+@pytest.mark.parametrize("method", ["exact", "lut"])
+def test_extended_mcp_range_uses_sdk_full_linear_domain(model_id, side, method):
+    mapper = A32StrokeMapper(side, method=method, model_id=model_id)
+    pose = load_hand_profile(model_id).init_pose(side)
+    for channel in mapper.description()["channels"]:
+        name = channel["joint"]
+        if not name.endswith("_MCP_joint"):
+            continue
+        upper = 1.565
+        assert channel["limits_rad"] == [.005, upper]
+        for angle in (.005, upper):
+            pose[name] = angle
+            result = mapper.convert(pose)
+            reference = sdk_stroke.joint_angle_deg_to_actuator(channel["motor_index"] - 1, math.degrees(angle))
+            assert result.linear_strokes_mm[name] == pytest.approx(reference, abs=1e-9, rel=0)
+            assert mapper.inverse_actuator(name, reference) == pytest.approx(angle, abs=4e-8)
+            assert result.joint_angles_rad[name] == angle
+            assert not result.clamped_joints_rad
 
 
 def test_v2_and_wrong_side_poses_are_rejected():
@@ -142,6 +165,8 @@ def test_minimal_bundle_contains_independent_a32_runtime(tmp_path):
             target.write_bytes(source.read_bytes())
     code = """
 import sys
+import ctypes
+ctypes.CDLL = lambda *a, **k: (_ for _ in ()).throw(AssertionError('native library loaded'))
 from a32_kinematics import A32StrokeMapper
 m = A32StrokeMapper()
 from a32_kinematics.joint_coordinates import initial_pose

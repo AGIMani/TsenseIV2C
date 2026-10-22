@@ -19,7 +19,7 @@
     <section class="cal-controls" aria-label="标定与输入设置">
       <label>手型<select id="hand-model"><option value="TsenseI_v3_2">A3.2</option><option value="TsenseI_v3_2_withid" selected>A3.2 with ID</option><option value="TsenseI_v3_0">A3.0</option><option value="TsenseI_v3_0_withid">A3.0 with ID</option></select></label>
       <label>模型手别<select id="side"><option value="left">左手模型</option><option value="right">右手模型</option></select></label>
-      <label>关键点来源<select id="input-source"><option value="mediapipe">MediaPipe · 相机</option><option value="webxr">Quest 3 · WebXR</option><option value="wuji_glove">Wuji · 数据手套</option><option value="leapmotion">Leap Motion 2 · 红外追踪</option></select></label>
+      <label>关键点来源<select id="input-source"><option value="mediapipe">MediaPipe · 相机</option><option value="realsense_rgbd">D455f 深度融合 · 21 点</option><option value="leapmotion_camera">Leap Motion 2 相机 · MediaPipe · 120 fps</option><option value="webxr">Quest 3 · WebXR</option><option value="wuji_glove">Wuji · 数据手套</option><option value="leapmotion">Leap Motion 2 · 红外追踪</option></select></label>
       <label>采集手别<select id="input-side"><option value="left">识别左手</option><option value="right">识别右手</option></select></label>
       <label id="camera-control">视频来源<select id="camera"><option value="">默认摄像头</option></select></label>
       <button id="start" class="cal-primary" disabled>接入实时输入</button><button id="reset-views">重置视角</button>
@@ -29,6 +29,7 @@
       <div><strong id="input-status" role="status">加载标定与模型…</strong><p id="source-help">相机由当前浏览器直接采集；冻结后可拖动输入关键点。</p></div>
       <div id="quest-pairing" hidden><label>Quest 地址<input id="quest-link" readonly></label><span>配对码 <strong id="quest-code"></strong></span><button id="quest-renew">更新配对码</button><a id="quest-open" href="/q" target="_blank" rel="noopener">打开 Quest 页面 ↗</a></div>
       <video id="video" autoplay muted playsinline hidden></video>
+      <canvas id="leap-camera-canvas" width="512" height="512" aria-label="Leap Motion 2 红外画面" hidden></canvas>
     </section>
     <section class="cal-views" aria-label="三栏标定预览">
       <article class="cal-card"><header><div><span class="cal-number">01</span><h2>输入骨架</h2></div><span id="input-mode">可拖动 · 21 点</span></header>

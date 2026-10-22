@@ -294,7 +294,7 @@ export class BrowserHandControl {
     if (!pose || Object.keys(pose).length !== Object.keys(this.held).length ||
       Object.entries(this.held).some(([key,q]) => {
         const value = pose[key], lim = this.limits?.[key];
-        const velocity = state.motion_limits?.[key]?.velocity ?? 10;
+        const velocity = state.motion_limits?.[key]?.velocity ?? 20;
         return !Number.isFinite(value) || !lim || value < lim[0]-1e-5 || value > lim[1]+1e-5 ||
           (!this.directMode && Math.abs(value-q) > velocity*3*dt+.002);
       })) { this.disarm("轨迹越界或跳变过大，已阻断下发"); return; }
@@ -316,10 +316,13 @@ export class BrowserHandControl {
         linear_mm: linear, rotary_deg: rotary, joint_enabled: enabled,
         frame_id: state.frame_id, direct_mode:this.directMode,
         source: this.directMode ? "browser/direct_motor_power" : "browser/ruckig_motor_power"});
-      if(this.directMode)this.event(this.modelId?.startsWith('TsenseI_v3_')?'direct_command':'direct_filter',{joints:pose,frame_id:state.frame_id,
+      // V2 direct samples are recorded from their pre-collision controller
+      // stage in app.js; the actual written pose belongs only to SDK output.
+      if(this.directMode&&this.modelId?.startsWith('TsenseI_v3_'))this.event('direct_command',{joints:pose,frame_id:state.frame_id,
         sample_ticks:state.sample_ticks,sent,stage:'checked',source:'browser_sample'});
       this.event("h7", {joints_ui: pose, joints_hw: state.hardware_joint_angles_rad,
         joint_enabled: enabled,
+        sample_ticks:state.sample_ticks, written_at:sent?this.lastSentAt:undefined,
         frame_id: state.frame_id, sent, usb_connected: this.connected, joints_ruckig_ui: this.directMode?{}:pose,
         ruckig_faults: state.ruckig_faults || [], guard_limited: null, control_dt_s: dt, source: "browser/received_sample"});
       const seq = this.event("downlink", {...this.protocol.decodePositions(bytes), wire_hex: hex(bytes), sent,

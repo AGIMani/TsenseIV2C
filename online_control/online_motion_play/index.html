@@ -21,21 +21,22 @@ header{display:flex;align-items:center;justify-content:space-between;gap:18px;pa
 <main>
 <div class="stack">
 <section class="card"><div class="card-head"><h2>手部模型</h2><div class="toolbar"><select id="modelSelect" aria-label="手部型号"><option value="TsenseI_v2">V2 · 21关节</option><option value="TsenseI_v3_0">A3.0 · 20关节</option><option value="TsenseI_v3_0_withid">A3.0 with ID · 20关节</option><option value="TsenseI_v3_2">A3.2 · 20关节 · SDK</option><option value="TsenseI_v3_2_withid">A3.2 with ID · 20关节 · SDK</option></select><span id="handSide"></span><span id="dof" class="badge">21 自由度</span></div></div><div class="viewer" id="viewer"><div class="viewer-note" id="modelNote">正在载入手部模型…</div><div class="viewer-info">左键旋转 · 中键平移 · 滚轮缩放</div></div><div class="viewer-tools"><span id="realtimeJointControl"></span><button id="resetView">重置视角</button></div></section>
-<section class="card"><div class="card-head"><h2>动作与序列</h2><span id="motionCount" class="badge">0 个动作</span></div><div class="section"><div class="toolbar"><span id="choosemotion" class="motion-picker"></span><span id="loadmotion"></span></div><div class="toolbar"><span id="savemotion"></span><span id="deletemotion"></span><button id="import">选择动作文件</button><button id="export">导出动作文件</button><input type="file" id="file" accept=".txt,.json" hidden></div><div class="toolbar"><label class="field">过渡 (s)<span id="transition"></span></label><label class="field">间隔 (s)<span id="interval"></span></label></div><div class="divider"></div><div class="toolbar"><span id="motionstreamplay"></span><span id="motionStreamLoop"></span><span id="isConnectOffline"></span></div><div class="file-note" id="fileNote">支持现有 .txt / .json 动作文件</div></div></section>
+<section class="card"><div class="card-head"><h2>动作与序列</h2><span id="motionCount" class="badge">0 个动作</span></div><div class="section"><div class="toolbar"><span id="choosemotion" class="motion-picker"></span><span id="loadmotion"></span></div><div class="toolbar"><span id="savemotion"></span><span id="deletemotion"></span><button id="import">选择动作文件</button><button id="export">导出动作文件</button><input type="file" id="file" accept=".txt,.json" hidden></div><div class="toolbar"><label class="field">过渡 (s)<span id="transition"></span></label><label class="field">间隔 (s)<span id="interval"></span></label></div><div class="divider"></div><div class="toolbar"><span id="motionstreamplay"></span><span id="motionStreamLoop"></span><span id="isConnectOffline"></span></div><div class="file-note" id="motionSendStatus" role="status"></div><div class="file-note" id="fileNote">支持现有 .txt / .json 动作文件</div></div></section>
 <section class="card" id="motorCard"><div class="card-head"><h2>电机控制</h2><span id="openSendLog"></span></div><div class="section" id="v2Motors"><div class="motor-row"><span>直线电机</span><span id="allzero"></span><span id="allreset"></span></div><div class="motor-row"><span>旋转电机</span><span id="calibrationRotateMotor"></span><span id="oneKeyZero"></span><span id="motiondirectlysend"></span></div></div>
 <div class="section" id="a30Motors" hidden>
 <div class="toolbar"><label class="field">直线找零 Iq<span id="a30LinearIq"></span></label><label class="field">旋转找零 Iq<span id="a30RotaryIq"></span></label></div>
 <div class="file-note">Iq 为已标定的电流码值，不是安培；两类电机分别填写。</div>
 <div class="toolbar"><span id="a30Home"></span><span id="a30Reset"></span><span id="a30Init"></span><span id="a30PowerOff"></span></div>
 <div class="file-note">9路行程(mm) + 11路角度(°)，外接角度按各通道配置的减速比换算。外接两路无独立找零/复位/断电指令。复位回零态不移动关节；回到初始姿态在实时控制开启时通过 Ruckig 下发。</div>
-<div class="file-note">实时控制无需先找零，也不要求20路全部在线；缺失反馈的关节使用页面当前姿态起步。</div>
+<div class="file-note">实时控制无需先找零；每次开启均需20路新鲜有效反馈，从当前实测姿态起步。</div>
 <div id="a30Telemetry" role="status"></div><div id="a30Seed" class="file-note"></div><div id="a30Clipped" class="file-note" role="status"></div><div id="a30Message" class="file-note"></div>
 <details><summary>找零结果</summary><div id="a30Report" class="dialog-label">尚未执行找零</div></details>
 </div>
 <div class="section" id="a32Motors" hidden>
 <div class="toolbar"><span id="a32Enable"></span><span id="a32Disable"></span><span id="a32Reset"></span><span id="a32Init"></span></div>
 <div class="toolbar"><span id="a32HomeSlot"></span><label class="field">找零 Iq 码值<span id="a32HomeIq"></span></label><span id="a32Home"></span></div>
-<div class="file-note">14 路直线 + 4 路自研旋转 + 2 路 MIT。连接使能后即可下发，无需等待遥测或先找零。缺失反馈时使用上次下发姿态，首次使用页面姿态，按 Ruckig 轨迹下发。可选找零仅覆盖自研电机，完成后重新使能。</div>
+<div class="file-note">14 路直线 + 4 路自研旋转 + 2 路 MIT。每次开启实时控制或动作同步，均从本次连接的新鲜完整反馈起步，再按 Ruckig 轨迹下发。反馈缺失时等待更新。可选找零仅覆盖自研电机，完成后重新使能。</div>
+<div class="file-note">A3.2 停止操作只停止后续下发，不发送失能；设备可能继续执行已接收的命令或找零。</div>
 <div id="a32Telemetry" role="status"></div><div id="a32Message" class="file-note"></div>
 <div class="toolbar"><button id="a32DownloadLog" disabled>下载控制记录</button><a href="/control-log-viewer" target="_blank" rel="noopener">数据查看器</a></div>
 <div id="a32LogStatus" class="file-note">连接 SDK 后自动记录</div>
@@ -43,7 +44,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:18px;pa
 </div>
 </section>
 </div>
-<section class="card"><div class="card-head"><h2>关节控制</h2><span id="jointUnits" class="file-note">UI：rad · 直线下发：负 mm</span></div><div id="jointNote" class="section file-note">每个关节显示 UI 输入范围与 USB 下发范围；零行程为 0。A3.0 外接旋转范围为电机端角度，已包含各通道配置的减速比。</div><div class="joints" id="joints"></div></section>
+<section class="card"><div class="card-head"><h2>关节控制</h2><div class="toolbar"><span id="jointUnits" class="file-note">滑块：弧度</span><button id="jointDisplayToggle" type="button" title="切换滑块和数值输入的显示单位">显示：弧度</button></div></div><div id="jointNote" class="section file-note">每个关节显示 UI 输入范围与 USB 下发范围；零行程为 0。A3.0 外接旋转范围为电机端角度，已包含各通道配置的减速比。</div><div class="joints" id="joints"></div></section>
 </main>
 <footer class="statusbar"><span id="status">等待服务响应</span><span>Form2 · Online Motion Play</span></footer>
 <div id="dialogs" class="dialog-layer"></div><div id="toast" role="status" aria-live="polite"></div>
@@ -78,9 +79,13 @@ async function api(action, body) {
   const data = await response.json();
   if (!response.ok) throw Error(data.error || response.statusText); return data;
 }
+let commandRevision = 0, pendingCommands = 0;
 function command(action, body) {
+  commandRevision++; pendingCommands++;
   const next = commandTail.then(() => api(action, body));
-  commandTail = next.catch(error => notify(error.message)); return commandTail;
+  commandTail = next.catch(error => notify(error.message)).finally(() => {
+    pendingCommands--; commandRevision++;
+  }); return commandTail;
 }
 function sendWidget(binding, value, commit = true) { return command('widget', {id:binding.spec.id, value, commit}); }
 function control(spec, host, key) {
@@ -114,7 +119,9 @@ function control(spec, host, key) {
     }
   }
   binding.spec = spec; const el = binding.el;
-  el.disabled = !spec.enabled || !ownsControl; el.title = spec.tip || '';
+  const disabled = !spec.enabled || !ownsControl;
+  if (el.disabled !== disabled) el.disabled = disabled;
+  if (el.title !== (spec.tip || '')) el.title = spec.tip || '';
   if (spec.kind === 'button' || spec.kind === 'label') el.textContent = spec.text;
   if (spec.kind === 'check') { binding.text.textContent = spec.text; el.checked = spec.value; }
   if (spec.kind === 'select') {
@@ -128,18 +135,101 @@ function control(spec, host, key) {
   }
   if (spec.kind === 'number') { el.min = spec.min; el.max = spec.max; el.step = spec.step; }
   if (spec.kind === 'number' || spec.kind === 'text' || spec.kind === 'select') {
-    if (document.activeElement !== el && !binding.dirty && !binding.sending && !pendingJoints.has(spec.name)) el.value = spec.kind === 'number' ? Math.max(spec.min, Math.min(spec.max, Number(spec.value.toFixed(6)))) : spec.value;
+    if (document.activeElement !== el && !binding.dirty && !binding.sending && !pendingJoints.has(spec.name)) {
+      const value = String(spec.kind === 'number' ? Math.max(spec.min, Math.min(spec.max, Number(spec.value.toFixed(6)))) : spec.value);
+      if (el.value !== value) el.value = value;
+    }
   }
   return binding;
 }
 const fingerNames = {thumb:'拇指',index:'食指',mid:'中指',ring:'无名指',pinky:'小指'};
 const jointRows = new Map();
 const rangeNumber = value => Number(value.toFixed(4)).toString();
+const DISPLAY_MODES = [
+  {key:'rad', label:'弧度', unit:'rad'},
+  {key:'deg', label:'角度', unit:'°'},
+  {key:'stroke', label:'转换后行程', unit:'mm / °'},
+];
+let jointDisplayMode = (() => {
+  try { return DISPLAY_MODES.some(mode => mode.key === localStorage.getItem('motionPlayJointDisplay'))
+    ? localStorage.getItem('motionPlayJointDisplay') : 'rad';
+  } catch (_) { return 'rad'; }
+})();
+const currentDisplay = () => DISPLAY_MODES.find(mode => mode.key === jointDisplayMode) || DISPLAY_MODES[0];
+const modeLabel = spec => jointDisplayMode === 'stroke' && !spec.downlink ? '弧度（无下发转换）' : currentDisplay().label;
+const interpolation = (points, value, reverse = false) => {
+  if (!points?.length) return value;
+  const ordered = points.slice().sort((a,b) => (reverse ? a[1] - b[1] : a[0] - b[0]));
+  const axis = reverse ? 1 : 0;
+  if (value <= ordered[0][axis]) return ordered[0][reverse ? 0 : 1];
+  if (value >= ordered.at(-1)[axis]) return ordered.at(-1)[reverse ? 0 : 1];
+  for (let i = 1; i < ordered.length; i++) {
+    const a = ordered[i - 1], b = ordered[i], av = a[axis], bv = b[axis];
+    if (value <= bv) {
+      const fraction = (value - av) / (bv - av || 1);
+      return a[reverse ? 0 : 1] + fraction * (b[reverse ? 0 : 1] - a[reverse ? 0 : 1]);
+    }
+  }
+  return ordered.at(-1)[reverse ? 0 : 1];
+};
+function toDisplay(spec, radians) {
+  if (jointDisplayMode === 'deg') return radians * 180 / Math.PI;
+  if (jointDisplayMode !== 'stroke' || !spec.downlink) return radians;
+  const downlink = spec.downlink;
+  if (downlink.curve) return interpolation(downlink.curve, radians);
+  const fraction = (radians - spec.min) / (spec.max - spec.min || 1);
+  return downlink.at_ui_min + fraction * (downlink.at_ui_max - downlink.at_ui_min);
+}
+function fromDisplay(spec, displayed) {
+  if (jointDisplayMode === 'deg') return displayed * Math.PI / 180;
+  if (jointDisplayMode !== 'stroke' || !spec.downlink) return displayed;
+  const downlink = spec.downlink;
+  if (downlink.curve) return interpolation(downlink.curve, displayed, true);
+  const fraction = (displayed - downlink.at_ui_min) / (downlink.at_ui_max - downlink.at_ui_min || 1);
+  return spec.min + fraction * (spec.max - spec.min);
+}
+function displayBounds(spec) {
+  if (jointDisplayMode === 'deg') return [spec.min * 180 / Math.PI, spec.max * 180 / Math.PI];
+  if (jointDisplayMode !== 'stroke' || !spec.downlink) return [spec.min, spec.max];
+  const curve = spec.downlink.curve;
+  return curve ? [Math.min(...curve.map(point => point[1])), Math.max(...curve.map(point => point[1]))]
+    : [spec.downlink.min, spec.downlink.max];
+}
+function displayStep(spec) {
+  if (jointDisplayMode === 'deg') return '.1';
+  if (jointDisplayMode === 'stroke' && spec.downlink) return spec.downlink.unit === 'mm' ? '.01' : '.1';
+  return '.001';
+}
+function updateJointDisplayButton() {
+  const mode = currentDisplay();
+  $('jointDisplayToggle').textContent = `显示：${mode.label}`;
+  $('jointDisplayToggle').setAttribute('aria-label', `切换滑块显示单位，当前为${mode.label}`);
+  $('jointDisplayToggle').dataset.mode = mode.key;
+  $('jointUnits').textContent = `滑块：${mode.label}`;
+}
+function formatDisplay(spec, value) {
+  const step = jointDisplayMode === 'rad' ? 6 : 4;
+  return Number(value.toFixed(step)).toString();
+}
+function setJointDisplayMode(mode) {
+  jointDisplayMode = mode;
+  try { localStorage.setItem('motionPlayJointDisplay', mode); } catch (_) {}
+  updateJointDisplayButton();
+  if (state) renderJoints(state.joints);
+}
+function cycleJointDisplayMode() {
+  const index = DISPLAY_MODES.findIndex(mode => mode.key === jointDisplayMode);
+  setJointDisplayMode(DISPLAY_MODES[(index + 1) % DISPLAY_MODES.length].key);
+}
+updateJointDisplayButton();
+document.getElementById('jointDisplayToggle').onclick = cycleJointDisplayMode;
 function renderJoints(joints) {
   for (const spec of joints) {
+    const [finger, ...parts] = spec.short.split('_');
+    const part = parts.join('_');
     let row = jointRows.get(spec.name);
     if (!row) {
-      const [finger, ...parts] = spec.short.split('_'); const part = parts.join('_'); let group = $('finger-' + finger);
+      let group = $('finger-' + finger);
       if (!group) {
         group = document.createElement('section'); group.className = 'finger'; group.id = 'finger-' + finger;
         const heading = document.createElement('div'); heading.className = 'finger-title';
@@ -154,19 +244,35 @@ function renderJoints(joints) {
       const binding = control(spec, valueHost, spec.name); binding.el.setAttribute('aria-label', `${fingerNames[finger]} ${part} 弧度`);
       row = {slider,binding,range}; jointRows.set(spec.name,row);
       slider.oninput = () => {
-        binding.el.value = slider.value;
-        pendingJoints.set(spec.name,{binding,value:Number(slider.value)});
-        if (state) { state.pose[spec.name.replace('left_hand_', state.side + '_hand_')] = Number(slider.value); applyPose(state.pose); }
+        const value = fromDisplay(spec, Number(slider.value));
+        binding.el.value = formatDisplay(spec, Number(slider.value));
+        pendingJoints.set(spec.name,{binding,value});
+        if (state) { state.pose[spec.name.replace('left_hand_', state.side + '_hand_')] = value; applyPose(state.pose); }
       };
-      slider.onchange = () => { pendingJoints.set(spec.name,{binding,value:Number(slider.value),commit:true}); slider.blur(); };
+      slider.onchange = () => { pendingJoints.set(spec.name,{binding,value:fromDisplay(spec, Number(slider.value)),commit:true}); slider.blur(); };
+      binding.el.oninput = () => { binding.dirty = true; };
+      const commitDisplayed = () => {
+        if (!binding.dirty) return;
+        binding.dirty = false; binding.sending = true;
+        const value = fromDisplay(spec, Number(binding.el.value));
+        pendingJoints.set(spec.name, {binding,value,commit:true});
+        binding.sending = false;
+      };
+      binding.el.onchange = commitDisplayed; binding.el.onblur = commitDisplayed;
+      binding.el.onkeydown = event => { if (event.key === 'Enter') { commitDisplayed(); binding.el.blur(); } };
     }
     control(spec, row.binding.host, spec.name);
     row.slider.disabled = !ownsControl || !spec.enabled;
-    row.slider.min = spec.min; row.slider.max = spec.max;
+    const [displayMin, displayMax] = displayBounds(spec);
+    row.slider.min = displayMin; row.slider.max = displayMax; row.slider.step = displayStep(spec);
     const downlink = spec.downlink;
-    row.range.textContent = downlink ? `UI [${rangeNumber(spec.min)}, ${rangeNumber(spec.max)}] rad → 下发 [${rangeNumber(downlink.min)}, ${rangeNumber(downlink.max)}] ${downlink.unit === 'deg' ? '°' : 'mm'} · ${downlink.slot}` : `输入范围 [${rangeNumber(spec.min)}, ${rangeNumber(spec.max)}] rad`;
+    const displayedValue = toDisplay(spec, spec.value);
+    row.binding.el.min = displayMin; row.binding.el.max = displayMax; row.binding.el.step = displayStep(spec);
+    row.binding.el.setAttribute('aria-label', `${fingerNames[finger]} ${part} ${modeLabel(spec)}`);
+    if (document.activeElement !== row.binding.el && !row.binding.dirty && !row.binding.sending) row.binding.el.value = formatDisplay(spec, displayedValue);
+    row.range.textContent = downlink ? `当前 ${modeLabel(spec)} [${rangeNumber(displayMin)}, ${rangeNumber(displayMax)}] · 原始弧度 [${rangeNumber(spec.min)}, ${rangeNumber(spec.max)}] → 下发 [${rangeNumber(downlink.min)}, ${rangeNumber(downlink.max)}] ${downlink.unit === 'deg' ? '°' : 'mm'} · ${downlink.slot}` : `当前 ${modeLabel(spec)} [${rangeNumber(displayMin)}, ${rangeNumber(displayMax)}]`;
     row.range.title = downlink ? `UI 最小值对应 ${rangeNumber(downlink.at_ui_min)}，UI 最大值对应 ${rangeNumber(downlink.at_ui_max)}；直线行程由机构非线性转换。` : '';
-    if (document.activeElement !== row.slider && !pendingJoints.has(spec.name)) row.slider.value = spec.value;
+    if (document.activeElement !== row.slider && !pendingJoints.has(spec.name)) row.slider.value = displayedValue;
   }
 }
 let flushing = false;
@@ -212,22 +318,23 @@ function render(next) {
   $('v2Motors').hidden = a30 || a32; $('a30Motors').hidden = !a30; $('a32Motors').hidden = !a32;
   $('a32Connection').hidden = !a32;
   for (const id of ['ports','refreshPorts','authorizePort','serialBaudField','openSendLog']) $(id).hidden = a32;
-  $('jointUnits').textContent = a32 ? 'UI：rad · SDK：mm / 输出轴 °' : 'UI：rad · 直线下发：负 mm';
-  $('jointNote').textContent = a32 ? '关节输入使用当前模型范围。四指 swing 默认为 0，输入范围 [0, 0.7] rad，下发前限幅到 [0.005, 0.695] rad；下方同时显示实际 SDK 下发单位和范围。' : '每个关节显示 UI 输入范围与 USB 下发范围；零行程为 0。A3.0 外接旋转范围为电机端角度，已包含各通道配置的减速比。';
+  $('jointNote').textContent = a32 ? '关节输入使用当前模型范围。四指 swing 默认为 0，输入范围 [-0.35, 0.35] rad，下发前限幅到 [-0.34, 0.34] rad；下方同时显示实际 SDK 下发单位和范围。' : '每个关节显示 UI 输入范围与 USB 下发范围；零行程为 0。A3.0 外接旋转范围为电机端角度，已包含各通道配置的减速比。';
+  updateJointDisplayButton();
   for (const id of ['a32Transport','a32Port','a32Host','a32TcpPort']) $(id).disabled = !ownsControl || next.connected;
   if (a32) {
     const d = next.device;
     const self = d.self || [], mit = d.mit || [];
-    $('a32Telemetry').textContent = `${d.feedback_valid ? '遥测就绪' : '遥测缺失或不完整，仍可下发'} · self ${self.filter(row => row.online).length}/18 + MIT ${mit.filter(row => row.online).length}/2 · ${d.enabled ? '已使能' : '未使能'} · ${d.command_started ? '轨迹下发中' : d.armed ? '等待关节或动作指令' : '未下发轨迹'}${d.seed_missing?.length ? ` · ${d.seed_missing.length} 路使用软件姿态起步（非实测）` : ''}`;
+    $('a32Telemetry').textContent = `${d.feedback_valid ? '遥测就绪' : '遥测缺失或不完整，仍可下发'} · self ${self.filter(row => row.online).length}/18 + MIT ${mit.filter(row => row.online).length}/2 · ${d.enabled ? '已使能' : '未使能'} · ${d.command_started ? '轨迹下发中' : d.armed ? '等待关节或动作指令' : '未下发轨迹'}${d.seed_missing?.length ? ` · ${d.seed_missing.length} 路反馈无法用于起步（非实测）` : ''}`;
     $('a32Message').textContent = [next.message, d.last_error, d.stop_reason && `停止原因：${d.stop_reason}`].filter(Boolean).join(' · ');
     const diag = d.telemetry_diagnostics || {};
     const recording = next.recording || {};
     $('a32DownloadLog').disabled = !recording.files?.length || next.sdk_local_access === false;
     $('a32LogStatus').textContent = recording.error ? `记录错误：${recording.error}` : recording.path ? `${recording.active ? '正在记录' : '记录已保存'}：${recording.path}` : '连接 SDK 后自动记录，包含 SDK 状态、轨迹目标、成功/失败下发和停止原因';
+    const currentUnit = row => row.current_unit || d.telemetry_units?.self_current || '协议原值';
     $('a32Report').textContent = [`SDK 在线掩码 ${diag.self_online_mask_hex || '—'} · 遥测年龄 ${d.telemetry_age_ms ?? '—'} ms · 序号 ${d.sequence ?? d.rx_ok ?? '—'} · 设备时钟 ${d.tick_ms ?? '—'} ms`,
       `SDK 报告的离线 self：${diag.self_offline_slots?.join(', ') || '无'}；在线状态来自固件标志，不按位置零值判断。`,
-      ...self.map(row => `self ${row.slot} · ${row.joint || ''} · CAN${row.bus ?? '?'} 节点 ${row.can_node ?? row.node ?? '?'} · ${row.online ? '在线' : '离线'} · 位置 ${row.position ?? '—'} ${row.unit || ''} · 找零 ${row.homing_label || row.homing || 'WAIT'}`),
-      ...mit.map(row => `MIT ${row.index} · ${row.joint || ''} · ${row.online ? '在线' : '离线'} · 有效 ${!!row.valid} · 故障 ${row.fault ?? '—'} · 输出轴 ${row.position ?? '—'}°`)].join('\n');
+      ...self.map(row => `self ${row.slot} · ${row.joint || ''} · CAN${row.bus ?? '?'} 节点 ${row.can_node ?? row.node ?? '?'} · ${row.online ? '在线' : '离线'} · 位置 ${row.position ?? '—'} ${row.unit || ''} · 电流 ${row.iq ?? '—'} / 目标 ${row.iq_ref ?? '—'} ${currentUnit(row)} · 找零 ${row.homing_label || row.homing || 'WAIT'}`),
+      ...mit.map(row => `MIT ${row.index} · ${row.joint || ''} · ${row.online ? '在线' : '离线'} · 有效 ${!!row.valid} · 故障 ${row.fault ?? '—'} · 输出轴 ${row.position ?? '—'}° · 电流 ${row.iq ?? '—'} A`)].join('\n');
   }
   if (a30) {
     const d = next.device;
@@ -250,12 +357,23 @@ function render(next) {
   const serialRates = localSerial.sampleMetrics();
   $('serialNote').textContent = serialSupport() || localSerial.error || (localSerial.active ? `${localSerial.deviceLabel} · 本机写入 ${serialRates.positionHz.toFixed(1)} Hz · 接收 ${serialRates.rxKBs.toFixed(1)} KiB/s · 交换 ${serialRates.exchangeHz.toFixed(1)} Hz / ${localSerial.rttMs.toFixed(1)} ms · 收 ${localSerial.rxCount} 字节 / 发 ${localSerial.txCount} 帧` : '将 H7 插在这台电脑，点击“授权本机串口”选择设备。node0 不连接 USB。');
   if (a32) {
-    $('connect').disabled = !ownsControl || next.side !== 'left' || next.sdk_local_access === false;
+    $('connect').disabled = !ownsControl || next.sdk_local_access === false;
     $('connect').textContent = next.connected ? '断开 SDK' : '连接本机 SDK';
     $('connection').textContent = next.connected ? '● SDK 已连接服务电脑设备' : '○ SDK 未连接';
     $('connection').classList.toggle('online', next.connected);
-    $('serialNote').textContent = next.sdk_local_access === false ? '当前为远程页面，可离线编辑 A3.2 动作。实机连接与控制请在运行 Python 服务的电脑上通过本机地址打开页面。' : 'A3.2 原生 SDK 在运行 Python 服务的电脑上连接 USB / ETH。当前仅左手具有硬件槽位标定，实机操作仅允许本机浏览器。';
+    $('serialNote').textContent = next.sdk_local_access === false ? '当前为远程页面，可离线编辑 A3.2 动作。实机连接与控制请在运行 Python 服务的电脑上通过本机地址打开页面。' : 'A3.2 原生 SDK 在运行 Python 服务的电脑上连接 USB / ETH。左右手共用硬件槽位表，实机操作仅允许本机浏览器。';
   }
+  $('motionSendStatus').textContent = a32
+    ? next.device.stop_reason || next.device.last_error
+      ? `下发已停止：${next.device.stop_reason || next.device.last_error}`
+      : next.device.command_started
+        ? `SDK 累计已发送 ${next.device.sample_ticks || 0} 帧轨迹目标（不代表设备已执行）`
+        : next.controls.isConnectOffline?.value
+          ? '同步已开启：点击加载选定动作或动作序列播放后下发'
+          : next.controls.realtimeJointControl?.value
+            ? '实时关节控制已开启；序列播放请切换到动作同步下位机'
+            : '离线预览：勾选动作同步下位机后再加载或播放'
+    : '';
   $('motionCount').textContent = `${next.count} 个动作`;
   $('status').textContent = (ownsControl ? '控制模式 · ' : '只读模式 · ') + (next.homing ? '正在执行一键找零' : next.playing ? '正在播放动作序列' : '就绪');
   $('fileNote').textContent = `工作副本：${next.file} · 修改自动保存，可导出 .txt / .json`;
@@ -263,14 +381,20 @@ function render(next) {
     const binding = control(spec,$(key),key);
     if (key === 'motionstreamplay') binding.el.className = next.playing ? 'stop' : 'primary';
     if (key === 'handSide') binding.el.setAttribute('aria-label','左右手');
-    if (key === 'choosemotion') binding.el.setAttribute('aria-label','选择动作');
+    if (key === 'choosemotion' && binding.el.getAttribute('aria-label') !== '选择动作') binding.el.setAttribute('aria-label','选择动作');
   }
   renderJoints(next.joints); renderDialogs(ownsControl ? next.dialogs : []);
-  if (viewerReady) { if (modelSide !== next.urdf && loadingSide !== next.urdf) loadModel(next.urdf); applyPose(next.pose); }
+  if (viewerReady) { if ((loadingSide || failedModelSide || modelSide) !== next.urdf) loadModel(next.urdf); applyPose(next.pose); }
 }
 async function poll() {
   if (!authenticated) { setTimeout(poll, 500); return; }
-  try { render(await api('state')); connected = true; }
+  const revision = commandRevision;
+  try {
+    const next = await api('state');
+    // A response started before a click must not undo that click's local value.
+    if (!pendingCommands && revision === commandRevision) render(next);
+    connected = true;
+  }
   catch (error) { $('connection').textContent = '服务已断开'; $('status').textContent = '服务器连接已中断，正在重试…'; document.body.classList.add('disconnected'); if (connected) notify(error.message); connected = false; }
   setTimeout(poll, connected ? 80 : 1500);
 }
@@ -351,13 +475,39 @@ async function startSession() {
 }
 
 // Render the repository's real URDF hierarchy, origins, axes and STL meshes.
-let THREE, renderer, scene, camera, orbit, STLLoader, model, modelSide='', loadingSide='', modelGeneration=0, viewerReady=false;
-let jointNodes = new Map();
+let THREE, renderer, scene, camera, orbit, STLLoader, model, modelSide='', loadingSide='', failedModelSide='', modelGeneration=0, viewerReady=false;
+let jointNodes = new Map(), modelLoadController;
+let viewerTimer = null, viewerFrame = null, viewerNextFrame = 0;
+function invalidateViewer() {
+  if (!viewerReady || document.hidden || viewerTimer !== null || viewerFrame !== null) return;
+  // Leave time for input and lease polling even on a software renderer. An
+  // unchanged pose needs no new frame; OrbitControls requests damping frames.
+  viewerTimer = setTimeout(() => {
+    viewerTimer = null;
+    viewerFrame = requestAnimationFrame(() => {
+      const started = performance.now(), moving = orbit.update();
+      renderer.render(scene,camera);
+      renderer.domElement.dataset.modelUrl = modelSide;
+      viewerNextFrame = performance.now() + Math.max(16, performance.now() - started);
+      viewerFrame = null;
+      if (moving) invalidateViewer();
+    });
+  }, Math.max(0, viewerNextFrame - performance.now()));
+}
+function cancelViewerFrame() {
+  clearTimeout(viewerTimer); cancelAnimationFrame(viewerFrame);
+  viewerTimer = viewerFrame = null;
+}
+
 function applyPose(pose) {
+  let changed = false;
   for (const [name,joint] of jointNodes) {
     const value = pose[name] ?? 0;
+    if (joint.value === value) continue;
+    joint.value = value; changed = true;
     joint.node.quaternion.copy(joint.origin).multiply(new THREE.Quaternion().setFromAxisAngle(joint.axis,value));
   }
+  if (changed) invalidateViewer();
 }
 function origin(node, xml) {
   const xyz = (xml?.getAttribute('xyz') || '0 0 0').trim().split(/\s+/).map(Number);
@@ -366,10 +516,16 @@ function origin(node, xml) {
 }
 function disposeModel(root) { root?.traverse(node => { if (node.isMesh) { node.geometry.dispose(); node.material.dispose(); } }); }
 async function loadModel(url) {
-  const generation = ++modelGeneration; loadingSide = url; $('modelNote').textContent = '正在载入手部模型…';
+  const generation = ++modelGeneration;
+  modelLoadController?.abort(); failedModelSide = ''; loadingSide = '';
+  // Returning to the displayed hand cancels the in-flight replacement. It must
+  // not be allowed to install itself after the selection has changed again.
+  if (modelSide === url) { $('modelNote').textContent = ''; return; }
+  const controller = modelLoadController = new AbortController(), {signal} = controller;
+  loadingSide = url; $('modelNote').textContent = '正在载入手部模型…';
   const root = new THREE.Group();
   try {
-    const response = await fetch(url); if (!response.ok) throw Error('无法加载 URDF');
+    const response = await fetch(url, {signal}); if (!response.ok) throw Error('无法加载 URDF');
     const xml = new DOMParser().parseFromString(await response.text(),'application/xml');
     if (xml.querySelector('parsererror')) throw Error('URDF 格式错误');
     const links = new Map(), children = new Set(), nodes = new Map(), jobs = [];
@@ -381,11 +537,19 @@ async function loadModel(url) {
         const mesh = visual.querySelector('geometry > mesh'); if (!mesh) continue;
         const meshURL = new URL(mesh.getAttribute('filename'),new URL(url,location.href));
         const rgba = (visual.querySelector('material > color')?.getAttribute('rgba') || '.78 .82 .91 1').split(/\s+/).map(Number);
-        jobs.push(loader.loadAsync(meshURL.href).then(geometry => {
+        jobs.push((async () => {
+          const response = await fetch(meshURL, {signal});
+          if (!response.ok) throw Error('无法加载网格：' + meshURL.pathname);
+          const buffer = await response.arrayBuffer();
+          // A cached hand can finish all downloads in one turn. Yield before
+          // each large STL parse so controls and polling keep making progress.
+          await new Promise(resolve => setTimeout(resolve, 0));
+          signal.throwIfAborted();
+          const geometry = loader.parse(buffer);
           const object = new THREE.Mesh(geometry,createAluminumMaterial(THREE, rgba[3]));
           if (mesh.hasAttribute('scale')) object.scale.fromArray(mesh.getAttribute('scale').trim().split(/\s+/).map(Number));
           holder.add(object);
-        }));
+        })());
       }
     }
     for (const joint of xml.querySelectorAll('robot > joint')) {
@@ -401,15 +565,19 @@ async function loadModel(url) {
     if (model) { scene.remove(model); disposeModel(model); }
     model = root; jointNodes = nodes; scene.add(model); modelSide = url;
     applyPose(state?.pose || {}); resetView(); $('modelNote').textContent = '';
-  } catch (error) { disposeModel(root); $('modelNote').textContent = '模型加载失败：' + error.message; modelSide = url; }
-  finally { if (generation === modelGeneration) loadingSide = ''; }
+  } catch (error) {
+    disposeModel(root);
+    if (generation === modelGeneration && !signal.aborted) {
+      $('modelNote').textContent = '模型加载失败：' + error.message; failedModelSide = url;
+    }
+  } finally { if (generation === modelGeneration) { loadingSide = ''; modelLoadController = null; } }
 }
 function resetView() {
   if (!model) return;
   const box = new THREE.Box3().setFromObject(model), center = box.getCenter(new THREE.Vector3());
   const radius = box.getSize(new THREE.Vector3()).length();
   orbit.target.copy(center); camera.position.copy(center).add(new THREE.Vector3(1,-.35,.25).normalize().multiplyScalar(radius*1.4));
-  camera.near = radius/100; camera.far = radius*100; camera.updateProjectionMatrix(); orbit.update();
+  camera.near = radius/100; camera.far = radius*100; camera.updateProjectionMatrix(); orbit.update(); invalidateViewer();
 }
 $('resetView').onclick = resetView;
 async function initViewer() {
@@ -426,8 +594,10 @@ async function initViewer() {
     const fill = new THREE.DirectionalLight(0xbed6ff,2); fill.position.set(-2,1,1); scene.add(fill);
     orbit = new controls.OrbitControls(camera,renderer.domElement); orbit.enableDamping = true;
     orbit.mouseButtons = {LEFT:THREE.MOUSE.ROTATE,MIDDLE:THREE.MOUSE.PAN,RIGHT:THREE.MOUSE.PAN};
-    new ResizeObserver(() => { const {width,height} = $('viewer').getBoundingClientRect(); renderer.setSize(width,height,false); camera.aspect=width/height; camera.updateProjectionMatrix(); }).observe($('viewer'));
-    renderer.setAnimationLoop(() => { orbit.update(); renderer.render(scene,camera); });
+    orbit.addEventListener('change', invalidateViewer);
+    new ResizeObserver(() => { const {width,height} = $('viewer').getBoundingClientRect(); if (!width || !height) return; renderer.setSize(width,height,false); camera.aspect=width/height; camera.updateProjectionMatrix(); invalidateViewer(); }).observe($('viewer'));
+    document.addEventListener('visibilitychange', () => { if (document.hidden) cancelViewerFrame(); else invalidateViewer(); });
+    window.addEventListener('pagehide', () => { cancelViewerFrame(); modelLoadController?.abort(); });
     viewerReady = true; await loadModel(state?.urdf || '/assets/hands/TsenseI_hand/urdf/TsenseI__hand_left_v1.urdf');
   } catch (error) { $('modelNote').textContent = '3D 视图不可用：' + error.message; }
 }

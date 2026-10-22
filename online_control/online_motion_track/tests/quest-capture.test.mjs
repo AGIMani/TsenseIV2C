@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import {SCHEMA, JOINT_NAMES, collectHand, collectHands, tokenFromFragment,
+import {SCHEMA, ADB_SCHEMA, ADB_JOINT_SET, JOINT_NAMES, collectHand, collectHands, toAdbHand, tokenFromFragment,
   QuestPublisher} from '../static/quest-capture-core.js';
 
 const flush = () => new Promise(resolve => setImmediate(resolve));
@@ -58,6 +58,57 @@ test('pairing token is read from a URL fragment without treating it as a path', 
   assert.equal(tokenFromFragment('#token=abc_def-12'), 'abc_def-12');
   assert.equal(tokenFromFragment('#other=1&token=a%2Bb'), 'a+b');
   assert.equal(tokenFromFragment(''), '');
+});
+
+test('USB ADB maps native joints into metric MediaPipe order and ignores only non-thumb metacarpals', () => {
+  const hand = collectHand({getJointPose(name) {
+    const index = JOINT_NAMES.indexOf(name);
+    if ([5, 10, 15, 20].includes(index)) return null;
+    return {transform: {position: {x: index / 100, y: 1, z: -0.5}, orientation: {x: 0, y: 0, z: 0, w: 1}}};
+  }}, {handedness: 'left', hand: {get: name => name}}, {});
+  assert.equal(hand.tracked, false, 'native25 has unavailable metacarpals');
+  const wire = toAdbHand(hand);
+  assert.equal(wire.tracked, true, 'all 21 transmitted joints remain valid');
+  assert.equal(wire.handedness, 'left');
+  assert.deepEqual(wire.landmarks, [0, 1, 2, 3, 4, 6, 7, 8, 9, 11, 12, 13, 14, 16, 17, 18, 19, 21, 22, 23, 24]
+    .map(index => [index / 100, 1, -0.5]));
+  wire.landmarks[0][0] = 100;
+  assert.equal(hand.joints[0].position[0], 0, 'wire data cannot mutate native rendering data');
+});
+
+test('USB ADB missing or nonfinite mapped joint invalidates the entire hand without old points', () => {
+  const original = collectHand({getJointPose() {
+    return {transform: {position: {x: 0.1, y: 1, z: -0.5}, orientation: {x: 0, y: 0, z: 0, w: 1}}};
+  }}, {handedness: 'right', hand: {get: name => name}}, {});
+  for (const index of [0, 4, 6, 9, 24]) {
+    for (const invalid of [null, {valid: false, position: [1, 2, 3]}, {valid: true, position: [NaN, 2, 3]}]) {
+      const hand = {...original, joints: [...original.joints]};
+      hand.joints[index] = invalid;
+      assert.deepEqual(toAdbHand(hand), {handedness: 'right', tracked: false, landmarks: []});
+    }
+  }
+  assert.deepEqual(collectHands({}, [], {}).map(toAdbHand), [
+    {handedness: 'left', tracked: false, landmarks: []},
+    {handedness: 'right', tracked: false, landmarks: []},
+  ]);
+});
+
+test('USB ADB publisher uses its dedicated endpoint and preserves stream envelope and order', async () => {
+  const h = harness({endpoint: '/api/quest-adb/publish'});
+  const fields = {schema: ADB_SCHEMA, joint_set: ADB_JOINT_SET, units: 'm', transport: 'adb'};
+  h.publisher.offer({...message(0, 'client_hello'), ...fields});
+  h.publisher.offer({...message(1), ...fields, client_perf_ms: 12, hands: collectHands({}, [], {}).map(toAdbHand)});
+  h.releases[0].resolve(); await flush();
+  assert.ok(h.calls.every(call => call.url === '/api/quest-adb/publish'));
+  assert.deepEqual(h.calls.map(call => call.body.message.sequence), [0, 1]);
+  assert.equal(h.calls[1].body.token, 'test-secret');
+  assert.equal(h.calls[1].body.message.stream_id, 'stream-a');
+  assert.equal(h.calls[1].body.message.client_perf_ms, 12);
+  assert.equal(h.calls[1].body.message.schema, 'teleop.quest.adb.hand_skeleton.v1');
+  assert.equal(h.calls[1].body.message.joint_set, 'mediapipe-21');
+  assert.equal(h.calls[1].body.message.units, 'm');
+  h.releases[1].resolve(); await flush();
+  h.publisher.close();
 });
 
 test('single flight keeps only the latest pose and sends the pairing envelope', async () => {

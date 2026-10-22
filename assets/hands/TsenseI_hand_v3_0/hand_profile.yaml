@@ -19,9 +19,11 @@ hardware:
   adapter: null
 retarget:
   pinch_enabled: true
-  pinch_full_ratio: 0.08
+  pinch_full_ratio: 0.15
+  pinch_index_full_ratio: 0.15
   pinch_start_ratio: 0.50
   pinch_weight: 65.0
+  pinch_index_weight: 65.0
   lambda_smooth: 0.1
   lambda_reg: 0.1
   init_max_iters: 2

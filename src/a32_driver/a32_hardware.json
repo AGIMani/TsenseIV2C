@@ -2,7 +2,7 @@
   "schema_version": 1,
   "source": "README.md: user-filled left-hand slot table, 2026-09-23",
   "calibration_confirmed": true,
-  "calibration_note": "用户确认：所有通道方向 +1、零偏 0（2026-09-23）。",
+  "calibration_note": "用户确认：A3.2 两侧共用 SDK 槽位方向/零偏表，所有通道方向 +1、零偏 0（2026-09-23；右手硬件已开放）。",
   "hand_side": "left",
   "channels": [
     {
@@ -11,8 +11,8 @@
       "index": 0,
       "unit": "mm",
       "limits": [
-        0.03978232907593353,
-        8.0
+        0.0,
+        12.437476671033064
       ],
       "direction": 1,
       "offset": 0
@@ -23,8 +23,8 @@
       "index": 1,
       "unit": "mm",
       "limits": [
-        0.047213362066967496,
-        15.563614436072365
+        0.0,
+        11.761489775595662
       ],
       "direction": 1,
       "offset": 0
@@ -35,8 +35,8 @@
       "index": 2,
       "unit": "mm",
       "limits": [
-        0.06346077964261738,
-        15.917403329193267
+        0.0,
+        19.627778913882647
       ],
       "direction": 1,
       "offset": 0
@@ -47,8 +47,8 @@
       "index": 3,
       "unit": "mm",
       "limits": [
-        0.039889456830952824,
-        8.0
+        0.0,
+        12.437476671033064
       ],
       "direction": 1,
       "offset": 0
@@ -59,8 +59,8 @@
       "index": 4,
       "unit": "mm",
       "limits": [
-        0.048521004893416556,
-        16.49396956515652
+        0.0,
+        16.939021296767194
       ],
       "direction": 1,
       "offset": 0
@@ -71,8 +71,8 @@
       "index": 5,
       "unit": "mm",
       "limits": [
-        0.052955557089815614,
-        17.506244070309826
+        0.0,
+        19.627778913882647
       ],
       "direction": 1,
       "offset": 0
@@ -83,8 +83,8 @@
       "index": 6,
       "unit": "deg",
       "limits": [
-        0.2864788975654116,
-        39.82056676159221
+        -19.48056503444799,
+        19.48056503444799
       ],
       "direction": 1,
       "offset": 0
@@ -95,8 +95,8 @@
       "index": 7,
       "unit": "deg",
       "limits": [
-        0.2864788975654116,
-        39.82056676159221
+        -19.48056503444799,
+        19.48056503444799
       ],
       "direction": 1,
       "offset": 0
@@ -107,8 +107,8 @@
       "index": 8,
       "unit": "mm",
       "limits": [
-        0.04002034247826795,
-        8.0
+        0.0,
+        12.437476671033064
       ],
       "direction": 1,
       "offset": 0
@@ -119,8 +119,8 @@
       "index": 9,
       "unit": "mm",
       "limits": [
-        0.0484368546490796,
-        16.480592961964707
+        0.0,
+        16.939021296767194
       ],
       "direction": 1,
       "offset": 0
@@ -131,8 +131,8 @@
       "index": 10,
       "unit": "mm",
       "limits": [
-        0.06356215084720937,
-        15.926229444931497
+        0.0,
+        19.627778913882647
       ],
       "direction": 1,
       "offset": 0
@@ -143,8 +143,8 @@
       "index": 11,
       "unit": "mm",
       "limits": [
-        0.039889456830952824,
-        8.0
+        0.0,
+        12.437476671033064
       ],
       "direction": 1,
       "offset": 0
@@ -155,8 +155,8 @@
       "index": 12,
       "unit": "mm",
       "limits": [
-        0.048521004893416556,
-        16.49396956515652
+        0.0,
+        16.939021296767194
       ],
       "direction": 1,
       "offset": 0
@@ -167,8 +167,8 @@
       "index": 13,
       "unit": "mm",
       "limits": [
-        0.052955557089815614,
-        17.506244070309826
+        0.0,
+        19.627778913882647
       ],
       "direction": 1,
       "offset": 0
@@ -179,8 +179,8 @@
       "index": 14,
       "unit": "deg",
       "limits": [
-        0.2864788975654116,
-        39.82056676159221
+        -19.48056503444799,
+        19.48056503444799
       ],
       "direction": 1,
       "offset": 0
@@ -191,8 +191,8 @@
       "index": 15,
       "unit": "deg",
       "limits": [
-        0.2864788975654116,
-        39.82056676159221
+        -19.48056503444799,
+        19.48056503444799
       ],
       "direction": 1,
       "offset": 0
@@ -203,8 +203,8 @@
       "index": 16,
       "unit": "mm",
       "limits": [
-        0.04002219983329294,
-        12.380969592467999
+        0.0,
+        12.437476671033064
       ],
       "direction": 1,
       "offset": 0
@@ -215,8 +215,8 @@
       "index": 17,
       "unit": "mm",
       "limits": [
-        0.04943704517454406,
-        13.72395301636824
+        0.0,
+        16.939021296767194
       ],
       "direction": 1,
       "offset": 0
@@ -246,6 +246,12 @@
       "offset": 0
     }
   ],
-  "joint_coordinate_version": "a32-positive-swing-v1",
-  "range_note": "2026-09-28 user-requested joint ranges; linear limits derived from existing geometry; self swing is positive radians converted to SDK degrees. No hardware motion used for validation. 2026-10-05: four-finger DIP mechanism and command upper limits reduced to 8 mm."
+  "joint_coordinate_version": "a32-signed-swing-v2",
+  "range_note": "2026-10-12: SDK 1.1.15 四类连杆闭环查表；精确 90° 行程上限写入通道交集。应用屈曲范围仍为 [0.005, 1.565] rad，swing 模型 [-0.35, 0.35]，命令 [-0.34, 0.34] rad。两侧共用 A3.2 槽位映射。",
+  "sdk_version": "1.1.15",
+  "conversion": "sdk-1.1.15-calibrated-linkage",
+  "supported_sides": [
+    "left",
+    "right"
+  ]
 }

@@ -17,6 +17,15 @@ from collections.abc import Mapping
 from utils.control_session_recorder import ControlSessionRecorder
 from a32_kinematics.joint_coordinates import COORDINATE_VERSION, SWING_AXIS_ALIGNMENT
 
+TELEMETRY_FORMAT = "a32-native-sdk-state/v2"
+
+
+def _current_unit(state, channel, row=None):
+    """Keep old captures in their original units; native SDK 1.1.15 supplies A."""
+    return ((row or {}).get("current_unit") or
+            state.get("telemetry_units", {}).get("external_current" if channel == "mit" else "self_current") or
+            ("A" if channel == "mit" or state.get("telemetry_format") == TELEMETRY_FORMAT else "SDK native"))
+
 
 def default_channels(hand_side="left"):
     import a32_driver
@@ -38,9 +47,11 @@ def recording_metadata(model_id, hand_side, channels, **extra):
             "hardware_location": "local Python service / A3 SDK DLL",
             "recording_location": "local service filesystem",
             "sampling": "every submitted host command; distinct SDK latest-state snapshots, not every wire packet",
-            "telemetry_format": "a32-native-sdk-state/v1",
-            "telemetry_units": {"self_position": "mm or deg by slot", "self_current": "SDK native",
+            "telemetry_format": TELEMETRY_FORMAT,
+            "telemetry_units": {"self_position": "mm or deg by slot", "self_current": "A",
                                 "external_current": "A", "external_velocity": "output rpm"},
+            "current_unit_source": "per-motor current_unit; legacy captures retain SDK native values",
+            "homing_current_unit": "counts",
             "feedback_position_convention": "linear feedback = -SDK pos_act / pos_ref; rotary feedback unchanged",
             "linear_feedback_sign": -1,
             "slot_maps": {kind: {c["joint"]: i for i, c in enumerate(
@@ -81,7 +92,8 @@ def telemetry_event(state, channels):
         centi = _finite(raw.get("temperature_centi"))
         temperature = centi / 100 if usable and centi is not None and centi != 32767 else None
         row = {**copy.deepcopy(raw), "slot": index, "joint": joint, "joint_suffix": suffix,
-               "channel": group, "position_unit": channel["unit"], "online": bool(raw.get("online")),
+               "channel": group, "position_unit": channel["unit"], "current_unit": _current_unit(state, group, raw),
+               "online": bool(raw.get("online")),
                "measurement_valid": usable and position is not None,
                "pos_ref_mm": target, "iq": current, "iq_ref": _finite(raw.get("iq_ref")) if usable else None,
                "mcu_temp_c": temperature, "home_state": raw.get("homing")}
@@ -97,7 +109,8 @@ def telemetry_event(state, channels):
             rotary.append(row)
         if usable and position is None:
             issues.append({"slot": index, "joint_suffix": suffix, "field": "position", "reason": "nonfinite_sdk_value"})
-    return {"telemetry_format": "a32-native-sdk-state/v1", "linear_feedback_sign": -1,
+    return {"telemetry_format": TELEMETRY_FORMAT, "linear_feedback_sign": -1,
+            "telemetry_units": {"self_current": _current_unit(state, "self"), "external_current": _current_unit(state, "mit")},
             "telemetry_seq": state.get("sequence"),
             "tick_ms": state.get("tick_ms"), "rx_ok": state.get("rx_ok"), "rx_mask": state.get("rx_mask"),
             "telemetry_age_ms": state.get("telemetry_age_ms"), "accepted": True,
@@ -141,6 +154,15 @@ class A32SessionRecorder:
         """Record platform stages with the same source timestamps and schema."""
         if not self.writer.active:
             return
+        if event in {"retarget", "direct", "ruckig", "mink", "sdk"}:
+            context = {k: copy.deepcopy(v) for k, v in details.items() if k != "joints"}
+            if event == "retarget":
+                self._record(event, **context)
+            return self.writer.record_joint_angles(event, details.get("joints"),
+                frame_id=details.get("frame_id"), hand_side=self.hand_side, model_id=self.model_id,
+                sent=details.get("sent") if event == "sdk" else None)
+        if event in {"control_target", "filter_candidate", "direct_filter", "direct_command"}:
+            return self._record(event, **{k: copy.deepcopy(v) for k, v in details.items() if k != "joints"})
         return self._record(event, **copy.deepcopy(details))
 
     def record_action(self, action, state=None, **details):
@@ -195,10 +217,13 @@ class A32SessionRecorder:
                            sent=bool(sent), error=str(error) if error is not None else None,
                            source=source, sdk_targets=copy.deepcopy(targets), frame_id=frame_id,
                            write_semantics="SDK sendOnce returned successfully" if sent else "SDK write failed or not completed")
-        self._record("h7", joints_ui=pose, joints_hw=applied_pose, sent=bool(sent), sdk_connected=bool(sent),
+        self._record("h7", sent=bool(sent), sdk_connected=bool(sent),
                      control_dt_s=control_dt_s, control_period_ms=control_dt_s * 1000 if control_dt_s is not None else None,
                      planner_dt_s=planner_dt_s, control_timing=copy.deepcopy(control_timing),
                      command_id=command_id, source=source, frame_id=frame_id)
+        if sent:
+            self.writer.record_joint_angles("sdk", applied_pose, frame_id=frame_id,
+                model_id=self.model_id, hand_side=self.hand_side, sent=True)
         if sent and seq is not None:
             self._last_host_command = {"downlink_seq": seq, "command_id": command_id}
 

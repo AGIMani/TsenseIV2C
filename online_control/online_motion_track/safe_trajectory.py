@@ -60,6 +60,7 @@ class SafeTrajectoryMixin:
     def _checked_step(self, dt):
         # Replan before publishing, rather than clipping an already-generated
         # sample while silently retaining its old Ruckig derivatives.
+        self.ruckig_output_joint_angles_rad = None
         reset_limits = set()
         contacts = []
         for _ in range(len(self.names)+7):
@@ -70,6 +71,13 @@ class SafeTrajectoryMixin:
             pose = dict(zip(self.names, self.output.new_position))
             if any(not math.isfinite(v) for v in pose.values()):
                 raise ValueError("Ruckig 输出非有限值")
+            # Preserve the first real solver output, before collision holds may
+            # trigger another solve. The published SDK pose remains unchanged.
+            if self.ruckig_output_joint_angles_rad is None:
+                self.ruckig_output_joint_angles_rad = dict(pose)
+                capture = getattr(self, "record_ruckig_output", None)
+                if capture is not None:
+                    capture(pose)
             # Check the whole remaining trajectory, including braking extrema.
             # A legal target alone does not imply a legal intermediate path.
             violations = []

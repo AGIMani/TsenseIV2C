@@ -14,3 +14,10 @@ PNG, copied without modification. It is used for the header. The favicon
 (static/brand/tsensei-favicon.svg) embeds the same PNG and clips its viewport
 to the blue mark, preserving transparency without redrawing the artwork.
 The legacy SVG files are reconstructions and are no longer used by the page.
+RealSense Hand Tracking Samples selected source fragments - Apache License 2.0.
+Copyright 2017 Intel Corporation.
+https://github.com/realsenseai/hand_tracking_samples
+Commit 75d5579aa258d97157d8a29b1c4da32f3d0a7608.
+Original excerpts, provenance and license: app/vendor/realsense-hand-tracking.
+The 21-joint fitter adapts deprojection and the depth-plus-bone fitting approach;
+it does not embed the original CNN or rigid-body tracking engine.

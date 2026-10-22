@@ -134,6 +134,21 @@ def test_a32_uses_calibrated_sdk_table_without_loading_native_transport(model, m
     assert state == original
 
 
+@pytest.mark.parametrize("model", A32_MODEL_IDS)
+@pytest.mark.parametrize("angle", [-.5, -.35, -.2, 0., .2, .35, .5])
+def test_a32_measured_swing_preserves_sign_and_uses_urdf_bounds(model, angle):
+    _, state = a32_state(model)
+    slots = {6: "pinky", 7: "ring", 14: "mid", 15: "index"}
+    for index in slots:
+        state["self"][index]["position"] = math.degrees(angle)
+        state["self"][index]["target"] = 12.  # Measured sign must win over the target.
+    result = feedback_pose({"model_id": model, "side": "left", "telemetry": state})
+    assert result["missing_joints"] == []
+    for finger in slots.values():
+        assert result["pose"][f"left_hand_{finger}_swing_joint"] == pytest.approx(
+            min(.35, max(-.35, angle)), abs=2e-7)
+
+
 def test_a32_missing_faulted_out_of_range_and_stale_feedback():
     pose, state = a32_state()
     state["self"][0]["online"] = False
@@ -162,7 +177,10 @@ def test_a32_finite_feedback_overruns_stay_visible_within_original_range(model, 
     result = feedback_pose({"model_id": model, "side": "left", "telemetry": state})
     assert result["missing_joints"] == []
     limits = load_hand_profile(model).joint_limits()
-    assert all(max(0., limits[name][0]) <= q <= limits[name][1] for name, q in result["pose"].items())
+    assert all(limits[name][0] <= q <= limits[name][1] for name, q in result["pose"].items())
+    for name, q in result["pose"].items():
+        if "_swing_" in name:
+            assert q == limits[name][0 if value < 0 else 1]
     device = A32Device(model_id=model)
     for channel in device.channels:
         if channel["unit"] == "mm":
@@ -176,13 +194,14 @@ def test_a32_finite_feedback_overruns_stay_visible_within_original_range(model, 
 
 
 @pytest.mark.parametrize("model", A32_MODEL_IDS)
-def test_a32_right_is_explicitly_unavailable(model):
+def test_a32_right_feedback_uses_shared_hardware_map(model):
     _, state = a32_state(model)
     state["hand_side"] = "right"
     result = feedback_pose({"model_id": model, "side": "right", "telemetry": state})
-    assert result["pose"] == {}
-    assert len(result["missing_joints"]) == 20
-    assert "待标定" in result["issues"][0]
+    assert len(result["pose"]) == 20
+    assert result["missing_joints"] == []
+    assert result["issues"] == []
+    assert all(name.startswith("right_hand_") for name in result["pose"])
 
 
 @pytest.mark.parametrize("data", [None, {}, {"model_id": "wrong", "side": "left"},
@@ -221,6 +240,9 @@ def test_http_route_is_pure_and_needs_no_control_session():
     try:
         request = {"model_id": "TsenseI_v3_0", "side": "left", "telemetry": packet.hex()}
         assert len(post(request)["pose"]) == 20
+        for model in A32_MODEL_IDS:
+            pose, state = a32_state(model)
+            assert post({"model_id": model, "side": "left", "telemetry": state})["pose"] == pytest.approx(pose, abs=2e-7)
         with pytest.raises(urllib.error.HTTPError) as exc:
             post({**request, "telemetry": "bad"})
         assert exc.value.code == 400

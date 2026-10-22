@@ -52,7 +52,12 @@ def validate_frame(raw, side):
     if not isinstance(conf, list) or len(conf) != 21 or any(not number(v) or not 0 <= v <= 1 for v in conf):
         raise ValueError("Wuji 置信度无效")
     wrist = pts[0]
-    return {"world": [[p[i] - wrist[i] for i in range(3)] for p in pts],
+    world = [[p[i] - wrist[i] for i in range(3)] for p in pts]
+    # MediaPipe-21: wrist=0, thumb=1..4. Discard the unreliable measured
+    # thumb MCP (2), retaining the 21-point topology for every downstream user.
+    # Build a separate array so raw SDK data remains available in recordings.
+    world[2] = [(world[1][i] + world[3][i]) * 0.5 for i in range(3)]
+    return {"world": world,
             "label": side.title(), "source": "wuji_glove", "normalized_is_image": False}
 
 

@@ -62,7 +62,8 @@ test("arm uses feedback; stale replies and jumps never send",async()=>{
   await c.arm(async (pose, feedback)=>{assert.equal(feedback,"measured");return state;});
   advance(25);await c.sample(state,now()-5);assert.equal(c.sent,1);
   assert.equal(log.filter(r=>r.type==="downlink"&&r.sent&&r.source==="browser/WebSerial").length,1);
-  advance(25);await c.sample({...state,sample_ticks:2,ruckig_joint_angles_rad:{left_hand_index_MCP_joint:1.5}},now());
+  // At 20 rad/s the guard permits 20 * 3 * .025 + .002 rad per tick.
+  advance(25);await c.sample({...state,sample_ticks:2,ruckig_joint_angles_rad:{left_hand_index_MCP_joint:1.55}},now());
   assert.equal(c.armed,false);assert.equal(c.sent,1);
   await c.arm(async()=>state);advance(120);await c.sample({...state,sample_ticks:3},now()-110);
   assert.equal(c.armed,false);assert.equal(c.sent,1);

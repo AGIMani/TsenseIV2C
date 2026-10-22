@@ -1,4 +1,4 @@
-"""Positive swing coordinates preserve geometry and invert SDK feedback."""
+"""Reference signed swing coordinates preserve geometry and invert SDK feedback."""
 from pathlib import Path
 import math
 import os
@@ -16,7 +16,7 @@ from a32_kinematics import A32Error, A32StrokeMapper
 from a32_kinematics.joint_coordinates import (
     COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, SWING_COMMAND_LIMITS, is_finger_swing,
     requested_limits, legacy_to_model, model_to_legacy,
-    thumb_rotaback_origin_offset,
+    thumb_origin_offset,
 )
 from hand_profiles import A32_MODEL_IDS, load_hand_profile
 from TsenseI_retargeting.fk.urdf import UrdfModel
@@ -34,13 +34,9 @@ def test_new_limits_initial_pose_and_retarget_seed(model_id, side):
         expected = requested_limits(name)
         if expected:
             assert bounds == expected
-            if name.endswith("_DIP_joint"):
-                assert device.joint_limits()[name][0] == pytest.approx(mechanism_limits[name][0])
-                assert device.joint_limits()[name][1] < mechanism_limits[name][1]
-            else:
-                np.testing.assert_allclose(device.joint_limits()[name],
-                                           SWING_COMMAND_LIMITS if is_finger_swing(name) else mechanism_limits[name],
-                                           atol=1e-12, rtol=0)
+            np.testing.assert_allclose(device.joint_limits()[name],
+                                       SWING_COMMAND_LIMITS if is_finger_swing(name) else mechanism_limits[name],
+                                       atol=1e-12, rtol=0)
     pose = profile.init_pose(side)
     suffix = "" if side == "left" else "_right"
     assert yaml.safe_load((profile.root / f"q_init{suffix}.yaml").read_text())["q"] == pose
@@ -53,8 +49,32 @@ def test_new_limits_initial_pose_and_retarget_seed(model_id, side):
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
 @pytest.mark.parametrize("side", ["left", "right"])
+def test_all_mcp_models_extend_to_1565_with_sdk_scaled_strokes(model_id, side):
+    profile = load_hand_profile(model_id)
+    device = A32Device(side, model_id=model_id)
+    pose = profile.init_pose(side)
+    for finger in ("thumb", "index", "mid", "ring", "pinky"):
+        name = f"{side}_hand_{finger}_MCP_joint"
+        assert profile.joint_limits(side)[name] == (.005, 1.565)
+        expected_upper = 1.565
+        assert device.joint_limits()[name] == pytest.approx((.005, expected_upper), abs=1e-10, rel=0)
+        pose[name] = 1.565
+    targets = device.prepare_targets(pose, clamp=True)
+    for finger in ("thumb", "index", "mid", "ring", "pinky"):
+        name = f"{side}_hand_{finger}_MCP_joint"
+        expected_upper = 1.565
+        assert targets["applied_pose"][name] == pytest.approx(expected_upper, abs=1e-10, rel=0)
+        assert pose[name] == 1.565
+    for channel in device.channels:
+        value = targets["self" if channel["channel"] == "self" else "mit_pos"][channel["index"]]
+        assert channel["limits"][0] <= value <= channel["limits"][1]
+    assert device._backend is None
+
+
+@pytest.mark.parametrize("model_id", A32_MODEL_IDS)
+@pytest.mark.parametrize("side", ["left", "right"])
 @pytest.mark.parametrize("method", ["exact", "lut"])
-def test_four_finger_dip_original_geometry_with_eight_mm_hardware_limit(model_id, side, method):
+def test_four_finger_dip_original_geometry_and_hardware_limits(model_id, side, method):
     mapper = A32StrokeMapper(side, method=method, model_id=model_id)
     device = A32Device(side, model_id=model_id)
     pose = load_hand_profile(model_id).init_pose(side)
@@ -65,22 +85,24 @@ def test_four_finger_dip_original_geometry_with_eight_mm_hardware_limit(model_id
     limited = mapper.convert(device.constrain_pose(pose))
     for name in dips:
         assert converted.linear_strokes_mm[name] > 8.
-        assert limited.linear_strokes_mm[name] == pytest.approx(8., abs=2e-6)
+        assert limited.linear_strokes_mm[name] == pytest.approx(converted.linear_strokes_mm[name], abs=2e-6)
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent(model_id, side):
     profile = load_hand_profile(model_id)
-    source = (ROOT / f"TsenseI_V3.2_hand_withid_fixed/urdf/TsenseI_{side}.urdf" if model_id.endswith("withid")
+    source = (ROOT / "assets/hands/TsenseI_hand_v3_2_withid/source_20_outputs/TsenseI_hand_left_v3_2_withid.urdf" if model_id.endswith("withid")
+              and side == "left" else ROOT / "assets/hands/TsenseI_hand_v3_2_withid/urdf/TsenseI_hand_right_v3_2_withid.urdf" if model_id.endswith("withid")
               else Path(os.environ.get("A32_REFERENCE_SDK", ROOT / "vendor/a3-cpp-sdk")) /
               f"daxian_hand_v3_2/urdf/daxian_hand_{side}_v3_2.urdf")
     old, new = UrdfModel(source), UrdfModel(profile.path("urdf", side))
     for fraction in (0., .25, .5, .75, 1.):
         q = {name: lo + fraction * (hi - lo) for name, (lo, hi) in new.joint_limits().items()}
-        a = old.forward_kinematics({name: model_to_legacy(model_id, name, angle)
-                                   + thumb_rotaback_origin_offset(model_id, name)
-                                   for name, angle in q.items()})
+        source_q = ({name: model_to_legacy(model_id, name, angle)
+                     + thumb_origin_offset(model_id, name) for name, angle in q.items()}
+                    if model_id == "TsenseI_v3_2" else q)
+        a = old.forward_kinematics(source_q)
         b = new.forward_kinematics(q)
         for name in a:
             np.testing.assert_allclose(a[name], b[name], atol=2e-12)
@@ -93,9 +115,10 @@ def test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent(mode
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
+@pytest.mark.parametrize("side", ["left", "right"])
 @pytest.mark.parametrize("fraction", [0., .2, .5, .8, 1.])
-def test_all_twenty_endpoints_send_within_limits_and_feedback_inverts(model_id, fraction):
-    device = A32Device(model_id=model_id)
+def test_all_twenty_endpoints_send_within_limits_and_feedback_inverts(model_id, side, fraction):
+    device = A32Device(side, model_id=model_id)
     pose = {name: lo + fraction * (hi - lo) for name, (lo, hi) in device.joint_limits().items()}
     targets = device.prepare_targets(pose, clamp=False)
     for channel in device.channels:
@@ -105,17 +128,17 @@ def test_all_twenty_endpoints_send_within_limits_and_feedback_inverts(model_id, 
         if is_finger_swing(channel["joint"]):
             q = pose[channel["joint"]]
             assert value == pytest.approx(math.degrees(q))
-            assert .005 - 1e-12 <= math.radians(value) <= .695 + 1e-12
+            assert -.34 - 1e-12 <= math.radians(value) <= .34 + 1e-12
     assert device._backend is None  # No DLL or connection used for any sample.
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
-@pytest.mark.parametrize("old, bare_value, id_value", [(.35, .7, 0.), (0., .35, .35), (-.35, 0., .7)])
+@pytest.mark.parametrize("old, bare_value, id_value", [(.35, -.35, .35), (0., 0., 0.), (-.35, .35, -.35)])
 def test_swing_source_coordinates_then_hardware_clip(model_id, old, bare_value, id_value):
     profile = load_hand_profile(model_id)
     device = A32Device(model_id=model_id)
     translated = bare_value if model_id == "TsenseI_v3_2" else id_value
-    sent = min(.695, max(.005, translated))
+    sent = min(.34, max(-.34, translated))
     pose = profile.init_pose()
     for name in pose:
         if is_finger_swing(name):
@@ -131,3 +154,46 @@ def test_swing_source_coordinates_then_hardware_clip(model_id, old, bare_value, 
             assert command["applied_pose"][name] == pytest.approx(sent)
             assert device._inverse(channel, command["self"][channel["index"]]) == pytest.approx(sent)
     assert device._backend is None
+
+
+@pytest.mark.parametrize("model_id", A32_MODEL_IDS)
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_positive_asset_migration_preserves_fk_and_is_idempotent(tmp_path, model_id, side):
+    from scipy.spatial.transform import Rotation
+    from a32_kinematics.joint_coordinates import (
+        POSITIVE_COORDINATE_VERSION, POSITIVE_SWING_AXIS_ALIGNMENT, migrate_positive_pose,
+    )
+    profile = load_hand_profile(model_id)
+    root = ET.parse(profile.path("urdf", side)).getroot()
+    # Reconstruct the previous positive coordinate from its defining transform.
+    for joint in root.findall("joint"):
+        if not is_finger_swing(joint.get("name", "")):
+            continue
+        axis = np.fromstring(joint.find("axis").get("xyz"), sep=" ")
+        origin = joint.find("origin")
+        rotation = Rotation.from_euler("xyz", np.fromstring(origin.get("rpy"), sep=" "))
+        rotation *= Rotation.from_rotvec(axis / np.linalg.norm(axis) * .35)
+        origin.set("rpy", " ".join(map(str, rotation.as_euler("xyz"))))
+        joint.find("axis").set("xyz", " ".join(map(str, -axis)))
+        joint.find("limit").set("lower", "0")
+        joint.find("limit").set("upper", "0.7")
+    root.set("a32_joint_coordinates", POSITIVE_COORDINATE_VERSION)
+    root.set("a32_swing_axis_alignment", POSITIVE_SWING_AXIS_ALIGNMENT)
+    old_path = tmp_path / "old.urdf"
+    ET.ElementTree(root).write(old_path)
+    old = UrdfModel(old_path)
+    apply_urdf_coordinates(root, model_id=model_id)
+    after = ET.tostring(root)
+    assert ET.tostring(apply_urdf_coordinates(root, model_id=model_id)) == after
+    new_path = tmp_path / "new.urdf"
+    ET.ElementTree(root).write(new_path)
+    new = UrdfModel(new_path)
+    installed = UrdfModel(profile.path("urdf", side))
+    for value in (0., .1, .35, .6, .7):
+        pose = profile.init_pose(side)
+        pose.update({name: value for name in pose if is_finger_swing(name)})
+        migrated = migrate_positive_pose(pose, profile.joint_limits(side))
+        a, b, c = old.forward_kinematics(pose), new.forward_kinematics(migrated), installed.forward_kinematics(migrated)
+        for name in a:
+            np.testing.assert_allclose(a[name], b[name], atol=2e-12)
+            np.testing.assert_allclose(b[name], c[name], atol=2e-12)

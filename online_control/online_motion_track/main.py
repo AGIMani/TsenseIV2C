@@ -38,7 +38,10 @@ from online_control.online_motion_track.landmark_filter import ResponsiveLandmar
 from online_control.online_motion_track.webxr_input import WebXRInputRelay
 from online_control.online_motion_track.wuji_input import WujiInputRelay, resolve_wuji_config
 from online_control.online_motion_track.leapmotion_input import LeapMotionInputRelay
+from online_control.online_motion_track.leap_camera import LeapCameraSource, encode_frame
+from online_control.online_motion_track.realsense_source import RealSenseSource
 from online_control.online_motion_track.source_worker import SourceWorker
+from online_control.online_motion_track.optimized_skeleton import optimized_skeleton
 from online_control.online_motion_track.calibration import CalibrationSession
 from online_control.shared.stream import serve_records
 from online_control.shared.version import downlink_version
@@ -111,9 +114,10 @@ class WebSession:
     model_id = "TsenseI_v3_2"
     def __init__(self, side="left", recording=True, log_dir=None, collision_mode="off", *, model_id="TsenseI_v3_2",
                  input_source="mediapipe"):
-        if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion"):
-            raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove 或 leapmotion")
+        if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
+            raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove、leapmotion 或 realsense_rgbd")
         self.input_source = input_source
+        self.mediapipe_filter_enabled = True
         self.direct_mode = False
         if model_id not in (*A32_MODEL_IDS, *A30_MODEL_IDS):
             raise ValueError("Unsupported preview model")
@@ -141,7 +145,7 @@ class WebSession:
                        _OneEuroLandmarkFilter(min_cutoff=1.5, beta=.25, derivative_cutoff=1.))
         self.normalized_filter = _OneEuroLandmarkFilter(min_cutoff=1.5, beta=.25, derivative_cutoff=1.)
         self.recorder = SessionRecorder(log_dir or HERE / "logs", self.pipeline,
-            camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2"}.get(input_source, "browser-webcam"),
+            camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2", "realsense_rgbd": "realsense-rgbd"}.get(input_source, "browser-webcam"),
             smoothing=input_source == "mediapipe", input_source=input_source) if recording else None
 
     def process(self, packet, *, touch_client=True):
@@ -155,21 +159,28 @@ class WebSession:
             if timestamp <= self.last_timestamp or sequence <= self.last_sequence:
                 raise StaleFrameError("丢弃过期或重复帧")
             input_source = packet.get("source", self.input_source)
-            if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion"):
-                raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove 或 leapmotion")
+            if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
+                raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove、leapmotion 或 realsense_rgbd")
+            filter_enabled = packet.get("mediapipe_filter_enabled", self.mediapipe_filter_enabled)
+            if not isinstance(filter_enabled, bool):
+                raise ValueError("mediapipe_filter_enabled 必须为布尔值")
+            if filter_enabled != self.mediapipe_filter_enabled:
+                self.filter.reset()
+                self.normalized_filter.reset()
+                self.mediapipe_filter_enabled = filter_enabled
             if input_source != self.input_source:
                 self.filter.reset()
                 self.normalized_filter.reset()
                 self.pipeline.session.retargeter.reset()
                 self.input_source = input_source
             capture_ns = int(packet["capture_unix_ms"] * 1_000_000)
-            camera_size = packet.get("camera_size", [640, 480]) if input_source == "mediapipe" else None
+            camera_size = packet.get("camera_size", [640, 480]) if input_source in ("mediapipe", "realsense_rgbd") else None
             observation = None
             hand = packet.get("hand")
             if hand is not None:
                 raw = points(hand["world"])
                 # WebXR supplies metric 3-D joints, with no image projection.
-                normalized = points(hand["normalized"]) if input_source == "mediapipe" else None
+                normalized = points(hand["normalized"]) if input_source in ("mediapipe", "realsense_rgbd") else None
                 expected = self.pipeline.expected_label
                 label = hand.get("label")
                 if label not in ("Left", "Right"):
@@ -180,11 +191,12 @@ class WebSession:
                         self.filter.reset()
                         self.normalized_filter.reset()
                     # Metric trackers already provide measured 3-D joints.
-                    # Keep their current sample intact; camera points retain smoothing.
+                    # MediaPipe smoothing is independently selectable per observation.
                     world = (self.filter.filter(raw, timestamp / 1000)
-                             if input_source == "mediapipe" else raw.copy())
+                             if input_source == "mediapipe" and filter_enabled else raw.copy())
                     filtered_normalized = (self.normalized_filter.filter(normalized, timestamp / 1000)
-                                           if normalized is not None else None)
+                                           if normalized is not None and (input_source != "mediapipe" or filter_enabled)
+                                           else normalized.copy() if normalized is not None else None)
                 else:
                     world = raw
                     filtered_normalized = normalized
@@ -194,6 +206,7 @@ class WebSession:
                     raw_world_points=raw, world_points=world, points=world,
                     raw_normalized_points=normalized, normalized_points=filtered_normalized,
                     detected_label=label, expected_label=expected,
+                    mediapipe_filter_enabled=input_source == "mediapipe" and filter_enabled,
                     source=input_source, source_metadata=packet.get("source_metadata"),
                     raw_webxr=packet.get("raw_webxr"),
                     held_last_valid=False, used_fallback_hand=False)
@@ -204,17 +217,24 @@ class WebSession:
             if self.recorder:
                 self.recorder.record_frame(sequence, observation, result,
                     capture_timestamp_ns=capture_ns, camera_size=camera_size, input_source=input_source,
+                    mediapipe_filter_enabled=input_source == "mediapipe" and filter_enabled,
                     source_metadata=packet.get("source_metadata"), raw_webxr=packet.get("raw_webxr"))
             self.last_sequence, self.last_timestamp = sequence, timestamp
             if touch_client:
                 self.last_seen = time.monotonic()
             return json_safe({"sequence": sequence, "tracking": result.tracking,
                               "direct_mode": self.direct_mode,
+                              "mediapipe_filter_enabled": input_source == "mediapipe" and filter_enabled,
                               "source": input_source, "depth_source": result.depth_source,
                               "source_metadata": packet.get("source_metadata"),
                               "message": result.message, "pose": result.pose,
                               "retarget_joint_angles_rad": result.retarget_pose,
+                              "mink_joint_angles_rad": result.mink_pose,
+                              "direct_joint_angles_rad": result.direct_pose,
                               "collision_safe_target_joint_angles_rad": result.pose,
+                              "optimized_points": optimized_skeleton(
+                                  self.pipeline.session.retargeter, result.retarget_pose)
+                                  if result.tracking else None,
                               "points": result.points, "solve_ms": result.solve_ms,
                               "actuation": result.actuation,
                               "collision": result.collision_diagnostics})
@@ -306,8 +326,11 @@ class Application:
         self.recordings_ready = set()
         self.webxr = WebXRInputRelay()
         self.quest_connection = {}
+        self.quest_adb_connection = {}
         self.wuji = WujiInputRelay(wuji_url, source=wuji_source, address=wuji_address, serial=wuji_serial)
         self.leapmotion = LeapMotionInputRelay()
+        self.leap_camera = LeapCameraSource()
+        self.realsense = RealSenseSource()
         self.leapmotion_frame_lock = threading.Lock()
         self.metric_workers = {}
 
@@ -331,8 +354,10 @@ class Application:
     def create(self, data, owner="local"):
         self.expire()
         input_source = data.get("input_source", data.get("source", "mediapipe"))
-        if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion"):
-            raise ValueError("输入源必须为 mediapipe、webxr、wuji_glove 或 leapmotion")
+        camera_source = data.get('camera_source', 'realsense_rgbd' if input_source == 'realsense_rgbd' else 'browser')
+        self._validate_camera_source(camera_source, input_source)
+        if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
+            raise ValueError("输入源必须为 mediapipe、webxr、wuji_glove、leapmotion 或 realsense_rgbd")
         direct_mode = data.get("direct_mode", False)
         if not isinstance(direct_mode, bool):
             raise ValueError("direct_mode 必须为布尔值")
@@ -374,6 +399,7 @@ class Application:
                                      collision_mode=data.get("collision_mode", "off" if model_id in A30_MODEL_IDS else self.collision_mode),
                                      model_id=model_id, input_source=input_source)
             session.input_source = input_source
+            session.camera_source = camera_source
             session.input_side = data.get("side", "left")
             if direct_mode:
                 try:
@@ -413,16 +439,31 @@ class Application:
                 raise ValueError("会话已失效，请重新开始")
             return self.sessions[token]
 
+    @staticmethod
+    def _validate_camera_source(camera_source, input_source):
+        if camera_source not in ('browser', 'leapmotion_camera', 'realsense_rgbd'):
+            raise ValueError('未知相机来源')
+        if camera_source == 'leapmotion_camera' and input_source != 'mediapipe':
+            raise ValueError('Leap 相机图像仅用于 MediaPipe 输入')
+        if camera_source == 'realsense_rgbd' and input_source != 'realsense_rgbd':
+            raise ValueError('RealSense 深度图像仅用于 realsense_rgbd 输入')
+
     def calibration_action(self, data, action):
         session = self.get(data['session'])
         if not isinstance(session, CalibrationSession):
             raise ValueError('需要动态标定会话')
         if action == 'input':
-            with session.lock:
+            camera_source = data.get('camera_source', 'browser') if data.get('enabled') else 'browser'
+            self._validate_camera_source(camera_source, data.get('source'))
+            with self.lock, session.lock:
                 result = session.set_input(data)
+                session.camera_source = camera_source
                 self.webxr.close(data['session'])
                 self.wuji.close(data['session'])
                 self.leapmotion.close(data['session'])
+                self.realsense.close(data['session'])
+                if not any(getattr(s, 'camera_source', None) == 'leapmotion_camera' for s in self.sessions.values()):
+                    self.leap_camera.close(wait=False)
                 return result
         if action == 'save' and self.public:
             raise ValueError('公共服务请使用导出 YAML，在本地应用标定')
@@ -445,6 +486,9 @@ class Application:
                 self.webxr.close(token)
                 self.wuji.close(token)
                 self.leapmotion.close(token)
+                self.realsense.close(token)
+                if not any(getattr(s, 'camera_source', None) == 'leapmotion_camera' for s in self.sessions.values()):
+                    self.leap_camera.close(wait=False)
             try:
                 if worker:
                     worker.close()
@@ -457,6 +501,9 @@ class Application:
 
     def webxr_create(self, data):
         token = data["session"]
+        transport = data.get("transport", "webxr")
+        if transport not in ("webxr", "adb"):
+            raise ValueError("Quest transport 必须为 webxr 或 adb")
         with self.lock:
             session = self.sessions.get(token)
             if session is None or session.closed:
@@ -469,7 +516,11 @@ class Application:
                 previous.cancel()
             result = self.webxr.create(token, session.input_side)
             background = self._replace_metric_worker(token, session, self.webxr)
-            return {**result, **self.quest_connection,
+            connection = self.quest_connection
+            if transport == "adb":
+                result.update(entry_path="/q/adb", capture_path="/q/adb#code=123456")
+                connection = self.quest_adb_connection
+            return {**result, **connection, 'transport': transport,
                     'background_processing': background, 'combined_frame': background}
 
     def webxr_latest(self, data):
@@ -545,6 +596,26 @@ class Application:
             snapshot["update"]["source_age_at_solve_ms"] = snapshot["age_ms"]
             return snapshot
 
+    def leap_camera_frame(self, data):
+        after = data.get('after_revision', -1)
+        if type(after) is not int or after < -1:
+            raise ValueError('图像 revision 必须为 -1 或非负整数')
+        with self.lock:
+            session = self.sessions.get(data['session'])
+            if session is None or session.closed:
+                raise ValueError('相机会话已失效，请重新开始')
+            if session.input_source != 'mediapipe' or getattr(session, 'camera_source', None) != 'leapmotion_camera':
+                raise ValueError('请先创建 Leap Motion 2 相机 / MediaPipe 会话')
+            session.last_seen = time.monotonic()
+            # Start atomically with session validation; a stopped long-poll must
+            # never reopen the device after remove() has closed its last owner.
+            self.leap_camera.start()
+        metadata, pixels = self.leap_camera.read_image(after, start=False)
+        # A stop may race with a long-poll. Do not return images to a cancelled session.
+        if session.closed or self.sessions.get(data['session']) is not session or session.camera_source != 'leapmotion_camera':
+            raise ValueError('相机会话已停止')
+        return encode_frame(metadata, pixels)
+
     def leapmotion_create(self, data):
         with self.lock:
             token = data['session']
@@ -560,6 +631,67 @@ class Application:
             result = self.leapmotion.create(token, session.input_side)
             background = self._replace_metric_worker(token, session, self.leapmotion)
             return {**result, 'combined_frame': True, 'background_processing': background}
+
+    def realsense_frame(self, data):
+        token = data['session']
+        with self.lock:
+            session = self.sessions.get(token)
+            if session is None or session.closed or session.input_source != 'realsense_rgbd':
+                raise ValueError('请先创建 D455f 深度融合会话')
+            session.last_seen = time.monotonic()
+            self.realsense.create(token)
+        payload = self.realsense.frame(token, data.get('after_revision', -1))
+        if session.closed or self.sessions.get(token) is not session or session.input_source != 'realsense_rgbd':
+            raise ValueError('深度相机会话已停止')
+        return payload
+
+    def _process_realsense(self, data, session):
+        from online_control.online_motion_track.rgbd_input import prepare_packet
+        token = data['session']
+        epoch = getattr(session, 'input_epoch', None)
+        data, snapshot, fused, diagnostics = prepare_packet(self.realsense, data, session.input_side)
+
+        def commit(action):
+            # No Application lock here: controller processing already owns its
+            # session lock. remove/calibration acquire locks in the other order.
+            def current():
+                return (self.sessions.get(token) is session and not session.closed
+                        and session.input_source == 'realsense_rgbd'
+                        and getattr(session, 'input_epoch', None) == epoch)
+            accepted = False
+            def apply_current():
+                nonlocal accepted
+                if current():
+                    action()
+                    accepted = True
+            if not current():
+                return False
+            if snapshot is None:
+                # Only a no-hand/failed-depth packet can reach this branch.
+                apply_current()
+            else:
+                try:
+                    self.realsense.commit_if_current(token, snapshot, apply_current)
+                except ValueError:
+                    return False
+            return accepted
+
+        if hasattr(session, 'process_metric'):
+            result = session.process_metric(data, commit)
+        else:
+            result = session.process(data)
+            if not commit(lambda: None):
+                result.update(tracking=False, display_discarded=True,
+                              discard_reason='source_cancelled_or_expired')
+        if result.get('display_discarded') or result.get('background_discarded'):
+            diagnostics = dict(diagnostics, status='unavailable', reason='source_cancelled_or_expired')
+            data['source_metadata']['depth_fusion'] = diagnostics
+        result.update(source_metadata=data['source_metadata'], depth_fusion=diagnostics,
+                      fused_world=fused['world'] if fused and result.get('tracking') else None,
+                      depth_source='realsense_rgbd_fused' if diagnostics['status'] == 'fused' else 'none')
+        if not result.get('tracking') and diagnostics['status'] == 'unavailable':
+            result['message'] = '深度约束不可用，保持上一姿态：' + diagnostics.get('reason', '')
+        return result
 
     def leapmotion_latest(self, data):
         session = self.get(data['session'])
@@ -613,6 +745,8 @@ class Application:
         source = data.get("source", "mediapipe")
         if source != session.input_source:
             raise ValueError("帧输入源与会话不一致，请重新开始会话")
+        if source == 'realsense_rgbd':
+            return self._process_realsense(data, session)
         if source in ('wuji_glove', 'webxr', 'leapmotion'):
             background = self._metric_result(data, session)
             if background is not None:
@@ -741,12 +875,23 @@ class Application:
     def close(self):
         for token in list(self.sessions):
             self.remove(token)
+        self.leap_camera.close()
+        self.realsense.close_all()
+
+
+def client_disconnected(error):
+    """Recognize peer shutdowns without hiding unrelated SSL or server failures."""
+    return isinstance(error, (BrokenPipeError, ConnectionResetError, ConnectionAbortedError,
+                              ssl.SSLEOFError, ssl.SSLZeroReturnError)) or (
+        isinstance(error, ssl.SSLError)
+        and getattr(error, "reason", None) == "UNEXPECTED_EOF_WHILE_READING")
 
 
 class Handler(BaseHTTPRequestHandler):
     protocol_version = "HTTP/1.1"
     disable_nagle_algorithm = True
     timeout = 15
+    publish_paths = ("/api/webxr/publish", "/api/quest-adb/publish")
 
     def valid_host(self):
         try:
@@ -769,7 +914,27 @@ class Handler(BaseHTTPRequestHandler):
         self.application = application
         super().__init__(*args, **kwargs)
 
+    def handle_one_request(self):
+        # A persistent connection can carry multiple responses. Track each one
+        # separately so a failed write can never append a second HTTP response.
+        self._response_started = False
+        try:
+            super().handle_one_request()
+        except OSError as exc:
+            self.close_connection = True
+            if not client_disconnected(exc):
+                raise
+
+    def send_response(self, *args, **kwargs):
+        self._response_started = True
+        super().send_response(*args, **kwargs)
+
     def log_message(self, format, *args):
+        if (len(args) >= 2 and str(args[1]) == "400"
+                and getattr(self, "path", None) in self.publish_paths):
+            # These high-rate input routes log the actual validation reason
+            # below, with a per-peer limit, instead of a bare line per frame.
+            return
         if len(args) < 2 or str(args[1]) not in ("200", "204"):
             super().log_message(format, *args)
 
@@ -782,10 +947,12 @@ class Handler(BaseHTTPRequestHandler):
             self.send_header("Cache-Control", "no-store")
             self.end_headers()
             self.wfile.write(payload)
-        except (BrokenPipeError, ConnectionResetError, ConnectionAbortedError):
+        except OSError as exc:
             # Closing the preview can cancel a response already being written.
             # Do not attempt a second error response on the same closed socket.
             self.close_connection = True
+            if not client_disconnected(exc):
+                raise
 
     def do_GET(self):
         if not self.valid_host():
@@ -832,7 +999,8 @@ class Handler(BaseHTTPRequestHandler):
                             "server_pid": os.getpid(),
                             "recording_allowed": not self.application.public,
                             "browser_serial": True, "browser_recording": True,
-                            "input_sources": ["mediapipe", "webxr", "wuji_glove", "leapmotion"], "webxr_stale_after_ms": self.application.webxr.stale_after_ms,
+                            "input_sources": ["mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"], "webxr_stale_after_ms": self.application.webxr.stale_after_ms,
+                            "camera_sources": ["browser", "leapmotion_camera", "realsense_rgbd"], "leap_camera_target_fps": 120,
                             "wuji_transport": self.application.wuji.source,
                             "control_chain_revision": "a30-stream-20260924-v2",
                             "downlink_sha256": downlink_version(), "a30_binary_stream": True,
@@ -873,7 +1041,7 @@ class Handler(BaseHTTPRequestHandler):
             if path and record_id not in self.application.recordings_ready:
                 self.send_json({"error": "请结束会话并保存后再下载记录"}, 409)
                 return
-        elif url.path in ("/q", "/q/"):
+        elif url.path in ("/q", "/q/", "/q/adb", "/q/adb/"):
             path = HERE / "static/quest.html"
         elif url.path == "/hand_landmarker.task":
             path = ROOT / "hand_landmarker.task"
@@ -911,6 +1079,7 @@ class Handler(BaseHTTPRequestHandler):
     def do_POST(self):
         if not self.valid_host():
             return
+        data = None
         try:
             origin_header = self.headers.get("Origin")
             if ((self.application.public and not origin_header)
@@ -923,7 +1092,18 @@ class Handler(BaseHTTPRequestHandler):
                 self.close_connection = True
                 self.send_json({"error": "请求大小无效"}, 413)
                 return
-            data = json.loads(self.rfile.read(length))
+            try:
+                body = self.rfile.read(length)
+            except OSError as exc:
+                if not client_disconnected(exc):
+                    raise
+                self.close_connection = True
+                return
+            if len(body) != length:
+                # An incomplete upload has no live peer to receive an error.
+                self.close_connection = True
+                return
+            data = json.loads(body)
             if not isinstance(data, dict):
                 raise ValueError("需要 JSON 对象")
             if self.path == "/api/viewer/log-parent":
@@ -941,6 +1121,17 @@ class Handler(BaseHTTPRequestHandler):
                 response = self.application.create(data, owner)
             elif self.path == "/api/frame":
                 response = self.application.frame(data)
+            elif self.path in ("/api/leap-camera/frame", "/api/realsense/frame"):
+                payload = (self.application.realsense_frame(data) if self.path == "/api/realsense/frame"
+                           else self.application.leap_camera_frame(data))
+                self.send_response(200)
+                self.send_header('Content-Type', 'application/octet-stream')
+                self.send_header('Content-Length', str(len(payload)))
+                self.send_header('Cache-Control', 'no-store')
+                self.send_header('X-Content-Type-Options', 'nosniff')
+                self.end_headers()
+                self.wfile.write(payload)
+                return
             elif self.path == "/api/feedback-pose":
                 from online_control.online_motion_track.feedback import feedback_pose
                 response = feedback_pose(data)
@@ -960,13 +1151,15 @@ class Handler(BaseHTTPRequestHandler):
                 response = self.application.leapmotion_latest(data)
             elif self.path == "/api/leapmotion/frame":
                 response = self.application.leapmotion_frame(data)
-            elif self.path == "/api/webxr/pair":
+            elif self.path in ("/api/webxr/pair", "/api/quest-adb/pair"):
                 response = self.application.webxr.pair(data.get("code"), self.client_address[0])
             elif self.path == "/api/webxr/code":
                 self.application.get(data["session"])
                 response = self.application.webxr.renew_code(data["session"])
             elif self.path == "/api/webxr/publish":
                 response = self.application.webxr.publish(data["token"], data["message"])
+            elif self.path == "/api/quest-adb/publish":
+                response = self.application.webxr.publish_quest_adb(data["token"], data["message"])
             elif self.path == "/api/webxr/latest":
                 response = self.application.webxr_latest(data)
             elif self.path == "/api/webxr/close":
@@ -999,8 +1192,20 @@ class Handler(BaseHTTPRequestHandler):
                 return
             self.send_json(response)
         except (ValueError, KeyError, TypeError, OverflowError) as exc:
+            if getattr(self, "_response_started", False):
+                self.close_connection = True
+                raise
+            if self.path in self.publish_paths:
+                reason = str(exc)
+                token = data.get("token") if isinstance(data, dict) else None
+                if isinstance(token, str) and token:
+                    reason = reason.replace(token, "[redacted]")
+                self.server.log_publish_rejection(self.client_address[0], self.path, reason)
             self.send_json({"error": str(exc)}, 400)
         except Exception as exc:
+            if getattr(self, "_response_started", False):
+                self.close_connection = True
+                raise
             # A failed logger/solver must be visible to the client, never keep
             # animating stale successful status after a broken request.
             self.send_json({"error": f"服务错误：{exc}"}, 500)
@@ -1009,6 +1214,7 @@ class Handler(BaseHTTPRequestHandler):
 class LimitedHTTPServer(ThreadingHTTPServer):
     """Bound connection threads, including slow/static asset clients."""
     allow_reuse_address = os.name != "nt"
+    warning_interval = 30.0
 
     def server_bind(self):
         if os.name == "nt":
@@ -1017,6 +1223,8 @@ class LimitedHTTPServer(ThreadingHTTPServer):
 
     def __init__(self, *args, **kwargs):
         self.slots = threading.BoundedSemaphore(64)
+        self._warnings = {}
+        self._warning_lock = threading.Lock()
         super().__init__(*args, **kwargs)
 
     def process_request(self, request, client_address):
@@ -1043,16 +1251,47 @@ class LimitedHTTPServer(ThreadingHTTPServer):
         finally:
             self.slots.release()
 
+    def _warning_suffix(self, key):
+        now = time.monotonic()
+        with self._warning_lock:
+            previous = self._warnings.get(key)
+            if previous and now - previous[0] < self.warning_interval:
+                self._warnings[key] = (previous[0], previous[1] + 1)
+                return None
+            suppressed = previous[1] if previous else 0
+            # Bound bookkeeping for both certificate and input warnings.
+            if previous is None and len(self._warnings) >= 256:
+                oldest = min(self._warnings, key=lambda item: self._warnings[item][0])
+                del self._warnings[oldest]
+            self._warnings[key] = (now, 0)
+        return f" ({suppressed} repeated warnings suppressed.)" if suppressed else ""
+
+    def log_publish_rejection(self, peer, path, reason):
+        repeated = self._warning_suffix(("publish", peer, path))
+        if repeated is None:
+            return
+        # Do not log payloads or capabilities, or allow malformed input to
+        # introduce terminal controls/newlines into the diagnostic.
+        reason = "".join(char if char.isprintable() else " " for char in reason)[:240]
+        print(f"[HTTP] {peer} POST {path} rejected (400): {reason}{repeated}",
+              file=sys.stderr, flush=True)
+
     def handle_error(self, request, client_address):
         error = sys.exception()
-        if isinstance(error, ssl.SSLError) and error.reason in {
+        if client_disconnected(error):
+            return
+        if isinstance(error, ssl.SSLError) and getattr(error, "reason", None) in {
             "SSLV3_ALERT_CERTIFICATE_UNKNOWN", "TLSV1_ALERT_UNKNOWN_CA",
             "SSLV3_ALERT_BAD_CERTIFICATE", "SSLV3_ALERT_CERTIFICATE_EXPIRED",
         }:
+            repeated = self._warning_suffix(("certificate", client_address[0]))
+            if repeated is None:
+                return
             print(f"[HTTPS] {client_address[0]} rejected the server certificate "
                   f"({error.reason}). Check the URL/IP and certificate validity, "
                   "then trust quest_webxr_ca.crt on the connecting computer or Quest "
-                  "and restart its browser.", file=sys.stderr, flush=True)
+                  "and restart its browser. USB alternative: "
+                  f"bash migration/ubuntu/start-quest-adb.sh.{repeated}", file=sys.stderr, flush=True)
             return
         super().handle_error(request, client_address)
 
@@ -1073,6 +1312,16 @@ def make_server(port=8766, log_dir=None, *, host="127.0.0.1", tls_cert=None, tls
         server.socket = context.wrap_socket(server.socket, server_side=True, do_handshake_on_connect=False)
     server.daemon_threads = True
     server.application = app
+    app.quest_adb_connection = {
+        'entry_url': '', 'adb_entry_url': '', 'adb_entry_path': '/q/adb',
+        'connection_error': 'USB ADB 输入需要回环 HTTP 服务。请运行 bash migration/ubuntu/start-quest-adb.sh，'
+                            '再打开 http://localhost:8766/?source=quest_adb。',
+    }
+    if not app.public and not context and host in ('127.0.0.1', 'localhost', '::1'):
+        adb_url = f'http://localhost:{server.server_port}/q/adb'
+        app.quest_adb_connection = {
+            'entry_url': adb_url, 'adb_entry_url': adb_url, 'adb_entry_path': '/q/adb',
+        }
     if not app.public:
         candidates = options.get('allowed_hosts', ())
         if host != '0.0.0.0':

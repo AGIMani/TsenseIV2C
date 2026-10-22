@@ -12,7 +12,7 @@ const server=createServer(async(req,res)=>{
   catch{res.writeHead(500).end();}
 });
 await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
-const browser=await chromium.launch({executablePath:process.env.CHROME_PATH||'C:/Program Files/Google/Chrome/Application/chrome.exe',headless:true});
+const browser=await chromium.launch({executablePath:process.env.CHROME_PATH,headless:true});
 const page=await browser.newPage(),errors=[];
 page.on('pageerror',e=>errors.push(e.message));
 try{
@@ -31,7 +31,8 @@ try{
     // 530 MiB exercises the actual 512 MiB boundary in a real worker/IndexedDB.
     const padding='x'.repeat(256*1024),total=2120;
     for(let i=1;i<=total;i++){
-      r.record('retarget',{frame_id:i,joints:{left_hand_index_swing_joint:i/10000},padding});
+      r.record('retarget',{frame_id:i,joints:{left_hand_index_swing_joint:i/10000}});
+      r.record('telemetry',{frame_id:i,padding});
       if(i%16===0)await r.flush();
     }
     check(r.active&&!r.error,'recording stopped at old capacity limit');
@@ -50,7 +51,7 @@ try{
           const row=JSON.parse(line);
           if(firstRow){check(row.type==='session'&&row.recording_part.index===i+1,'missing standalone part metadata');firstRow=false;continue;}
           seqs.push(row.seq);
-          if(row.type==='retarget')ids.push(row.frame_id);
+          if(row.type==='joint_angles'&&row.stage==='retarget')ids.push(row.frame_id);
           if(row.type==='session_end'){check(!end,'duplicate end');end=row;}
         }
         if(done)break;
@@ -59,7 +60,7 @@ try{
     }
     check(ids.length===total+2&&ids.every((id,i)=>id===i),'lost or duplicated retarget across parts');
     check(seqs.every((n,i)=>n===i+2),'non-contiguous stored event sequences');
-    check(end.dropped_events===0&&end.event_counts.retarget===total+2,'incorrect capture summary');
+    check(end.dropped_events===0&&end.event_counts.joint_angles===total+2,'incorrect capture summary');
     check(sizes.every(n=>n<=512*1024*1024),'export exceeds 512 MiB');
     // A fresh worker can discover and export every persisted part.
     const recovery=new WorkerRecorder(),history=await recovery.list();
@@ -74,7 +75,7 @@ try{
     failed.record('uncloneable',{callback(){}});await seal;
     const bad=await failed.export(failed.id),badRows=(await(await fetch(bad.url)).text()).trim().split('\n').map(JSON.parse);
     check(error&&badRows.at(-1).dropped_events===1,'clone failure reported zero loss');
-    check(badRows.some(r=>r.type==='retarget'),'clone failure lost earlier data');
+    check(badRows.some(r=>r.type==='joint_angles'&&r.stage==='retarget'),'clone failure lost earlier data');
     URL.revokeObjectURL(bad.url);await failed.remove(failed.id);failed.worker.terminate();
 
     const {LocalRecorder}=await import('/local-recorder.js');

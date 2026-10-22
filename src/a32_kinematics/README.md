@@ -1,21 +1,24 @@
-# A3.2 independent kinematics
+# A3.2 kinematics and SDK 1.1.15 commands
 
-Copied from the user's `D:/Qtworks/gravity` on 2026-09-18. The reference solver,
-fast solver, source URDF and inferred mechanism configuration are bundled here.
-The only change to the supplied fast solver is its package-relative import.
-On 2026-10-05, the index/mid/ring/pinky DIP mechanism stroke upper bounds in
-`model/geometry_inferred.mat` were reduced to 0.008 m (8 mm). Other mechanism
-parameters and zero positions are unchanged. Effective conversion angle limits
-are derived from these stroke bounds.
-`source_snapshot.json` records the original and current bundled file hashes.
+`A32StrokeMapper` now implements the SDK 1.1.15 calibrated closed-loop conversion for
+both A3.2 models and both hands. Its input remains 20 named URDF angles in
+radians, with 14 named millimetre outputs and 6 degree outputs. The pure Python
+`sdk_stroke.py` uses the upstream `Stroke.cpp` coefficients recorded in
+`sdk_stroke_data.py`; tests compare it with the compiled upstream function.
+Feedback uses the inverse of the same monotonic curves. Actuators of the same
+size share one curve: large MCP 19.63 mm, medium PIP/thumb MCP 16.95 mm, small
+DIP/thumb PIP/pinky PIP 12.44 mm. Feedback includes exact 0/90 degree endpoints
+and the SDK's float32 boundary tolerances; command angles still use its guards.
 
-`A32Converter` retains the original degree-input / SI-output interface.
-`A32StrokeMapper` adapts A3.2 left/right URDF dictionaries (radians) to 14 named
-linear inputs (mm) and 6 named rotary inputs (degrees). It contains no V2
-imports, USB slot definitions or hardware sign assumptions.
+Application flexion remains 0.005..1.565 rad, including index/ring MCP. Swing
+remains signed and is converted directly to degrees. The old `lut`/`exact`
+method arguments remain accepted metadata; both use the new formula, identified
+by `conversion="sdk-1.1.15"`. The offline mapper never loads a native library.
 
-The project mapper defaults to `method="lut"` (interpolation error bound
-<= 1e-9 m); `method="exact"` remains available. The supplied low-level
-converter's defaults are preserved for compatibility.
+The original `A32Converter`, `a32_fast.py`, reference solver, geometry constants
+and source URDF retain their original degree-input/SI-output behavior. A3.0
+still uses that original geometry; it is not migrated to the A3.2 SDK formula.
+The original solver's source provenance is recorded in `source_snapshot.json`.
 
-See [integration and benchmarks](../../docs/angle_to_stroke.md).
+See [SDK integration](../../docs/A32_NATIVE_SDK.md) for stroke caps, hardware
+mapping, feedback signs and build instructions.

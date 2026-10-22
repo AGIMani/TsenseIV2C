@@ -1,4 +1,4 @@
-"""A3.2 trajectories with optional feedback; only this worker writes targets."""
+"""A3.2 trajectories seeded from current feedback; this worker writes targets."""
 import math
 import threading
 import time
@@ -109,6 +109,9 @@ class A32Control(SafeTrajectoryMixin):
         # Raw skeleton deepcopy/recording must not own the motor control lock.
         self._record("record_event", event, **details)
 
+    def record_ruckig_output(self, pose):
+        self.record_event("ruckig", joints=pose, frame_id=self.frame_id)
+
     def _record_state(self, state=None):
         if not self.recorder.writer.active:
             return
@@ -186,6 +189,7 @@ class A32Control(SafeTrajectoryMixin):
         return {**status, 'active': writer.active, 'error': writer.error}
 
     def _seed(self, pose):
+        self.ruckig_output_joint_angles_rad = None
         self.pose = dict(pose)
         self.input.current_position = [pose[n] for n in self.names]
         self.input.current_velocity = [0.] * len(self.names)
@@ -209,7 +213,15 @@ class A32Control(SafeTrajectoryMixin):
 
     def reset_connection(self):
         with self.lock:
+            self.armed = False
             self.telemetry_seen = False
+            self.target_at = 0.
+            self.frame_id = -1
+            self._seed(self.pose)
+            self.target = dict(self.pose)
+            self.finger_holds.clear()
+            self.finger_hold_context.clear()
+            self._state_cache = None
 
     def set_direct_mode(self, enabled):
         """Change the command path only while hardware motion is disabled."""
@@ -297,8 +309,8 @@ class A32Control(SafeTrajectoryMixin):
             issue = self.arm_issue(self.device.get_state())
             if issue:
                 raise ValueError(issue)
-            # Missing telemetry uses the last command or initial software pose.
-            seed = self.device.starting_pose(self.pose)
+            # A reconnect/resume must start at the current measured hand pose.
+            seed = self.device.starting_pose()
             if self.guard is not None:
                 self.guard.filter.sync_pose_from_dict(seed)
                 if self.guard.filter.data.ncon:
@@ -439,7 +451,9 @@ class A32Control(SafeTrajectoryMixin):
                 self.samples.append({"tick": self.ticks, "frame_id": self.frame_id,
                                      "direct_mode": self.direct_mode,
                                      "sent_at_unix_ms": time.time() * 1000.,
-                                     "joints": dict(candidate), "self": targets.get("self"),
+                                     "ruckig_output_joint_angles_rad": (dict(self.ruckig_output_joint_angles_rad)
+                                         if not self.direct_mode and self.ruckig_output_joint_angles_rad is not None else None),
+                                     "joints": dict(targets.get("applied_pose", candidate)), "self": targets.get("self"),
                                      "mit_pos": targets.get("mit_pos"), "control_timing": dict(self.control_timing)})
                 if not self.observer.is_alive():
                     self._record_state()
@@ -504,6 +518,8 @@ class A32Control(SafeTrajectoryMixin):
                     "ruckig_enabled": not self.direct_mode, "sample_ticks": self.ticks, "frame_id": self.frame_id,
                     "command_joint_angles_rad": dict(self.pose),
                     "ruckig_joint_angles_rad": dict(self.pose), "target_joint_angles_rad": dict(self.target),
+                    "ruckig_output_joint_angles_rad": (dict(self.ruckig_output_joint_angles_rad)
+                        if not self.direct_mode and self.ruckig_output_joint_angles_rad is not None else None),
                     "sample_collision": self.sample_collision if self.guard is not None else {
                         "mode": "off" if self.direct_mode else self.mode,
                         "checked": False, "protection_enabled": False,

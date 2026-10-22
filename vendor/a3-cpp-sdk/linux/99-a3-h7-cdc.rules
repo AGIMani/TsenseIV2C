@@ -1,0 +1,3 @@
+# H723 A3 USB CDC (ST VID 0483, PID 5740). Does not match ST-Link (3748/374B/...).
+# Debian/Ubuntu: GROUP="dialout". Arch: often GROUP="uucp".
+SUBSYSTEM=="tty", ATTRS{idVendor}=="0483", ATTRS{idProduct}=="5740", MODE="0660", GROUP="dialout"

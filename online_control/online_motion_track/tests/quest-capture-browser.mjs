@@ -5,7 +5,7 @@ import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 
-const received = [];
+const received = [], pairedEndpoints = [];
 async function waitReceived(predicate) {
   const until = Date.now() + 3000;
   while (!predicate(received) && Date.now() < until) await new Promise(resolve => setTimeout(resolve, 10));
@@ -13,21 +13,24 @@ async function waitReceived(predicate) {
 }
 const files = new Map([
   ['/q', ['quest.html', 'text/html']],
+  ['/q/adb', ['quest.html', 'text/html']],
+  ['/q/adb/', ['quest.html', 'text/html']],
   ['/quest.html', ['quest.html', 'text/html']],
   ['/quest-capture.js', ['quest-capture.js', 'text/javascript']],
   ['/quest-capture-core.js', ['quest-capture-core.js', 'text/javascript']],
 ]);
 const server = createServer(async (req, res) => {
-  if (req.url === '/api/webxr/pair' && req.method === 'POST') {
+  if (['/api/webxr/pair', '/api/quest-adb/pair'].includes(req.url) && req.method === 'POST') {
+    pairedEndpoints.push(req.url);
     let body='';for await (const chunk of req) body+=chunk;
     const valid=JSON.parse(body).code==='123456';
     res.writeHead(valid?200:400,{'Content-Type':'application/json'});
     res.end(JSON.stringify(valid?{token:'browser-secret'}:{error:'配对码无效'}));return;
   }
-  if (req.url === '/api/webxr/publish' && req.method === 'POST') {
+  if (['/api/webxr/publish', '/api/quest-adb/publish'].includes(req.url) && req.method === 'POST') {
     let body = '';
     for await (const chunk of req) body += chunk;
-    received.push(JSON.parse(body));
+    received.push({endpoint: req.url, ...JSON.parse(body)});
     res.setHeader('Content-Type', 'application/json');
     res.end(JSON.stringify({ok: true, accepted: true}));
     return;
@@ -41,7 +44,7 @@ await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
 let browser;
 try {
   browser = await chromium.launch({
-    executablePath: process.env.CHROME_PATH || 'C:/Program Files/Google/Chrome/Application/chrome.exe',
+    executablePath: process.env.CHROME_PATH || undefined,
     headless: true,
     args:process.env.HAND_BROWSER_SWIFTSHADER==='1'?['--use-angle=swiftshader','--enable-unsafe-swiftshader']:[],
   });
@@ -181,8 +184,55 @@ try {
   await page.evaluate(() => window.xrTest.resolveSession());
   await page.waitForFunction(() => window.xrTest.session.ended);
   assert.equal(received.length, beforeLatePermission);
+
+  // The USB entry reuses native25 drawing while its transport contains only 21 metric points.
+  for (const entry of ['/q/adb', '/q/adb/']) {
+    const beforeAdb = received.length;
+    await page.goto(`http://127.0.0.1:${server.address().port}${entry}`);
+    await page.waitForFunction(() => !document.querySelector('#start').disabled);
+    assert.equal(pairedEndpoints.at(-1), '/api/quest-adb/pair');
+    assert.match(await page.locator('#capture-title').innerText(), /USB ADB 21 点/);
+    assert.match(await page.locator('#status').innerText(), /发送：21 点/);
+    await page.locator('#start').click();
+    await page.waitForFunction(() => Boolean(window.xrTest.session?.callback));
+    await page.evaluate(() => { window.xrTest.missingJoint = 'index-finger-metacarpal'; window.xrTest.frame(); });
+    await waitReceived(items => items.slice(beforeAdb).some(item => item.message.type === 'hand_skeleton'));
+    const adbItems = received.slice(beforeAdb);
+    assert.ok(adbItems.every(item => item.endpoint === '/api/quest-adb/publish'));
+    assert.ok(adbItems.every(item => item.message.schema === 'teleop.quest.adb.hand_skeleton.v1'));
+    assert.equal(adbItems.find(item => item.message.type === 'client_hello').message.coordinate_space, undefined);
+    const adbFrame = adbItems.find(item => item.message.type === 'hand_skeleton').message;
+    assert.equal(adbFrame.units, 'm');
+    assert.equal(adbFrame.joint_set, 'mediapipe-21');
+    assert.equal(adbFrame.transport, 'adb');
+    assert.equal(adbFrame.coordinate_space, 'webxr_local_floor');
+    assert.equal(adbFrame.hands[0].tracked, true, 'excluded metacarpal cannot invalidate 21 valid transmitted joints');
+    assert.equal(adbFrame.hands[0].landmarks.length, 21);
+    assert.deepEqual(adbFrame.hands[0].landmarks[0], [0.1, 0.2, -0.5]);
+    assert.equal(adbFrame.hands[0].joints, undefined);
+    assert.deepEqual(adbFrame.hands[1], {handedness: 'right', tracked: false, landmarks: []});
+    const beforeLoss = received.length;
+    await page.evaluate(() => { window.xrTest.missingJoint = 'index-finger-tip'; window.xrTest.frame(); });
+    await waitReceived(items => items.slice(beforeLoss).some(item => item.message.type === 'hand_skeleton'));
+    const lossItems = received.slice(beforeLoss);
+    assert.ok(lossItems.some(item => item.message.type === 'tracking_lost'));
+    assert.deepEqual(lossItems.find(item => item.message.type === 'hand_skeleton').message.hands[0],
+      {handedness: 'left', tracked: false, landmarks: []});
+    if (entry.endsWith('/')) {
+      await page.evaluate(() => window.dispatchEvent(new Event('pagehide')));
+      await waitReceived(items => items.at(-1)?.message.type === 'session_ended');
+      assert.equal(received.at(-1).endpoint, '/api/quest-adb/publish', 'pagehide beacon uses USB endpoint');
+      assert.equal(received.at(-1).message.reason, 'page_hidden');
+    } else {
+      await page.locator('#stop').click();
+      await page.waitForFunction(() => !document.querySelector('#start').disabled);
+      assert.equal(received.at(-1).message.type, 'session_ended');
+    }
+    const sequences = received.slice(beforeAdb).map(item => item.message.sequence);
+    assert.ok(sequences.every((sequence, index) => index === 0 || sequence > sequences[index - 1]));
+  }
   assert.deepEqual(errors, []);
-  console.log('Quest browser lifecycle passed: native25, loss, single user gesture, restart, visibility pause/resume, explicit end, cancelled permission.');
+  console.log('Quest browser lifecycle passed: native25 and USB ADB metric21, loss, single user gesture, restart, visibility pause/resume, explicit end, cancelled permission, USB pagehide beacon.');
 } finally {
   await browser?.close();
   await new Promise(resolve => server.close(resolve));

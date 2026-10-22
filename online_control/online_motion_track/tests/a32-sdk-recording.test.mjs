@@ -18,6 +18,19 @@ test('failed SDK polling records its source action and does not schedule another
   p.begin();await noticed;clearTimeout(p.timer);
   assert.equal(rows[0].type,'a32_sdk_error');assert.equal(rows[0].action,'status');assert.equal(p.state.armed,false);
 });
+test('SDK polling preserves ampere metadata and values in browser downloads',async()=>{
+  const {p,rows}=panel();
+  const hardware={connected:true,telemetry_format:'a32-native-sdk-state/v2',
+    telemetry_units:{self_current:'A',external_current:'A'},self:[{iq:-.1374,iq_ref:.2748,current_unit:'A'}]};
+  p.api=async()=>hardware;
+  const captured=new Promise(resolve=>{p.record=(type,data)=>{rows.push({type,...data});p.serial++;resolve();};});
+  p.begin();await captured;clearTimeout(p.timer);
+  assert.equal(rows[0].type,'a32_sdk_sample');
+  assert.equal(rows[0].telemetry_format,hardware.telemetry_format);
+  assert.deepEqual(rows[0].telemetry_units,hardware.telemetry_units);
+  assert.equal(rows[0].hardware.self[0].iq,-.1374);
+  assert.equal(rows[0].hardware.self[0].iq_ref,.2748);
+});
 test('stop/disconnect success and failure are recorded before the session is sealed',async()=>{
   const {p,rows,current}=panel();await assert.rejects(p.finish(current),/synthetic I\/O failure/);
   assert.equal(rows[0].action,'disconnect');assert.equal(rows[0].type,'a32_sdk_error');

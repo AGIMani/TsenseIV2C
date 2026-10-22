@@ -345,7 +345,8 @@ def test_loss_recovery_plans_from_stopped_pose_and_checks_every_ruckig_sample(mo
         tracking.tick(now=now, current=current)
         pose, diag = sample_guard.project(interp.sample())
         assert diag["output_max_penetration_mm"] <= 0.200001
-        assert max(abs(pose[name] - current[name]) for name in pose) <= 0.008001
+        assert all(abs(pose[name] - current[name]) <= velocity * 0.002 + 1e-6
+                   for name, velocity in zip(interp._joint_names, interp._input.max_velocity))
         assert pose[fixed] == 0.0
         assert not interp.last_faults
         if diag["limited"]:

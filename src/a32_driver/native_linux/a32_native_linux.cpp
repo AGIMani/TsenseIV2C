@@ -1,13 +1,15 @@
-// Independent Linux implementation of the project's version-2 C ABI.
-// No vendor binary, Wine, Windows process, automatic enable or automatic motion.
+// Linux version-2 C ABI adapter using the bundled A3 SDK protocol source.
+// Native POSIX transport; no automatic enable, disable or motion.
 #include "protocol.hpp"
+#include "a3/Stroke.h"
+#include "a3/Types.h"
+#include "a3/Version.h"
 #include <algorithm>
 #include <atomic>
 #include <cerrno>
 #include <chrono>
 #include <climits>
 #include <cmath>
-#include <condition_variable>
 #include <cstring>
 #include <filesystem>
 #include <fstream>
@@ -61,7 +63,6 @@ struct Context {
     // ABI calls serialize against each other; RX only owns stateMutex. The descriptor
     // stays open until RX is joined, including after unexpected link loss.
     std::mutex apiMutex, stateMutex;
-    std::condition_variable firmwareChanged;
     std::atomic<bool> stop{true};
     std::thread receiver;
     int fd{-1};
@@ -83,7 +84,6 @@ struct Context {
 
     void cleanup() noexcept {
         stop.store(true);
-        firmwareChanged.notify_all();
         if (receiver.joinable()) receiver.join();
         if (fd>=0) {
             if (serialExclusive) ::ioctl(fd,TIOCNXCL);
@@ -105,7 +105,6 @@ struct Context {
             for (auto& item: hand.self) item.online=false;
             for (auto& item: hand.mit) item.online=false;
         }
-        firmwareChanged.notify_all();
     }
     void receive() noexcept {
         try {
@@ -132,7 +131,7 @@ struct Context {
                         std::lock_guard<std::mutex> lock(stateMutex);
                         if (fun==1) {
                             a32wire::Firmware decoded;
-                            if (a32wire::parse_firmware(payload,decoded)) { firmware=decoded; firmwareChanged.notify_all(); }
+                            if (a32wire::parse_firmware(payload,decoded)) firmware=decoded;
                         } else if (fun==2) {
                             a32wire::Hand decoded;
                             if (a32wire::parse_hand(payload,decoded)) {
@@ -155,9 +154,9 @@ struct Context {
           catch (const std::exception& failure) { if (!stop.load()) lost(7,failure.what()); }
           catch (...) { if (!stop.load()) lost(7,"unknown receive failure"); }
     }
-    void writeAll(const a32wire::Bytes& bytes, bool handshake=false) {
+    void writeAll(const a32wire::Bytes& bytes, bool connecting=false) {
         { std::lock_guard<std::mutex> lock(stateMutex);
-          if (!transportLive || (!handshake && !connected)) throw Failure(1,"not connected"); }
+          if (!transportLive || (!connecting && !connected)) throw Failure(1,"not connected"); }
         const auto deadline=Clock::now()+250ms;
         size_t offset=0;
         try {
@@ -182,20 +181,20 @@ struct Context {
             }
         } catch (const Failure& failure) { lost(failure.code,failure.what()); throw; }
     }
-    void startHandshake(const std::string& name, bool isTcp) {
+    void startConnection(const std::string& name, bool isTcp) {
         { std::lock_guard<std::mutex> lock(stateMutex);
           link=name; tcp=isTcp; transportLive=true; connected=false; stop.store(false);
           firmware={}; hand={}; board={}; receivedAt=0; previousRx=0; rxOk=0;
           targetsSet=false; error.clear(); errorCode=0; failedOperation.clear(); }
         try {
             receiver=std::thread([this] { receive(); });
+            // Version information is optional metadata. Some deployed firmware
+            // does not answer this query; neither its absence nor its version
+            // gates transport connection. Telemetry and commands retain their
+            // existing frame validation and connection-loss handling.
             writeAll(a32wire::host_info(),true);
-            std::unique_lock<std::mutex> lock(stateMutex);
-            const bool woke=firmwareChanged.wait_for(lock,1500ms,[this] { return firmware.valid || !transportLive; });
-            if (!transportLive) throw Failure(errorCode,error.empty()?"connection lost during handshake":error);
-            if (!woke || !firmware.valid) throw Failure(9,"firmware version query timed out (1500 ms)");
-            if (firmware.proto_major!=1 || firmware.app_major!=1)
-                throw Failure(10,"firmware protocol incompatible (requires protocol major 1 and app major 1)");
+            std::lock_guard<std::mutex> lock(stateMutex);
+            if (!transportLive) throw Failure(errorCode,error.empty()?"connection lost during connect":error);
             connected=true;
         } catch (...) { cleanup(); throw; }
     }
@@ -205,12 +204,17 @@ struct Context {
         for (int i=0;i<18;++i) if (!std::isfinite(self[i])) throw Failure(6,"self targets must be finite");
         for (int i=0;i<2;++i) if (!std::isfinite(mit[i])) throw Failure(6,"MIT targets must be finite");
         std::lock_guard<std::mutex> lock(stateMutex);
-        for (int i=0;i<18;++i) {
-            const bool rotary=i==6 || i==7 || i==14 || i==15;
-            targetSelf[static_cast<size_t>(i)]=std::clamp(self[i],rotary?-180.f:0.f,rotary?180.f:40.f);
-        }
-        for (int i=0;i<2;++i) targetMit[static_cast<size_t>(i)]=std::clamp(mit[i],-180.f,180.f);
+        for (int i=0;i<18;++i) targetSelf[static_cast<size_t>(i)]=a3::clampSlotPos(i,self[i]);
+        for (int i=0;i<2;++i) targetMit[static_cast<size_t>(i)]=a3::clampMitPos(mit[i]);
         targetsSet=true;
+    }
+    void stopSending() {
+        // Local cancellation only: keep telemetry connected and require a fresh
+        // explicit target before another position send. Never change motor power.
+        std::lock_guard<std::mutex> lock(stateMutex);
+        targetsSet=false;
+        targetSelf={};
+        targetMit={};
     }
     void sendOnce(SendTiming* timing) {
         a32wire::Bytes bytes;
@@ -287,7 +291,7 @@ static void connectSerial(Context* c, const std::string& path) {
         if (::cfsetispeed(&options,B115200)<0 || ::cfsetospeed(&options,B115200)<0 ||
             ::tcsetattr(c->fd,TCSANOW,&options)<0) throw Failure(7,ioError("configure serial port"));
         // Do not pulse DTR/RTS or send enable/position commands during connect.
-        c->startHandshake("USB:"+path,false);
+        c->startConnection("USB:"+path,false);
     } catch (...) { c->cleanup(); throw; }
 }
 static void connectTcp(Context* c, const char* host, unsigned short port) {
@@ -320,10 +324,15 @@ static void connectTcp(Context* c, const char* host, unsigned short port) {
     if (c->fd<0) throw Failure(7,"TCP connect failed or timed out (1500 ms)");
     const int yes=1;
     ::setsockopt(c->fd,IPPROTO_TCP,TCP_NODELAY,&yes,sizeof(yes));
-    c->startHandshake(std::string("TCP:")+host+":"+service,true);
+    c->startConnection(std::string("TCP:")+host+":"+service,true);
 }
 
 API int a32_abi_version() noexcept { return 2; }
+// Stateless conversion for offline consumers and parity checks; no transport
+// or motor state is read or changed. Invalid input leaves the output unchanged.
+API int a32_angles_to_actuators(const float* angles_deg,float* actuators) noexcept {
+    return a3::anglesDegToActuator(angles_deg,actuators)?1:0;
+}
 API Context* a32_create() noexcept { try { return new Context(); } catch (...) { return nullptr; } }
 API void a32_destroy(Context* c) noexcept { try { delete c; } catch (...) {} }
 API int a32_last_error(Context* c, char* out, int capacity) noexcept {
@@ -335,7 +344,7 @@ API int a32_connect_usb(Context* c, const char* port) noexcept {
     return invoke(c,"connect_usb",[&] {
         if (port && *port && std::string(port)!="auto") { connectSerial(c,port); return; }
         const auto found=autoPorts();
-        if (found.empty()) throw Failure(8,"no H7 USB CDC port (0483:5740); attach USB to WSL2 first");
+        if (found.empty()) throw Failure(8,"no H7 USB CDC port (0483:5740); connect the device and check Linux USB permissions");
         if (found.size()!=1) throw Failure(6,"multiple H7 USB CDC devices; specify an explicit /dev/ttyACM path");
         connectSerial(c,found.front());
     });
@@ -355,7 +364,12 @@ API int a32_send_targets(Context* c,const float* self,const float* mit,SendTimin
         c->sendOnce(timing);
     });
 }
-API int a32_enable_all(Context* c,int enabled) noexcept { return invoke(c,"enable_all",[&] { c->writeAll(a32wire::power(enabled!=0)); }); }
+API int a32_enable_all(Context* c,int enabled) noexcept {
+    return invoke(c,"enable_all",[&] {
+        if (enabled) c->writeAll(a32wire::enable());
+        else c->stopSending();
+    });
+}
 API int a32_home_slot(Context* c,int slot,float iq) noexcept {
     return invoke(c,"home_slot",[&] {
         if (slot<0 || slot>=18) throw Failure(5,"invalid self motor slot (0..17)");
@@ -369,7 +383,9 @@ API int a32_home_reset_slot(Context* c,int slot) noexcept {
         c->writeAll(a32wire::home(slot,true,0));
     });
 }
-API int a32_estop(Context* c) noexcept { return invoke(c,"estop",[&] { c->writeAll(a32wire::power(false)); }); }
+API int a32_stop_sending(Context* c) noexcept { return invoke(c,"stop_sending",[&] { c->stopSending(); }); }
+// Preserve the existing C ABI entry point, now with local cancellation semantics.
+API int a32_estop(Context* c) noexcept { return invoke(c,"estop",[&] { c->stopSending(); }); }
 API int a32_control_state(Context* c,ControlState* out) noexcept {
     return invoke(c,"control_state",[&] {
         if (!out) throw Failure(6,"control state output required");
@@ -385,24 +401,31 @@ API int a32_state(Context* c,char* out,int capacity) noexcept {
     try {
         std::lock_guard<std::mutex> lock(c->stateMutex);
         std::ostringstream s; s << std::setprecision(9) << std::boolalpha;
-        s << "{\"connected\":" << c->connected << ",\"streaming\":false,\"sdk_version\":\"independent-linux-abi2/1.0\",\"link\":" << quote(c->link)
+        s << "{\"connected\":" << c->connected << ",\"streaming\":false,\"sdk_version\":" << quote(a3::sdkVersion())
+          << ",\"native_implementation\":\"a3-sdk-protocol-linux-abi2/1.0\",\"link\":" << quote(c->link)
+          << ",\"telemetry_format\":\"a32-native-sdk-state/v2\",\"telemetry_units\":{\"self_current\":\"A\",\"external_current\":\"A\"}"
           << ",\"rx_mask\":" << c->hand.mask << ",\"rx_ok\":" << c->rxOk << ",\"rx_hz\":"; number(s,c->rxHz);
         s << ",\"tx_hz\":"; number(s,c->txHz);
         s << ",\"telemetry_age_ms\":" << (c->receivedAt?nowMs()-c->receivedAt:-1) << ",\"sequence\":" << c->hand.sequence << ",\"tick_ms\":" << c->hand.tick;
         const auto& f=c->firmware;
         s << ",\"firmware\":{\"valid\":" << f.valid << ",\"proto_major\":" << int(f.proto_major) << ",\"proto_minor\":" << int(f.proto_minor)
-          << ",\"app_major\":" << int(f.app_major) << ",\"app_minor\":" << int(f.app_minor) << ",\"app_patch\":" << int(f.app_patch) << ",\"app_build\":" << int(f.app_build) << "},\"self\":[";
+          << ",\"app_major\":" << int(f.app_major) << ",\"app_minor\":" << int(f.app_minor) << ",\"app_patch\":" << int(f.app_patch) << ",\"app_build\":" << int(f.app_build)
+          << ",\"hand_side\":" << int(f.hand_side) << "},\"self\":[";
         for (size_t i=0;i<18;++i) {
-            if (i) s << ','; const auto& row=c->hand.self[i];
+            if (i) s << ',';
+            const auto& row=c->hand.self[i];
             s << "{\"slot\":" << i << ",\"online\":" << row.online << ",\"homing\":" << int(row.homing) << ",\"position\":"; number(s,row.position);
             s << ",\"target\":"; number(s,row.target); s << ",\"iq\":"; number(s,row.iq); s << ",\"iq_ref\":"; number(s,row.iq_ref);
+            s << ",\"current_unit\":\"A\"";
             s << ",\"temperature_centi\":" << row.temperature << ",\"open_spin\":" << row.open_spin << '}';
         }
         s << "],\"mit\":[";
         for (size_t i=0;i<2;++i) {
-            if (i) s << ','; const auto& row=c->hand.mit[i];
+            if (i) s << ',';
+            const auto& row=c->hand.mit[i];
             s << "{\"index\":" << i << ",\"online\":" << row.online << ",\"valid\":" << row.valid << ",\"position\":"; number(s,row.position);
             s << ",\"velocity_rpm\":"; number(s,row.velocity); s << ",\"iq\":"; number(s,row.iq); s << ",\"voltage\":"; number(s,row.voltage);
+            s << ",\"current_unit\":\"A\"";
             s << ",\"fault\":" << row.fault << ",\"state\":" << int(row.state) << ",\"calib\":" << int(row.calib) << ",\"mode\":" << int(row.mode) << '}';
         }
         s << "],\"board\":{\"valid\":" << c->board.valid << ",\"ntc_c_centi\":" << c->board.ntc_c << ",\"ntc_b_centi\":" << c->board.ntc_b << ",\"vin24_mv\":" << c->board.vin << "},\"targets\":{\"self\":[";

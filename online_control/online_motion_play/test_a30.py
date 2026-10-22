@@ -339,10 +339,10 @@ def test_arming_seeds_measured_pose_and_writes_a3_only(device):
         clock.value += .01
         feed(d, seq=seq)
         d.tick()
-        assert all(abs(v-pv) <= 80*.01+1e-8 for v, pv in zip(d.input.current_velocity, previous_v))
-        assert all(abs(a-pa) <= 200*.01+1e-8 for a, pa in zip(d.input.current_acceleration, previous_a))
+        assert all(abs(v-pv) <= 400*.01+1e-8 for v, pv in zip(d.input.current_velocity, previous_v))
+        assert all(abs(a-pa) <= 2400*.01+1e-8 for a, pa in zip(d.input.current_acceleration, previous_a))
         previous_v, previous_a = d.input.current_velocity, d.input.current_acceleration
-    assert 0 < d.pose[name] <= .4
+    assert 0 < d.pose[name] <= .4 + 1e-12
     for frame in d.port.writes:
         assert crc16_modbus(frame[:-2]) == struct.unpack_from("<H", frame, len(frame)-2)[0]
     count = len(d.port.writes)

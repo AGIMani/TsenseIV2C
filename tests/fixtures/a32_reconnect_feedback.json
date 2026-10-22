@@ -1,0 +1,200 @@
+{
+  "description": "Reconnect regression: previously sent flexed pose, then fresh near-zero telemetry; raw linear feedback has the opposite sign to commands.",
+  "previous_command_at": "2026-10-09T18:20:34.755+08:00",
+  "feedback_at": "2026-10-09T18:23:57.424+08:00",
+  "previous_pose": {
+    "left_hand_pinky_DIP_joint": 1.565,
+    "left_hand_pinky_PIP_joint": 1.4268743107894317,
+    "left_hand_pinky_MCP_joint": 0.935318510663433,
+    "left_hand_ring_DIP_joint": 1.5649999999999997,
+    "left_hand_ring_PIP_joint": 1.5649999999999997,
+    "left_hand_ring_MCP_joint": 1.0721272084532463,
+    "left_hand_pinky_swing_joint": -0.20013241048516994,
+    "left_hand_ring_swing_joint": -0.08571321337738577,
+    "left_hand_mid_DIP_joint": 1.565,
+    "left_hand_mid_PIP_joint": 1.565,
+    "left_hand_mid_MCP_joint": 1.128177642848851,
+    "left_hand_index_DIP_joint": 1.5648751838324675,
+    "left_hand_index_PIP_joint": 1.4646584780936946,
+    "left_hand_index_MCP_joint": 1.3942139663085296,
+    "left_hand_mid_swing_joint": 0.3399995092317406,
+    "left_hand_index_swing_joint": 0.3399757452832689,
+    "left_hand_thumb_PIP_joint": 1.5335025688162527,
+    "left_hand_thumb_MCP_joint": 1.5649799777328808,
+    "left_hand_thumb_rotaback_joint2": 0.9803522095761864,
+    "left_hand_thumb_rota_block_joint": 1.7897013771405714
+  },
+  "feedback": {
+    "connected": true,
+    "telemetry_age_ms": 1,
+    "rx_ok": 96,
+    "rx_mask": 262143,
+    "sequence": 1100,
+    "self": [
+      {
+        "slot": 0,
+        "online": true,
+        "homing": 254,
+        "position": -0.0243276525,
+        "target": 0
+      },
+      {
+        "slot": 1,
+        "online": true,
+        "homing": 254,
+        "position": -0.00589483231,
+        "target": 0
+      },
+      {
+        "slot": 2,
+        "online": true,
+        "homing": 254,
+        "position": -0.00326854922,
+        "target": 0
+      },
+      {
+        "slot": 3,
+        "online": true,
+        "homing": 254,
+        "position": -0.00135063194,
+        "target": 0
+      },
+      {
+        "slot": 4,
+        "online": true,
+        "homing": 254,
+        "position": -0.0106398407,
+        "target": 0
+      },
+      {
+        "slot": 5,
+        "online": true,
+        "homing": 254,
+        "position": -0.00943469163,
+        "target": 0
+      },
+      {
+        "slot": 6,
+        "online": true,
+        "homing": 2,
+        "position": 0.00737457257,
+        "target": 0
+      },
+      {
+        "slot": 7,
+        "online": true,
+        "homing": 2,
+        "position": 0.105606079,
+        "target": 0
+      },
+      {
+        "slot": 8,
+        "online": true,
+        "homing": 254,
+        "position": 0.0100286147,
+        "target": 0
+      },
+      {
+        "slot": 9,
+        "online": true,
+        "homing": 254,
+        "position": -0.0031731159,
+        "target": 0
+      },
+      {
+        "slot": 10,
+        "online": true,
+        "homing": 254,
+        "position": 0.000494771288,
+        "target": 0
+      },
+      {
+        "slot": 11,
+        "online": true,
+        "homing": 254,
+        "position": 0.00972178765,
+        "target": 0
+      },
+      {
+        "slot": 12,
+        "online": true,
+        "homing": 254,
+        "position": -0.0112758828,
+        "target": 0
+      },
+      {
+        "slot": 13,
+        "online": true,
+        "homing": 254,
+        "position": -0.018920932,
+        "target": 0
+      },
+      {
+        "slot": 14,
+        "online": true,
+        "homing": 2,
+        "position": 0.00203613285,
+        "target": 0
+      },
+      {
+        "slot": 15,
+        "online": true,
+        "homing": 2,
+        "position": 0.0147251133,
+        "target": 0
+      },
+      {
+        "slot": 16,
+        "online": true,
+        "homing": 254,
+        "position": -0.0176889375,
+        "target": 0
+      },
+      {
+        "slot": 17,
+        "online": true,
+        "homing": 254,
+        "position": -0.0108172353,
+        "target": 0
+      }
+    ],
+    "mit": [
+      {
+        "index": 0,
+        "online": true,
+        "position": 0.000439453113,
+        "valid": true,
+        "fault": 0,
+        "state": 4
+      },
+      {
+        "index": 1,
+        "online": true,
+        "position": -0.000878906227,
+        "valid": true,
+        "fault": 0,
+        "state": 4
+      }
+    ]
+  },
+  "buggy_first_self": [
+    0.039996461947698805,
+    10.769481458411219,
+    11.847700697981526,
+    12.383506065434402,
+    16.873516084378334,
+    10.825546059603507,
+    0.007374572569999999,
+    0.105606079,
+    12.405626658570487,
+    16.873527217299674,
+    13.976440888577503,
+    12.382294645326665,
+    15.626680811790205,
+    15.079434516694091,
+    0.00203613285,
+    0.0147251133,
+    12.084042718180722,
+    19.538620131625468
+  ]
+}
