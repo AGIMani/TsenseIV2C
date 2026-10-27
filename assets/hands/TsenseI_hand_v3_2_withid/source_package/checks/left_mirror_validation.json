@@ -1,0 +1,15 @@
+{
+  "passed": true,
+  "links": 22,
+  "joints": 21,
+  "movable_joints": 20,
+  "stl_files": 367,
+  "triangles_checked": 1839012,
+  "poses_checked": 143,
+  "max_mesh_reflection_error_m": 1.3113021848920603e-09,
+  "max_fk_matrix_error": 2.7755575615628914e-17,
+  "total_mass_kg": 0.9520000000000001,
+  "relative_and_ros_mesh_paths_valid": true,
+  "inertia_COM_mass_limits_and_winding_valid": true,
+  "scope": "Geometric and kinematic reflection validation; ROS/RViz runtime and collision-free motion not tested."
+}

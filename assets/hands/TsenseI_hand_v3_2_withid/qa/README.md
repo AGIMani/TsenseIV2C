@@ -1,39 +1,31 @@
 # A3.2 带 ID 模型检查
 
+2026-10-27 替换为用户提供的 `TsenseI_hand_A3.2_withid_upper_thumb5mm_noupper_mid`。
+网页仍通过 `TsenseI_v3_2_withid` 选择此模型，左右手各保留 22 个 link、20 个活动关节、367 个完整外观网格及源 URDF 的 22 组质量惯量（总质量 0.952 kg）。
+
+## 坐标与控制
+
+源文件原样保存在 `../source_20_outputs/`，与运行模型共享未经修改的 `../meshes/`。源包的配置和审计资料保存在 `../source_package/`，仅用于溯源，不作为项目控制策略。
+
+原包拇指第二旋转关节范围为 [-1.74, 0] rad。本次按用户要求同时修改源目录左右手 URDF：采用 `q_new = -q_old` 并翻转该关节轴，源文件与项目现在均使用 [0, 1.74] rad。原文件以 `.urdf.bak-*` 保存在源目录；项目源快照及哈希同步更新。源包配套配置/历史审计仍作为原始记录保存。关节原点和其他轴保留源值。屈曲范围继续使用 [0.005, 1.565] rad，侧摆模型范围为 [-0.35, 0.35] rad。
+
+右手直接使用提供的右手文件，镜像面位于 base_link 的 Y=4 mm，满足 `y_right=0.008-y_left`。关键点镜像工具已适配该平面偏移。每只手保留原来的局部连杆关键点，随新几何运动，标记为 Draft/待复核，不能视作新 CAD 的实测标定。
+
 ## 碰撞模型
 
-每只手有 15 个碰撞几何：10 个近端/中间指节胶囊，加 5 个完整末端外壳凸包。只检查不同手指之间的碰撞；同指、手掌、安装底座和腕壳不参与此模型的碰撞保护。
+所有 44 个连杆的碰撞包络均从各自完整外观网格重新计算，验证源顶点被包络覆盖，凸包外扩误差不超过 0.35 mm。运行 MJCF 每只手启用 15 个手指包络，继续只检查不同手指之间的碰撞；手掌、腕座、同指碰撞不在此策略内。MJCF 沿用运动学碰撞代理的质量惯量，不是源质量参数的动力学仿真模型。
 
-上传包的末端胶囊仅根据指尖最后 1 mm 的截面拟合，直径约 4–4.8 mm，不能覆盖宽约 14.5–16 mm 的指腹。本项目因此从每个末端 link 的**全部视觉网格顶点**构建凸包，包含 URDF 的 visual origin 和 scale，并保存到 `../mjcf/collision_meshes/*.stl`。凸包保留收尖外形，同时覆盖整个指腹；它会保守填平局部凹槽。
+本目录原有预览图属于旧模型历史记录，不能作为本次模型的验收图片。
 
-生成器使用 SciPy ConvexHull，并按凸包平面法向设置三角形绕序。保留原始顶点精度，避免 STL 导出前自动合并非常接近的顶点而产生退化面。右侧网格使用模型规定的 XZ 镜像并反转绕序。
+## 导入与验证
 
-`collision_overlay.png` 显示左右手的掌面、侧面和屈曲姿态。彩色区域包括 10 个胶囊和 5 个末端凸包，灰色区域是原始视觉外壳。两只手零位均无接触；普通屈曲姿态也无假碰撞。
+在项目根目录使用 track 环境：
 
-浏览器既有胶囊辅助显示接口返回 10 个胶囊；5 个末端凸包由真实末端模型表面表示，均参与后台 MuJoCo 距离计算和 stop 保护。此图额外绘制完整凸包轮廓。
-
-## 验证
-
-2026-09-28：以下 4 个测试文件合计 **70 项通过**。
-
-```powershell
-E:/conda/envs/hand_dex/python.exe -m pytest tests/test_a32_distal_collision.py tests/test_a32_models_integration.py tests/test_a32_mapper.py tests/test_hand_profile_v3_2.py -q --basetemp .pytest-runtime/a32-models-full-hull-04
+```bash
+.venvs/track/bin/python tools/import_a32_withid_package.py /path/to/TsenseI_hand_A3.2_withid_upper_thumb5mm_noupper_mid
+.venvs/track/bin/python -m pytest -q tests/test_a32_models_integration.py tests/test_a32_joint_ranges.py tests/test_a32_distal_collision.py tests/test_web_v3_2.py
 ```
 
-新增碰撞检查包括：
+导入先在临时目录构建，成功后将旧模型目录移入项目外的 `../model-backups/`，再安装新模型。来源网格、原始 URDF、运行 URDF 和 MJCF 的 SHA-256 见 `../source_mapping.yaml`。
 
-- 验证五个凸包覆盖各自原始视觉网格的所有顶点，边界误差小于 20 nm；验证闭合、凸性、右侧镜像。
-- 五根手指、左右手分别检查指腹对碰和指尖对碰：1 mm 间隙时无接触，向内推进 0.5 mm 时均检出接触。
-- 整手弯曲交叉姿态中检出末端凸包之间的碰撞；确认正负距离进入 stop guard，并将目标截停在无穿透姿态。
-- 随机姿态检查 URDF 与 MJCF 的关节限位及正向运动学一致，初始零位不碰撞。
-
-## 重新生成
-
-在项目根目录运行：
-
-```powershell
-python tools/prepare_hand_v3_2_withid.py --sdk-root D:/Qtworks/a3-cpp-sdk
-python tools/render_profile_collision.py --model TsenseI_v3_2_withid
-```
-
-来源和生成的碰撞网格 SHA-256 记录在 `../source_mapping.yaml`。重新生成保留已存在的 21 点人工标定，以及非末端碰撞几何调整。硬件标定、原模型误差和碰撞代理近似仍需按实际设备校验。
+验证未连接或驱动机械手。已运行的 track/play 服务需重新加载模型；重启对应服务并刷新网页可确保采用新资产。

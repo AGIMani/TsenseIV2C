@@ -1,0 +1,7 @@
+{
+  "passed": true,
+  "links": 22,
+  "isolated_copy": "E:\\codex_work\\导出urdf\\work\\urdf_raised_5mm_20261011\\right_hand_r03_20261013\\mass_tool_check",
+  "max_COM_origin_matrix_difference": 8.673617379884035e-19,
+  "max_inertia_tensor_difference": 3.3881317890172014e-21
+}

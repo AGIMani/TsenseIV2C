@@ -256,9 +256,6 @@ class V2Calibration:
     def enable(self):
         self._send("send_rm_drive_motor", True, label="使能")
 
-    def disable(self):
-        self._send("send_rm_drive_motor", False, label="断电")
-
     def send_position(self, value):
         position = _number(value, -3600.0, 3600.0, "位置")
         self._send("send_rm_pos_motor", position, label="位置")
@@ -280,5 +277,5 @@ class V2Calibration:
             "hardware": f"协议 spi_bus={bus} → 硬件 {ROTARY_HW_SPI_LABELS[bus]} M{motor}"
                         " (0x22 使能 / 0x21 位置 / 0x25 回零)",
             "finger_part": f"{finger} — {part}",
-            "hint": "先使能、发送位置、确认回零；然后手动选择下一个，完成后可断电。",
+            "hint": "先使能、发送位置、确认回零；然后手动选择下一个，完成后可关闭校准。",
         }

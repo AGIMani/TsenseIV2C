@@ -73,7 +73,7 @@ class A30Session:
             "a30Home": button("a30Home", "18路一键找零", self.device.connected and not busy),
             "a30Reset": button("a30Reset", "复位回零态", self.device.connected),
             "a30Init": button("a30Init", "回到初始姿态", not busy),
-            "a30PowerOff": button("a30PowerOff", "停止 / 自研断电", self.device.connected),
+            "a30PowerOff": button("a30PowerOff", "停止下发", self.device.connected),
             "a30LinearIq": number("a30LinearIq", self.linear_iq, 5000),
             "a30RotaryIq": number("a30RotaryIq", self.rotary_iq, 5000),
         }
@@ -236,8 +236,7 @@ class A30Session:
                 self.sync = False
         elif key == "a30PowerOff":
             self.stop()
-            self.device.stop(power_off=True)
-            self.message = "已请求自研18路断电；外接2路仅停发（协议未提供独立断电）"
+            self.message = "已停止下发，未发送失能"
         elif key == "a30Reset":
             self.stop()
             self.device.reset_home()

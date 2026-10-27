@@ -1,0 +1,44 @@
+planning_plugins:
+- ompl_interface/OMPLPlanner
+request_adapters:
+- default_planning_request_adapters/ResolveConstraintFrames
+- default_planning_request_adapters/ValidateWorkspaceBounds
+- default_planning_request_adapters/CheckStartStateBounds
+- default_planning_request_adapters/CheckStartStateCollision
+response_adapters:
+- default_planning_response_adapters/ValidateSolution
+- default_planning_response_adapters/DisplayMotionPath
+planner_configs:
+  RRTConnectkConfigDefault:
+    type: geometric::RRTConnect
+    range: 0.0
+right_hand:
+  planner_configs:
+  - RRTConnectkConfigDefault
+  projection_evaluator: joints(right_hand_thumb_rota_block_joint,right_hand_thumb_rotaback_joint2)
+  longest_valid_segment_fraction: 0.005
+right_hand_thumb:
+  planner_configs:
+  - RRTConnectkConfigDefault
+  projection_evaluator: joints(right_hand_thumb_rota_block_joint,right_hand_thumb_rotaback_joint2)
+  longest_valid_segment_fraction: 0.005
+right_hand_index:
+  planner_configs:
+  - RRTConnectkConfigDefault
+  projection_evaluator: joints(right_hand_index_MCP_joint,right_hand_index_swing_joint)
+  longest_valid_segment_fraction: 0.005
+right_hand_mid:
+  planner_configs:
+  - RRTConnectkConfigDefault
+  projection_evaluator: joints(right_hand_mid_MCP_joint,right_hand_mid_swing_joint)
+  longest_valid_segment_fraction: 0.005
+right_hand_ring:
+  planner_configs:
+  - RRTConnectkConfigDefault
+  projection_evaluator: joints(right_hand_ring_MCP_joint,right_hand_ring_swing_joint)
+  longest_valid_segment_fraction: 0.005
+right_hand_pinky:
+  planner_configs:
+  - RRTConnectkConfigDefault
+  projection_evaluator: joints(right_hand_pinky_MCP_joint,right_hand_pinky_swing_joint)
+  longest_valid_segment_fraction: 0.005

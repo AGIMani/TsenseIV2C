@@ -191,7 +191,6 @@ class V2Session:
             items += [spec('calibrationPosition', 'number', value=c.position, min=-3600., max=3600., step=1.),
                       spec('calibrationSend', 'button', text='发送位置'),
                       spec('calibrationEnable', 'button', text='使能'),
-                      spec('calibrationDisable', 'button', text='断电'),
                       spec('calibrationPrevious', 'button', text='上一个', enabled=c.index > 0),
                       spec('calibrationNext', 'button', text='下一个', enabled=c.index < 6),
                       spec('calibrationZero', 'button', text='已完成' if c.completed else '确认回零', enabled=not c.completed),
@@ -498,8 +497,6 @@ class V2Session:
             c.send_position(c.position)
         elif key == 'calibrationEnable':
             c.enable()
-        elif key == 'calibrationDisable':
-            c.disable()
         elif key == 'calibrationPrevious':
             c.previous()
         elif key == 'calibrationNext':

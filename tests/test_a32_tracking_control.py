@@ -440,7 +440,7 @@ def test_missing_hand_finishes_last_target_and_resumes():
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
-def test_real_driver_waits_for_current_feedback_before_start_and_resume(model_id):
+def test_real_driver_falls_back_for_missing_feedback_before_start_and_resume(model_id):
     from a32_driver import A32Device, A32DriverError
     from test_a32_driver import SimulatedNativeHand
     backend = SimulatedNativeHand()
@@ -452,10 +452,12 @@ def test_real_driver_waits_for_current_feedback_before_start_and_resume(model_id
     try:
         assert item.snapshot()["telemetry_seen"]
         backend.state["telemetry_age_ms"] = -1
-        before = list(backend.calls)
-        with pytest.raises(A32DriverError, match="反馈"):
-            item.arm(True)
-        assert not item.armed and backend.calls == before
+        fallback = device.constrain_pose(item.pose)
+        item.arm(True)
+        assert item.armed
+        for name in device.get_state()["seed_missing"]:
+            assert item.pose[name] == pytest.approx(fallback[name])
+        item.stop()
         backend.state["telemetry_age_ms"] = 0
         item.arm(True)
         seed = dict(item.pose)
@@ -466,10 +468,12 @@ def test_real_driver_waits_for_current_feedback_before_start_and_resume(model_id
         assert item.pose["left_hand_index_PIP_joint"] > seed["left_hand_index_PIP_joint"]
         item.stop()
         backend.state["self"][0]["online"] = False
-        before = list(backend.calls)
-        with pytest.raises(A32DriverError, match="反馈"):
-            item.arm(True)
-        assert not item.armed and backend.calls == before
+        fallback = device.constrain_pose(item.pose)
+        item.arm(True)
+        assert item.armed
+        for name in device.get_state()["seed_missing"]:
+            assert item.pose[name] == pytest.approx(fallback[name])
+        item.stop()
         backend.state["self"][0]["online"] = True
         item.arm(True)
         assert item.pose == seed  # Fresh stationary feedback, not the last command.

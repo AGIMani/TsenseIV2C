@@ -1,0 +1,2947 @@
+{
+  "source": "urdf/TsenseI_hand_right_v3_2_withid.urdf",
+  "source_sha256": "cff6ca17617a763f718c3adc8977d8611bbccc86f41de3ab536cbf6463199062",
+  "target": "urdf/TsenseI_hand_left_v3_2_withid.urdf",
+  "target_sha256": "c958333873ae1cfe09a1594a20b2056bdcb548632cd78033335b5a2b7f139a08",
+  "mirror_plane_base_y_m": 0.004,
+  "base_point_relation": "x_left=x_right; y_left=0.008-y_right; z_left=z_right",
+  "joint_relation": "q_left=q_right; limits and mass unchanged",
+  "meshes": [
+    {
+      "source": "meshes/right/right_hand_base_electronics__P0216.STL",
+      "target": "meshes/left/left_hand_base_electronics__P0216.STL",
+      "root_frame": true,
+      "triangles": 9914,
+      "source_sha256": "16307edc64727cdcd59ea677dea83eed302a96a8861bda8e605b32eb4341dce4",
+      "target_sha256": "d63a3a4c8782240408836c59fa12c3a452f1e4554506d8bf5875742ed86b58de"
+    },
+    {
+      "source": "meshes/right/right_hand_base_electronics__P0230.STL",
+      "target": "meshes/left/left_hand_base_electronics__P0230.STL",
+      "root_frame": true,
+      "triangles": 1520,
+      "source_sha256": "21588ecf2fc54e9a20fb1986e333bd716b78ce818547d48eb4330e6b5ab7eea6",
+      "target_sha256": "e4ea940fbb1655e3d0bd4277922e59684e22b4adcd5ee7acdbc6e176f247454d"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0052.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0052.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "429a46edbc7ded85d985a5041d708e0acd532cbd164c86ce0084184c83f57913",
+      "target_sha256": "f68e72b9a7f21764a176b828c238d1ee9218e01f00f57c961af7456bec40c30d"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0053.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0053.STL",
+      "root_frame": true,
+      "triangles": 1006,
+      "source_sha256": "069dd8573b3c491d548bfa009f33b8f0bdc84ff986c58f296185e0a797d6ff15",
+      "target_sha256": "3e96081017e5d1c76019d99658e74c32be75d2ee85112a84111ca37e79c0e6bb"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0054.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0054.STL",
+      "root_frame": true,
+      "triangles": 1006,
+      "source_sha256": "92a14e931c7e17ab47cea05b72073eee1640961ad34b1cd472f19eef9dc6ea75",
+      "target_sha256": "fc5932812d43db0d7da424c0d750c18620fc69bc6629136f61f64589253ad9ce"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0055.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0055.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "283c6946db381a60d7e67e2ccbe597266a3049c9867097f384665e536411ba13",
+      "target_sha256": "92b133b4cd0f090c04aa86aa111d60528c45e7623fc88dcab4ebd02b73f323d0"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0056.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0056.STL",
+      "root_frame": true,
+      "triangles": 1014,
+      "source_sha256": "fefb432c8c8d7552dbeff6089648c44c19905edce020db3bd90bbdaf3716cec3",
+      "target_sha256": "181174389494c3b38c65480a9caed843e5b8c932bbbb2ec7d5b6829b878d59f6"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0057.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0057.STL",
+      "root_frame": true,
+      "triangles": 1024,
+      "source_sha256": "b80060b5dffe1875e4544c233e4e831e6f790d51ee1d8bb3c22326a8b7098f38",
+      "target_sha256": "bdafccee7525fdcd7e067ecd463a7ae6bf0e76bc62b458a6ab6bf3de8096a54f"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0058.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0058.STL",
+      "root_frame": true,
+      "triangles": 1024,
+      "source_sha256": "c894e0a81d66831d5aad1daa5f11ad4a40672fe42c678ef0e3dcc591046110df",
+      "target_sha256": "d6a1c141236e27ee3db644fb237fa0adc76c63b1ff214594de9ce8e998c73a47"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0059.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0059.STL",
+      "root_frame": true,
+      "triangles": 1006,
+      "source_sha256": "f9e86196aa7760a69078a547e821d758ab5f46a587df64aa9c37be0203172c99",
+      "target_sha256": "40700390df73d3f56df69a4356e28af403b0d93b35bf4c4c3e7d8d87b855256f"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0060.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0060.STL",
+      "root_frame": true,
+      "triangles": 1024,
+      "source_sha256": "fb73b9aa4b64812cf4e0e6cb6e4be62f72453977d9030ac1ce1edd97efb0a8bb",
+      "target_sha256": "dc02489e403355e45d9e6405d2fce03097bbec63e69aed50954df40587cba5ad"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0061.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0061.STL",
+      "root_frame": true,
+      "triangles": 1014,
+      "source_sha256": "8d1ecf4cc8b6b0c6fc24fce646e69aed3f2fe2c81d1d54feb3f9fe96328433e8",
+      "target_sha256": "ec5ecc67a68569eb4bafe98e71f2927cd40e9f860adec8cc191eb6e828616a0f"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0062.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0062.STL",
+      "root_frame": true,
+      "triangles": 1006,
+      "source_sha256": "c6fed68aff051433f0268c8d74a90cbaeed03195e77d503c6a4b8a643effc89b",
+      "target_sha256": "974a94f53795c0e95fc410a5b5ae060750cdcb7b3949e1835dc5766650c1d23c"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0063.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0063.STL",
+      "root_frame": true,
+      "triangles": 1006,
+      "source_sha256": "9621bd0ec00e103f99549b3f7340230569aeb13b7feb29c6bd4930c1d013c855",
+      "target_sha256": "60d97ba64ce09ed745e48ec58ed9f65308592001231126f8b61e4c64eebf9962"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0064.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0064.STL",
+      "root_frame": true,
+      "triangles": 1014,
+      "source_sha256": "1197031225668c7e58d2c889b44354b9f5a8ce333e2c1fb2ab1b33826ea36f41",
+      "target_sha256": "4ba9fded4b004fd2bc1dcd49e8c35b4edc73ebec27321c91bd1bd16645b46584"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0065.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0065.STL",
+      "root_frame": true,
+      "triangles": 1024,
+      "source_sha256": "d7b39b29da26877a08814be1354af1cb0924f6cf9c70c0074c98f6a5cff9c9d1",
+      "target_sha256": "5287c9d22cf0bb2bf53dc860475df89df326067be111d8fa9efe7871b581a811"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0066.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0066.STL",
+      "root_frame": true,
+      "triangles": 1014,
+      "source_sha256": "267823d1ce08cffc79c1abe34701439dc8196e5dadbde9e679c4adc5c42e6bfd",
+      "target_sha256": "6ed062f30be08cc693d591a1344ed3e8ddd8ad58089163bc26b1d142dd320f36"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0067.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0067.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "8c3bfea5f1fd63ec75cc2c47e5dca61c72f1c94b496573642255a132e0903058",
+      "target_sha256": "c6a9e56958adeae80f5cd36f8135b0c0ebc88b58c9bdcd11a0ef59ca9fe9c7e4"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0068.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0068.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "fa0529059e1e827ac947d2875faa5af7183bd4dc1e4af2aaa303dcd98e8e884d",
+      "target_sha256": "5fe0c7df161d367ea10f3abaa7eb8849b8bb8499e1750d015811603dd5b683d8"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0069.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0069.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "690add69caa34d5a2072b6c042f2e775c88627add99c204f82392d9132a2089c",
+      "target_sha256": "3b7cc5d57da69eb0f623673043b85fe9b43ae9e28bdab96754828463d505852e"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0070.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0070.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "6bbce4b8346336b51e00ca21b88fbaf7af03da71699b725bd0534314fb7c9988",
+      "target_sha256": "ad6282bd110fb959a4cbe3d1ebd94b3b00d6d680d94d7687ce5a046349b8528b"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0071.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0071.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "921b4884d220cb2ca784615e1a02c9161484a107bfee91aff8be2e90e2537854",
+      "target_sha256": "aab8a11130f5916f5f09edb4549526a95b08c465e05ad52fcb6d93f27bdf16f4"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0072.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0072.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "6c344b8f98b8a8e4d5eef6efa270ab585dfe00dbb83fa47be479917866bd1d32",
+      "target_sha256": "27597bef1048082df6f21ac33292b2afb51067b8c0fa8c7c80eb5ccd3e4a1fcb"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0073.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0073.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "332092d2bbe4d526f712e7ff5b5653981c335bc3065cfcc4455b4642eff373fb",
+      "target_sha256": "2def3bd9abdf664026752ce7608562ba6d9b77fddeede2243723e26ea81b729a"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0074.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0074.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "d97601f7b4486cb4a7085c176c2367e3b745d291a2e183a62ff222d88c591494",
+      "target_sha256": "bb7877a3a6511dd4dd36699452803defa776793acf8f630e4f0c3daa7ff42598"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0075.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0075.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "afdd9af7f948467e4090d3806130ddd2baaadb7fe4fa2549b01ef6bd260b0276",
+      "target_sha256": "9eb297b6c2f6807bb65eb58924d8f82ee3997d783e54902b966c74804f700802"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0076.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0076.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "1a90a84d96158a97a12f40d30d368209dc1502bc9d291fc6749f560c7f4899b6",
+      "target_sha256": "f96d0c18c9c4bb51a86e52fbe7229b317c18fa8659dac5d9689f5b9dea61a5a7"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0077.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0077.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "d8ba9f6f0c1ba94849983117dbd4bdf060649dcbf4d92003dc25f21d86fc40d4",
+      "target_sha256": "002d31d53e1ee85d0857c8b6b3fbdc29541e565655524a3f150e292d04e713ea"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0078.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0078.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "691bd98e39541855fa9c4807c411b8d7b12344bf9076d717a0a5651f44cde730",
+      "target_sha256": "bfe6b64aadbb2f681e9139a5b1ace7645a063c609069f58c06b5e93f0c3201e7"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0079.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0079.STL",
+      "root_frame": true,
+      "triangles": 1014,
+      "source_sha256": "7a3b24cb97d0ccfb7690c96e4168984dfcdbadd8ddea96fa7f47237ae2bf3309",
+      "target_sha256": "94309afa6c912ea60e825cf6652bc65582ba404e7d1315f8bdc716250407ec7e"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0080.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0080.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "a363a1f41ce08b93278f74f2d6f9a7cee7fa239d99ef5ba3f45d3c5f5f4be9f7",
+      "target_sha256": "db99f3309b2e0e9b7f3fe3636c696601c898aebcfc462382e24aca26abb25581"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0081.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0081.STL",
+      "root_frame": true,
+      "triangles": 766,
+      "source_sha256": "f69680eeb7fce48e62c7f05a5b43ea7a16a8f23bb66ff18a20f182adfee18436",
+      "target_sha256": "2eb4bae2307b49a155f49a192215a9e013caddc09a6d71e53202a7fe3c5f6d2d"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0085.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0085.STL",
+      "root_frame": true,
+      "triangles": 1014,
+      "source_sha256": "6ec40625a788d9deb28c8948ef7e64d6f764cde6af28590e03516fb4886c0b35",
+      "target_sha256": "ef8cd01676603f0e6517b39b6c38177de9a7bbb404ce7279dd9a61ec4decc101"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0086.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0086.STL",
+      "root_frame": true,
+      "triangles": 1014,
+      "source_sha256": "7530b205db0e5c96a50ce1362f9b590991412ed93d92f3155d8a2f33a0d7d77c",
+      "target_sha256": "fd154202446a12626c1055d4680bd52a90d693676c470da7c4fafa4fe58000e4"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0220.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0220.STL",
+      "root_frame": true,
+      "triangles": 932,
+      "source_sha256": "4a574e4f3014e766429ad71d38809df418a50d88c0b4a201d06853a67b29674c",
+      "target_sha256": "902774d86ef367bc88e0d539d35b7b74337eb956a9ba37731991c97157e55660"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0221.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0221.STL",
+      "root_frame": true,
+      "triangles": 1014,
+      "source_sha256": "4241d89e8ec7b6563293d49e93431023637291c943e863d8fa193f749729eb54",
+      "target_sha256": "08b809188d606c0c629140d028f8b3b8c47ceed56ffd7659edf520204fdbb663"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0222.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0222.STL",
+      "root_frame": true,
+      "triangles": 932,
+      "source_sha256": "a509059d5e54ed43e68d697d17b489ecea015218ed61da93ad52d6ab5cbfb9cc",
+      "target_sha256": "c51a7b989ba51f59778a641df29bdd073e2cde45be008e782092d702fc337b98"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0223.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0223.STL",
+      "root_frame": true,
+      "triangles": 932,
+      "source_sha256": "c225ee13644180e0736e1b9c30e5fffb8d8a08b51018a182f5a54f93fd796f78",
+      "target_sha256": "6e87759f433bf37fcf5ee672a2cbc82770b7ae267ee584f0da964cc6d3c78f4c"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0224.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0224.STL",
+      "root_frame": true,
+      "triangles": 1106,
+      "source_sha256": "2b0157951d6e5f6f3cf32b8b12be4c2f0ebc456c405814a4dba570c4a47ba13a",
+      "target_sha256": "f9908899ed99c73ce05630cb3b7fe2ce779716b700770ed2cb8688ea3b47a63b"
+    },
+    {
+      "source": "meshes/right/right_hand_base_fastener__P0225.STL",
+      "target": "meshes/left/left_hand_base_fastener__P0225.STL",
+      "root_frame": true,
+      "triangles": 1106,
+      "source_sha256": "a670c49413379f2c8bcf7830c7468b828d54ce353962d32e18684d9ff113dcd8",
+      "target_sha256": "5558ec0be70c17b7f711b7ebde2fbcde459599f6009cfc90365424de4e603f91"
+    },
+    {
+      "source": "meshes/right/right_hand_base_housing__P0227.STL",
+      "target": "meshes/left/left_hand_base_housing__P0227.STL",
+      "root_frame": true,
+      "triangles": 6034,
+      "source_sha256": "be74dfd341b46fbb30ddb64ed238ace3e83b880f459fda5a997f25eeb2ed2692",
+      "target_sha256": "9a938d0e8b96cd330e3f9147c591c170e538fadae1f7b2880f473f7068aab1bb"
+    },
+    {
+      "source": "meshes/right/right_hand_base_housing__P0229.STL",
+      "target": "meshes/left/left_hand_base_housing__P0229.STL",
+      "root_frame": true,
+      "triangles": 5718,
+      "source_sha256": "671f12147b66dac53a4b2db1ec0b903b356003c266bf850c8db07870a6181c02",
+      "target_sha256": "8e53fd05a79b0a5fc136dca54a07b47b4668f1ce488f432546a230c7c42f3e0a"
+    },
+    {
+      "source": "meshes/right/right_hand_base_rubber__P0226.STL",
+      "target": "meshes/left/left_hand_base_rubber__P0226.STL",
+      "root_frame": true,
+      "triangles": 34052,
+      "source_sha256": "4aa88930107a97a9fd9aaf771b84ceb383a8ee2dbb03908159dffd13a3b57747",
+      "target_sha256": "99aab35bb1b48b0a039ee14fc9ed4cd450567c414d91de226931757de191f8db"
+    },
+    {
+      "source": "meshes/right/right_hand_base_sensor__P0087.STL",
+      "target": "meshes/left/left_hand_base_sensor__P0087.STL",
+      "root_frame": true,
+      "triangles": 1378,
+      "source_sha256": "6a21916625e17d194a68625f265dc5d70e6e1907ad7c4981529382bf87db4b0b",
+      "target_sha256": "2016a54411821a31d9adadffb0168dd9ba698e835d359f2e5eaa2615906178a7"
+    },
+    {
+      "source": "meshes/right/right_hand_base_sensor__P0228.STL",
+      "target": "meshes/left/left_hand_base_sensor__P0228.STL",
+      "root_frame": true,
+      "triangles": 820,
+      "source_sha256": "0e7715e4f0b060933f9fd1f56eb86ce9962316acdf36b52e5dd1d439071c0cc9",
+      "target_sha256": "4018d12b96290208931fb81ea4be7875021ad9c97fc0a83b219cf9be550ba686"
+    },
+    {
+      "source": "meshes/right/right_hand_base_support__P0051.STL",
+      "target": "meshes/left/left_hand_base_support__P0051.STL",
+      "root_frame": true,
+      "triangles": 8672,
+      "source_sha256": "4c3e18370a935d535460a9ef26d6f2236dc64a9e08b90d330a87065a52d9af3a",
+      "target_sha256": "941bae7e96ee5213d5f5d69d85fa4193537323179cd073c94b2728280bba4579"
+    },
+    {
+      "source": "meshes/right/right_hand_base_support__P0082.STL",
+      "target": "meshes/left/left_hand_base_support__P0082.STL",
+      "root_frame": true,
+      "triangles": 3910,
+      "source_sha256": "db770d338b40c1c12466695bb2bacf1ee473388f3bcf8df7d0e95f8d14cd1ecf",
+      "target_sha256": "b6211b6c9729e760bf17c479a4a87f0e91ae10999f2ae204e61604a556e322cc"
+    },
+    {
+      "source": "meshes/right/right_hand_base_support__P0083.STL",
+      "target": "meshes/left/left_hand_base_support__P0083.STL",
+      "root_frame": true,
+      "triangles": 3910,
+      "source_sha256": "bbbf808a6bd8d651106ade6f45d7268e900a7abcc8fe931a189ca9f55a723373",
+      "target_sha256": "1f2640efb32684b517c6489a69088362744e404b21a507d74d6810ce14eddb66"
+    },
+    {
+      "source": "meshes/right/right_hand_base_support__P0084.STL",
+      "target": "meshes/left/left_hand_base_support__P0084.STL",
+      "root_frame": true,
+      "triangles": 764,
+      "source_sha256": "8a476dedbc05fe88136456567e6a74f245f23382aa32b4fe19991c25e05b5817",
+      "target_sha256": "0906aeae09c98483db10330712318f046eda5c4f2a4aff9eed133cc74264b5cd"
+    },
+    {
+      "source": "meshes/right/right_hand_base_support__P0088.STL",
+      "target": "meshes/left/left_hand_base_support__P0088.STL",
+      "root_frame": true,
+      "triangles": 2050,
+      "source_sha256": "7b2530a94ee2c6709874e6dfbff2460eb0e7b937c33928e9a18d568174eade54",
+      "target_sha256": "b042c8168e72618b999b98fea00843f2501f0ae8da696b64511dcdca1855403b"
+    },
+    {
+      "source": "meshes/right/right_hand_base_support__P0089.STL",
+      "target": "meshes/left/left_hand_base_support__P0089.STL",
+      "root_frame": true,
+      "triangles": 764,
+      "source_sha256": "2bae3591b2e25be18c97bdf119be16e670ac34a54ea8c9d8a56387a6f7830969",
+      "target_sha256": "ce2d3a49c7b140aeba4be52dd0702016b2eb9ab61824e59f2b02582e4e39c8c8"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_bearing__P0245.STL",
+      "target": "meshes/left/left_hand_index_DIP_bearing__P0245.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "b93df9ab02f728244bdb0cf04a4cc4bfecf24fc875e2d45a79d7f1c50db515d2",
+      "target_sha256": "70c933a285559680565e01cf3fa06eada52c1bc86df702ecf3df107aa7d8ceb7"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_electronics_motor_stator__P0251.STL",
+      "target": "meshes/left/left_hand_index_DIP_electronics_motor_stator__P0251.STL",
+      "root_frame": false,
+      "triangles": 3726,
+      "source_sha256": "f3fab4581e92ee208c884e7a18a44555f469cb67d1ca0df2041acdc42af2d8a9",
+      "target_sha256": "6b0e08a691b93ef65944b9edb3268a9cabfbad5b535d59277c835570cba9ee33"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_fastener__P0232.STL",
+      "target": "meshes/left/left_hand_index_DIP_fastener__P0232.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "5d11a8555655ab2142a2d5cc0e9ae239ad14730f59e90e3310374fce6d208a5d",
+      "target_sha256": "2a3878baeea273e3c9cbdfe27a4306973b5f3012fcd8e6cdeb4649abf03b9690"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_fastener__P0234.STL",
+      "target": "meshes/left/left_hand_index_DIP_fastener__P0234.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "41ddfd0fb7e2c0284add50542d0e35457940e9df500385d0980db88c874844be",
+      "target_sha256": "0ffa01564ac69bd1deaf433fad2b9ab80dac68bc3369534ea13d85a7019f6eda"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_fastener__P0250.STL",
+      "target": "meshes/left/left_hand_index_DIP_fastener__P0250.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "2376adc08ce5b15aee1dd01a6019534ebb58200b2f00ec8a4afcb998e2ba822a",
+      "target_sha256": "865326ada7cc542d28ca2cec138a889f03dba37b39e7b35a65f93fa9e331fe9c"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_housing__P0252.STL",
+      "target": "meshes/left/left_hand_index_DIP_housing__P0252.STL",
+      "root_frame": false,
+      "triangles": 4740,
+      "source_sha256": "02bd7d80ed52dbcfad8e4ef51b6fa7ac86080a6ef90ccb62335619fb2459db6d",
+      "target_sha256": "93505d6b494cf5c04fe629580a6f30c8967f5f72fc8c0a86c0dc6b834cc54742"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_housing_motor_mover__P0235.STL",
+      "target": "meshes/left/left_hand_index_DIP_housing_motor_mover__P0235.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "142c02f2f17ad270fc04c55ad240caa2780150ba2d0b9922374bb5822867ec13",
+      "target_sha256": "5953e3453227786615183cbddce9074ec68578d123347da6e91bf8684693df12"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_housing_motor_stator__P0251.STL",
+      "target": "meshes/left/left_hand_index_DIP_housing_motor_stator__P0251.STL",
+      "root_frame": false,
+      "triangles": 4964,
+      "source_sha256": "61666086a04a779607a4cfb6605fda680f7eee550a1feffc779ba80a55f7839f",
+      "target_sha256": "8b238b2135573101acc7beb40648baf717e5cbdcc0705807d3c800b4783cd847"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_mover_motor_mover__P0235.STL",
+      "target": "meshes/left/left_hand_index_DIP_mover_motor_mover__P0235.STL",
+      "root_frame": false,
+      "triangles": 884,
+      "source_sha256": "413b236d3c7d9b31dfe2fd54d1e8f2ee0900310291f1325fa9da62f53525a951",
+      "target_sha256": "bc297d0fa02e48369f0733515907267cb84544fb3882e6fe753967a0819ea3f4"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_rod__P0239.STL",
+      "target": "meshes/left/left_hand_index_DIP_rod__P0239.STL",
+      "root_frame": false,
+      "triangles": 1904,
+      "source_sha256": "0d883be802f6e74cdc7ecbb237e4f8395b142ad3dd13b47d5e4aa14773cf9cc1",
+      "target_sha256": "7faa7e7b5695c087bfd2ba16e89ab557a868016bd14af7fa41ac84e867e5332d"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_rubber__P0253.STL",
+      "target": "meshes/left/left_hand_index_DIP_rubber__P0253.STL",
+      "root_frame": false,
+      "triangles": 3560,
+      "source_sha256": "ae42608bbad68757f32165313d8c5852444e5a663205bba39ce2d8014e5c5e44",
+      "target_sha256": "4c3c0338adf49ebe7afe5a1966f0850a9c85cab96eefcdce2c634081570cfee5"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_sensor_motor_stator__P0251.STL",
+      "target": "meshes/left/left_hand_index_DIP_sensor_motor_stator__P0251.STL",
+      "root_frame": false,
+      "triangles": 504,
+      "source_sha256": "3a0065049f607821207c331c8bcafefd97ce6f0ef3e8c5e330b1a9dd15270884",
+      "target_sha256": "d04a1c092c39798605b7beb6983d9a6235319e7a8c71406054660a0d85055911"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_stator_motor_stator__P0251.STL",
+      "target": "meshes/left/left_hand_index_DIP_stator_motor_stator__P0251.STL",
+      "root_frame": false,
+      "triangles": 8820,
+      "source_sha256": "7042c04aa487151cb4e7f2c2518bd56ee4d91138fe4f4f5b4ae2e0ec1aee1ecf",
+      "target_sha256": "f4af2563637c45c513d7f90daa331a50acba81050ea0438836bf1b3df52c14eb"
+    },
+    {
+      "source": "meshes/right/right_hand_index_DIP_support_motor_stator__P0251.STL",
+      "target": "meshes/left/left_hand_index_DIP_support_motor_stator__P0251.STL",
+      "root_frame": false,
+      "triangles": 9110,
+      "source_sha256": "eb9c3ee23a0a7d5dc8c485fb075ea52b53395f08f1a014d8ddd178fc50c5ad57",
+      "target_sha256": "8ea467fa1916b4ede1c4933a2b049366eb1acb2e3e9815ab9afcf51f183acc77"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_bearing__P0266.STL",
+      "target": "meshes/left/left_hand_index_MCP_bearing__P0266.STL",
+      "root_frame": true,
+      "triangles": 1024,
+      "source_sha256": "8394a9beead2e86cb7c07dff3cf8abce4d7e282a52ba419881f952c22a08061f",
+      "target_sha256": "0307b59cce29dd269ccc1624414791eb66a8ed2fe7aac13d927a9a3026a8a85a"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_electronics_motor_stator__P0241.STL",
+      "target": "meshes/left/left_hand_index_MCP_electronics_motor_stator__P0241.STL",
+      "root_frame": true,
+      "triangles": 4896,
+      "source_sha256": "6ed056147f2c025d8b9a89276060178e8ca95d95a9c90d7058bc456eb34f1162",
+      "target_sha256": "b42c218192e2e9dd1532cc52cf8c1fbdebe3d473abe2e68ed12df6f3750e2f99"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_fastener__P0242.STL",
+      "target": "meshes/left/left_hand_index_MCP_fastener__P0242.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "d569e2b62d45456edbe7691060c47eed7b5342bf5228b44c1b9911c9729e6a34",
+      "target_sha256": "c403b35dd1a99ff12eafc03faea04f441d966262f3a0eb0dad700c6c3befa084"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_fastener__P0269.STL",
+      "target": "meshes/left/left_hand_index_MCP_fastener__P0269.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "de728d5a6992de2b36ab1967c0aa377f73fa0246650a13aee53d40e6ff393a7a",
+      "target_sha256": "33ff8e38af17aa6ff5108a4582dcdecf8dc42c32aaecfce44e5281e9cecb0a27"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_fastener__P0279.STL",
+      "target": "meshes/left/left_hand_index_MCP_fastener__P0279.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "d569e2b62d45456edbe7691060c47eed7b5342bf5228b44c1b9911c9729e6a34",
+      "target_sha256": "c403b35dd1a99ff12eafc03faea04f441d966262f3a0eb0dad700c6c3befa084"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_housing_motor_mover__P0265.STL",
+      "target": "meshes/left/left_hand_index_MCP_housing_motor_mover__P0265.STL",
+      "root_frame": true,
+      "triangles": 352,
+      "source_sha256": "a37d8f47a10c6c4deab46f7877fd0339ac2f0bdd4e67cbb48b6963c14036f0a6",
+      "target_sha256": "b7d99b7104c3a78257781bbc463bc5965ce50e25ab1532d6497aee9416b49bb5"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_housing_motor_stator__P0241.STL",
+      "target": "meshes/left/left_hand_index_MCP_housing_motor_stator__P0241.STL",
+      "root_frame": true,
+      "triangles": 7692,
+      "source_sha256": "8fcb44c41598555e7e1b6ac781e387b71487d6f39cd48ac4f1119205393db7d0",
+      "target_sha256": "23c9860b6af0120205dfc9b96af277deebc041c17295a1550df69fe85426426a"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_mover_motor_mover__P0265.STL",
+      "target": "meshes/left/left_hand_index_MCP_mover_motor_mover__P0265.STL",
+      "root_frame": true,
+      "triangles": 862,
+      "source_sha256": "a50f12c9c55b39c24fb055a3fe1d97f008fa971fc840ea1ef8c86894e5173195",
+      "target_sha256": "9613553e37942ef8548b6bbf4d376983ab9a1b44adea5a6d0dff1437bef59839"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_rod__P0274.STL",
+      "target": "meshes/left/left_hand_index_MCP_rod__P0274.STL",
+      "root_frame": true,
+      "triangles": 1558,
+      "source_sha256": "554892089cd6b56a84776a41e8bf465fa92c7f4b50a289483930f56e7faa841f",
+      "target_sha256": "36a16abbaa495a74c0ccc85f078c7a0694eeab0a673459e78aaa28d60169b8c9"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_stator_motor_stator__P0241.STL",
+      "target": "meshes/left/left_hand_index_MCP_stator_motor_stator__P0241.STL",
+      "root_frame": true,
+      "triangles": 2188,
+      "source_sha256": "52466f75023d35a87b890c2f574b952ff91547aae20e96cdb4997e5f9e7a7552",
+      "target_sha256": "0e3cfacc3b143121f7d037b4a195d6cd15f204a8871b39d7e79a532ebe389be5"
+    },
+    {
+      "source": "meshes/right/right_hand_index_MCP_support_motor_stator__P0241.STL",
+      "target": "meshes/left/left_hand_index_MCP_support_motor_stator__P0241.STL",
+      "root_frame": true,
+      "triangles": 37750,
+      "source_sha256": "2aec419aabee838718507a1203c7918e6307301a85bee8030d2806059b9846ac",
+      "target_sha256": "08b7eb17b14cfc8d83f8b4f53707495ce62e7cfb29b85b0dfa6ef244726986c0"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_bearing__P0246.STL",
+      "target": "meshes/left/left_hand_index_PIP_bearing__P0246.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "1f46b46b7ca4653354357654151b5357568ea9fe9b999c9c20a1222b1b3b925a",
+      "target_sha256": "cc84f221c53cceac30b7edfa1ad007c6896ddaf400630119017cbf02b3f3bcf7"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_electronics_motor_stator__P0260.STL",
+      "target": "meshes/left/left_hand_index_PIP_electronics_motor_stator__P0260.STL",
+      "root_frame": false,
+      "triangles": 4334,
+      "source_sha256": "2b61b16851f9d0e002462891601198cbc7643aad0da7e55d637af0fbfcb1fd1d",
+      "target_sha256": "450e777ac1ff80f99f617b4973c7837cb1097d635dd18ff542ffd0b48c5a626f"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0244.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0244.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "c3529f8369b6f19e1e5e70b34bf8acf6dc2e78e9dec1863ac66c06d0168d4b8b",
+      "target_sha256": "37dfb5759c383c63bb5fde4a94aec91fd31ed69ba682b4ab17639f6cee8e5ec8"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0249.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0249.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "15e5e8d133cfe8e31cd5b5e554af1f60c3e43f1c6164ef9b6cd83ea617357fd1",
+      "target_sha256": "613a10dcab90b0d1353c588b3d35b3d5a2f89544c5393f942358df8f483d5bc8"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0254.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0254.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "ae9c554caa325b8bdcaf68f2530879035686fc2b8a506fa47358a72fc812326e",
+      "target_sha256": "8fc502be745ba30854607f25a29fd0b6e3371defea27bc95b3a963f08f16c3ab"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0255.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0255.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "15c47db22bb259f5d9a7ebb42fc342a176a2a3d303908d09f44a7309ba96786f",
+      "target_sha256": "c75cbed1b4264fdb6c1afdfa1a33791499d79c85367cec2815266036d549d0ec"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0256.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0256.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "b7ae8d936b8bd55dfa4c09283d36dc81e7cc0e5d1ee053bdafeaa45043c6e200",
+      "target_sha256": "65ad5110b5644c96b5e46073570e5f24b3ac3aaf0fe381bd2070b017d578a27e"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0257.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0257.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "ba39576ee32d3463da10baa36aefbb36c1a53cb3782e90de64481c2a65d04a23",
+      "target_sha256": "2dda509dcf456aa79dbe53e18a5ca36403c633b34d165c6786b4e324e98478b9"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0259.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0259.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "3195337c895653ee6520624ef2dc148c502986dff02e0a0468244172f08d8698",
+      "target_sha256": "3a8f16ae11e393c67ce64bb23a584bb93194d3d7cd3add741bbb7888e7f66b58"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0261.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0261.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "f7a29ed3265bfed2a393b0b156d2f1b6ab17a46f502fc37284a404a309f4180e",
+      "target_sha256": "1f9b7d06831fa7bbe80ce7f4af3eadb0952a0b1209972604274771f2d4fc0275"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_fastener__P0263.STL",
+      "target": "meshes/left/left_hand_index_PIP_fastener__P0263.STL",
+      "root_frame": false,
+      "triangles": 336,
+      "source_sha256": "0142cf72cc684e7dec87b071e480c8b99faa1fd01eb2830e0b872c50146c7704",
+      "target_sha256": "bbf40c5f3311bd50ba1a2ba16b941c95d9733c2f69473031fd69e2a30226472e"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_housing__P0262.STL",
+      "target": "meshes/left/left_hand_index_PIP_housing__P0262.STL",
+      "root_frame": false,
+      "triangles": 2978,
+      "source_sha256": "c5a6c390004596a89e2289b7d65cdd64daea9beacb44c86fdb6dd646e2ca0ed3",
+      "target_sha256": "70ac53246302ad0d8b94c770132e5398552684c2c1685dbc9bd886daeb9547d0"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_housing_motor_mover__P0248.STL",
+      "target": "meshes/left/left_hand_index_PIP_housing_motor_mover__P0248.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "0e5fdf82c8a5d8c2fdfd8604a835d9d63499686ed01fa0a8180570a1f51a09bd",
+      "target_sha256": "884e8286ae8548230e519be4da9a5b14acf84ee2b4ed7d4b195cfd57b6bb6483"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_housing_motor_stator__P0260.STL",
+      "target": "meshes/left/left_hand_index_PIP_housing_motor_stator__P0260.STL",
+      "root_frame": false,
+      "triangles": 2276,
+      "source_sha256": "0da7be4a2011b43163e49bee48a2da0a7329e7954af4e0de96ea40986349aef3",
+      "target_sha256": "64dd8a9633cd750d95d5f4a3472f70f824b59196cd8a119fc1e0b78667028313"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_mover_motor_mover__P0248.STL",
+      "target": "meshes/left/left_hand_index_PIP_mover_motor_mover__P0248.STL",
+      "root_frame": false,
+      "triangles": 758,
+      "source_sha256": "5331de1928d74600b84695a4bff9eeabb899ede08a7487f2745bc6c9d3d4479e",
+      "target_sha256": "d38961723c446ea8b73f8f1fa30fd635c59d46208448c4f2a48fd961209339f6"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_rod__P0247.STL",
+      "target": "meshes/left/left_hand_index_PIP_rod__P0247.STL",
+      "root_frame": false,
+      "triangles": 1104,
+      "source_sha256": "71fa753112791b4d7bda89f6919d3af7a10f06db73990b4e2d4e57b9c028c4cc",
+      "target_sha256": "5dd7ee36ad695f8060837c45c649354f02059583b1e23747dc181552a20a10f9"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_rotary_motor__P0281_OUTPUT.STL",
+      "target": "meshes/left/left_hand_index_PIP_rotary_motor__P0281_OUTPUT.STL",
+      "root_frame": false,
+      "triangles": 10928,
+      "source_sha256": "f1e8eb3e35dec971cdc889b3e2c07cbb6c5a36eeaeb1b3b9dfdb893168be2e0b",
+      "target_sha256": "34b506b115a0d7c05092d1254b70f4e050a0561ed84416797564db5a46a7984a"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_rubber__P0264.STL",
+      "target": "meshes/left/left_hand_index_PIP_rubber__P0264.STL",
+      "root_frame": false,
+      "triangles": 3482,
+      "source_sha256": "0448ac513b0b05393cf8924d346d4248a89b4ecd5648fb97ae84371660b43e58",
+      "target_sha256": "f90c13f945ea3088b7dbe1bfed30233de548aa34097bba386ef0ff4a91763733"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_sensor_motor_stator__P0260.STL",
+      "target": "meshes/left/left_hand_index_PIP_sensor_motor_stator__P0260.STL",
+      "root_frame": false,
+      "triangles": 27180,
+      "source_sha256": "2707e42da43ec807af00f4e4436dbabc6243a1aba8cfda246b3332ad7602b166",
+      "target_sha256": "3635b17b595a9c723c4dc4f96021f8735396e421b19373876e888fa82d257f5c"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_stator_motor_stator__P0260.STL",
+      "target": "meshes/left/left_hand_index_PIP_stator_motor_stator__P0260.STL",
+      "root_frame": false,
+      "triangles": 1164,
+      "source_sha256": "2eff34ae182b68f368c671966c7a02dd54cd5fc23649a1afaa9934bfc6ee0002",
+      "target_sha256": "cab2782a1ca666efb32ffd3b4928fe2626837d49ae8fc8ddaa547273ed8548f6"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_support__P0258.STL",
+      "target": "meshes/left/left_hand_index_PIP_support__P0258.STL",
+      "root_frame": false,
+      "triangles": 3720,
+      "source_sha256": "04598ec02f67aeba94ca035e44c37dfa7edd9f19a8d4043e8502db9094c2463b",
+      "target_sha256": "0ed3494e0d07176eee51567a9254674c569cd1aaa992b637eec6bbd554da45b2"
+    },
+    {
+      "source": "meshes/right/right_hand_index_PIP_support_motor_stator__P0260.STL",
+      "target": "meshes/left/left_hand_index_PIP_support_motor_stator__P0260.STL",
+      "root_frame": false,
+      "triangles": 36688,
+      "source_sha256": "129dc9c0a4e793df63a5dfb1d46567889544ac19bbea5ccf3ab141d21964e246",
+      "target_sha256": "dcf66e1e2606fe604987126f632541a8d6978100e3dbb54a7996bb406553475a"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_bearing__P0267.STL",
+      "target": "meshes/left/left_hand_index_swing_bearing__P0267.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "a141bdfe8873b7d0c79e5367b79898b19bd657246b2327dd2c06c1683b297ada",
+      "target_sha256": "908dac568c5b814619bdbffbd9328876b2871588d34b81176aeb5efdeb3561cf"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_electronics__P0270.STL",
+      "target": "meshes/left/left_hand_index_swing_electronics__P0270.STL",
+      "root_frame": false,
+      "triangles": 85280,
+      "source_sha256": "901c74ac1827f631a9d6bfa641e628b29e8f6d95444bbdba46d5df91948b94f2",
+      "target_sha256": "a44faae23820437226b0f0bb10158f33e2e325b7ad9a596e7397c11252a96326"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_fastener__P0268.STL",
+      "target": "meshes/left/left_hand_index_swing_fastener__P0268.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "9aef7a0e91a00f92e8e7d1f087c42b714c06812fc06034c67e4e04e4ddb726a7",
+      "target_sha256": "9eb8592a896c07284fdf8338c47c32a2907ce01bd5f8d925aa699e0463751cf1"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_fastener__P0271.STL",
+      "target": "meshes/left/left_hand_index_swing_fastener__P0271.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "75fcfe953ec25379478214629b06a1caf9da336bc85701eeda96abde55e7806b",
+      "target_sha256": "464a4fa869aae4020418683e64f7f2f214903adc93dbabcb31b89e43363e6637"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_fastener__P0273.STL",
+      "target": "meshes/left/left_hand_index_swing_fastener__P0273.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "270e34dcd2610e9bd90d05174f39a6d95c658f5e3f70ca02f24f58cb0c3b16d7",
+      "target_sha256": "05cf3413412547c113f11c6a3de69fd782ff0b13b5be81571944256ba1b10d64"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_fastener__P0275.STL",
+      "target": "meshes/left/left_hand_index_swing_fastener__P0275.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "6a27e30d9be9a6eea8bb12df11660650364ed895835eba3fe9b6780fccd2ec24",
+      "target_sha256": "686f6c3e470cf1d85a511d55ba082324a6561e12b0edd440f01619c227e7ec7c"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_fastener__P0276.STL",
+      "target": "meshes/left/left_hand_index_swing_fastener__P0276.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "74bc1413e2a7cacff334608d784a5cc7f66a0ea26d6e2b447e738436e148b68e",
+      "target_sha256": "03f5ff10706f00bf3185d729bf5e7602ff63254c06a9a03c013ccd9c7ba4158f"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_fastener__P0277.STL",
+      "target": "meshes/left/left_hand_index_swing_fastener__P0277.STL",
+      "root_frame": false,
+      "triangles": 454,
+      "source_sha256": "3a85eed54d2c4cf473e20491df96300371f21605197cba1d87136bf2060ca6dd",
+      "target_sha256": "a183b717a12896cb77d07cefba915b9e47c695cc6d2eeb7da13ba1139ff07ada"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_fastener__P0278.STL",
+      "target": "meshes/left/left_hand_index_swing_fastener__P0278.STL",
+      "root_frame": false,
+      "triangles": 454,
+      "source_sha256": "df5da1ef7cd1f01a72228ff8e29a64d3e4528a513c647b672ca374958fbd4a5a",
+      "target_sha256": "aa96d3b2cbea7116068281b73d7d4624a147e908eb59d282c65e4cfe0d02c217"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_housing__P0280.STL",
+      "target": "meshes/left/left_hand_index_swing_housing__P0280.STL",
+      "root_frame": false,
+      "triangles": 7446,
+      "source_sha256": "0385b0f4cfa63b676b1d45730b84cecc9e58dd020652bdc42efd28d19e07c8eb",
+      "target_sha256": "e98aa84b108edc5feb9a5ecbc11fbb70cd89b8f5ad809893fc7905f05d0e21df"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_rotary_motor__P0281.STL",
+      "target": "meshes/left/left_hand_index_swing_rotary_motor__P0281.STL",
+      "root_frame": false,
+      "triangles": 25626,
+      "source_sha256": "f3c19ebb435792902086b49e16ac621fa11d1d9f4e2cb05ff9fd6ae68abf32b3",
+      "target_sha256": "2dfd467ca2b2ee9b65a0ebf6d9a6ac5e9dd29bfa25b952cf1bf0add4a8133079"
+    },
+    {
+      "source": "meshes/right/right_hand_index_swing_support__P0272.STL",
+      "target": "meshes/left/left_hand_index_swing_support__P0272.STL",
+      "root_frame": false,
+      "triangles": 2182,
+      "source_sha256": "c00098ed940a3ae5e91e51386e4e26d7abbdcb00088cc51f61adb6c47a96acfd",
+      "target_sha256": "2b2fefd388c7fc5dafa2a7094c32bbfa83b35659a443abc47f15c1ce24b8a836"
+    },
+    {
+      "source": "meshes/right/right_hand_index_tip_bearing__P0240.STL",
+      "target": "meshes/left/left_hand_index_tip_bearing__P0240.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "350060a3167add8172d059c69fcc695e07cafca9aa6c419ae7c22bcdc7651752",
+      "target_sha256": "6ccaff916e75ee282f6ff367fb4b31408fbd812cc0cb868193c17fa2aa186c8e"
+    },
+    {
+      "source": "meshes/right/right_hand_index_tip_bearing__P0243.STL",
+      "target": "meshes/left/left_hand_index_tip_bearing__P0243.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "2ea36029a77b5bcb035a750c066dbb4f1f3712b702d9e0f67236455580a7716f",
+      "target_sha256": "e1b63f82529bffb2c36ce5b5ce1aa1900c611a0aa9628a93d715db772bc97cf8"
+    },
+    {
+      "source": "meshes/right/right_hand_index_tip_housing__P0236.STL",
+      "target": "meshes/left/left_hand_index_tip_housing__P0236.STL",
+      "root_frame": false,
+      "triangles": 7114,
+      "source_sha256": "01481c28f2ed3d5e2afbdd50dfd3253acad09976b465b2edece017d4fbd068a7",
+      "target_sha256": "3aef1b5bb4af75e784908c303fb249dba4077c8f7f4dd230affd1d5e5c89c71b"
+    },
+    {
+      "source": "meshes/right/right_hand_index_tip_rubber__P0237.STL",
+      "target": "meshes/left/left_hand_index_tip_rubber__P0237.STL",
+      "root_frame": false,
+      "triangles": 2916,
+      "source_sha256": "a97c9b240db827f38f47465e4f2f2f66c182d21a68471d265f02e14d0171d657",
+      "target_sha256": "f02c929d1b783d5d51abeb3cc665a2b34e962cfa35cfde76137ac3c8e240507d"
+    },
+    {
+      "source": "meshes/right/right_hand_index_tip_rubber__P0238.STL",
+      "target": "meshes/left/left_hand_index_tip_rubber__P0238.STL",
+      "root_frame": false,
+      "triangles": 3028,
+      "source_sha256": "54f74812f9967bf4ecebd7fcacc73571748afd1db0fd6b2e588f47dec2fb64a3",
+      "target_sha256": "1e19e594dd6e13ea35cbecbea50d2c38b75986f8603fcfeee732a8190383cf24"
+    },
+    {
+      "source": "meshes/right/right_hand_index_tip_sensor__P0231.STL",
+      "target": "meshes/left/left_hand_index_tip_sensor__P0231.STL",
+      "root_frame": false,
+      "triangles": 828,
+      "source_sha256": "864755d3567307f5a48426e27367ad120e416c0bbde2bd708b3f560ffa780734",
+      "target_sha256": "71f3f0b660d823a22fd539d3aee73fe7efd868e4fd9c6265a83f4c6a7e88eb55"
+    },
+    {
+      "source": "meshes/right/right_hand_index_tip_support__P0233.STL",
+      "target": "meshes/left/left_hand_index_tip_support__P0233.STL",
+      "root_frame": false,
+      "triangles": 2222,
+      "source_sha256": "3147be6fb2dea12f4c67a0df2ad42e66bda9c4690dfd0a3e28586af6babfe614",
+      "target_sha256": "ad2484939862e25010fad0427443585a2ee6ebeeb5613ba4a416909fc4d84e6d"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_bearing__STD004_P0245.STL",
+      "target": "meshes/left/left_hand_mid_DIP_bearing__STD004_P0245.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "b93df9ab02f728244bdb0cf04a4cc4bfecf24fc875e2d45a79d7f1c50db515d2",
+      "target_sha256": "70c933a285559680565e01cf3fa06eada52c1bc86df702ecf3df107aa7d8ceb7"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_electronics_motor_stator__STD004_P0251.STL",
+      "target": "meshes/left/left_hand_mid_DIP_electronics_motor_stator__STD004_P0251.STL",
+      "root_frame": false,
+      "triangles": 3726,
+      "source_sha256": "f3fab4581e92ee208c884e7a18a44555f469cb67d1ca0df2041acdc42af2d8a9",
+      "target_sha256": "6b0e08a691b93ef65944b9edb3268a9cabfbad5b535d59277c835570cba9ee33"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_fastener__STD004_P0232.STL",
+      "target": "meshes/left/left_hand_mid_DIP_fastener__STD004_P0232.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "5d11a8555655ab2142a2d5cc0e9ae239ad14730f59e90e3310374fce6d208a5d",
+      "target_sha256": "2a3878baeea273e3c9cbdfe27a4306973b5f3012fcd8e6cdeb4649abf03b9690"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_fastener__STD004_P0234.STL",
+      "target": "meshes/left/left_hand_mid_DIP_fastener__STD004_P0234.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "41ddfd0fb7e2c0284add50542d0e35457940e9df500385d0980db88c874844be",
+      "target_sha256": "0ffa01564ac69bd1deaf433fad2b9ab80dac68bc3369534ea13d85a7019f6eda"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_fastener__STD004_P0250.STL",
+      "target": "meshes/left/left_hand_mid_DIP_fastener__STD004_P0250.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "2376adc08ce5b15aee1dd01a6019534ebb58200b2f00ec8a4afcb998e2ba822a",
+      "target_sha256": "865326ada7cc542d28ca2cec138a889f03dba37b39e7b35a65f93fa9e331fe9c"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_housing__STD004_P0252.STL",
+      "target": "meshes/left/left_hand_mid_DIP_housing__STD004_P0252.STL",
+      "root_frame": false,
+      "triangles": 4740,
+      "source_sha256": "6412b2bad9457ffbfccdf852fde35ac710bdc4c2f3d305e4a1d1af20faffa6b5",
+      "target_sha256": "ea1d6b421a7933722dfd95d4b2d308692a5197ec3e27b3d1e0e15493630ed61d"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_housing_motor_mover__STD004_P0235.STL",
+      "target": "meshes/left/left_hand_mid_DIP_housing_motor_mover__STD004_P0235.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "142c02f2f17ad270fc04c55ad240caa2780150ba2d0b9922374bb5822867ec13",
+      "target_sha256": "5953e3453227786615183cbddce9074ec68578d123347da6e91bf8684693df12"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_housing_motor_stator__STD004_P0251.STL",
+      "target": "meshes/left/left_hand_mid_DIP_housing_motor_stator__STD004_P0251.STL",
+      "root_frame": false,
+      "triangles": 4964,
+      "source_sha256": "61666086a04a779607a4cfb6605fda680f7eee550a1feffc779ba80a55f7839f",
+      "target_sha256": "8b238b2135573101acc7beb40648baf717e5cbdcc0705807d3c800b4783cd847"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_mover_motor_mover__STD004_P0235.STL",
+      "target": "meshes/left/left_hand_mid_DIP_mover_motor_mover__STD004_P0235.STL",
+      "root_frame": false,
+      "triangles": 884,
+      "source_sha256": "700dbb951b1c0269333c2fb060b612d2c5eba457675af4e76bcdc6a32e25f275",
+      "target_sha256": "87c7120cb0e80fc14a8c591c4d8e8a0d1ddb65eb6954b48fbe77f30a11b1ef74"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_rod__STD004_P0239.STL",
+      "target": "meshes/left/left_hand_mid_DIP_rod__STD004_P0239.STL",
+      "root_frame": false,
+      "triangles": 1904,
+      "source_sha256": "0d883be802f6e74cdc7ecbb237e4f8395b142ad3dd13b47d5e4aa14773cf9cc1",
+      "target_sha256": "7faa7e7b5695c087bfd2ba16e89ab557a868016bd14af7fa41ac84e867e5332d"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_rubber__STD004_P0253.STL",
+      "target": "meshes/left/left_hand_mid_DIP_rubber__STD004_P0253.STL",
+      "root_frame": false,
+      "triangles": 3560,
+      "source_sha256": "ae42608bbad68757f32165313d8c5852444e5a663205bba39ce2d8014e5c5e44",
+      "target_sha256": "4c3c0338adf49ebe7afe5a1966f0850a9c85cab96eefcdce2c634081570cfee5"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_sensor_motor_stator__STD004_P0251.STL",
+      "target": "meshes/left/left_hand_mid_DIP_sensor_motor_stator__STD004_P0251.STL",
+      "root_frame": false,
+      "triangles": 504,
+      "source_sha256": "3a0065049f607821207c331c8bcafefd97ce6f0ef3e8c5e330b1a9dd15270884",
+      "target_sha256": "d04a1c092c39798605b7beb6983d9a6235319e7a8c71406054660a0d85055911"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_stator_motor_stator__STD004_P0251.STL",
+      "target": "meshes/left/left_hand_mid_DIP_stator_motor_stator__STD004_P0251.STL",
+      "root_frame": false,
+      "triangles": 8820,
+      "source_sha256": "7042c04aa487151cb4e7f2c2518bd56ee4d91138fe4f4f5b4ae2e0ec1aee1ecf",
+      "target_sha256": "f4af2563637c45c513d7f90daa331a50acba81050ea0438836bf1b3df52c14eb"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_DIP_support_motor_stator__STD004_P0251.STL",
+      "target": "meshes/left/left_hand_mid_DIP_support_motor_stator__STD004_P0251.STL",
+      "root_frame": false,
+      "triangles": 9110,
+      "source_sha256": "eb9c3ee23a0a7d5dc8c485fb075ea52b53395f08f1a014d8ddd178fc50c5ad57",
+      "target_sha256": "8ea467fa1916b4ede1c4933a2b049366eb1acb2e3e9815ab9afcf51f183acc77"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_bearing__P0305.STL",
+      "target": "meshes/left/left_hand_mid_MCP_bearing__P0305.STL",
+      "root_frame": true,
+      "triangles": 1024,
+      "source_sha256": "936859416c9acda60d72a5603693479974278f642372926bfe0c0a311afba9e3",
+      "target_sha256": "3f86af5d1f2fdd9e2d75162f34a273a536fd336eed0afd373d08181706baefb6"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_electronics_motor_stator__P0304.STL",
+      "target": "meshes/left/left_hand_mid_MCP_electronics_motor_stator__P0304.STL",
+      "root_frame": true,
+      "triangles": 4896,
+      "source_sha256": "4192a9798b6d191531f7d26c1b842b794eb545d2f01c671c5c2d178fbf5d1148",
+      "target_sha256": "caa52782bf6280563e53a12a13338d6bff7dd8b3005851aed79f85fc687b15bd"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_fastener__P0313.STL",
+      "target": "meshes/left/left_hand_mid_MCP_fastener__P0313.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "63aba527bbbe6798d7c995a22400ad982604f9cdf079b14a5f0cb03b25ae7078",
+      "target_sha256": "a737d62397bf0c2ce08aec72c5879d23b79de9391e2ab58dc0178e1d088329be"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_fastener__P0317.STL",
+      "target": "meshes/left/left_hand_mid_MCP_fastener__P0317.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "0a9d90e790f3e49bd0864584b48bdf926d9cc8ddc05020b8b1e5e24a6a1bf229",
+      "target_sha256": "99d223eb0696f54f64d1f542c09ce7b197d488e411592299f9e026cd847d98e3"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_housing_motor_mover__P0306.STL",
+      "target": "meshes/left/left_hand_mid_MCP_housing_motor_mover__P0306.STL",
+      "root_frame": true,
+      "triangles": 352,
+      "source_sha256": "aabdc51dc409359359cb7f3030a985408eecd185403d1962f6e307446c2f5761",
+      "target_sha256": "78c022de0783b9ed433ec95cf9770bf7690d4c5ec468d4f119dd42c0d5118f2d"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_housing_motor_stator__P0304.STL",
+      "target": "meshes/left/left_hand_mid_MCP_housing_motor_stator__P0304.STL",
+      "root_frame": true,
+      "triangles": 7692,
+      "source_sha256": "a0d9609ab28d1b66c9d24e2778178dafb7a5443b191ab855f1941e847cbb9bd1",
+      "target_sha256": "ffaaae3faf8a9e6d274b6c1a40b6afcf8666102e45e7adcf2916f7ca887ccdb6"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_mover_motor_mover__P0306.STL",
+      "target": "meshes/left/left_hand_mid_MCP_mover_motor_mover__P0306.STL",
+      "root_frame": true,
+      "triangles": 862,
+      "source_sha256": "8cc51f89edc3c732cb985956d476b8daa2cdd58ae050e9fd5680a2cece8b9459",
+      "target_sha256": "192de984e5c86549a5c7aee701c75f0a0b7b5434217ca2ae5138fd5c7ec5bc27"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_rod__P0307.STL",
+      "target": "meshes/left/left_hand_mid_MCP_rod__P0307.STL",
+      "root_frame": true,
+      "triangles": 1558,
+      "source_sha256": "1325d5814f5dd90165abd32dc1fb91853a0fc0f5aea06b3fb69bdae6237d7a51",
+      "target_sha256": "54ab66d2503d4d1b39d7d24265265e636629f1dbc880c471f32e96b3dd57414f"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_stator_motor_stator__P0304.STL",
+      "target": "meshes/left/left_hand_mid_MCP_stator_motor_stator__P0304.STL",
+      "root_frame": true,
+      "triangles": 2188,
+      "source_sha256": "119adcb41a624957942cedbd0c81c064e5736712742c189f1d68f3b80d6aa0d4",
+      "target_sha256": "1074bf4534e52a49d3f83457b49e1ca18d532de1903cce74b22d3d01bf3833f2"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_MCP_support_motor_stator__P0304.STL",
+      "target": "meshes/left/left_hand_mid_MCP_support_motor_stator__P0304.STL",
+      "root_frame": true,
+      "triangles": 37750,
+      "source_sha256": "ee027975c901675a5cb7a004353a67edcc060d968eda74b0ae2d2b81aeefa9a9",
+      "target_sha256": "68a274ab2e9bad15c03ed59c80a448e2605d89183a866236eb8ac44822fa2bc3"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_bearing__P0329.STL",
+      "target": "meshes/left/left_hand_mid_PIP_bearing__P0329.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "0f700ed5160b9d32b3f28ff9ffa90b7aae84f2f5a5ce0b9c89536d4de286f46f",
+      "target_sha256": "61bf47c1b666273f3b7eb2ce34f25f3ae38119db5bf78b0eb48403c32955d2c8"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_electronics_motor_stator__P0286.STL",
+      "target": "meshes/left/left_hand_mid_PIP_electronics_motor_stator__P0286.STL",
+      "root_frame": false,
+      "triangles": 4334,
+      "source_sha256": "3c9ef35cf72af7dcb5e90dc4aaaec204a4c58eaa0a1afe8ea05745a102a81a86",
+      "target_sha256": "33e0bd6a25e2224d2aaf9eb604ab8a717e01c1b599ba0647cc3ecd4d5d91747f"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0282.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0282.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "10bfa64f0875fd783b39d17459c53e1abb86764576942250e0ed0c8baf9911e8",
+      "target_sha256": "42627fcc1a61134f21118ee64753f12d3d5b2b3cbeace12e857969ec43a42b7b"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0284.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0284.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "6b9f62a1c5f04188cba582e3d090b389fca00b7c8c1b5b66592fa84da2ef1de0",
+      "target_sha256": "c5cf59ac2fc627ace5e7128dfd7801347037457119bacdf30542d54674ba5a16"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0285.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0285.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "10a00581f8b73de5e8a69f4e64da1a549998c42db701a181ba571cb1553759ea",
+      "target_sha256": "e9ef1e327d20767c84e6481a842a994e2bd278d806c8ac3dd2d6f3b513ce44ed"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0287.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0287.STL",
+      "root_frame": false,
+      "triangles": 336,
+      "source_sha256": "bb7ccf56e5bb38c17d228a5da1fd2b24a7398405d5460201189a294fd276c35f",
+      "target_sha256": "d5da921890050cb9bd2f9a8224972d5a0e4a2e0c9c4e64daead9ecdb1f2ca35c"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0288.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0288.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "b1b7c0bd8f1f8dc81995247115a2c1ce829f583eff754ccf0fed658d0511e9a2",
+      "target_sha256": "4e9611c66221f35ecad0e4a9fdaf76e2fb84899efa084a52fa30f5233e7dc1e2"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0289.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0289.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "37f2ec7775852922da9c4476e55e584b17b3e8b8bf2436f86587877c907747fb",
+      "target_sha256": "03e5f15f8a71a8ace03883413dcaa8c587f5956dd676b32ac20614ead6b062dd"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0291.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0291.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "616e93b2736441422938aea36d942b28aa0fbdf8bcef594c5f6e36e96b500ae9",
+      "target_sha256": "8d1eaba7c0ee2b266f886524e67ac987250bf8dc891ee27f217d448c2f4b00a3"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0327.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0327.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "4b25dae8352743923671e1f19f8d92265e1af5f3434c7889d10456ea45c01e06",
+      "target_sha256": "6f1870380c833141a8e8e25fac81416b0e4115de50dc09c77b58ec5c322b2b7c"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_fastener__P0331.STL",
+      "target": "meshes/left/left_hand_mid_PIP_fastener__P0331.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "8605cc54d8d0cc6ebd6a02d9cc57e52dcd0e5ba1adbdfd3acf4bf7c690118f9b",
+      "target_sha256": "c909d0800787e7792398eaeaf5f2359b1a59f5654ce9b758e9b9648a0a564cbf"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_housing__P0292.STL",
+      "target": "meshes/left/left_hand_mid_PIP_housing__P0292.STL",
+      "root_frame": false,
+      "triangles": 2978,
+      "source_sha256": "f8b32bd169646e12788c3ed0473e619410eb9a69c2342e9fb32c916abe99ec88",
+      "target_sha256": "4aa71c6fbacf6f664c2cbf3789e16363d5816df26278e5b3aa38396653695c08"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_housing_motor_mover__P0322.STL",
+      "target": "meshes/left/left_hand_mid_PIP_housing_motor_mover__P0322.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "04e9f1f212c232088c3f5faa5e0335e969bf11a6ccc6d98d101e58cf3adeb74f",
+      "target_sha256": "ed91f95369d7be508c514dd41189162537ce64ab1743e4f6471db8af23dd9b37"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_housing_motor_stator__P0286.STL",
+      "target": "meshes/left/left_hand_mid_PIP_housing_motor_stator__P0286.STL",
+      "root_frame": false,
+      "triangles": 2276,
+      "source_sha256": "f4d6f130d15604d68fec1a753ac4221d61e6abce6cbf9911610c1f8beec5c53a",
+      "target_sha256": "cebb9b5d0ce068414b52cc04d25b3f1185dcfd51e891a91ac0dab1e4cef0cea2"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_mover_motor_mover__P0322.STL",
+      "target": "meshes/left/left_hand_mid_PIP_mover_motor_mover__P0322.STL",
+      "root_frame": false,
+      "triangles": 758,
+      "source_sha256": "d0f2c1b839ac8c5c8621535738fc1142ef0b69d0538c3f8ec10ebe1b10e7e489",
+      "target_sha256": "910a62a0e7844a68aed2671bc966f27303b9939c61ccf2d44b274939b302adff"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_rod__P0330.STL",
+      "target": "meshes/left/left_hand_mid_PIP_rod__P0330.STL",
+      "root_frame": false,
+      "triangles": 1104,
+      "source_sha256": "9c66bbb8f020f16d315ca5c48bb3b78a055c8831c3901e36d4a65acc22cf9795",
+      "target_sha256": "0d69864ce7e383e86f23ee664ebcb13b5243fa12a5242087e83f152aabf3bf97"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_rotary_motor__P0320_OUTPUT.STL",
+      "target": "meshes/left/left_hand_mid_PIP_rotary_motor__P0320_OUTPUT.STL",
+      "root_frame": false,
+      "triangles": 10928,
+      "source_sha256": "4f26f2063ba53fdb9020835e1bd0fc426590eca516299dbc3f63d792dec2958f",
+      "target_sha256": "2defe89ee3ae7a50e7769bb15d9c198782dfc08639838521ee254736eabbe106"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_rubber__P0283.STL",
+      "target": "meshes/left/left_hand_mid_PIP_rubber__P0283.STL",
+      "root_frame": false,
+      "triangles": 3482,
+      "source_sha256": "e9af5b03438a60d80cc0bd21592299258cda7a192676be3cb7e12ff0a9df0079",
+      "target_sha256": "1a23c3b335b0809d284aab4242cb516c4aeec51a13e26ff4e6d8f9a9221781de"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_sensor_motor_stator__P0286.STL",
+      "target": "meshes/left/left_hand_mid_PIP_sensor_motor_stator__P0286.STL",
+      "root_frame": false,
+      "triangles": 27180,
+      "source_sha256": "15d4d1b539bfdf73d43c33969a38c9b4b0bc042a0a51272ba4e2da44423858e3",
+      "target_sha256": "14bdd71e2666aa38e1cb0700334daf16fd92ea57a518972eb133ffbdf7e2409e"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_stator_motor_stator__P0286.STL",
+      "target": "meshes/left/left_hand_mid_PIP_stator_motor_stator__P0286.STL",
+      "root_frame": false,
+      "triangles": 1164,
+      "source_sha256": "c29bc92036bd7adcfd0dbb2215f2f4afdc6e788ab26a87d0d9c7c90fe1757b6b",
+      "target_sha256": "facbac91a3b6bea5f994cce877cc7a668cc22883ce0fad227e352b2f6d6376a0"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_support__P0290.STL",
+      "target": "meshes/left/left_hand_mid_PIP_support__P0290.STL",
+      "root_frame": false,
+      "triangles": 3720,
+      "source_sha256": "ad61a173900d2fc74ee21d367a7ec65260ab90552f877021ae7d75ce93a9cd51",
+      "target_sha256": "63c9a6eb5167885fa821b996cb7604fcb6f0e94daad6ef54a0844330633eb319"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_PIP_support_motor_stator__P0286.STL",
+      "target": "meshes/left/left_hand_mid_PIP_support_motor_stator__P0286.STL",
+      "root_frame": false,
+      "triangles": 36688,
+      "source_sha256": "d41ceae5a65f745883bdb21c497785899114bfd05efe8bf4bc7a33ef59682f57",
+      "target_sha256": "52311e6e5e9b936dd032ac4f780c69b2e31acfc31eef7f69eb6c2e6f9bd2e624"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_bearing__P0314.STL",
+      "target": "meshes/left/left_hand_mid_swing_bearing__P0314.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "2666010bb7945e579821750bbc7784dbb54ad98a14773b02f5d61dbe0155a291",
+      "target_sha256": "5ae76dedb9754eae25508ddf0b697973ba6b21cd2a4edea42365c85868fd9507"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_electronics__P0316.STL",
+      "target": "meshes/left/left_hand_mid_swing_electronics__P0316.STL",
+      "root_frame": false,
+      "triangles": 85280,
+      "source_sha256": "99aad7c01fdb1b7debb74ccbbdda9f2535ab00f2d260f43d57f4cd6c48fd91b5",
+      "target_sha256": "4fef24a209261c40485df4f1e936bcafbab1be52737612a3862bdc0fbf352e02"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_fastener__P0308.STL",
+      "target": "meshes/left/left_hand_mid_swing_fastener__P0308.STL",
+      "root_frame": false,
+      "triangles": 454,
+      "source_sha256": "b1b581aa84d4a85cbc1c6de8539826fff2f7e6cd81e1e0fc6f51b43feeb90092",
+      "target_sha256": "f4f0e6f0dda87820c3113f116f2b535258de6db148e68a901bf9ad9a933521f4"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_fastener__P0309.STL",
+      "target": "meshes/left/left_hand_mid_swing_fastener__P0309.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "74bc1413e2a7cacff334608d784a5cc7f66a0ea26d6e2b447e738436e148b68e",
+      "target_sha256": "03f5ff10706f00bf3185d729bf5e7602ff63254c06a9a03c013ccd9c7ba4158f"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_fastener__P0310.STL",
+      "target": "meshes/left/left_hand_mid_swing_fastener__P0310.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "270e34dcd2610e9bd90d05174f39a6d95c658f5e3f70ca02f24f58cb0c3b16d7",
+      "target_sha256": "05cf3413412547c113f11c6a3de69fd782ff0b13b5be81571944256ba1b10d64"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_fastener__P0311.STL",
+      "target": "meshes/left/left_hand_mid_swing_fastener__P0311.STL",
+      "root_frame": false,
+      "triangles": 454,
+      "source_sha256": "483fb1f6daff360bb42a1d5496e3a48221b63443e44cb928ce55a45bfcc14ded",
+      "target_sha256": "891f32acbee524a1eb53a813a61db1b0f79f3ee02d8a1747b306bd69b978ec93"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_fastener__P0312.STL",
+      "target": "meshes/left/left_hand_mid_swing_fastener__P0312.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "23d4edb4659cbdf1d249c940ad9d99157f3e4578950cc307b4570ce714655fca",
+      "target_sha256": "c4eac0cea67e5afa0c7d8b4274c132b726af6ccb423e0d63be78fca1c1481010"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_fastener__P0318.STL",
+      "target": "meshes/left/left_hand_mid_swing_fastener__P0318.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "75fcfe953ec25379478214629b06a1caf9da336bc85701eeda96abde55e7806b",
+      "target_sha256": "464a4fa869aae4020418683e64f7f2f214903adc93dbabcb31b89e43363e6637"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_fastener__P0319.STL",
+      "target": "meshes/left/left_hand_mid_swing_fastener__P0319.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "9aef7a0e91a00f92e8e7d1f087c42b714c06812fc06034c67e4e04e4ddb726a7",
+      "target_sha256": "9eb8592a896c07284fdf8338c47c32a2907ce01bd5f8d925aa699e0463751cf1"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_housing__P0321.STL",
+      "target": "meshes/left/left_hand_mid_swing_housing__P0321.STL",
+      "root_frame": false,
+      "triangles": 7446,
+      "source_sha256": "fd4c5335981c9c605b43a522ad36e8e9201742dc4f820784175e0f4453c4a9ae",
+      "target_sha256": "5c6bf9b3b8bf2097c2e9910df882ecc404111aa7f98e9a065c83c8665ed87281"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_rotary_motor__P0320.STL",
+      "target": "meshes/left/left_hand_mid_swing_rotary_motor__P0320.STL",
+      "root_frame": false,
+      "triangles": 25626,
+      "source_sha256": "ec468fcfd2536998894efc8041488f99d5d38bfc5576d117c0462451f4bc8284",
+      "target_sha256": "06c4e3dbb557fddeeae33d9d178bad342d638019d7ff3e1e482c952d9eb3d326"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_swing_support__P0315.STL",
+      "target": "meshes/left/left_hand_mid_swing_support__P0315.STL",
+      "root_frame": false,
+      "triangles": 2182,
+      "source_sha256": "c00098ed940a3ae5e91e51386e4e26d7abbdcb00088cc51f61adb6c47a96acfd",
+      "target_sha256": "2b2fefd388c7fc5dafa2a7094c32bbfa83b35659a443abc47f15c1ce24b8a836"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_tip_bearing__STD004_P0240.STL",
+      "target": "meshes/left/left_hand_mid_tip_bearing__STD004_P0240.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "350060a3167add8172d059c69fcc695e07cafca9aa6c419ae7c22bcdc7651752",
+      "target_sha256": "6ccaff916e75ee282f6ff367fb4b31408fbd812cc0cb868193c17fa2aa186c8e"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_tip_bearing__STD004_P0243.STL",
+      "target": "meshes/left/left_hand_mid_tip_bearing__STD004_P0243.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "2ea36029a77b5bcb035a750c066dbb4f1f3712b702d9e0f67236455580a7716f",
+      "target_sha256": "e1b63f82529bffb2c36ce5b5ce1aa1900c611a0aa9628a93d715db772bc97cf8"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_tip_housing__STD004_P0236.STL",
+      "target": "meshes/left/left_hand_mid_tip_housing__STD004_P0236.STL",
+      "root_frame": false,
+      "triangles": 7114,
+      "source_sha256": "733caf11321331b1fc67b4ea932dd479c01cb99c00885ebdef8a42579fe98696",
+      "target_sha256": "f18c24bc43a658433dc804a10a23694b6e29725dfdc8e904e3f996b1c3d844be"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_tip_rubber__STD004_P0237.STL",
+      "target": "meshes/left/left_hand_mid_tip_rubber__STD004_P0237.STL",
+      "root_frame": false,
+      "triangles": 2916,
+      "source_sha256": "27aeb638f810c89132445b59188deb3e33c02e44615c8254b64104569f7fc035",
+      "target_sha256": "c01b414404a7862578cb44719abb95bb1cf8a6e334e1a15ba003d6d9f8882c5f"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_tip_rubber__STD004_P0238.STL",
+      "target": "meshes/left/left_hand_mid_tip_rubber__STD004_P0238.STL",
+      "root_frame": false,
+      "triangles": 3028,
+      "source_sha256": "58c966e62d537b68fe4f6841bf9b405361839fdf17e3ac5841bf384e3c0a300a",
+      "target_sha256": "261109182aa7b9eb928d1d68540d97d33406956ae648972924faa95840aea5c0"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_tip_sensor__STD004_P0231.STL",
+      "target": "meshes/left/left_hand_mid_tip_sensor__STD004_P0231.STL",
+      "root_frame": false,
+      "triangles": 828,
+      "source_sha256": "864755d3567307f5a48426e27367ad120e416c0bbde2bd708b3f560ffa780734",
+      "target_sha256": "71f3f0b660d823a22fd539d3aee73fe7efd868e4fd9c6265a83f4c6a7e88eb55"
+    },
+    {
+      "source": "meshes/right/right_hand_mid_tip_support__STD004_P0233.STL",
+      "target": "meshes/left/left_hand_mid_tip_support__STD004_P0233.STL",
+      "root_frame": false,
+      "triangles": 2222,
+      "source_sha256": "3147be6fb2dea12f4c67a0df2ad42e66bda9c4690dfd0a3e28586af6babfe614",
+      "target_sha256": "ad2484939862e25010fad0427443585a2ee6ebeeb5613ba4a416909fc4d84e6d"
+    },
+    {
+      "source": "meshes/right/right_hand_palm_support__P0090.STL",
+      "target": "meshes/left/left_hand_palm_support__P0090.STL",
+      "root_frame": false,
+      "triangles": 3980,
+      "source_sha256": "775679a8dd7e3778c2db4f65a66821d74b6bc2e2748dc992bf8b6dcb768e536a",
+      "target_sha256": "1e65d397baddd89c8d564cc22f5afd90910439cabbf21e1de534c1a5e21da91d"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_bearing__P0387.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_bearing__P0387.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "1b80e631138342b5532003caadd4561942337fce142c041fad2758a82444fe83",
+      "target_sha256": "07dc4634a47193c495e0f19a72aa9aacc9d83a04c92b494f3167f91463741a6e"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_bearing__P0389.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_bearing__P0389.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "bcfd88e982c3d48e7fbc70f9d13907bd9af39ebf6b57ebe56d325dc6211cce56",
+      "target_sha256": "9604aa0bb2e6e75c407a433929c5080fe3cd97ae2b61679f428eb7ddcb8bbaa1"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_electronics_motor_stator__P0394.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_electronics_motor_stator__P0394.STL",
+      "root_frame": false,
+      "triangles": 3726,
+      "source_sha256": "064b57c031dad09c5da593e9a86896c436f857f6d019d9fb578e3d426cb85eeb",
+      "target_sha256": "016acec9b39aa6a8f1c57b05a0c1377af6cffa9b052d8b963b0ad6d85749259d"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_fastener__P0408.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_fastener__P0408.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "88d217d24db7fb2d1a2112a3dd564fa7172f1a45bd4b46416c96409c84908106",
+      "target_sha256": "d19647620af926b81bf1eae6e68a11c55d056cec11ac9c03cf12298398a11dc1"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_fastener__P0409.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_fastener__P0409.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "dfb9f0ea96d0feeddb034de98600fd63c3ce3bae776f53f251113b04ed161f8a",
+      "target_sha256": "f79e6f3add094a71cee83b56c2582e1a73607cb0fa195449e24d17998e384dfe"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_fastener__P0414.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_fastener__P0414.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "b5cba9daa7e74d1be1707e18a6d6ed91997be136a435c3019960b48e8e17e229",
+      "target_sha256": "575817041dd6d74de6ec4f76b16d01a34f548196faabf49abb4734ef4b78506e"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_housing__P0395.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_housing__P0395.STL",
+      "root_frame": false,
+      "triangles": 1630,
+      "source_sha256": "615af743abf311c53662f795a8fb62b1dd84c586531a93d750d8003f10cc3946",
+      "target_sha256": "df398046445f5d70b2ade2b6073d04be2438ecca92ac38da0597efbf6c8963e1"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_housing_motor_mover__P0412.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_housing_motor_mover__P0412.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "18c43e14f851661ef9734c2fb75f8bc2797fcc287a7fcaf46f11e1c9d04f2963",
+      "target_sha256": "a66da2fd7ea0fecb77867d16a529c22810970c51892e340ba78013844273c1ee"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_housing_motor_stator__P0394.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_housing_motor_stator__P0394.STL",
+      "root_frame": false,
+      "triangles": 2260,
+      "source_sha256": "43f37278bf6b30aa1d404253cbd1090d2a30dda5c056f6f59bc7239a29ae7dac",
+      "target_sha256": "a5795af65c846f4eefb03e28819224fed0437152f330369681836120ed9ba449"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_mover_motor_mover__P0412.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_mover_motor_mover__P0412.STL",
+      "root_frame": false,
+      "triangles": 884,
+      "source_sha256": "005899ca2116025ca12acaa316b19705dac737e4488ea3fd0a4b7913daa070ea",
+      "target_sha256": "de5aff9bb580c2f1fa309e773f188516543abdfd5e35b537954d209c106ab277"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_rod__P0410.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_rod__P0410.STL",
+      "root_frame": false,
+      "triangles": 1904,
+      "source_sha256": "630cb46b84cd469c29d3f19426e8d1afc457aaf5055f6bcef4a92491b7b0855b",
+      "target_sha256": "7cb380b1f0bc9f9b34ea453bfffec222b38c3a6422623636b5050026b5559b20"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_rubber__P0396.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_rubber__P0396.STL",
+      "root_frame": false,
+      "triangles": 2846,
+      "source_sha256": "de96aa632cb68b94850483ceec546e3a6f4a4760ec16fbbeac066c042bd2e41c",
+      "target_sha256": "42ee4680cd3c4839b10ec5277d165681e35b36b6ed16583ab691109c9cc9eb9d"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_sensor_motor_stator__P0394.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_sensor_motor_stator__P0394.STL",
+      "root_frame": false,
+      "triangles": 504,
+      "source_sha256": "e7395fca0fac5c3803a3d683f25e8f8b801564dee9e24ae4e05e4d951dee3908",
+      "target_sha256": "368fa7939f53eb18baadb26708448a73d900dd48c5061e5ac3a926a7eac051a9"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_stator_motor_stator__P0394.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_stator_motor_stator__P0394.STL",
+      "root_frame": false,
+      "triangles": 10924,
+      "source_sha256": "8ebd8d47e0e2a90f65f5e518227e696c5b8840da1f2697d291ebd524b057c9fb",
+      "target_sha256": "35218b056623d69390aa8088806c44f9f8af81db06b2578352942bc9a20d6474"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_DIP_support_motor_stator__P0394.STL",
+      "target": "meshes/left/left_hand_pinky_DIP_support_motor_stator__P0394.STL",
+      "root_frame": false,
+      "triangles": 9110,
+      "source_sha256": "bc2791c08cd276fa230968c543332a6e048f54ae044aca12eb9fa04aa62a820d",
+      "target_sha256": "36fef0c2422562b9177df800e0f647d66871f99735b06e44d9a7e2e4ae222457"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_bearing__P0425.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_bearing__P0425.STL",
+      "root_frame": true,
+      "triangles": 1024,
+      "source_sha256": "56383b4c2ed894ec5e8f9505c67db523940055748720ccffc8a5bd096db808fe",
+      "target_sha256": "e6e9e49f80c350018eb2de2c49a0069460dcf58afbef3bfa39297288dc1d1eda"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_electronics_motor_stator__P0438.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_electronics_motor_stator__P0438.STL",
+      "root_frame": true,
+      "triangles": 4896,
+      "source_sha256": "994f9aef2cda8b041cb73047a019a98cec05376957a77b902e154a41e4e2b114",
+      "target_sha256": "39ce559f3baf9eafbd8490026458ebedf709d6674b198857b243a641c61de660"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_fastener__P0420.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_fastener__P0420.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "6ad4e69417f9d3f3b1fd33ed644a1dc95c3d716e6dd959a9a1eb9caa9278dd27",
+      "target_sha256": "45fcb4327251104aa0fc875f7fe78bc56b8b5497dcebcb84abf81b2d5ff08200"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_fastener__P0429.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_fastener__P0429.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "718efd9da1f2ef84ef50f23980a211ef454a9698fc6937f63d3612c887008447",
+      "target_sha256": "7aa50d0b988134bfd01585da3bac7f68fe49ddc6bf305bbb46b80757a9cc6987"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_housing_motor_mover__P0421.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_housing_motor_mover__P0421.STL",
+      "root_frame": true,
+      "triangles": 352,
+      "source_sha256": "fa066c26be58dccbe35edaa004426f41b5d326dfd89401fb10d96fef075417d9",
+      "target_sha256": "9bfb45af54e5d2576f5075e380a93b24687b2b38df2c5958b4533e9a4a55f79d"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_housing_motor_stator__P0438.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_housing_motor_stator__P0438.STL",
+      "root_frame": true,
+      "triangles": 7692,
+      "source_sha256": "5399f94a37f7bc07730e3004b31957e6f9c35f2b8bddea7fd25b75e6f4301056",
+      "target_sha256": "b88adf3d42d1f2d66e696fadde3743668333fb63d822eb544be253b742de5227"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_mover_motor_mover__P0421.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_mover_motor_mover__P0421.STL",
+      "root_frame": true,
+      "triangles": 862,
+      "source_sha256": "0a2f6923e4e0a47fb0c11f266e901895c94277048403efaaf9a3e10ddf649fd3",
+      "target_sha256": "1096920c1e4c47e67ed5dd9cd97b3c0e43ab0d9359abca1c19ecf24e28bfb4bc"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_rod__P0423.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_rod__P0423.STL",
+      "root_frame": true,
+      "triangles": 1558,
+      "source_sha256": "b5a92ee022f4e657fea32bbb078385a26baf66106b45dc1f33c1330abf64e6ec",
+      "target_sha256": "4e0d1f96bac82d130a952f49dc0444bfc76ececca8bf55d3de2cd168bd94fe63"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_stator_motor_stator__P0438.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_stator_motor_stator__P0438.STL",
+      "root_frame": true,
+      "triangles": 2188,
+      "source_sha256": "1af96cc2513900847cb60ce36d812db39686d1f7710b993e62ce432a099d6863",
+      "target_sha256": "b92388f3cfe8a16a759a5d9bff7ca0e00c704a240c0a8cd652067da71ff58dab"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_MCP_support_motor_stator__P0438.STL",
+      "target": "meshes/left/left_hand_pinky_MCP_support_motor_stator__P0438.STL",
+      "root_frame": true,
+      "triangles": 37750,
+      "source_sha256": "6c600065b8c5820bfb77a148319d0f40bbd4fc9e8a2a148f6ea5762a8c706e72",
+      "target_sha256": "693b52ecc0f15835d349058c13d4a5f140f70b2d0b207db0a76f621af1b0755c"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_electronics_motor_stator__P0405.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_electronics_motor_stator__P0405.STL",
+      "root_frame": false,
+      "triangles": 3638,
+      "source_sha256": "2b614d3bde4b9c4ca1ed98391ffe7914a7c4dccf378dbc653013d5917ca38731",
+      "target_sha256": "87f6555d19271914b01ada0f6052e7ab44d59963bc511410fbfe1b96515aaf59"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_fastener__P0388.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_fastener__P0388.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "beb05e51e65970255b7856c5bc22420b62e4400d1ed8fe7a947231479bce6b70",
+      "target_sha256": "6a67530f837f870f999d6c6e169c2e118005d82b219aac8bccf0e1d75c583d26"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_fastener__P0392.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_fastener__P0392.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "884924990655ff0312aa8ec4d5fbbe5792339c20725a01aa2787811ca589c578",
+      "target_sha256": "d0361b36e3494c629554e5412ce6a933698fe12e70dee7f77ff5eb2423b5cedb"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_fastener__P0393.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_fastener__P0393.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "f7ba2970589974736a5497ae9ee4e68fa799868f63402c5f95be5b951c58486f",
+      "target_sha256": "ff21554e0d6e61238d5b9c8c35733b4b5af9d6b9053c130c235e41b3321a8545"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_fastener__P0397.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_fastener__P0397.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "75ec42323609a3ae7dde15bb59db9707eea886dae2cc99039aec44cdbc8d1b90",
+      "target_sha256": "36de9c64ae5333ce947f2f2700e0f5388e9183a259d3ad2c227656786fde7d3f"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_fastener__P0398.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_fastener__P0398.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "e726f0f5d682501c3d560541e73aeaed1e6b4ba1e085a0bc8d993e53a623e4f8",
+      "target_sha256": "803b924d0e047dbdc2e5045e3ca1cf7017f0a48173fd7dad6c9ac6e96526aa15"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_fastener__P0399.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_fastener__P0399.STL",
+      "root_frame": false,
+      "triangles": 336,
+      "source_sha256": "52a4ec54cf35692ed8a89435f48201d7e8e3b71f116878789c1023472ad7b46d",
+      "target_sha256": "63a0e2cce0f6bcef8317f0cc9b91d31036b0700b16a9f11ece54cb7c648da403"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_fastener__P0401.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_fastener__P0401.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "d0ff9255e44709c245d5acb1dca7a2ba9ece3274dead69118ec3e2804dcd840e",
+      "target_sha256": "9439eb73c1ab141c985cccb0057af748b74a2afe28a56a3b288a19135a80733a"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_fastener__P0402.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_fastener__P0402.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "5de2a67069ebacd1a8f377ce2032761e82ce0bb9f9b6c2e23946134763a8c2a0",
+      "target_sha256": "82a0983986e0ee7b61aa92d128f5c13844bca1a95f803cf6e211d19b7023021c"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_housing__P0407.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_housing__P0407.STL",
+      "root_frame": false,
+      "triangles": 1240,
+      "source_sha256": "7bad805c1c55a8e30ea00be1c1169e6f2395a60d48555c4e3d4ca7e860b33cdb",
+      "target_sha256": "cd96140768159ca5cc25e042dbcf47beed5242e72045bc86da044dea0b5d7e17"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_housing_motor_stator__P0405.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_housing_motor_stator__P0405.STL",
+      "root_frame": false,
+      "triangles": 732,
+      "source_sha256": "35f3a48cfd8c9de1c8bdb072dee8c0063b7851e6bd0bb37564cc1c3f8d4a4e3e",
+      "target_sha256": "86cd303e9f400b359542953f5dc51ef5f90946c6f54bf854860c62c0dba90126"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_mover_motor_mover__P0390.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_mover_motor_mover__P0390.STL",
+      "root_frame": false,
+      "triangles": 1416,
+      "source_sha256": "d2d56b2b10ed9b94b440afc170cdaf0c536167d3cce94b6e20ffff002633f38a",
+      "target_sha256": "485f8fb341edc30f3f317c7f0f99de9d0e0a812634f051205421527af70416eb"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_rod__P0391.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_rod__P0391.STL",
+      "root_frame": false,
+      "triangles": 1784,
+      "source_sha256": "c173e5525692ac45dfce8f61b6e0e28dcfc8a6378d2ce398c0ee630c03a63602",
+      "target_sha256": "14ab7cae556dcbc52dd030714efa80566f3dd3238e402856592d5051d989faac"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_rotary_motor__P0436_OUTPUT.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_rotary_motor__P0436_OUTPUT.STL",
+      "root_frame": false,
+      "triangles": 10928,
+      "source_sha256": "2450aa5c589c7504117c0634f2b30513a34362d2709c381028eddad48a0354f4",
+      "target_sha256": "8b123e343c8d0a75d32dc5aca771defc8cc728727f580d64c03a87f29890e2a0"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_rubber__P0406.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_rubber__P0406.STL",
+      "root_frame": false,
+      "triangles": 3302,
+      "source_sha256": "32bdcc107e3fbb057b5ef28829652af529f6411edfa8f8762040707b05e4a7c6",
+      "target_sha256": "0aaa675e5c5ff3e399052142a145fc0d475057e24c53188393e926c59c2b8f51"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_sensor_motor_stator__P0405.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_sensor_motor_stator__P0405.STL",
+      "root_frame": false,
+      "triangles": 82686,
+      "source_sha256": "df9375aa92d84404fe65e4edffbd695cdfbcab438ea7c34158f272fea7a38081",
+      "target_sha256": "cbe9a6d33d5babcf0315443b9c95d33d054c47c6df60196f167827dac6faec87"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_stator_motor_stator__P0405.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_stator_motor_stator__P0405.STL",
+      "root_frame": false,
+      "triangles": 5122,
+      "source_sha256": "9bcdd5313b77e9a1e992ea369ec365a9c2c22261f2491aff8b359cb9e01c5241",
+      "target_sha256": "38aeb6861bd72ea77b7b36b1e32959b46233aff924e356540a770931d75926b0"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_support__P0400.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_support__P0400.STL",
+      "root_frame": false,
+      "triangles": 3720,
+      "source_sha256": "d45153676ab60106f7464d7dc14a59f84840afce636da133f598ffc5b42afd12",
+      "target_sha256": "d8afbb0e6661ba966f502f0cbf1963d6047eaac726d80083b206b1004d3e695b"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_PIP_support_motor_stator__P0405.STL",
+      "target": "meshes/left/left_hand_pinky_PIP_support_motor_stator__P0405.STL",
+      "root_frame": false,
+      "triangles": 3310,
+      "source_sha256": "ea3555f4ebaad7b87cdcf320cf00381413c5783d9bf3c1f523c6c95b4cae33f2",
+      "target_sha256": "680f840bc5899f74280de45c867c44d7451bf5fddcb2ddc6250ec3e0acd78663"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_bearing__P0435.STL",
+      "target": "meshes/left/left_hand_pinky_swing_bearing__P0435.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "cb159ad87d96550e1c5a3fb834e15d1415bda9705c5f559ca77470d0e4835d94",
+      "target_sha256": "bd1ee9951c78cd51c0256333125c9bbc685f6448b4c4cf0636ac7ac101d37f58"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_electronics__P0422.STL",
+      "target": "meshes/left/left_hand_pinky_swing_electronics__P0422.STL",
+      "root_frame": false,
+      "triangles": 85280,
+      "source_sha256": "99aad7c01fdb1b7debb74ccbbdda9f2535ab00f2d260f43d57f4cd6c48fd91b5",
+      "target_sha256": "4fef24a209261c40485df4f1e936bcafbab1be52737612a3862bdc0fbf352e02"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_fastener__P0424.STL",
+      "target": "meshes/left/left_hand_pinky_swing_fastener__P0424.STL",
+      "root_frame": false,
+      "triangles": 454,
+      "source_sha256": "ea9638bbde640463b9fb2dae02011f8e76fe2a74dc20c4ba9338d526d14eb715",
+      "target_sha256": "d6795f33e0ff69215edccc5691f52beb378d6a0959ce4003a6e246fa44a65f12"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_fastener__P0431.STL",
+      "target": "meshes/left/left_hand_pinky_swing_fastener__P0431.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "fe25a37949307dc5df9d7e4ebceb1d168f305a00b85af12fb62e7033ede0aea8",
+      "target_sha256": "dee2d21f90c31817b3bc2d49ae290b9ef0cb1df0a7761f54398d37f37b2d5d97"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_fastener__P0432.STL",
+      "target": "meshes/left/left_hand_pinky_swing_fastener__P0432.STL",
+      "root_frame": false,
+      "triangles": 454,
+      "source_sha256": "d4104172742035c991a3c14d87171e8fe77af74addce3590116a6b92372fc6ee",
+      "target_sha256": "b6025f0ac92930818858645fda0bb662209e4b3ffd803b135b4e81c795868812"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_fastener__P0434.STL",
+      "target": "meshes/left/left_hand_pinky_swing_fastener__P0434.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "7f39ec905f53ad9969a3ed2d937c3a7cc64b6cfcc066a98943999d80f5f6455c",
+      "target_sha256": "6507dc2ae42e60dcf4b347b6a6bca4f70dcf7c4be879eaf8521cf8be65942bfe"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_housing__P0437.STL",
+      "target": "meshes/left/left_hand_pinky_swing_housing__P0437.STL",
+      "root_frame": false,
+      "triangles": 7446,
+      "source_sha256": "0385b0f4cfa63b676b1d45730b84cecc9e58dd020652bdc42efd28d19e07c8eb",
+      "target_sha256": "e98aa84b108edc5feb9a5ecbc11fbb70cd89b8f5ad809893fc7905f05d0e21df"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_rotary_motor__P0436.STL",
+      "target": "meshes/left/left_hand_pinky_swing_rotary_motor__P0436.STL",
+      "root_frame": false,
+      "triangles": 25626,
+      "source_sha256": "ec468fcfd2536998894efc8041488f99d5d38bfc5576d117c0462451f4bc8284",
+      "target_sha256": "06c4e3dbb557fddeeae33d9d178bad342d638019d7ff3e1e482c952d9eb3d326"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_swing_support__P0430.STL",
+      "target": "meshes/left/left_hand_pinky_swing_support__P0430.STL",
+      "root_frame": false,
+      "triangles": 2182,
+      "source_sha256": "c00098ed940a3ae5e91e51386e4e26d7abbdcb00088cc51f61adb6c47a96acfd",
+      "target_sha256": "2b2fefd388c7fc5dafa2a7094c32bbfa83b35659a443abc47f15c1ce24b8a836"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_tip_bearing__P0415.STL",
+      "target": "meshes/left/left_hand_pinky_tip_bearing__P0415.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "fbd962a197a4b8e7694a8daa0b43ad84becfe8b38c9932afcd547827165c7fa0",
+      "target_sha256": "3bfcfe8a44e27070d879a5f4e25c6732eb0aa5e93dbf84ac38832f6e7b69042a"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_tip_bearing__P0417.STL",
+      "target": "meshes/left/left_hand_pinky_tip_bearing__P0417.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "d0b4232cda42e74814d1b6622f801b2eb6e90e92aafcebeb2ec36c3121150505",
+      "target_sha256": "281d68035e8dfb98212a4cc09308f360e18f609f5042be32fd1fd09c0ad8d70a"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_tip_housing__P0418.STL",
+      "target": "meshes/left/left_hand_pinky_tip_housing__P0418.STL",
+      "root_frame": false,
+      "triangles": 6726,
+      "source_sha256": "185dd7165b0fe9c4a2dc00121a047dc7b7eaae9e5d4ab7568800d4f32b9a45be",
+      "target_sha256": "a3012566579af895a3652b5d32fe4b61d58a586d536d6b528625083cd56bff29"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_tip_rubber__P0416.STL",
+      "target": "meshes/left/left_hand_pinky_tip_rubber__P0416.STL",
+      "root_frame": false,
+      "triangles": 2144,
+      "source_sha256": "3ab7bb24a2363be34d3638ddcf45091fa3a9e8ffe088de799f73eb34481ca404",
+      "target_sha256": "98bba49215d3fb59c057553afabe7259954dd564e9d384d49ed7eac362d2cac1"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_tip_rubber__P0419.STL",
+      "target": "meshes/left/left_hand_pinky_tip_rubber__P0419.STL",
+      "root_frame": false,
+      "triangles": 3786,
+      "source_sha256": "13652097210ca1081e91ad65bf157f84f46703e6bb1f145b09abeae3d80e6284",
+      "target_sha256": "eee580efe3be6565c13e321728668ab94b66d594cc2c16dfd2506aa0f57baaa1"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_tip_sensor__P0411.STL",
+      "target": "meshes/left/left_hand_pinky_tip_sensor__P0411.STL",
+      "root_frame": false,
+      "triangles": 828,
+      "source_sha256": "b1e7c62ae59a10deb4e1865b90d2d8273ecac87a0b0772d62ac7c87266fef532",
+      "target_sha256": "05f293202e47bcbf8c412087023596f51aa96a7e6da6421f143acdaf1483e495"
+    },
+    {
+      "source": "meshes/right/right_hand_pinky_tip_support__P0413.STL",
+      "target": "meshes/left/left_hand_pinky_tip_support__P0413.STL",
+      "root_frame": false,
+      "triangles": 2086,
+      "source_sha256": "395c4cefd4a31dfcd1c9a2d61072798cbbaa99b2b7dc6b50054ee9b11628fe0d",
+      "target_sha256": "10d1e44cc652f81c8425df447a852a6040b9c7659942de7256745a648f3a5f68"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_bearing__P0015.STL",
+      "target": "meshes/left/left_hand_ring_DIP_bearing__P0015.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "9612a6f37542ca2f8b7ddaa469646ee443071eada2c6d396c08d4f353578cb9f",
+      "target_sha256": "b82a4c8ab001e20a18352ee357025c4850974bdc128f5d07d555aaa4bf75c33a"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_electronics_motor_stator__P0020.STL",
+      "target": "meshes/left/left_hand_ring_DIP_electronics_motor_stator__P0020.STL",
+      "root_frame": false,
+      "triangles": 3726,
+      "source_sha256": "f3fab4581e92ee208c884e7a18a44555f469cb67d1ca0df2041acdc42af2d8a9",
+      "target_sha256": "6b0e08a691b93ef65944b9edb3268a9cabfbad5b535d59277c835570cba9ee33"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_fastener__P0003.STL",
+      "target": "meshes/left/left_hand_ring_DIP_fastener__P0003.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "5d11a8555655ab2142a2d5cc0e9ae239ad14730f59e90e3310374fce6d208a5d",
+      "target_sha256": "2a3878baeea273e3c9cbdfe27a4306973b5f3012fcd8e6cdeb4649abf03b9690"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_fastener__P0005.STL",
+      "target": "meshes/left/left_hand_ring_DIP_fastener__P0005.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "41ddfd0fb7e2c0284add50542d0e35457940e9df500385d0980db88c874844be",
+      "target_sha256": "0ffa01564ac69bd1deaf433fad2b9ab80dac68bc3369534ea13d85a7019f6eda"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_fastener__P0019.STL",
+      "target": "meshes/left/left_hand_ring_DIP_fastener__P0019.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "2376adc08ce5b15aee1dd01a6019534ebb58200b2f00ec8a4afcb998e2ba822a",
+      "target_sha256": "865326ada7cc542d28ca2cec138a889f03dba37b39e7b35a65f93fa9e331fe9c"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_housing__P0013.STL",
+      "target": "meshes/left/left_hand_ring_DIP_housing__P0013.STL",
+      "root_frame": false,
+      "triangles": 4740,
+      "source_sha256": "3051326b91d9dadae547a67e03f33c267785772facccb08efbe59fed79283e66",
+      "target_sha256": "abe7e4062194e3c8205ee8a8b5f63d17b3ed9745d365bc917212875f2f7a95bc"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_housing_motor_mover__P0006.STL",
+      "target": "meshes/left/left_hand_ring_DIP_housing_motor_mover__P0006.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "142c02f2f17ad270fc04c55ad240caa2780150ba2d0b9922374bb5822867ec13",
+      "target_sha256": "5953e3453227786615183cbddce9074ec68578d123347da6e91bf8684693df12"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_housing_motor_stator__P0020.STL",
+      "target": "meshes/left/left_hand_ring_DIP_housing_motor_stator__P0020.STL",
+      "root_frame": false,
+      "triangles": 4964,
+      "source_sha256": "61666086a04a779607a4cfb6605fda680f7eee550a1feffc779ba80a55f7839f",
+      "target_sha256": "8b238b2135573101acc7beb40648baf717e5cbdcc0705807d3c800b4783cd847"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_mover_motor_mover__P0006.STL",
+      "target": "meshes/left/left_hand_ring_DIP_mover_motor_mover__P0006.STL",
+      "root_frame": false,
+      "triangles": 884,
+      "source_sha256": "700dbb951b1c0269333c2fb060b612d2c5eba457675af4e76bcdc6a32e25f275",
+      "target_sha256": "87c7120cb0e80fc14a8c591c4d8e8a0d1ddb65eb6954b48fbe77f30a11b1ef74"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_rod__P0004.STL",
+      "target": "meshes/left/left_hand_ring_DIP_rod__P0004.STL",
+      "root_frame": false,
+      "triangles": 1904,
+      "source_sha256": "0d883be802f6e74cdc7ecbb237e4f8395b142ad3dd13b47d5e4aa14773cf9cc1",
+      "target_sha256": "7faa7e7b5695c087bfd2ba16e89ab557a868016bd14af7fa41ac84e867e5332d"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_rubber__P0014.STL",
+      "target": "meshes/left/left_hand_ring_DIP_rubber__P0014.STL",
+      "root_frame": false,
+      "triangles": 3560,
+      "source_sha256": "ae42608bbad68757f32165313d8c5852444e5a663205bba39ce2d8014e5c5e44",
+      "target_sha256": "4c3c0338adf49ebe7afe5a1966f0850a9c85cab96eefcdce2c634081570cfee5"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_sensor_motor_stator__P0020.STL",
+      "target": "meshes/left/left_hand_ring_DIP_sensor_motor_stator__P0020.STL",
+      "root_frame": false,
+      "triangles": 504,
+      "source_sha256": "3a0065049f607821207c331c8bcafefd97ce6f0ef3e8c5e330b1a9dd15270884",
+      "target_sha256": "d04a1c092c39798605b7beb6983d9a6235319e7a8c71406054660a0d85055911"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_stator_motor_stator__P0020.STL",
+      "target": "meshes/left/left_hand_ring_DIP_stator_motor_stator__P0020.STL",
+      "root_frame": false,
+      "triangles": 8820,
+      "source_sha256": "7042c04aa487151cb4e7f2c2518bd56ee4d91138fe4f4f5b4ae2e0ec1aee1ecf",
+      "target_sha256": "f4af2563637c45c513d7f90daa331a50acba81050ea0438836bf1b3df52c14eb"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_DIP_support_motor_stator__P0020.STL",
+      "target": "meshes/left/left_hand_ring_DIP_support_motor_stator__P0020.STL",
+      "root_frame": false,
+      "triangles": 9110,
+      "source_sha256": "eb9c3ee23a0a7d5dc8c485fb075ea52b53395f08f1a014d8ddd178fc50c5ad57",
+      "target_sha256": "8ea467fa1916b4ede1c4933a2b049366eb1acb2e3e9815ab9afcf51f183acc77"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_bearing__P0026.STL",
+      "target": "meshes/left/left_hand_ring_MCP_bearing__P0026.STL",
+      "root_frame": true,
+      "triangles": 1024,
+      "source_sha256": "60097ad09da2f3f403405cbcfb6b5b7cb694f10937d4fe256787c391c1ccb043",
+      "target_sha256": "507c19afeeaaf6b12872f68558bfc0b5b7bd2548a3431268471b265492bb1b52"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_electronics_motor_stator__P0050.STL",
+      "target": "meshes/left/left_hand_ring_MCP_electronics_motor_stator__P0050.STL",
+      "root_frame": true,
+      "triangles": 4896,
+      "source_sha256": "4ed48fa0c3ee9a321ef4fcbfaa18a28b378dc08ad30e8f28802767ebd6bc0267",
+      "target_sha256": "822fcc1a9b4466fdddf1b7bb306cd1db62f1e169520cae57365fdd491e0da258"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_fastener__P0022.STL",
+      "target": "meshes/left/left_hand_ring_MCP_fastener__P0022.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "0739b846c681826d5b018c217a83d755660e9fba28f7251307c88667b5872920",
+      "target_sha256": "4d8c4c65de6c739484a90744151315c6564d02d4fe45f4e175ae2f3f9f9a26d7"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_fastener__P0028.STL",
+      "target": "meshes/left/left_hand_ring_MCP_fastener__P0028.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "0739b846c681826d5b018c217a83d755660e9fba28f7251307c88667b5872920",
+      "target_sha256": "4d8c4c65de6c739484a90744151315c6564d02d4fe45f4e175ae2f3f9f9a26d7"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_fastener__P0031.STL",
+      "target": "meshes/left/left_hand_ring_MCP_fastener__P0031.STL",
+      "root_frame": true,
+      "triangles": 532,
+      "source_sha256": "8c1214dbf9e69509f32232e941f4696e915e6577ed0816603006089a8859d6a8",
+      "target_sha256": "1345c8f9f1ff497155b577b928329b8017b4d3a36c6308a89cb9666be5ed6f8a"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_housing_motor_mover__P0030.STL",
+      "target": "meshes/left/left_hand_ring_MCP_housing_motor_mover__P0030.STL",
+      "root_frame": true,
+      "triangles": 352,
+      "source_sha256": "2ec7997a9158ce8e4000032fc3b50bb6185cc36b2058305c65143c6b9c4ce27c",
+      "target_sha256": "1ed926dc12d29dc1a0e9e7ba121e9037d6b4281c463595d20b7b8a694ef4e1fa"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_housing_motor_stator__P0050.STL",
+      "target": "meshes/left/left_hand_ring_MCP_housing_motor_stator__P0050.STL",
+      "root_frame": true,
+      "triangles": 7692,
+      "source_sha256": "a507ad349b550e57ba3234a0b512b18679899b96714ffd102c6d2357f7333bb1",
+      "target_sha256": "c2b5f3e76aceaebdf228fc78e5a32c7514937cace7a521a6f740f940dafaf244"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_mover_motor_mover__P0030.STL",
+      "target": "meshes/left/left_hand_ring_MCP_mover_motor_mover__P0030.STL",
+      "root_frame": true,
+      "triangles": 862,
+      "source_sha256": "3de6508ca1a7d0b9caf9afedd5c0fa16736bdbfa9d6c1c0ab6cb125508b5f7ab",
+      "target_sha256": "bbe5e9b474d6459e1898c5dbd8aec44200f8039145debf5141e19d727fdeec93"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_rod__P0023.STL",
+      "target": "meshes/left/left_hand_ring_MCP_rod__P0023.STL",
+      "root_frame": true,
+      "triangles": 1558,
+      "source_sha256": "5c51029b7f089ba28e7ae17c42d88650b14f889e8b035d414f4bebdf82230d07",
+      "target_sha256": "94c2e71e8ae6050a1222568dcf54d909bc9d858a5f3b432f5d208445e3b2126c"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_stator_motor_stator__P0050.STL",
+      "target": "meshes/left/left_hand_ring_MCP_stator_motor_stator__P0050.STL",
+      "root_frame": true,
+      "triangles": 2188,
+      "source_sha256": "c757b7f1190d2082026f97776157e5b6a60af67d4393433f903992b42fd4c4ab",
+      "target_sha256": "a38a88d02ca8f2ca83573232773cbb5afcea254306daebaf43d75fcf3c966052"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_MCP_support_motor_stator__P0050.STL",
+      "target": "meshes/left/left_hand_ring_MCP_support_motor_stator__P0050.STL",
+      "root_frame": true,
+      "triangles": 37750,
+      "source_sha256": "d14bf8aa812a49bb89913fac03e046bee7838deaac95de2807450442dfa9f87a",
+      "target_sha256": "8526227ecb8f63336acd07ac29744657fd2f5532eb29095e36419f8cb541d50a"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_bearing__P0016.STL",
+      "target": "meshes/left/left_hand_ring_PIP_bearing__P0016.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "3c6e06f01b45b65892109de6f03c9fbc263e927150a22e365e281a610ebe9b28",
+      "target_sha256": "3d0835bbfa5dffc7445abd5f45ec80caf2d10d068fdd79c985775d2ec465104e"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_electronics_motor_stator__P0045.STL",
+      "target": "meshes/left/left_hand_ring_PIP_electronics_motor_stator__P0045.STL",
+      "root_frame": false,
+      "triangles": 4334,
+      "source_sha256": "2b61b16851f9d0e002462891601198cbc7643aad0da7e55d637af0fbfcb1fd1d",
+      "target_sha256": "450e777ac1ff80f99f617b4973c7837cb1097d635dd18ff542ffd0b48c5a626f"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0010.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0010.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "c3529f8369b6f19e1e5e70b34bf8acf6dc2e78e9dec1863ac66c06d0168d4b8b",
+      "target_sha256": "37dfb5759c383c63bb5fde4a94aec91fd31ed69ba682b4ab17639f6cee8e5ec8"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0018.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0018.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "15e5e8d133cfe8e31cd5b5e554af1f60c3e43f1c6164ef9b6cd83ea617357fd1",
+      "target_sha256": "613a10dcab90b0d1353c588b3d35b3d5a2f89544c5393f942358df8f483d5bc8"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0039.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0039.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "3195337c895653ee6520624ef2dc148c502986dff02e0a0468244172f08d8698",
+      "target_sha256": "3a8f16ae11e393c67ce64bb23a584bb93194d3d7cd3add741bbb7888e7f66b58"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0042.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0042.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "ba39576ee32d3463da10baa36aefbb36c1a53cb3782e90de64481c2a65d04a23",
+      "target_sha256": "2dda509dcf456aa79dbe53e18a5ca36403c633b34d165c6786b4e324e98478b9"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0044.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0044.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "15c47db22bb259f5d9a7ebb42fc342a176a2a3d303908d09f44a7309ba96786f",
+      "target_sha256": "c75cbed1b4264fdb6c1afdfa1a33791499d79c85367cec2815266036d549d0ec"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0046.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0046.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "b7ae8d936b8bd55dfa4c09283d36dc81e7cc0e5d1ee053bdafeaa45043c6e200",
+      "target_sha256": "65ad5110b5644c96b5e46073570e5f24b3ac3aaf0fe381bd2070b017d578a27e"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0047.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0047.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "ae9c554caa325b8bdcaf68f2530879035686fc2b8a506fa47358a72fc812326e",
+      "target_sha256": "8fc502be745ba30854607f25a29fd0b6e3371defea27bc95b3a963f08f16c3ab"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0048.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0048.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "f7a29ed3265bfed2a393b0b156d2f1b6ab17a46f502fc37284a404a309f4180e",
+      "target_sha256": "1f9b7d06831fa7bbe80ce7f4af3eadb0952a0b1209972604274771f2d4fc0275"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_fastener__P0049.STL",
+      "target": "meshes/left/left_hand_ring_PIP_fastener__P0049.STL",
+      "root_frame": false,
+      "triangles": 336,
+      "source_sha256": "3b78b94824621ef03935c1b2ec2ba3cd97a262599971472303403ffc3c0a3488",
+      "target_sha256": "3600bfcf44a6a4e8da39b88ad1ac46073f5cb05b9f245883e183b4b8205645b0"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_housing__P0041.STL",
+      "target": "meshes/left/left_hand_ring_PIP_housing__P0041.STL",
+      "root_frame": false,
+      "triangles": 2978,
+      "source_sha256": "4afe1fcbd04cef948a2a8730ced4626b330ba67ce98019307ec1d786eb6e03c1",
+      "target_sha256": "2b09eae31aa35ef749d1fa1bc58fd2b8ab73c60aab092cd822122c989a431789"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_housing_motor_mover__P0011.STL",
+      "target": "meshes/left/left_hand_ring_PIP_housing_motor_mover__P0011.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "0e5fdf82c8a5d8c2fdfd8604a835d9d63499686ed01fa0a8180570a1f51a09bd",
+      "target_sha256": "884e8286ae8548230e519be4da9a5b14acf84ee2b4ed7d4b195cfd57b6bb6483"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_housing_motor_stator__P0045.STL",
+      "target": "meshes/left/left_hand_ring_PIP_housing_motor_stator__P0045.STL",
+      "root_frame": false,
+      "triangles": 2276,
+      "source_sha256": "0da7be4a2011b43163e49bee48a2da0a7329e7954af4e0de96ea40986349aef3",
+      "target_sha256": "64dd8a9633cd750d95d5f4a3472f70f824b59196cd8a119fc1e0b78667028313"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_mover_motor_mover__P0011.STL",
+      "target": "meshes/left/left_hand_ring_PIP_mover_motor_mover__P0011.STL",
+      "root_frame": false,
+      "triangles": 758,
+      "source_sha256": "5331de1928d74600b84695a4bff9eeabb899ede08a7487f2745bc6c9d3d4479e",
+      "target_sha256": "d38961723c446ea8b73f8f1fa30fd635c59d46208448c4f2a48fd961209339f6"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_rod__P0017.STL",
+      "target": "meshes/left/left_hand_ring_PIP_rod__P0017.STL",
+      "root_frame": false,
+      "triangles": 1104,
+      "source_sha256": "71fa753112791b4d7bda89f6919d3af7a10f06db73990b4e2d4e57b9c028c4cc",
+      "target_sha256": "5dd7ee36ad695f8060837c45c649354f02059583b1e23747dc181552a20a10f9"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_rotary_motor__P0037_OUTPUT.STL",
+      "target": "meshes/left/left_hand_ring_PIP_rotary_motor__P0037_OUTPUT.STL",
+      "root_frame": false,
+      "triangles": 10928,
+      "source_sha256": "891481c68e8b1728a5261d98a1142807a9e43b624deaa439797bf3cb16cabbc2",
+      "target_sha256": "999d67454f7fd51590a5ec0c99b63ac47281d39ecb60114c9bf0b51fec12be38"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_rubber__P0043.STL",
+      "target": "meshes/left/left_hand_ring_PIP_rubber__P0043.STL",
+      "root_frame": false,
+      "triangles": 3482,
+      "source_sha256": "0448ac513b0b05393cf8924d346d4248a89b4ecd5648fb97ae84371660b43e58",
+      "target_sha256": "f90c13f945ea3088b7dbe1bfed30233de548aa34097bba386ef0ff4a91763733"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_sensor_motor_stator__P0045.STL",
+      "target": "meshes/left/left_hand_ring_PIP_sensor_motor_stator__P0045.STL",
+      "root_frame": false,
+      "triangles": 27180,
+      "source_sha256": "2707e42da43ec807af00f4e4436dbabc6243a1aba8cfda246b3332ad7602b166",
+      "target_sha256": "3635b17b595a9c723c4dc4f96021f8735396e421b19373876e888fa82d257f5c"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_stator_motor_stator__P0045.STL",
+      "target": "meshes/left/left_hand_ring_PIP_stator_motor_stator__P0045.STL",
+      "root_frame": false,
+      "triangles": 1164,
+      "source_sha256": "2eff34ae182b68f368c671966c7a02dd54cd5fc23649a1afaa9934bfc6ee0002",
+      "target_sha256": "cab2782a1ca666efb32ffd3b4928fe2626837d49ae8fc8ddaa547273ed8548f6"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_support__P0040.STL",
+      "target": "meshes/left/left_hand_ring_PIP_support__P0040.STL",
+      "root_frame": false,
+      "triangles": 3720,
+      "source_sha256": "87c7412c95b1a61927a1c042d197879a433d91e9afade08c25c9d487de505997",
+      "target_sha256": "95fa14f1248881512a6ed55cd42feb93d60d220e5e0086b6c50879c05840bd8d"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_PIP_support_motor_stator__P0045.STL",
+      "target": "meshes/left/left_hand_ring_PIP_support_motor_stator__P0045.STL",
+      "root_frame": false,
+      "triangles": 36688,
+      "source_sha256": "129dc9c0a4e793df63a5dfb1d46567889544ac19bbea5ccf3ab141d21964e246",
+      "target_sha256": "dcf66e1e2606fe604987126f632541a8d6978100e3dbb54a7996bb406553475a"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_swing_bearing__P0029.STL",
+      "target": "meshes/left/left_hand_ring_swing_bearing__P0029.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "a141bdfe8873b7d0c79e5367b79898b19bd657246b2327dd2c06c1683b297ada",
+      "target_sha256": "908dac568c5b814619bdbffbd9328876b2871588d34b81176aeb5efdeb3561cf"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_swing_electronics__P0035.STL",
+      "target": "meshes/left/left_hand_ring_swing_electronics__P0035.STL",
+      "root_frame": false,
+      "triangles": 85280,
+      "source_sha256": "901c74ac1827f631a9d6bfa641e628b29e8f6d95444bbdba46d5df91948b94f2",
+      "target_sha256": "a44faae23820437226b0f0bb10158f33e2e325b7ad9a596e7397c11252a96326"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_swing_fastener__P0024.STL",
+      "target": "meshes/left/left_hand_ring_swing_fastener__P0024.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "f0345b5bd54e00875d1cc04b078e2764400a4f9d2d7095eb155b0d9cb6a05de9",
+      "target_sha256": "807f11373f915782eb707cd2c1909cd6247ef411c16d8e1423d2334c4618fbe2"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_swing_fastener__P0027.STL",
+      "target": "meshes/left/left_hand_ring_swing_fastener__P0027.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "ed27b359d7d14bf059a9a9e6be11062e96c04834e10b2101baaa8670f5a08224",
+      "target_sha256": "4ffd689fa034e7f0847eb0c77ab97c613d79ba5461ea391c30cefb75d9236535"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_swing_fastener__P0033.STL",
+      "target": "meshes/left/left_hand_ring_swing_fastener__P0033.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "be3281d4438d608802c49234ade6a268d932523737b8a94255b1bcb41a3f4d56",
+      "target_sha256": "522c77f369f5bd737a13172097d93d7a9977a7203b3ebb6813613e09cb5abcbf"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_swing_housing__P0038.STL",
+      "target": "meshes/left/left_hand_ring_swing_housing__P0038.STL",
+      "root_frame": false,
+      "triangles": 7446,
+      "source_sha256": "0385b0f4cfa63b676b1d45730b84cecc9e58dd020652bdc42efd28d19e07c8eb",
+      "target_sha256": "e98aa84b108edc5feb9a5ecbc11fbb70cd89b8f5ad809893fc7905f05d0e21df"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_swing_rotary_motor__P0037.STL",
+      "target": "meshes/left/left_hand_ring_swing_rotary_motor__P0037.STL",
+      "root_frame": false,
+      "triangles": 25626,
+      "source_sha256": "f3c19ebb435792902086b49e16ac621fa11d1d9f4e2cb05ff9fd6ae68abf32b3",
+      "target_sha256": "2dfd467ca2b2ee9b65a0ebf6d9a6ac5e9dd29bfa25b952cf1bf0add4a8133079"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_swing_support__P0021.STL",
+      "target": "meshes/left/left_hand_ring_swing_support__P0021.STL",
+      "root_frame": false,
+      "triangles": 2182,
+      "source_sha256": "c00098ed940a3ae5e91e51386e4e26d7abbdcb00088cc51f61adb6c47a96acfd",
+      "target_sha256": "2b2fefd388c7fc5dafa2a7094c32bbfa83b35659a443abc47f15c1ce24b8a836"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_tip_bearing__P0000.STL",
+      "target": "meshes/left/left_hand_ring_tip_bearing__P0000.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "350060a3167add8172d059c69fcc695e07cafca9aa6c419ae7c22bcdc7651752",
+      "target_sha256": "6ccaff916e75ee282f6ff367fb4b31408fbd812cc0cb868193c17fa2aa186c8e"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_tip_bearing__P0012.STL",
+      "target": "meshes/left/left_hand_ring_tip_bearing__P0012.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "2ea36029a77b5bcb035a750c066dbb4f1f3712b702d9e0f67236455580a7716f",
+      "target_sha256": "e1b63f82529bffb2c36ce5b5ce1aa1900c611a0aa9628a93d715db772bc97cf8"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_tip_housing__P0009.STL",
+      "target": "meshes/left/left_hand_ring_tip_housing__P0009.STL",
+      "root_frame": false,
+      "triangles": 7572,
+      "source_sha256": "6dea4c2c50c798fc74ac0b6b7267bdfbf7e16fc7aeefc45e4490e21b4d0c4082",
+      "target_sha256": "ff6958e024ad99460b3e6214fbcdf5780f71487f52cb3653806efff931af08a1"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_tip_rubber__P0007.STL",
+      "target": "meshes/left/left_hand_ring_tip_rubber__P0007.STL",
+      "root_frame": false,
+      "triangles": 2224,
+      "source_sha256": "1dd066b167297a30d9d83f55871bf739b1e6523ef9bd26d13ebc47c65f96f0e1",
+      "target_sha256": "49f7d1c2f2ea7e7505969ccca28b362faf40fbf9c6d694fe9776b3a487e6a1bd"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_tip_rubber__P0008.STL",
+      "target": "meshes/left/left_hand_ring_tip_rubber__P0008.STL",
+      "root_frame": false,
+      "triangles": 3092,
+      "source_sha256": "0d0ef83822b5bceadc22150adc55fe038a3ccd5b8cca57398cc5d45ffe40cdbc",
+      "target_sha256": "38261282f2c59f1955d98cb61a8122b975666d7a53766e606567221b089d92c9"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_tip_sensor__P0001.STL",
+      "target": "meshes/left/left_hand_ring_tip_sensor__P0001.STL",
+      "root_frame": false,
+      "triangles": 828,
+      "source_sha256": "28e9bbede20bf822795c3bc2d723b18008f8e8c9e097b7c2367f8b60360619dd",
+      "target_sha256": "693f2cdfae3b9995509fc53cec32ca9972a021d9c70cde6a8447ebf08d578167"
+    },
+    {
+      "source": "meshes/right/right_hand_ring_tip_support__P0002.STL",
+      "target": "meshes/left/left_hand_ring_tip_support__P0002.STL",
+      "root_frame": false,
+      "triangles": 2222,
+      "source_sha256": "3147be6fb2dea12f4c67a0df2ad42e66bda9c4690dfd0a3e28586af6babfe614",
+      "target_sha256": "ad2484939862e25010fad0427443585a2ee6ebeeb5613ba4a416909fc4d84e6d"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_electronics_motor_stator__P0361.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_electronics_motor_stator__P0361.STL",
+      "root_frame": false,
+      "triangles": 4334,
+      "source_sha256": "31d7bb8e381a39ea5e16eae0d7947c9d7aee2b9c11dbac4fb61d1a016df0ad0b",
+      "target_sha256": "26c58244ce8db6a4cf103ff01910717b58cc1e3747e9ea56711b27e18924b505"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_fastener__P0360.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_fastener__P0360.STL",
+      "root_frame": false,
+      "triangles": 778,
+      "source_sha256": "35b591d15614d9992568a02f24452dfc140767a7e4c3e454213e6ddd3df885ce",
+      "target_sha256": "cc9550845d05441d8dd9033517e8ee1e39bcd83198e33bafa6991e4af1c0d34a"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_fastener__P0362.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_fastener__P0362.STL",
+      "root_frame": false,
+      "triangles": 778,
+      "source_sha256": "5d30825e62def3bc4e50144397055f9c56714f3c7956c81b53e07dd776df7ae2",
+      "target_sha256": "cb214aa7e3cd3a24bbe7104cde97d970adaf77eea0d6f42a2eaf15ae27b4e3dd"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_fastener__P0363.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_fastener__P0363.STL",
+      "root_frame": false,
+      "triangles": 778,
+      "source_sha256": "852286712c889af58d812cf3dca61a4d3962b204e32b8934a017f90c26eacdca",
+      "target_sha256": "2190a58e46ad9e10b4135902978db567efca258fb7364ef9072e9380a9cc86e2"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_fastener__P0367.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_fastener__P0367.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "f68df8604938ef6ddd984f665e83822d80e17f4fd3da7ebedf78d85de6a97ca8",
+      "target_sha256": "b822b5ae89346dc8c15c5b7ccb6b3bcbbe830a202bdfc1fdc6779268d857eca1"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_fastener__P0368.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_fastener__P0368.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "ff543059b720233fc48228484e3de3a0ab9804235bb25c0a059b321037550ca9",
+      "target_sha256": "836061cee0480d775d79ad54a5be41a9ed4f7795a60c17b0884a3b92c98972cb"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_fastener__P0369.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_fastener__P0369.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "fed484808194d870c803add45ebcf603c00dd3f17f91f30fd1ecc257353f004a",
+      "target_sha256": "71857c83ddd2cb8df374793e75d8ce7aeeaae858c00104bcf6d5212af953eba5"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_fastener__P0377.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_fastener__P0377.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "faf208bc3f7bc5dc83ab1d1e696712c0f3e410332675fd180c448e3d4b75a5e1",
+      "target_sha256": "74956852e4eee09a643ec6355b9e2133868c29515381f567c7ded479d94384bc"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_housing__P0364.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_housing__P0364.STL",
+      "root_frame": false,
+      "triangles": 5922,
+      "source_sha256": "dfefa08e3287d92336f0fabe7f059ca7800aafa7dc2973bd912e8db5d027cc88",
+      "target_sha256": "12b515bce18483cb832d5df18944e3a398d1911dc877d421701a251db05352b4"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_housing__P0371.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_housing__P0371.STL",
+      "root_frame": false,
+      "triangles": 2626,
+      "source_sha256": "634ca0e25acdc483a931dfe211b249bde58078888fed3e2d939b465624050dac",
+      "target_sha256": "6e562784d2ca86d0442b63b0ebc144dc833ccd3583cf7046add50f94466fbe01"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_housing_motor_mover__P0370.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_housing_motor_mover__P0370.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "73c31eaf47016fa7c0a7b65989a8247b29372d125fc35b5532e0fd618bb34bed",
+      "target_sha256": "544f40277d89e0868a880aad1a4fdfeca90e63ea75fd5819ac4905d83224fde2"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_housing_motor_stator__P0361.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_housing_motor_stator__P0361.STL",
+      "root_frame": false,
+      "triangles": 2788,
+      "source_sha256": "da33f28f7ad3d21cc0fd8764574d4d1b30da079647f62605a4c901ef5f95fe50",
+      "target_sha256": "cc6de254c958e7a3da96aef963e6ffc3e77247abc8ad56d91eb83d6187bcf5d3"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_mover_motor_mover__P0370.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_mover_motor_mover__P0370.STL",
+      "root_frame": false,
+      "triangles": 758,
+      "source_sha256": "bd4c7c1d7c8438c1bc300c471715e6f30ddae24a52100b0c513809ed6ea44724",
+      "target_sha256": "233f7d979daa734a4415d1ac386a44b00b9cd68485bad5b25523b96f9c9ce2ad"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_rod__RECOVERED_THUMB_F2_ROD.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_rod__RECOVERED_THUMB_F2_ROD.STL",
+      "root_frame": false,
+      "triangles": 1104,
+      "source_sha256": "d2c050c0c1fb5193d85f2a17065a16548db4d1970f6750fd27953157c47ccbce",
+      "target_sha256": "23ea0a25b3944babe53964616f5c95e18027ceddaed2dd29883c1c0dd69cea82"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_rotary_motor__P0334_OUTPUT.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_rotary_motor__P0334_OUTPUT.STL",
+      "root_frame": false,
+      "triangles": 21528,
+      "source_sha256": "862583129d805534fd7e0adcacba040916a055d885c6ba27185a9ba228baefaa",
+      "target_sha256": "f6df81ff4f9921885c961e159f49cb92ee158ecb24c34a96a5d625712cf45bb5"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_rubber__P0365.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_rubber__P0365.STL",
+      "root_frame": false,
+      "triangles": 3396,
+      "source_sha256": "79704f6f226b35ef6cf9d04290a87c18af8a27c0259158d2fc870cc511871fa4",
+      "target_sha256": "96a6913b266ec1a835e87bca01da4125292c77b3d34deead9e8d66a6fccadc8d"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_rubber__P0372.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_rubber__P0372.STL",
+      "root_frame": false,
+      "triangles": 3376,
+      "source_sha256": "634292d752f5d3608572e7c7063c289dfb874f93698a55403c1e41e91e63f53b",
+      "target_sha256": "a622beb2afde5818d153a8fd96b4005bd82a075aa1ca2ad26bd443e487904dd1"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_sensor_motor_stator__P0361.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_sensor_motor_stator__P0361.STL",
+      "root_frame": false,
+      "triangles": 82694,
+      "source_sha256": "540e021d181222aa67487fc13f52e3c294e567a0eb196e62873dfc72d499bef6",
+      "target_sha256": "8d94878ffd61ab88a93c15c530f7528a39df62511a5bfa7dfe40c555c353f93a"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_stator_motor_stator__P0361.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_stator_motor_stator__P0361.STL",
+      "root_frame": false,
+      "triangles": 1164,
+      "source_sha256": "56c30ed4739fb3c14113e8543ef7b6c08f6763c37ce5bf023415fd968ff0e1ca",
+      "target_sha256": "8dff03a33396ccfe0847750878f5b008606f25daa721f41a290209b66f90afb4"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_support__P0366.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_support__P0366.STL",
+      "root_frame": false,
+      "triangles": 3584,
+      "source_sha256": "431a1b60f16d76e99d6d728e0c9b5f83f25ee8ba9e3aa74d5014e397faa8ecd3",
+      "target_sha256": "e7ac3f358a9bdba97d9d8e888de4346ffaa64424850d7a3f258b6e4d983f4014"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_support__P0386.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_support__P0386.STL",
+      "root_frame": false,
+      "triangles": 5044,
+      "source_sha256": "497a7c565fcd95d7543b62aa9efd6fefff4bc364c9becfee36459e2e2fca0277",
+      "target_sha256": "9da810cf42c2c27b6c13f29104da64306e07f8c463268a321209515926cb0253"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_MCP_support_motor_stator__P0361.STL",
+      "target": "meshes/left/left_hand_thumb_MCP_support_motor_stator__P0361.STL",
+      "root_frame": false,
+      "triangles": 36012,
+      "source_sha256": "e47e68ab58d1ee68f6b82b030510944d344f13d3306cee8dc2a32c569c738a37",
+      "target_sha256": "574077877d37ae13d07ad01cc3eb1703eb8cc74bbbb754f52779265f1f3f74da"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_PIP_electronics_motor_stator__P0373.STL",
+      "target": "meshes/left/left_hand_thumb_PIP_electronics_motor_stator__P0373.STL",
+      "root_frame": false,
+      "triangles": 3726,
+      "source_sha256": "f3fab4581e92ee208c884e7a18a44555f469cb67d1ca0df2041acdc42af2d8a9",
+      "target_sha256": "6b0e08a691b93ef65944b9edb3268a9cabfbad5b535d59277c835570cba9ee33"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_PIP_housing_motor_stator__P0373.STL",
+      "target": "meshes/left/left_hand_thumb_PIP_housing_motor_stator__P0373.STL",
+      "root_frame": false,
+      "triangles": 4964,
+      "source_sha256": "61666086a04a779607a4cfb6605fda680f7eee550a1feffc779ba80a55f7839f",
+      "target_sha256": "8b238b2135573101acc7beb40648baf717e5cbdcc0705807d3c800b4783cd847"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_PIP_sensor_motor_stator__P0373.STL",
+      "target": "meshes/left/left_hand_thumb_PIP_sensor_motor_stator__P0373.STL",
+      "root_frame": false,
+      "triangles": 504,
+      "source_sha256": "3a0065049f607821207c331c8bcafefd97ce6f0ef3e8c5e330b1a9dd15270884",
+      "target_sha256": "d04a1c092c39798605b7beb6983d9a6235319e7a8c71406054660a0d85055911"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_PIP_stator_motor_stator__P0373.STL",
+      "target": "meshes/left/left_hand_thumb_PIP_stator_motor_stator__P0373.STL",
+      "root_frame": false,
+      "triangles": 8820,
+      "source_sha256": "7042c04aa487151cb4e7f2c2518bd56ee4d91138fe4f4f5b4ae2e0ec1aee1ecf",
+      "target_sha256": "f4af2563637c45c513d7f90daa331a50acba81050ea0438836bf1b3df52c14eb"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_PIP_support_motor_stator__P0373.STL",
+      "target": "meshes/left/left_hand_thumb_PIP_support_motor_stator__P0373.STL",
+      "root_frame": false,
+      "triangles": 9110,
+      "source_sha256": "eb9c3ee23a0a7d5dc8c485fb075ea52b53395f08f1a014d8ddd178fc50c5ad57",
+      "target_sha256": "8ea467fa1916b4ede1c4933a2b049366eb1acb2e3e9815ab9afcf51f183acc77"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_fastener__P0351.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_fastener__P0351.STL",
+      "root_frame": true,
+      "triangles": 1086,
+      "source_sha256": "3249216b69d03cbdcdc16e3f0a5fe7aa0d3378fa9ee9b144050df8778dad5ada",
+      "target_sha256": "ead4aa37a6305c917700107869e1d4374b3d7f3b001a7dca5978afa6be3f88d7"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_fastener__P0354.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_fastener__P0354.STL",
+      "root_frame": true,
+      "triangles": 320,
+      "source_sha256": "cf502082245ba771c838b28d5c8f5f07dcaa2cbb1309cbfdc9dd550501844c86",
+      "target_sha256": "da5ed4a6a2446668bf1b0c34e27b4ff658c5d24209e74ab365f95f3ba32b4adc"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_fastener__P0355.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_fastener__P0355.STL",
+      "root_frame": true,
+      "triangles": 320,
+      "source_sha256": "8a291b263c902f4fd6eb8245fec05f69a93cce4c4c30fb3d25108994ecd3e944",
+      "target_sha256": "e644fe09d13958f2fbf3ece50880dcad6f96859ba381ee1b4c886041af6e54f9"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_fastener__P0356.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_fastener__P0356.STL",
+      "root_frame": true,
+      "triangles": 1086,
+      "source_sha256": "aafb196385cc9659094417af234ecc4aaac977881696a5044f83cf7757765264",
+      "target_sha256": "c3e23cd3e047163b6d3823ce176d8b58fc197aa09b9611d2c5eaa87477ef755b"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_fastener__P0357.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_fastener__P0357.STL",
+      "root_frame": true,
+      "triangles": 1086,
+      "source_sha256": "7e7ef2ef500de33bc5bb46f0009fc0101162fe79f7341e8bcd11031b4b752383",
+      "target_sha256": "323175a5c1dd12ef2707e831df3ccdbebd73886c445669828673541b3e7eb738"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_fastener__P0358.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_fastener__P0358.STL",
+      "root_frame": true,
+      "triangles": 1086,
+      "source_sha256": "9744d8bebe289ee0468a360aa31354f88bc3aa68682042e19ca4ee76d5290143",
+      "target_sha256": "2042b3cfd98d68d95a45d4e2281b61dc99e2603ce8d59a096166b1c2f2ba902b"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_rotary_motor__P0353.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_rotary_motor__P0353.STL",
+      "root_frame": true,
+      "triangles": 22256,
+      "source_sha256": "2fb691fe3cdee1767ba7793249be0670c7e747048141073fffe3d1bb4a0de02d",
+      "target_sha256": "07af08a17672764ebaabd9d94e595d4952782d22f6513f142926a2760815f2a8"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_support__P0352.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_support__P0352.STL",
+      "root_frame": true,
+      "triangles": 2628,
+      "source_sha256": "99d9c1edd833486a3f7f2e5f07a8dff071372bfa1e0655c89dce09454725ab81",
+      "target_sha256": "f729d0606bdf1d489825a36a81abb966cbfab046a6292d7d21d007be76b918f6"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation1_support__P_THUMB_PALM_MOUNT.STL",
+      "target": "meshes/left/left_hand_thumb_rotation1_support__P_THUMB_PALM_MOUNT.STL",
+      "root_frame": true,
+      "triangles": 2348,
+      "source_sha256": "c254293d07b5325bbc933cb94dd3fdb890d453a8bd54f27db89641b0b78f5c9b",
+      "target_sha256": "956b966101fb2c069e408d47acd089226a79c760072dda947fa6845bd150a98b"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0335.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0335.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "49585bddb81eb50afd9ddb5271c40c4743d733dad44bc1205a378eb24ad0cae9",
+      "target_sha256": "9f7555327f9a02e5508883c7d830bc3ead3b0f1e496da7bdc432ba0f96c34498"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0337.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0337.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "700ff26598fd7cd51d91769904f641ced9c0884c93d13fd3d89c67f4b36199fd",
+      "target_sha256": "08734d81e73ab3ab2ae5d67b93d0dd32329d0d5e243315629c89fd6f7fb686e2"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0338.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0338.STL",
+      "root_frame": false,
+      "triangles": 320,
+      "source_sha256": "83b38357b73d9bc41547de374c8857396f1977c3f74d080a5752c8833f961ae9",
+      "target_sha256": "12a61a2b4568357f793877438f83fc492524c82cb324a25e9285a89e77d7a7fc"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0339.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0339.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "37857982c3364f9c075713f68ff6634c578af3c6371b0cf4c017bbda46f35af8",
+      "target_sha256": "93449bc283e2832a97834efdf1056ca97a79715e307babe556543aa27634515d"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0340.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0340.STL",
+      "root_frame": false,
+      "triangles": 1106,
+      "source_sha256": "e55a7da8887f973988189a7d44755c0ff05df745eddf649a42ac6545e34b9f43",
+      "target_sha256": "22d409640829552e43bdace5eeb3241a8449dcf1318530eca758fa245885cfd1"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0341.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0341.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "a4315129404aeb7fb32a736c9a137560458cc9c772091eb7a26dc9a960079026",
+      "target_sha256": "ab30348a6a7b0864880b80d88f4c7575f2e62a725715a4fa840165e756d59d1f"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0342.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0342.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "f5097b9fdcecdb9c07cbc20b043225fb379cdb8b9f35aa1791dac20ef9674017",
+      "target_sha256": "ba94c0cf42df0bed340e51566e2a0941dc7cf102158636390430f66a92751f64"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0343.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0343.STL",
+      "root_frame": false,
+      "triangles": 336,
+      "source_sha256": "daee3c090d8e4c80a1cc625b093839238f9c390018563070676f389c8263448a",
+      "target_sha256": "0159512e93678af776343216ab2a86304ab387d02ece8d9633bc53ab1757a4d4"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0344.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0344.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "b45276f4ca6501cd5b11321e3d4f1698e5d222ad208bb40a7f8e2c7907643617",
+      "target_sha256": "52b160a9647eb2ba1b5f6e73bf938f4e7830a31ba4c4318e4132d295f44e6d1d"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0345.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0345.STL",
+      "root_frame": false,
+      "triangles": 1086,
+      "source_sha256": "c66933cb03014ad25121ba0ae8c4dbb72ffd2765f5479bd819b6162eddce30e3",
+      "target_sha256": "20b3ade61f728d0d8a993bf849d82e29e05da7aec953d0e69204360624f61d86"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_fastener__P0346.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_fastener__P0346.STL",
+      "root_frame": false,
+      "triangles": 320,
+      "source_sha256": "7b9645f7ab32620b51088a1bfc466958e20630d94bc208565f564a044db73eb6",
+      "target_sha256": "5358af88727f548bf00473524379f7dd179419818d9be37a0d4e2252be3e3f44"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_rotary_motor__P0334.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_rotary_motor__P0334.STL",
+      "root_frame": false,
+      "triangles": 22256,
+      "source_sha256": "bab8856226b23b0d9e779bb16aa00878921a8a6bff72645e22ac62d55a434978",
+      "target_sha256": "1682dd1a466c89b5bd807a8d71e86423ef6d6562543c1d8877c1f767f304c7ed"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_rotary_motor__P0353_OUTPUT.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_rotary_motor__P0353_OUTPUT.STL",
+      "root_frame": false,
+      "triangles": 21528,
+      "source_sha256": "fd5dbb7627e77f2aefd45783ca3e1dea95ea3b433e0a3ce22ea5be16afba99bf",
+      "target_sha256": "8fd73507126526195e6aeceab6141aef668057bae042fa6e3dbc068b2420a1de"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_rotation2_support__P0336.STL",
+      "target": "meshes/left/left_hand_thumb_rotation2_support__P0336.STL",
+      "root_frame": false,
+      "triangles": 3678,
+      "source_sha256": "8a0a6f06f7689933ad6088c1e2333e413d79a3e94cfc2ee20b609613b5dc31e6",
+      "target_sha256": "27d457ec09dbe8072098bb497c3b6bc657834b9e4fe3b3799a972faf92d1ddbd"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_bearing__P0382.STL",
+      "target": "meshes/left/left_hand_thumb_tip_bearing__P0382.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "77c83c59b45b041fb72ccd747a5e8abbb5a6e11d1b778bd74b871cf931ca3ae8",
+      "target_sha256": "c13246c3a9e6af5581121a5a329e50e9bc7ee6e31622e19ffd8bf3ee4b521bc7"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_bearing__P0384.STL",
+      "target": "meshes/left/left_hand_thumb_tip_bearing__P0384.STL",
+      "root_frame": false,
+      "triangles": 1024,
+      "source_sha256": "73568fbd0031e689376f2d87b716e45db32ab0f5f327672400718a6db58a289a",
+      "target_sha256": "6c2dcd0ff67110af5945c468386608b23a2d3322c6d1266d0164577f34a77ece"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_fastener__P0380.STL",
+      "target": "meshes/left/left_hand_thumb_tip_fastener__P0380.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "8f2e1c00538dee06af2c5141540ce321faa71cd4c270c1798b16099ecd645b01",
+      "target_sha256": "de673549bd2b2fe314e265cc74a47592c449fd423417b5a3cefad5240d8490c3"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_fastener__P0383.STL",
+      "target": "meshes/left/left_hand_thumb_tip_fastener__P0383.STL",
+      "root_frame": false,
+      "triangles": 532,
+      "source_sha256": "8077e99d1c2c1694dc6cc064986d3d5297ebd4dacb03e617568d0194c5de01f4",
+      "target_sha256": "9b59d291d22e8a2c7a89d9efcdfef093f7f77b5f12fdfe33703d94ab40c46d7c"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_housing__P0385.STL",
+      "target": "meshes/left/left_hand_thumb_tip_housing__P0385.STL",
+      "root_frame": false,
+      "triangles": 6726,
+      "source_sha256": "8122c310bf321e5e27833d2ef4e6853c0e0669d8a4d4e80466ab50dc7af81458",
+      "target_sha256": "4184e8273e00d2d3df2ed3fdcc99a214dc4fb447022b4c0ac1b3fcccf9532af4"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_housing_motor_mover__P0381.STL",
+      "target": "meshes/left/left_hand_thumb_tip_housing_motor_mover__P0381.STL",
+      "root_frame": false,
+      "triangles": 376,
+      "source_sha256": "142c02f2f17ad270fc04c55ad240caa2780150ba2d0b9922374bb5822867ec13",
+      "target_sha256": "5953e3453227786615183cbddce9074ec68578d123347da6e91bf8684693df12"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_mover_motor_mover__P0381.STL",
+      "target": "meshes/left/left_hand_thumb_tip_mover_motor_mover__P0381.STL",
+      "root_frame": false,
+      "triangles": 884,
+      "source_sha256": "413b236d3c7d9b31dfe2fd54d1e8f2ee0900310291f1325fa9da62f53525a951",
+      "target_sha256": "bc297d0fa02e48369f0733515907267cb84544fb3882e6fe753967a0819ea3f4"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_rod__RECOVERED_THUMB_F1_ROD.STL",
+      "target": "meshes/left/left_hand_thumb_tip_rod__RECOVERED_THUMB_F1_ROD.STL",
+      "root_frame": false,
+      "triangles": 1904,
+      "source_sha256": "0d883be802f6e74cdc7ecbb237e4f8395b142ad3dd13b47d5e4aa14773cf9cc1",
+      "target_sha256": "7faa7e7b5695c087bfd2ba16e89ab557a868016bd14af7fa41ac84e867e5332d"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_rubber__P0378.STL",
+      "target": "meshes/left/left_hand_thumb_tip_rubber__P0378.STL",
+      "root_frame": false,
+      "triangles": 3786,
+      "source_sha256": "310342f1a97b1cbdb4674dc21819591526088e6b03a10939501520324391fc2a",
+      "target_sha256": "ba246e19e3ff40faa3b578a91eac7088a10e547c2ef5a7b896e47cfb30dc532a"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_rubber__P0379.STL",
+      "target": "meshes/left/left_hand_thumb_tip_rubber__P0379.STL",
+      "root_frame": false,
+      "triangles": 2144,
+      "source_sha256": "18b8c2e10f81338d2dbb8d3d2c32047f11fa7443f7b2f0434acf3223e4ecae43",
+      "target_sha256": "ff49f3d64bf314ef36ea3b18e4fa20260a9571a8a9b6861059827cf354ffb8d5"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_sensor__P0376.STL",
+      "target": "meshes/left/left_hand_thumb_tip_sensor__P0376.STL",
+      "root_frame": false,
+      "triangles": 828,
+      "source_sha256": "b1e7c62ae59a10deb4e1865b90d2d8273ecac87a0b0772d62ac7c87266fef532",
+      "target_sha256": "05f293202e47bcbf8c412087023596f51aa96a7e6da6421f143acdaf1483e495"
+    },
+    {
+      "source": "meshes/right/right_hand_thumb_tip_support__RECOVERED_THUMB_F1_HINGE.STL",
+      "target": "meshes/left/left_hand_thumb_tip_support__RECOVERED_THUMB_F1_HINGE.STL",
+      "root_frame": false,
+      "triangles": 2086,
+      "source_sha256": "395c4cefd4a31dfcd1c9a2d61072798cbbaa99b2b7dc6b50054ee9b11628fe0d",
+      "target_sha256": "10d1e44cc652f81c8425df447a852a6040b9c7659942de7256745a648f3a5f68"
+    }
+  ]
+}

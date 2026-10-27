@@ -292,15 +292,15 @@ class A32Device:
             return pose
 
     def starting_pose(self, fallback_pose=None):
-        """Seed every axis from fresh telemetry on the current connection.
+        """Use valid telemetry where available, otherwise a bounded fallback.
 
-        ``fallback_pose`` is retained for API compatibility but never used.
-        A previous command/software pose cannot establish the hand's position
-        after reconnecting. Small endpoint noise and the application's inset
-        joint limits may be clamped only within 0.1 mm / 0.002 rad of feedback.
+        Missing/invalid feedback is diagnostic only, not an arming gate.
+        Callers should pass their current software pose as the fallback.
         """
         with self._lock:
-            pose, measured = {}, {}
+            pose = {}
+            fallback = self.constrain_pose(fallback_pose if fallback_pose is not None else
+                                           {n: 0. for n in self._joint_limits})
             state = self.get_state()
             age = state.get("telemetry_age_ms", -1)
             fresh = (state.get("connected") and isinstance(age, Real)
@@ -324,24 +324,13 @@ class A32Device:
                         lo, hi = self._joint_limits[c["joint"]]
                         if math.isfinite(q):
                             pose[c["joint"]] = min(hi, max(lo, q))
-                            measured[c["joint"]] = (value, tolerance)
                             continue
                     except (ValueError, ArithmeticError):
                         pass
                 missing.append(c["joint"])
-            if not missing:
-                # Verify the actual first command, including calibration and
-                # the narrower application limits, stays near the measurement.
-                targets = self.prepare_targets(pose, clamp=False)
-                for c in self.channels:
-                    value, tolerance = measured[c["joint"]]
-                    target = targets["self" if c["channel"] == "self" else "mit_pos"][c["index"]]
-                    if abs(target - value) > tolerance + 1e-9:
-                        missing.append(c["joint"])
             self._seed_missing = missing
-            if missing:
-                raise A32DriverError("A3.2 起步需要本次连接的新鲜、完整且有效的反馈；缺失或异常关节："
-                                     + ", ".join(missing))
+            for name in missing:
+                pose[name] = fallback[name]
             return pose
 
     def enable_all(self, *, start_pose=None, fallback_pose=None, send_initial_pose=True):
@@ -356,15 +345,8 @@ class A32Device:
             # collision-checked seed, even if telemetry changes between calls.
             targets = None
             if send_initial_pose:
-                current = self.prepare_targets(self.starting_pose(), clamp=False)
-                targets = current if start_pose is None else self.prepare_targets(start_pose, clamp=False)
-                # A caller can supply the collision-checked planner seed, but
-                # it cannot bypass feedback checks or reuse a previous session.
-                for c in self.channels:
-                    key = "self" if c["channel"] == "self" else "mit_pos"
-                    tolerance = .1 if c["unit"] == "mm" else math.degrees(.002)
-                    if abs(targets[key][c["index"]] - current[key][c["index"]]) > tolerance:
-                        raise A32DriverError("A3.2 起步姿态与当前反馈不一致，请根据新反馈重新开启下发：" + c["joint"])
+                seed = start_pose if start_pose is not None else self.starting_pose(fallback_pose)
+                targets = self.prepare_targets(seed, clamp=False)
             self._enabled = False
             try:
                 if send_initial_pose:

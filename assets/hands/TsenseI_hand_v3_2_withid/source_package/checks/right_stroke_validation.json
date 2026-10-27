@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "linear_drives": 14,
+  "samples": 12614,
+  "errors": {
+    "closure_m": 1.5612511283791264e-17,
+    "inverse_rad": 1.7763568394002505e-15,
+    "signed_stroke_difference_m": 0.0
+  }
+}

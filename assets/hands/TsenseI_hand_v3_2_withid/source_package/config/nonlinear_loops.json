@@ -1,0 +1,644 @@
+{
+  "model_id": "right-mirror-raised-5mm-standard-DIP-5bd3d21b150e",
+  "kinematics_sha256": "5bd3d21b150e0e2bab3a05247abab06320d07e65a796458ff36d875bf8257118",
+  "formula": "B(q)=H+R(axis,q)(B0-H); s=-dot(A0-B(q),u)+root*sqrt(dot^2-|A0-B(q)|^2+L^2); rod_phi=atan2(axis.dot((B0-A0).cross(B(q)-A0-u*s)),(B0-A0).dot(B(q)-A0-u*s))",
+  "units": {
+    "output_angles": "rad",
+    "slider_positions": "m",
+    "rod_angles": "rad"
+  },
+  "loops": [
+    {
+      "control": "003_base",
+      "output_joint": "rh_source_index_mcp_flexion",
+      "slider_joint": "rh_source_index_mcp_slider_joint",
+      "rod_joint": "rh_source_index_mcp_rod_joint",
+      "parent_link": "rh_source_index_mount",
+      "H_parent_m": [
+        -2.168404344971009e-19,
+        -8.673617379884035e-19,
+        0.0
+      ],
+      "A0_parent_m": [
+        0.015598408199202895,
+        0.007632133051536025,
+        0.0
+      ],
+      "B0_parent_m": [
+        0.01320037878244408,
+        0.0,
+        -3.469446951953614e-18
+      ],
+      "axis_parent": [
+        1.3215160335088015e-18,
+        2.7884928629893717e-18,
+        -1.0
+      ],
+      "slide_axis_parent": [
+        0.41665471049319047,
+        0.9090648228942948,
+        6.950188877127941e-17
+      ],
+      "rod_length_m": 0.007999999999999998,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -0.9110618695410401,
+        1.7697638615222502
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "003_middle",
+      "output_joint": "rh_source_index_pip_flexion",
+      "slider_joint": "rh_source_index_pip_slider_joint",
+      "rod_joint": "rh_source_index_pip_rod_joint",
+      "parent_link": "rh_source_index_proximal",
+      "H_parent_m": [
+        0.041999999999999836,
+        0.0,
+        -0.02699999999999819
+      ],
+      "A0_parent_m": [
+        0.027832203132828453,
+        -9.71445146547012e-17,
+        -0.015999999999996593
+      ],
+      "B0_parent_m": [
+        0.03799999999999971,
+        -2.7755575615628914e-17,
+        -0.01680988077390235
+      ],
+      "axis_parent": [
+        -7.030433809189094e-15,
+        0.9999999999999999,
+        6.771012229602188e-17
+      ],
+      "slide_axis_parent": [
+        -1.0,
+        -7.000137106556529e-15,
+        -2.6623998163526502e-14
+      ],
+      "rod_length_m": 0.01020000000000001,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.1222467090323538,
+        1.8709929581379212
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "003_distal",
+      "output_joint": "rh_source_index_dip_flexion",
+      "slider_joint": "rh_source_index_dip_slider_joint",
+      "rod_joint": "rh_source_index_dip_rod_joint",
+      "parent_link": "rh_source_index_middle",
+      "H_parent_m": [
+        -0.005311413721869259,
+        -0.025846448194579826,
+        -1.1934897514720433e-15
+      ],
+      "A0_parent_m": [
+        0.006008588438242786,
+        -0.018902562478807023,
+        -1.2004286453759505e-15
+      ],
+      "B0_parent_m": [
+        0.002864936750359372,
+        -0.026907401894139902,
+        -1.1934897514720433e-15
+      ],
+      "axis_parent": [
+        3.972848019361105e-17,
+        3.1296697027775075e-17,
+        -1.0
+      ],
+      "slide_axis_parent": [
+        0.36539428889665043,
+        0.9308528420978855,
+        -1.511492979006382e-16
+      ],
+      "rod_length_m": 0.00859999999999998,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.3980087308474578,
+        1.8884462506578645
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "004_base",
+      "output_joint": "rh_source_middle_mcp_flexion",
+      "slider_joint": "rh_source_middle_mcp_slider_joint",
+      "rod_joint": "rh_source_middle_mcp_rod_joint",
+      "parent_link": "rh_source_middle_mount",
+      "H_parent_m": [
+        -4.336808689942018e-19,
+        -2.168404344971009e-19,
+        0.0
+      ],
+      "A0_parent_m": [
+        0.015598408199204277,
+        0.00763213305153637,
+        -1.3552527156068805e-20
+      ],
+      "B0_parent_m": [
+        0.01320037878244409,
+        -8.673617379884035e-19,
+        -1.2197274440461925e-19
+      ],
+      "axis_parent": [
+        -8.33427225326389e-19,
+        -1.3431681879879587e-19,
+        -1.0
+      ],
+      "slide_axis_parent": [
+        0.4166547104932138,
+        0.9090648228942843,
+        1.41959782019216e-17
+      ],
+      "rod_length_m": 0.008000000000000002,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -0.9110618695410401,
+        1.7697638615222502
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "004_middle",
+      "output_joint": "rh_source_middle_pip_flexion",
+      "slider_joint": "rh_source_middle_pip_slider_joint",
+      "rod_joint": "rh_source_middle_pip_rod_joint",
+      "parent_link": "rh_source_middle_proximal",
+      "H_parent_m": [
+        0.04199999999999954,
+        -2.710505431213761e-20,
+        -0.025300000000000353
+      ],
+      "A0_parent_m": [
+        0.02783220313282713,
+        1.4956568969437534e-16,
+        -0.01429999999999819
+      ],
+      "B0_parent_m": [
+        0.03799999999999953,
+        4.175533616784799e-17,
+        -0.0151098807739043
+      ],
+      "axis_parent": [
+        1.0632717019227047e-14,
+        1.0,
+        9.287248493912009e-17
+      ],
+      "slide_axis_parent": [
+        -1.0,
+        1.0645036577620398e-14,
+        -2.6945933897862728e-14
+      ],
+      "rod_length_m": 0.010200000000000008,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.1222467090323538,
+        1.8709929581379212
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "004_distal",
+      "output_joint": "rh_source_middle_dip_flexion",
+      "slider_joint": "rh_source_middle_dip_slider_joint",
+      "rod_joint": "rh_source_middle_dip_rod_joint",
+      "parent_link": "rh_source_middle_middle",
+      "H_parent_m": [
+        -0.005311413721869301,
+        -0.025846448194579878,
+        -5.992520932598944e-16
+      ],
+      "A0_parent_m": [
+        0.006008588438242804,
+        -0.018902562478807172,
+        -6.098366169687841e-16
+      ],
+      "B0_parent_m": [
+        0.0028649367503593252,
+        -0.02690740189414001,
+        -6.087117572148304e-16
+      ],
+      "axis_parent": [
+        3.9922929728907734e-17,
+        4.147605857481305e-17,
+        -1.0000000000000002
+      ],
+      "slide_axis_parent": [
+        0.36539428889665865,
+        0.9308528420978825,
+        -1.3831981520234137e-16
+      ],
+      "rod_length_m": 0.00859999999999998,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.3980087308474578,
+        1.8884462506578645
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "005_base",
+      "output_joint": "rh_source_ring_mcp_flexion",
+      "slider_joint": "rh_source_ring_mcp_slider_joint",
+      "rod_joint": "rh_source_ring_mcp_rod_joint",
+      "parent_link": "rh_source_ring_mount",
+      "H_parent_m": [
+        0.0,
+        0.0,
+        3.469446951953614e-18
+      ],
+      "A0_parent_m": [
+        0.0155984081991965,
+        0.007632133051538849,
+        0.0
+      ],
+      "B0_parent_m": [
+        0.013200378782444087,
+        0.0,
+        0.0
+      ],
+      "axis_parent": [
+        -3.203656874137309e-18,
+        2.6261992311310495e-18,
+        -1.0000000000000002
+      ],
+      "slide_axis_parent": [
+        0.4166547104932135,
+        0.9090648228942843,
+        -1.134117391439582e-15
+      ],
+      "rod_length_m": 0.008,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -0.9110618695410401,
+        1.7697638615222502
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "005_middle",
+      "output_joint": "rh_source_ring_pip_flexion",
+      "slider_joint": "rh_source_ring_pip_slider_joint",
+      "rod_joint": "rh_source_ring_pip_rod_joint",
+      "parent_link": "rh_source_ring_proximal",
+      "H_parent_m": [
+        0.041999999999998094,
+        0.0,
+        -0.02699999999999493
+      ],
+      "A0_parent_m": [
+        0.02783220313282781,
+        5.204170427930421e-17,
+        -0.015999999999998668
+      ],
+      "B0_parent_m": [
+        0.0379999999999978,
+        1.3877787807814457e-17,
+        -0.016809880773899097
+      ],
+      "axis_parent": [
+        3.630121374898195e-15,
+        1.0,
+        6.424069746935862e-17
+      ],
+      "slide_axis_parent": [
+        -0.9999999999999999,
+        3.655421400812271e-15,
+        -2.661744392674973e-14
+      ],
+      "rod_length_m": 0.010200000000000002,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.1222467090323538,
+        1.8709929581379212
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "005_distal",
+      "output_joint": "rh_source_ring_dip_flexion",
+      "slider_joint": "rh_source_ring_dip_slider_joint",
+      "rod_joint": "rh_source_ring_dip_rod_joint",
+      "parent_link": "rh_source_ring_middle",
+      "H_parent_m": [
+        -0.00531141372187283,
+        -0.025846448194579964,
+        -1.849603803449895e-12
+      ],
+      "A0_parent_m": [
+        0.006008588438238174,
+        -0.018902562478807866,
+        -1.849607272896847e-12
+      ],
+      "B0_parent_m": [
+        0.0028649367503557933,
+        -0.026907401894140152,
+        -1.849607272896847e-12
+      ],
+      "axis_parent": [
+        3.627075746094459e-17,
+        2.922553297770413e-17,
+        -1.0
+      ],
+      "slide_axis_parent": [
+        0.3653942888966637,
+        0.9308528420978804,
+        -1.4014179598105574e-16
+      ],
+      "rod_length_m": 0.008599999999999991,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.3980087308474578,
+        1.8884462506578645
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "006_base",
+      "output_joint": "rh_source_little_mcp_flexion",
+      "slider_joint": "rh_source_little_mcp_slider_joint",
+      "rod_joint": "rh_source_little_mcp_rod_joint",
+      "parent_link": "rh_source_little_mount",
+      "H_parent_m": [
+        1.3010426069826053e-18,
+        -8.673617379884035e-19,
+        0.0
+      ],
+      "A0_parent_m": [
+        0.015598408199203816,
+        0.00763213305153632,
+        0.0
+      ],
+      "B0_parent_m": [
+        0.013200378782444086,
+        0.0,
+        -6.938893903907228e-18
+      ],
+      "axis_parent": [
+        -6.436443066647092e-18,
+        -1.1862774413993103e-17,
+        -1.0
+      ],
+      "slide_axis_parent": [
+        0.4166547104932123,
+        0.9090648228942849,
+        4.665696336654815e-15
+      ],
+      "rod_length_m": 0.008,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -0.9110618695410401,
+        1.7697638615222502
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "006_middle",
+      "output_joint": "rh_source_little_pip_flexion",
+      "slider_joint": "rh_source_little_pip_slider_joint",
+      "rod_joint": "rh_source_little_pip_rod_joint",
+      "parent_link": "rh_source_little_proximal",
+      "H_parent_m": [
+        0.03950000000000045,
+        0.0,
+        -0.021809999999998726
+      ],
+      "A0_parent_m": [
+        0.026400000000640862,
+        -6.106226635438361e-16,
+        -0.013809999999995885
+      ],
+      "B0_parent_m": [
+        0.03750000000000023,
+        -9.020562075079397e-17,
+        -0.01380988077390297
+      ],
+      "axis_parent": [
+        -4.711119435909274e-14,
+        1.0,
+        -5.720662831794962e-17
+      ],
+      "slide_axis_parent": [
+        -1.0,
+        -4.7095151154067234e-14,
+        -2.6200062280852285e-14
+      ],
+      "rod_length_m": 0.011099999999999999,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.710422666954443,
+        2.2008601867648494
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "006_distal",
+      "output_joint": "rh_source_little_dip_flexion",
+      "slider_joint": "rh_source_little_dip_slider_joint",
+      "rod_joint": "rh_source_little_dip_rod_joint",
+      "parent_link": "rh_source_little_middle",
+      "H_parent_m": [
+        -0.0063032454065008086,
+        -0.025224375205066284,
+        0.00020675515638994557
+      ],
+      "A0_parent_m": [
+        0.0040261505427627384,
+        -0.016880465488000915,
+        -1.850498920763499e-12
+      ],
+      "B0_parent_m": [
+        0.001939059827186014,
+        -0.025223369799074656,
+        3.5004442559827265e-08
+      ],
+      "axis_parent": [
+        -0.025072767746538955,
+        0.006268098521520595,
+        -0.999665977843826
+      ],
+      "slide_axis_parent": [
+        0.24253222313248157,
+        0.9701433506149573,
+        1.8084808177227278e-16
+      ],
+      "rod_length_m": 0.008599999999999997,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.3980087308474578,
+        1.8884462506578645
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "002_f2",
+      "output_joint": "rh_source_thumb_f2_flexion",
+      "slider_joint": "rh_source_thumb_f2_slider_joint",
+      "rod_joint": "rh_source_thumb_f2_rod_joint",
+      "parent_link": "rh_source_thumb_rot2_carrier",
+      "H_parent_m": [
+        0.05166894259260114,
+        0.0,
+        -0.0052920750176667485
+      ],
+      "A0_parent_m": [
+        0.0370752120795393,
+        0.004680861552178596,
+        0.0040266712988059755
+      ],
+      "B0_parent_m": [
+        0.047244533436188035,
+        0.00507351056036176,
+        0.0033405737098430067
+      ],
+      "axis_parent": [
+        -0.06845092120132099,
+        0.8443887903844963,
+        -0.5313398555159374
+      ],
+      "slide_axis_parent": [
+        -0.9967302874004046,
+        -0.0808005827869257,
+        1.1073103538934159e-15
+      ],
+      "rod_length_m": 0.010200000000000002,
+      "assembly_root_sign": 1,
+      "connected_bounds_rad": [
+        -1.1222467090323538,
+        1.8709929581379212
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    },
+    {
+      "control": "002_f1",
+      "output_joint": "rh_source_thumb_f1_flexion",
+      "slider_joint": "rh_source_thumb_f1_slider_joint",
+      "rod_joint": "rh_source_thumb_f1_rod_joint",
+      "parent_link": "rh_source_thumb_f2_output",
+      "H_parent_m": [
+        -0.005311413721850653,
+        -0.0258464481945897,
+        -2.0469737016526324e-15
+      ],
+      "A0_parent_m": [
+        0.006008588438244811,
+        -0.018902562478816637,
+        -2.005340338229189e-15
+      ],
+      "B0_parent_m": [
+        0.0028649367503644496,
+        -0.026907401894150775,
+        -2.0192181260370035e-15
+      ],
+      "axis_parent": [
+        4.1372074662426615e-15,
+        -8.45366062199988e-16,
+        -1.0
+      ],
+      "slide_axis_parent": [
+        -0.36539428889630476,
+        -0.9308528420980213,
+        3.4685267890892847e-16
+      ],
+      "rod_length_m": 0.008600000000000002,
+      "assembly_root_sign": -1,
+      "connected_bounds_rad": [
+        -1.3980087308474578,
+        1.8884462506578645
+      ],
+      "review_output_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "displacement_zero": "This variant mover pin A at output zero",
+      "geometry_source": "Reflected left r03 candidate mechanism, same assembly branch; right physical installation not independently measured.",
+      "physical_effective_stroke_m": null
+    }
+  ],
+  "handedness": "right",
+  "right_derivation": "polar vectors S*v; rotational axis -S*a. The signed mover displacement and output command values are preserved."
+}

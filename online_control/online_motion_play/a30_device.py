@@ -232,7 +232,7 @@ class A30Device:
             for slot in range(18):
                 self.write(pack_self_pwr(*slot_to_bus_node(slot), 1))
         except Exception:
-            self.stop(power_off=True)
+            self.stop()
             raise
         self.accumulator = 0.
         self.last_tick = self.clock()
@@ -247,15 +247,13 @@ class A30Device:
         self.input.minimum_duration = minimum_duration
 
     @synchronized
-    def stop(self, power_off=False):
+    def stop(self):
         was_homing = self.homing is not None
         self.armed, self.homing = False, None
-        if self.connected and (was_homing or power_off):
+        if self.connected and was_homing:
             for slot in range(18):
                 try:
                     self.write(pack_self_homing(*slot_to_bus_node(slot), 2, 0.))
-                    if power_off:
-                        self.write(pack_self_pwr(*slot_to_bus_node(slot), 2))
                 except (OSError, ValueError):
                     self.error = "停止命令未全部写入，请检查设备"
                     break

@@ -1,0 +1,129 @@
+<?xml version='1.0' encoding='utf-8'?>
+<robot name="TsenseI_hand_v3_2_withid_right_raised5mm">
+  <virtual_joint name="world_fixed" type="fixed" parent_frame="world" child_link="base_link" />
+  <group name="right_hand">
+    <joint name="right_hand_thumb_rota_block_joint" />
+    <joint name="right_hand_thumb_rotaback_joint2" />
+    <joint name="right_hand_thumb_MCP_joint" />
+    <joint name="right_hand_thumb_PIP_joint" />
+    <joint name="right_hand_index_MCP_joint" />
+    <joint name="right_hand_index_swing_joint" />
+    <joint name="right_hand_index_PIP_joint" />
+    <joint name="right_hand_index_DIP_joint" />
+    <joint name="right_hand_mid_MCP_joint" />
+    <joint name="right_hand_mid_swing_joint" />
+    <joint name="right_hand_mid_PIP_joint" />
+    <joint name="right_hand_mid_DIP_joint" />
+    <joint name="right_hand_ring_MCP_joint" />
+    <joint name="right_hand_ring_swing_joint" />
+    <joint name="right_hand_ring_PIP_joint" />
+    <joint name="right_hand_ring_DIP_joint" />
+    <joint name="right_hand_pinky_MCP_joint" />
+    <joint name="right_hand_pinky_swing_joint" />
+    <joint name="right_hand_pinky_PIP_joint" />
+    <joint name="right_hand_pinky_DIP_joint" />
+  </group>
+  <group_state name="zero" group="right_hand">
+    <joint name="right_hand_thumb_rota_block_joint" value="0" />
+    <joint name="right_hand_thumb_rotaback_joint2" value="0" />
+    <joint name="right_hand_thumb_MCP_joint" value="0" />
+    <joint name="right_hand_thumb_PIP_joint" value="0" />
+    <joint name="right_hand_index_MCP_joint" value="0" />
+    <joint name="right_hand_index_swing_joint" value="0" />
+    <joint name="right_hand_index_PIP_joint" value="0" />
+    <joint name="right_hand_index_DIP_joint" value="0" />
+    <joint name="right_hand_mid_MCP_joint" value="0" />
+    <joint name="right_hand_mid_swing_joint" value="0" />
+    <joint name="right_hand_mid_PIP_joint" value="0" />
+    <joint name="right_hand_mid_DIP_joint" value="0" />
+    <joint name="right_hand_ring_MCP_joint" value="0" />
+    <joint name="right_hand_ring_swing_joint" value="0" />
+    <joint name="right_hand_ring_PIP_joint" value="0" />
+    <joint name="right_hand_ring_DIP_joint" value="0" />
+    <joint name="right_hand_pinky_MCP_joint" value="0" />
+    <joint name="right_hand_pinky_swing_joint" value="0" />
+    <joint name="right_hand_pinky_PIP_joint" value="0" />
+    <joint name="right_hand_pinky_DIP_joint" value="0" />
+  </group_state>
+  <group name="right_hand_thumb">
+    <joint name="right_hand_thumb_rota_block_joint" />
+    <joint name="right_hand_thumb_rotaback_joint2" />
+    <joint name="right_hand_thumb_MCP_joint" />
+    <joint name="right_hand_thumb_PIP_joint" />
+  </group>
+  <group_state name="zero" group="right_hand_thumb">
+    <joint name="right_hand_thumb_rota_block_joint" value="0" />
+    <joint name="right_hand_thumb_rotaback_joint2" value="0" />
+    <joint name="right_hand_thumb_MCP_joint" value="0" />
+    <joint name="right_hand_thumb_PIP_joint" value="0" />
+  </group_state>
+  <group name="right_hand_index">
+    <joint name="right_hand_index_MCP_joint" />
+    <joint name="right_hand_index_swing_joint" />
+    <joint name="right_hand_index_PIP_joint" />
+    <joint name="right_hand_index_DIP_joint" />
+  </group>
+  <group_state name="zero" group="right_hand_index">
+    <joint name="right_hand_index_MCP_joint" value="0" />
+    <joint name="right_hand_index_swing_joint" value="0" />
+    <joint name="right_hand_index_PIP_joint" value="0" />
+    <joint name="right_hand_index_DIP_joint" value="0" />
+  </group_state>
+  <group name="right_hand_mid">
+    <joint name="right_hand_mid_MCP_joint" />
+    <joint name="right_hand_mid_swing_joint" />
+    <joint name="right_hand_mid_PIP_joint" />
+    <joint name="right_hand_mid_DIP_joint" />
+  </group>
+  <group_state name="zero" group="right_hand_mid">
+    <joint name="right_hand_mid_MCP_joint" value="0" />
+    <joint name="right_hand_mid_swing_joint" value="0" />
+    <joint name="right_hand_mid_PIP_joint" value="0" />
+    <joint name="right_hand_mid_DIP_joint" value="0" />
+  </group_state>
+  <group name="right_hand_ring">
+    <joint name="right_hand_ring_MCP_joint" />
+    <joint name="right_hand_ring_swing_joint" />
+    <joint name="right_hand_ring_PIP_joint" />
+    <joint name="right_hand_ring_DIP_joint" />
+  </group>
+  <group_state name="zero" group="right_hand_ring">
+    <joint name="right_hand_ring_MCP_joint" value="0" />
+    <joint name="right_hand_ring_swing_joint" value="0" />
+    <joint name="right_hand_ring_PIP_joint" value="0" />
+    <joint name="right_hand_ring_DIP_joint" value="0" />
+  </group_state>
+  <group name="right_hand_pinky">
+    <joint name="right_hand_pinky_MCP_joint" />
+    <joint name="right_hand_pinky_swing_joint" />
+    <joint name="right_hand_pinky_PIP_joint" />
+    <joint name="right_hand_pinky_DIP_joint" />
+  </group>
+  <group_state name="zero" group="right_hand_pinky">
+    <joint name="right_hand_pinky_MCP_joint" value="0" />
+    <joint name="right_hand_pinky_swing_joint" value="0" />
+    <joint name="right_hand_pinky_PIP_joint" value="0" />
+    <joint name="right_hand_pinky_DIP_joint" value="0" />
+  </group_state>
+  <disable_collisions link1="base_link" link2="Right_hand_palm_link" reason="Fixed attachment" />
+  <disable_collisions link1="base_link" link2="right_hand_thumb_rota_block_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_thumb_rota_block_link" link2="right_hand_thumb_rotaback_link2" reason="Adjacent" />
+  <disable_collisions link1="right_hand_thumb_rotaback_link2" link2="right_hand_thumb_MCP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_thumb_MCP_link" link2="right_hand_thumb_PIP_link" reason="Adjacent" />
+  <disable_collisions link1="base_link" link2="right_hand_index_MCP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_index_MCP_link" link2="right_hand_index_swing_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_index_swing_link" link2="right_hand_index_PIP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_index_PIP_link" link2="right_hand_index_DIP_link" reason="Adjacent" />
+  <disable_collisions link1="base_link" link2="right_hand_mid_MCP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_mid_MCP_link" link2="right_hand_mid_swing_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_mid_swing_link" link2="right_hand_mid_PIP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_mid_PIP_link" link2="right_hand_mid_DIP_link" reason="Adjacent" />
+  <disable_collisions link1="base_link" link2="right_hand_ring_MCP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_ring_MCP_link" link2="right_hand_ring_swing_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_ring_swing_link" link2="right_hand_ring_PIP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_ring_PIP_link" link2="right_hand_ring_DIP_link" reason="Adjacent" />
+  <disable_collisions link1="base_link" link2="right_hand_pinky_MCP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_pinky_MCP_link" link2="right_hand_pinky_swing_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_pinky_swing_link" link2="right_hand_pinky_PIP_link" reason="Adjacent" />
+  <disable_collisions link1="right_hand_pinky_PIP_link" link2="right_hand_pinky_DIP_link" reason="Adjacent" />
+</robot>

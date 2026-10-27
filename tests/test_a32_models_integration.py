@@ -2,6 +2,7 @@
 from pathlib import Path
 import hashlib
 import sys
+import xml.etree.ElementTree as ET
 
 import numpy as np
 import pytest
@@ -46,24 +47,26 @@ def test_sdk_bare_provenance_retains_existing_calibrated_landmarks():
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_id_import_retains_every_joint_frame_mesh_and_base_scale(side):
     profile = load_hand_profile("TsenseI_v3_2_withid")
-    source = UrdfModel(profile.root / "source_20_outputs/TsenseI_hand_left_v3_2_withid.urdf")
-    if side == "right":
-        # Source snapshot is intentionally the supplied left CAD; the installed
-        # right model is its equal-angle XZ mirror.
-        source = UrdfModel(profile.root / "urdf/TsenseI_hand_right_v3_2_withid.urdf")
+    source = UrdfModel(profile.root / f"source_20_outputs/TsenseI_hand_{side}_v3_2_withid.urdf")
     target = UrdfModel(profile.path("urdf", side))
     assert len(source.joints) == len(target.joints)
     for a, b in zip(source.joints, target.joints, strict=True):
         assert (a.name, a.parent, a.child, a.type) == (b.name, b.parent, b.child, b.type)
         expected_limits = requested_limits(a.name) or (a.lower, a.upper)
+        sign = -1 if a.name.endswith('_thumb_rotaback_joint2') and a.lower < 0 else 1
+        if sign == -1:
+            expected_limits = (-a.upper, -a.lower)
         if expected_limits[0] is None:
             assert (b.lower, b.upper) == expected_limits
         else:
             np.testing.assert_allclose((b.lower, b.upper), expected_limits, atol=1e-14)
-        expected_origin = (a.origin if profile.root.joinpath("urdf/TsenseI_hand_left_v3_2_withid.urdf").read_text().find("middle-dip-standard-20-outputs-v1") >= 0
-                           else a.origin @ axis_angle_matrix(a.axis, thumb_origin_offset(profile.model_id, a.name)))
-        np.testing.assert_allclose(expected_origin, b.origin, atol=1e-14)
-        np.testing.assert_array_equal(a.axis, b.axis)
+        np.testing.assert_allclose(a.origin, b.origin, atol=1e-14)
+        np.testing.assert_array_equal(sign * a.axis, b.axis)
+    assert len(source.root.findall('.//visual')) == len(target.root.findall('.//visual')) == 367
+    assert len(target.root.findall('.//inertial')) == 22
+    assert sum(float(n.get('value')) for n in target.root.findall('.//mass')) == pytest.approx(.952)
+    for a, b in zip(source.root.findall('link'), target.root.findall('link'), strict=True):
+        assert ET.tostring(a.find('inertial')).strip() == ET.tostring(b.find('inertial')).strip()
     for link, meshes in source.visual_meshes_by_link().items():
         for a, b in zip(meshes, target.visual_meshes_by_link()[link], strict=True):
             assert hashlib.sha256(a.path.read_bytes()).digest() == hashlib.sha256(b.path.read_bytes()).digest()
@@ -73,10 +76,10 @@ def test_id_import_retains_every_joint_frame_mesh_and_base_scale(side):
                                   [1.] * 3 if profile.root.joinpath("source_20_outputs").exists() else [.001] * 3)
     manifest = yaml.safe_load((profile.root / "source_mapping.yaml").read_text(encoding="utf-8"))
     for name, digest in manifest["source_sha256"].items():
-        path = profile.root / "source_20_outputs" / Path(name).name
-        if name.startswith("meshes/"):
-            path = profile.root / "source_20_outputs" / name
+        path = profile.root / name
         assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
+    for name, digest in manifest['installed_sha256'].items():
+        assert hashlib.sha256((profile.root / name).read_bytes()).hexdigest() == digest
 
 
 @pytest.mark.parametrize("side", ["left", "right"])
@@ -87,6 +90,8 @@ def test_bare_and_id_swing_axes_have_same_direction_after_root_alignment(side):
     rotate_z_90 = np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
     swings = []
     for name in bare.joint_names():
+        if '_thumb_' in name:
+            continue  # Raised thumb has new source frames; tested against its own CAD above.
         x, y = bare.joint_by_name[name], shell.joint_by_name[name]
         source_axis = rotate_z_90 @ a[x.parent][:3, :3] @ x.origin[:3, :3] @ x.axis
         shell_axis = b[y.parent][:3, :3] @ y.origin[:3, :3] @ y.axis
@@ -108,7 +113,9 @@ def test_bare_and_id_swing_axes_have_same_direction_after_root_alignment(side):
 def test_id_right_frames_are_equal_angle_xz_mirrors():
     profile = load_hand_profile("TsenseI_v3_2_withid")
     left, right = (UrdfModel(profile.path("urdf", side)) for side in ("left", "right"))
-    reflection = np.diag([1, -1, 1, 1])
+    reflection = np.diag([1., -1., 1., 1.])
+    offset_reflection = reflection.copy()
+    offset_reflection[1, 3] = .008
     rng = np.random.default_rng(39)
     for _ in range(5):
         pose = {name: rng.uniform(lo, hi) for name, (lo, hi) in left.joint_limits().items()}
@@ -116,7 +123,8 @@ def test_id_right_frames_are_equal_angle_xz_mirrors():
         b = right.forward_kinematics({name.replace("left_hand", "right_hand"): value for name, value in pose.items()})
         for name, transform in a.items():
             reflected_name = name.replace("left_hand", "right_hand").replace("Left_hand", "Right_hand")
-            np.testing.assert_allclose(b[reflected_name], reflection @ transform @ reflection, atol=1e-12)
+            expected = np.eye(4) if name == left.base_link else offset_reflection @ transform @ reflection
+            np.testing.assert_allclose(b[reflected_name], expected, atol=1e-12)
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
@@ -139,8 +147,9 @@ def test_generated_right_keypoints_are_equal_angle_mirrors(model_id, tmp_path):
     poses += [{name: rng.uniform(lo, hi) for name, (lo, hi) in left.model.joint_limits().items()}
               for _ in range(5)]
     for pose in poses:
+        offset = np.array([0., .008, 0.]) if model_id.endswith('withid') else np.zeros(3)
         np.testing.assert_allclose(right.compute({right_name(name): value for name, value in pose.items()}),
-                                   left.compute(pose) @ reflection, atol=1e-12)
+                                   left.compute(pose) @ reflection + offset, atol=1e-12)
     assert installed == {side: profile.path("keypoints", side).read_bytes() for side in ("left", "right")}
 
 

@@ -1,0 +1,42 @@
+joint,drive,nominal_min_deg,nominal_max_deg,URDF_effort_Nm_PLACEHOLDER,URDF_velocity_rad_s_PLACEHOLDER,signed_mover_stroke_at_90_mm,required_mover_travel_at_90_mm,actual_motor_stroke_m_PENDING,actual_joint_torque_Nm_PENDING,actual_joint_velocity_rad_s_PENDING
+
+right_hand_thumb_rota_block_joint,rotary_motor,0.0,119.74817918234204,1,1,N/A rotary drive,N/A rotary drive,N/A,pending,pending
+
+right_hand_thumb_rotaback_joint2,rotary_motor,-99.69465635276325,-0.0,1,1,N/A rotary drive,N/A rotary drive,N/A,pending,pending
+
+right_hand_thumb_MCP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-16.93902129687112,16.93902129687112,pending,pending,pending
+
+right_hand_thumb_PIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,12.43747667067553,12.43747667067553,pending,pending,pending
+
+right_hand_index_MCP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-19.627778913891376,19.627778913891376,pending,pending,pending
+
+right_hand_index_swing_joint,rotary_motor,-20.05352282957881,20.05352282957881,1,1,N/A rotary drive,N/A rotary drive,N/A,pending,pending
+
+right_hand_index_PIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-16.93902129687247,16.93902129687247,pending,pending,pending
+
+right_hand_index_DIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-12.437476670698546,12.437476670698546,pending,pending,pending
+
+right_hand_mid_MCP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-19.627778913892087,19.627778913892087,pending,pending,pending
+
+right_hand_mid_swing_joint,rotary_motor,-20.05352282957881,20.05352282957881,1,1,N/A rotary drive,N/A rotary drive,N/A,pending,pending
+
+right_hand_mid_PIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-16.939021296873197,16.939021296873197,pending,pending,pending
+
+right_hand_mid_DIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-12.437476670698528,12.437476670698528,pending,pending,pending
+
+right_hand_ring_MCP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-19.627778913883404,19.627778913883404,pending,pending,pending
+
+right_hand_ring_swing_joint,rotary_motor,-20.05352282957881,20.05352282957881,1,1,N/A rotary drive,N/A rotary drive,N/A,pending,pending
+
+right_hand_ring_PIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-16.93902129686789,16.93902129686789,pending,pending,pending
+
+right_hand_ring_DIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-12.437476670697695,12.437476670697695,pending,pending,pending
+
+right_hand_pinky_MCP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-19.627778913891675,19.627778913891675,pending,pending,pending
+
+right_hand_pinky_swing_joint,rotary_motor,-20.05352282957881,20.05352282957881,1,1,N/A rotary drive,N/A rotary drive,N/A,pending,pending
+
+right_hand_pinky_PIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-11.761489775693514,11.761489775693514,pending,pending,pending
+
+right_hand_pinky_DIP_joint,linear_motor_with_linkage,0.0,89.95437383553924,1,1,-12.437476670698375,12.437476670698375,pending,pending,pending
+

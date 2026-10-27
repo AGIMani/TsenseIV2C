@@ -1,0 +1,209 @@
+{
+  "source": "D:\\chrome_download\\link质量.xlsx",
+  "source_sha256": "17954cf0b6f3364e048203f53c7e94bfe2fd8a84feb16d7cee4f57a6f5fa4539",
+  "sheet": "Sheet1",
+  "units": "g",
+  "user_policy": "Current explicit confirmation: palm/base 150g excludes wrist mount; adopt mount 17g separately. All listed masses provisionally reused for raised5mm standard-DIP model; total 952g. Right mirror reuses these masses; no independent right-hand weighing.",
+  "rows": [
+    {
+      "source_name": "base_link",
+      "mass_g": 150.0,
+      "source_range": "A2:B2",
+      "link": "base_link",
+      "mass_kg": 0.15,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_index_DIP_link",
+      "mass_g": 15.0,
+      "source_range": "A3:B3",
+      "link": "right_hand_index_DIP_link",
+      "mass_kg": 0.015,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_index_MCP_link",
+      "mass_g": 30.0,
+      "source_range": "A4:B4",
+      "link": "right_hand_index_MCP_link",
+      "mass_kg": 0.03,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_index_PIP_link",
+      "mass_g": 40.0,
+      "source_range": "A5:B5",
+      "link": "right_hand_index_PIP_link",
+      "mass_kg": 0.04,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_index_swing_link",
+      "mass_g": 70.0,
+      "source_range": "A6:B6",
+      "link": "right_hand_index_swing_link",
+      "mass_kg": 0.07,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_mid_DIP_link",
+      "mass_g": 15.0,
+      "source_range": "A7:B7",
+      "link": "right_hand_mid_DIP_link",
+      "mass_kg": 0.015,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_mid_MCP_link",
+      "mass_g": 30.0,
+      "source_range": "A8:B8",
+      "link": "right_hand_mid_MCP_link",
+      "mass_kg": 0.03,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_mid_PIP_link",
+      "mass_g": 40.0,
+      "source_range": "A9:B9",
+      "link": "right_hand_mid_PIP_link",
+      "mass_kg": 0.04,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_mid_swing_link",
+      "mass_g": 70.0,
+      "source_range": "A10:B10",
+      "link": "right_hand_mid_swing_link",
+      "mass_kg": 0.07,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "Left_hand_palm_link",
+      "mass_g": 17.0,
+      "source_range": "A11:B11",
+      "link": "Right_hand_palm_link",
+      "mass_kg": 0.017,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_pinky_DIP_link",
+      "mass_g": 15.0,
+      "source_range": "A12:B12",
+      "link": "right_hand_pinky_DIP_link",
+      "mass_kg": 0.015,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_pinky_MCP_link",
+      "mass_g": 30.0,
+      "source_range": "A13:B13",
+      "link": "right_hand_pinky_MCP_link",
+      "mass_kg": 0.03,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_pinky_PIP_link",
+      "mass_g": 40.0,
+      "source_range": "A14:B14",
+      "link": "right_hand_pinky_PIP_link",
+      "mass_kg": 0.04,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_pinky_SWING_link",
+      "mass_g": 70.0,
+      "source_range": "A15:B15",
+      "link": "right_hand_pinky_swing_link",
+      "mass_kg": 0.07,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_ring_DIP_link",
+      "mass_g": 15.0,
+      "source_range": "A16:B16",
+      "link": "right_hand_ring_DIP_link",
+      "mass_kg": 0.015,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_ring_MCP_link",
+      "mass_g": 30.0,
+      "source_range": "A17:B17",
+      "link": "right_hand_ring_MCP_link",
+      "mass_kg": 0.03,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_ring_PIP_link",
+      "mass_g": 40.0,
+      "source_range": "A18:B18",
+      "link": "right_hand_ring_PIP_link",
+      "mass_kg": 0.04,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_ring_swing_link",
+      "mass_g": 70.0,
+      "source_range": "A19:B19",
+      "link": "right_hand_ring_swing_link",
+      "mass_kg": 0.07,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_thumb_MCP_link",
+      "mass_g": 40.0,
+      "source_range": "A20:B20",
+      "link": "right_hand_thumb_MCP_link",
+      "mass_kg": 0.04,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_thumb_PIP_link",
+      "mass_g": 15.0,
+      "source_range": "A21:B21",
+      "link": "right_hand_thumb_PIP_link",
+      "mass_kg": 0.015,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_thumb_rota_block_link",
+      "mass_g": 35.0,
+      "source_range": "A22:B22",
+      "link": "right_hand_thumb_rota_block_link",
+      "mass_kg": 0.035,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    },
+    {
+      "source_name": "left_hand_thumb_rotaback_link2",
+      "mass_g": 75.0,
+      "source_range": "A23:B23",
+      "link": "right_hand_thumb_rotaback_link2",
+      "mass_kg": 0.075,
+      "name_match": "mapped from adopted left-hand mass table; mirror preserves mass",
+      "status": "provisional mass: user requested adoption as recorded"
+    }
+  ],
+  "applicability": "Provisional adopted masses, not a new weighing of this raised variant",
+  "right_hand_derivation": "Mirror of current left r03; hardware data remain provisional."
+}

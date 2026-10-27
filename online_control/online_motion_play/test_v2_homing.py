@@ -182,9 +182,9 @@ def test_calibration_visits_seven_steps_and_never_auto_advances():
     for index,step in enumerate(CALIBRATION_STEPS):
         assert c.index==index and c.step==step
         assert c.info()["progress"]==f"步骤 {index+1} / 7"
-        c.enable(); c.send_position(-12.5); c.confirm_zero(); c.disable()
-        assert usb.calls[-4:]==[
-            ("drive",*step,True),("position",*step,-12.5),("zero",*step),("drive",*step,False)]
+        c.enable(); c.send_position(-12.5); c.confirm_zero()
+        assert usb.calls[-3:]==[
+            ("drive",*step,True),("position",*step,-12.5),("zero",*step)]
         assert c.index==index
         if index<6:
             assert not c.completed
@@ -201,7 +201,7 @@ def test_calibration_rejects_invalid_position_or_disconnected_commands():
         with pytest.raises(ValueError): c.send_position(value)
     assert not usb.calls
     usb.is_connected=False
-    for action in (c.enable,c.disable,c.confirm_zero,lambda:c.send_position(0)):
+    for action in (c.enable,c.confirm_zero,lambda:c.send_position(0)):
         with pytest.raises(ValueError): action()
     assert not usb.calls
 

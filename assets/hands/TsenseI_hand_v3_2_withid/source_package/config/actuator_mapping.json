@@ -1,0 +1,170 @@
+{
+  "linear_drives": [
+    {
+      "joint": "right_hand_index_MCP_joint",
+      "control": "003_base",
+      "signed_stroke_at_90_mm": -19.627778913891376,
+      "required_motion_at_90_mm": 19.627778913891376,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_index_PIP_joint",
+      "control": "003_middle",
+      "signed_stroke_at_90_mm": -16.93902129687247,
+      "required_motion_at_90_mm": 16.93902129687247,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_index_DIP_joint",
+      "control": "003_distal",
+      "signed_stroke_at_90_mm": -12.437476670698546,
+      "required_motion_at_90_mm": 12.437476670698546,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_mid_MCP_joint",
+      "control": "004_base",
+      "signed_stroke_at_90_mm": -19.627778913892087,
+      "required_motion_at_90_mm": 19.627778913892087,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_mid_PIP_joint",
+      "control": "004_middle",
+      "signed_stroke_at_90_mm": -16.939021296873197,
+      "required_motion_at_90_mm": 16.939021296873197,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_mid_DIP_joint",
+      "control": "004_distal",
+      "signed_stroke_at_90_mm": -12.437476670698528,
+      "required_motion_at_90_mm": 12.437476670698528,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_ring_MCP_joint",
+      "control": "005_base",
+      "signed_stroke_at_90_mm": -19.627778913883404,
+      "required_motion_at_90_mm": 19.627778913883404,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_ring_PIP_joint",
+      "control": "005_middle",
+      "signed_stroke_at_90_mm": -16.93902129686789,
+      "required_motion_at_90_mm": 16.93902129686789,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_ring_DIP_joint",
+      "control": "005_distal",
+      "signed_stroke_at_90_mm": -12.437476670697695,
+      "required_motion_at_90_mm": 12.437476670697695,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_pinky_MCP_joint",
+      "control": "006_base",
+      "signed_stroke_at_90_mm": -19.627778913891675,
+      "required_motion_at_90_mm": 19.627778913891675,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_pinky_PIP_joint",
+      "control": "006_middle",
+      "signed_stroke_at_90_mm": -11.761489775693514,
+      "required_motion_at_90_mm": 11.761489775693514,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_pinky_DIP_joint",
+      "control": "006_distal",
+      "signed_stroke_at_90_mm": -12.437476670698375,
+      "required_motion_at_90_mm": 12.437476670698375,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_thumb_MCP_joint",
+      "control": "002_f2",
+      "signed_stroke_at_90_mm": -16.93902129687112,
+      "required_motion_at_90_mm": 16.93902129687112,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    },
+    {
+      "joint": "right_hand_thumb_PIP_joint",
+      "control": "002_f1",
+      "signed_stroke_at_90_mm": 12.43747667067553,
+      "required_motion_at_90_mm": 12.43747667067553,
+      "nominal_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "hardware_verified": false
+    }
+  ],
+  "rotary_drives": [
+    "right_hand_thumb_rota_block_joint",
+    "right_hand_thumb_rotaback_joint2",
+    "right_hand_index_swing_joint",
+    "right_hand_mid_swing_joint",
+    "right_hand_ring_swing_joint",
+    "right_hand_pinky_swing_joint"
+  ],
+  "position_reference": "mirrored CAD zero; signed strokes unchanged",
+  "force_relation": "tau=F*ds/dq, signed virtual work; motor force and output torque are different units",
+  "speed_relation": "v_mover=q_dot*ds/dq",
+  "hardware_verified": false
+}

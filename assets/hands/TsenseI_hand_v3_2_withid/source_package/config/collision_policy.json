@@ -1,0 +1,9 @@
+{
+  "collision_mesh_count": 367,
+  "geometry": "Geometric mirror of all left r03 native collision surfaces; not convex-filled",
+  "reference_model": "20-output rigid approximation with fixed zero-pose auxiliary details",
+  "planning_exclusions": "Direct adjacent links only; cross-finger and nonadjacent thumb/palm remain checked",
+  "mirror_audit": "Left r03 collision results transferred by proven isometry; right FCL spot checks and full pose-transform checks performed separately",
+  "hardware_verified": false,
+  "continuous_collision_certificate": false
+}

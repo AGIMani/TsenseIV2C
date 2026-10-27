@@ -1,0 +1,128 @@
+{
+  "units": "rad",
+  "limits": {
+    "right_hand_thumb_rota_block_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "2.09",
+      "velocity": "1.0"
+    },
+    "right_hand_thumb_rotaback_joint2": {
+      "effort": "1.0",
+      "lower": "-1.74",
+      "upper": "-0.0",
+      "velocity": "1.0"
+    },
+    "right_hand_thumb_MCP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_thumb_PIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_index_MCP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_index_swing_joint": {
+      "effort": "1.0",
+      "lower": "-0.35",
+      "upper": "0.35",
+      "velocity": "1.0"
+    },
+    "right_hand_index_PIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_index_DIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_mid_MCP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_mid_swing_joint": {
+      "effort": "1.0",
+      "lower": "-0.35",
+      "upper": "0.35",
+      "velocity": "1.0"
+    },
+    "right_hand_mid_PIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_mid_DIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_ring_MCP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_ring_swing_joint": {
+      "effort": "1.0",
+      "lower": "-0.35",
+      "upper": "0.35",
+      "velocity": "1.0"
+    },
+    "right_hand_ring_PIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_ring_DIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_pinky_MCP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_pinky_swing_joint": {
+      "effort": "1.0",
+      "lower": "-0.35",
+      "upper": "0.35",
+      "velocity": "1.0"
+    },
+    "right_hand_pinky_PIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    },
+    "right_hand_pinky_DIP_joint": {
+      "effort": "1.0",
+      "lower": "0.0",
+      "upper": "1.57",
+      "velocity": "1.0"
+    }
+  },
+  "effort_velocity": "User explicitly chose to retain the current 1/1 values as display/mock placeholders on 2026-10-13; not measured motor ratings.",
+  "bounds": "Current raised-variant nominal requirements, unchanged; 1.57rad=89.954374deg. Exact 90deg stroke calculations are separate geometry evidence.",
+  "right_hand_derivation": "Mirror of current left r03; hardware data remain provisional."
+}

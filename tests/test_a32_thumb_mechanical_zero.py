@@ -36,8 +36,9 @@ def test_measured_offsets_reproduce_reference_and_export_precision():
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_zero_thumb_matches_reference_orientation_and_preserves_mirror(model_id, side):
-    ref = UrdfModel(ROOT / THUMB_ZERO_REFERENCE)
     profile = load_hand_profile(model_id)
+    ref = UrdfModel(profile.root / 'source_20_outputs/TsenseI_hand_left_v3_2_withid.urdf'
+                    if model_id.endswith('withid') else ROOT / THUMB_ZERO_REFERENCE)
     model = UrdfModel(profile.path("urdf", side))
     a, b = ref.forward_kinematics({}), model.forward_kinematics({})
     palm = "Left_hand_palm_link" if side == "left" else "Right_hand_palm_link"

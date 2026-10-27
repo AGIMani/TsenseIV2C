@@ -26,7 +26,8 @@ from a32_kinematics.joint_coordinates import (
 def apply_urdf_coordinates(root, *, model_id="TsenseI_v3_2"):
     """Apply ranges, swing alignment and the reference thumb zero once."""
     replacement_cad = (model_id == "TsenseI_v3_2_withid"
-                       and root.get("a32_cad_source") == "middle-dip-standard-20-outputs-v1"
+                       and root.get("a32_cad_source") in (
+                           "middle-dip-standard-20-outputs-v1", "raised5mm-noupper-mid-20261027")
                        and root.get("a32_joint_coordinates") in (None, COORDINATE_VERSION))
     if model_id not in ("TsenseI_v3_2", "TsenseI_v3_2_withid"):
         raise ValueError(f"Unknown A3.2 model: {model_id}")
@@ -53,6 +54,13 @@ def apply_urdf_coordinates(root, *, model_id="TsenseI_v3_2"):
             origin.set("rpy", " ".join(format(v, ".17g") for v in (old * shift).as_euler("xyz")))
         bounds = requested_limits(name)
         if replacement_cad and name.endswith("_thumb_rotaback_joint2"):
+            if (root.get("a32_cad_source") == "raised5mm-noupper-mid-20261027"
+                    and version is None and float(joint.find("limit").get("lower")) < 0):
+                # New CAD uses q_source=-q_app. Flip the axis, retaining the
+                # same physical poses and the existing positive SDK commands.
+                axis = joint.find("axis")
+                axis.set("xyz", " ".join(str(-float(v)) for v in axis.get("xyz").split()))
+                joint.find("limit").set("lower", "0.0")
             joint.find("limit").set("upper", "1.74")
         if bounds is None:
             continue

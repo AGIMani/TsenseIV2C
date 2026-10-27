@@ -57,8 +57,8 @@ test('late network commands are discarded; local A3 stop needs no server respons
   const transport=api(async()=>{await wait(240);return [{data:Buffer.from(command).toString('base64'),age_ms:0}];});
   const p=port(),link=new BrowserSerial(transport);t.after(()=>link.disconnect());
   await link.connect(p,'TsenseI_v3_0');await until(()=>p.closed);await wait(100);
-  const sent=frames(p.writes);assert.equal(sent.length,36);
-  assert.ok(sent.every(f=>f[5]!==0x20&&f[8]===2));assert.equal(link.active,false);
+  const sent=frames(p.writes);assert.equal(sent.length,18);
+  assert.ok(sent.every(f=>f[5]===0x22&&f[8]===2));assert.equal(link.active,false);
 });
 
 test('old server frames and CRC errors close the local port',async t=>{
@@ -75,10 +75,10 @@ test('old server frames and CRC errors close the local port',async t=>{
 test('different models have different local homing cancellation opcodes',()=>{
   const a=emergencyFrames('TsenseI_v3_0'),v=emergencyFrames('TsenseI_v2');
   assert.equal(a.filter(f=>f[5]===0x22&&f[8]===2).length,18);
-  assert.equal(a.filter(f=>f[5]===0x21&&f[8]===2).length,18);
+  assert.equal(a.filter(f=>f[5]===0x21&&f[8]===2).length,0);
   assert.equal(v.filter(f=>f[5]===0x12&&f[8]===2).length,14);
-  assert.equal(v.filter(f=>f[5]===0x11&&f[8]===2).length,14);
-  assert.equal(v.filter(f=>f[5]===0x22&&f[7]===0&&f[8]===0).length,4);
+  assert.equal(v.filter(f=>f[5]===0x11&&f[8]===2).length,0);
+  assert.equal(v.filter(f=>f[5]===0x22&&f[7]===0&&f[8]===0).length,0);
   frames([...a,...v]);
 });
 
@@ -216,3 +216,17 @@ test('fragmented and combined network records survive reusable parser compaction
   await consumeRecords({ok:true,body},b=>{seen.push([...b]);if(seen.length===2)abort.abort();},{signal:abort.signal});
   assert.deepEqual(seen,records.map(b=>[...b]));
 });
+
+for (const model of ['TsenseI_v2', 'TsenseI_v3_0', 'TsenseI_v3_0_withid']) {
+  test(`disconnect never disables motors: ${model}`, async () => {
+    const p = port(), link = new BrowserSerial(api());
+    await link.connect(p, model);
+    await link.disconnect();
+    const sent = frames(p.writes);
+    const a30 = model.startsWith('TsenseI_v3_0');
+    assert.equal(sent.length, a30 ? 18 : 14);
+    assert.ok(sent.every(f => f[5] === (a30 ? 0x22 : 0x12) && f[8] === 2));
+    assert.equal(p.closed, true);
+    assert.equal(link.active, false);
+  });
+}

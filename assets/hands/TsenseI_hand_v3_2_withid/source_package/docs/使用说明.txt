@@ -1,0 +1,39 @@
+ROS2 Jazzy 配套使用
+
+将本包文件夹放到ROS2工作区src下，例如~/hand_ws/src/tsensei_hand_right_raised5mm_20_outputs_description。
+source /opt/ros/jazzy/setup.bash
+cd ~/hand_ws
+rosdep install --from-paths src --ignore-src -r -y
+colcon build --packages-select tsensei_hand_right_raised5mm_20_outputs_description
+source install/setup.bash
+
+显示模型：
+ros2 launch tsensei_hand_right_raised5mm_20_outputs_description display.launch.py
+无GUI检查：
+ros2 launch tsensei_hand_right_raised5mm_20_outputs_description display.launch.py gui:=false rviz:=false
+
+离线位置控制演示：
+ros2 launch tsensei_hand_right_raised5mm_20_outputs_description mock_control.launch.py
+状态话题/joint_states；轨迹话题/hand_controller/joint_trajectory；动作/hand_controller/follow_joint_trajectory。
+控制器要求一次提交全部20个输出关节，顺序见config/controller_joint_order.json。控制的是关节角度rad。此启动文件只配置理想位置反馈，不连接真实驱动器。
+
+MoveIt关节空间几何规划：
+ros2 launch tsensei_hand_right_raised5mm_20_outputs_description planning.launch.py
+依赖MoveIt、OMPL与MoveIt RViz插件。组为right_hand以及right_hand_thumb/index/mid/ring/pinky。相邻关节装配接触被排除；不同手指和非相邻拇指/手掌仍检测。有相交的初态/目标应被规划器拒绝。未指定加速度，因此该入口只供几何规划，不作时间参数化和轨迹执行。实际规划速度取决于详细碰撞网格与目标环境。
+
+行程换算：
+python tools/stroke_conversion.py --joint right_hand_mid_DIP_joint --angle-deg 45
+python tools/stroke_conversion.py --joint right_hand_thumb_MCP_joint --angle-deg 90 --geometry-only
+python tools/stroke_conversion.py --joint right_hand_mid_DIP_joint --stroke-mm -5
+输出位移相对CAD零位，符号沿源动子轴；准确90°查询使用--geometry-only，因为1.57rad名义上限略小于90°。超出机构闭合分支时工具报错，不把异常值当作电机行程。六个旋转电机没有直线动子行程。
+
+单位及坐标：
+长度m，角度rad，质量kg，惯量kg*m^2。旋转关节effort单位Nm，velocity单位rad/s。joint origin是父link到零位子link/关节坐标；axis在关节坐标系中，正角遵循右手法则。visual/collision origin是所属link到网格坐标。inertial origin位于质心，惯量对应该坐标系下的质心惯量。
+根坐标base_link采用已独立核验的手腕安装基准，安装面Z=-4mm；它不是任意世界坐标。MoveIt的world连接只是固定语义参照，主URDF没有增加控制自由度。
+
+后续实测需填config/hardware_parameters_pending.json：真实角度范围、输出力矩/速度、线性驱动推力/速度/有效行程、通道、编码器零位和实测质量。对于线性驱动，tau=F*ds/dq，v_mover=q_dot*ds/dq；ds/dq随角度改变，不能把直线电机推力数值直接当作URDF关节力矩。
+如改质量，编辑config/measured_link_masses.json，安装tools/requirements.txt后运行tools/rebuild_inertials.py，再重新验证。
+
+右手由左手r03沿base_link的Y=4mm平面镜像；root mesh/COM采用y=8mm-y，局部非根坐标采用Y变号，旋转轴按轴矢量变换。相同关节指令和同一有符号行程产生对应镜像动作。
+
+当前URDF是20输出刚体近似，内部动子和连杆参考姿态固定。真正内部联动由附带非线性机构数据和换算工具计算。摩擦和阻尼按用户要求未加入。模拟反馈、占位限制和CAD估算惯量不等于实机校准。

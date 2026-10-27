@@ -6,8 +6,8 @@ unit: meter
 base_link: base_link
 hand_side: right
 quality_status: Draft
-annotation_version: 2
-generated_by: tools/import_a32_withid_outputs.py
+annotation_version: 3
+generated_by: tools/import_a32_withid_package.py
 keypoints:
 - id: 0
   source_name: Wrist
@@ -16,15 +16,14 @@ keypoints:
   link: base_link
   local_xyz:
   - 0.011878141135606575
-  - -0.004741477055684609
+  - 0.0032585229443153913
   - 0.00011513428205463296
   parent: null
   child: null
   type: root
   weight: 0.5
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 1
   source_name: ThumbCMC
   semantic: cmc
@@ -39,8 +38,7 @@ keypoints:
   type: joint_proxy
   weight: 0.7
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 2
   source_name: ThumbMCP
   semantic: mcp
@@ -55,8 +53,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 3
   source_name: ThumbIP
   semantic: ip
@@ -71,8 +68,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 4
   source_name: ThumbTip
   semantic: tip
@@ -87,8 +83,7 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 5
   source_name: IndexMCP
   semantic: mcp
@@ -103,8 +98,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 6
   source_name: IndexPIP
   semantic: pip
@@ -119,8 +113,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 7
   source_name: IndexDIP
   semantic: dip
@@ -135,8 +128,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 8
   source_name: IndexTip
   semantic: tip
@@ -151,8 +143,7 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 9
   source_name: MiddleMCP
   semantic: mcp
@@ -167,8 +158,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 10
   source_name: MiddlePIP
   semantic: pip
@@ -183,8 +173,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 11
   source_name: MiddleDIP
   semantic: dip
@@ -199,8 +188,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 12
   source_name: MiddleTip
   semantic: tip
@@ -215,8 +203,7 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 13
   source_name: RingMCP
   semantic: mcp
@@ -231,8 +218,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 14
   source_name: RingPIP
   semantic: pip
@@ -247,8 +233,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 15
   source_name: RingDIP
   semantic: dip
@@ -263,8 +248,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 16
   source_name: RingTip
   semantic: tip
@@ -279,8 +263,7 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 17
   source_name: PinkyMCP
   semantic: mcp
@@ -295,8 +278,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 18
   source_name: PinkyPIP
   semantic: pip
@@ -311,8 +293,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 19
   source_name: PinkyDIP
   semantic: dip
@@ -327,8 +308,7 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.
 - id: 20
   source_name: PinkyTip
   semantic: tip
@@ -343,5 +323,4 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Previous zero-pose position reprojected into replacement CAD; recalibration
-    pending.
+  note: Previous local link annotation retained on replacement CAD; review required.

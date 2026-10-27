@@ -495,7 +495,7 @@ class A32Session:
         elif key == "motionStreamLoop":
             self.loop = value
         elif key == "a32Enable":
-            self._enable(self.validate_pose(self.device.starting_pose()))
+            self._enable(self.validate_pose(self.device.starting_pose(self.pose)))
             self.message = "SDK 已使能，尚未下发轨迹；可开启实时关节控制或动作同步"
         elif key == "a32Disable":
             self.stop()
@@ -507,7 +507,7 @@ class A32Session:
         elif key in ("isConnectOffline", "realtimeJointControl"):
             self.playback = None
             if value:
-                seed = self.validate_pose(self.device.starting_pose())
+                seed = self.validate_pose(self.device.starting_pose(self.pose))
                 if not self.device.get_state().get("enabled"):
                     self._enable(seed)
                 self.pose = seed

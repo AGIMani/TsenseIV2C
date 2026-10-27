@@ -1,0 +1,41 @@
+左手镜像模型（2026-10-20）
+
+从本文件夹当前 urdf/TsenseI_hand_right_v3_2_withid.urdf 实际镜像生成，
+并非直接采用 provenance 中历史左手文件。原右手文件保持原样。
+
+直接加载：
+  urdf/TsenseI_hand_left_v3_2_withid.urdf
+请保留同文件夹下 meshes/left/ 的全部 367 个 STL；URDF 使用相对路径。
+
+ROS 2：
+  urdf/TsenseI_hand_left_ros.urdf
+沿用本文件夹已有 ROS 包名 tsensei_hand_right_raised5mm_20_outputs_description，
+因此左手 ROS URDF 的 package:// 中仍带 right，这是资源所属包名。
+在 ROS 2 工作空间中重新 colcon build 并 source install/setup.bash 后：
+  ros2 launch tsensei_hand_right_raised5mm_20_outputs_description display_left.launch.py
+本次环境没有 ROS 2，未运行 ROS/RViz；已校验全部 ROS 资源映射。
+
+镜像：
+  平面为 base_link 坐标系 Y=0.004 m，沿用原包的安装孔中心镜像平面。
+  x_L=x_R，y_L=0.008-y_R，z_L=z_R。
+  所有左手 link/joint 名称由 right_hand/Right_hand 转为 left_hand/Left_hand。
+  根坐标系仍叫 base_link；22 个 link、21 个 joint，其中 20 个可动旋转关节。
+  相同关节角度 q_L=q_R 产生镜像动作，保留原角度限位、质量、effort 和 velocity。
+  STL 顶点已物理镜像、反转三角面绕序并重算法线，所有 mesh scale 为正的 1 1 1。
+  visual、collision、关节原点、轴向、质心、完整惯量已同步转换。
+
+检查：
+  checks/left_mirror_manifest.json：源文件/生成文件哈希和网格映射。
+  checks/left_mirror_validation.json：本次实际验证结果。
+  校验全部 367 个 STL、1,839,012 个三角形，以及零位、整体上下限、
+  单关节上下限和 100 个随机姿态，共 143 组姿态。
+  总质量约 0.952 kg。没有重新进行碰撞检测；原模型已有的碰撞情况也会镜像保留。
+
+复现（需要 Python 3 和 numpy，在包目录执行）：
+  python3 tools/mirror_left.py
+  python3 tools/validate_left_mirror.py
+生成脚本仅重建左手 URDF、左手 STL 和本次生成清单。
+
+原 config、mock_control 和 planning 入口仍属于右手，本次新增左手为 URDF
+及显示入口；请勿将原右手控制配置直接用于左手。原 README 中的历史验证
+记录不代表本次新生成左手的运行验证。

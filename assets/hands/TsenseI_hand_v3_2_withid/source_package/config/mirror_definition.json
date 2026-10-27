@@ -1,0 +1,141 @@
+{
+  "left_package": "tsensei_hand_raised5mm_20_outputs_description",
+  "right_package": "tsensei_hand_right_raised5mm_20_outputs_description",
+  "left_model_id": "raised-5mm-standard-DIP-5bd3d21b150e",
+  "right_model_id": "right-mirror-raised-5mm-standard-DIP-5bd3d21b150e",
+  "base_coordinate_relation": "x_R=x_L, y_R=0.008-y_L, z_R=z_L",
+  "mirror_plane_base_m": {
+    "normal": [
+      0,
+      1,
+      0
+    ],
+    "point": [
+      0,
+      0.004,
+      0
+    ]
+  },
+  "S": [
+    [
+      1.0,
+      0.0,
+      0.0
+    ],
+    [
+      0.0,
+      -1.0,
+      0.0
+    ],
+    [
+      0.0,
+      0.0,
+      1.0
+    ]
+  ],
+  "F_column_major": [
+    1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    -1.0,
+    0.0,
+    0.0,
+    0.0,
+    0.0,
+    1.0,
+    0.0,
+    0.0,
+    0.008,
+    0.0,
+    1.0
+  ],
+  "root_mesh_and_COM": "S*p+[0,0.008,0]",
+  "other_link_mesh_and_COM": "S*p",
+  "root_child_joint_origin": "F*T*D",
+  "other_joint_origin": "D*T*D",
+  "revolute_axis": "-S*axis; angular axes are axial vectors",
+  "prismatic_axis": "S*axis",
+  "inertia": "S*I*S^T; ixy and iyz reverse sign, ixz unchanged",
+  "joint_command_relation": "q_right=q_left for every corresponding output; same bounds and signed mover strokes",
+  "STL_winding": "Vertices [0,2,1]; normals recomputed from actual right float vertices; positive mesh scales 1 1 1",
+  "left_mount_holes": [
+    {
+      "center_mm": [
+        -6.500000385882243,
+        -5.499998972432685,
+        -4.00000051409017
+      ],
+      "radius_mm": 1.850000192283547,
+      "residual_mm": 1.9127348220848717e-06
+    },
+    {
+      "center_mm": [
+        -6.500000385882217,
+        13.500000923871653,
+        -4.000000514090169
+      ],
+      "radius_mm": 1.8499999833464105,
+      "residual_mm": 1.5306117542301934e-06
+    },
+    {
+      "center_mm": [
+        33.49999955296476,
+        -5.499998972432721,
+        -4.000000514090308
+      ],
+      "radius_mm": 1.850000010205118,
+      "residual_mm": 1.687154151941428e-06
+    },
+    {
+      "center_mm": [
+        33.49999955296475,
+        13.500000923871847,
+        -4.000000514090306
+      ],
+      "radius_mm": 1.8499998012678114,
+      "residual_mm": 1.71269022097853e-06
+    }
+  ],
+  "right_mount_holes": [
+    {
+      "center_mm": [
+        -6.500000385882243,
+        13.499998972432685,
+        -4.00000051409017
+      ],
+      "radius_mm": 1.850000192283547,
+      "residual_mm": 1.9127348220848717e-06
+    },
+    {
+      "center_mm": [
+        -6.500000385882217,
+        -5.500000923871653,
+        -4.000000514090169
+      ],
+      "radius_mm": 1.8499999833464105,
+      "residual_mm": 1.5306117542301934e-06
+    },
+    {
+      "center_mm": [
+        33.49999955296476,
+        13.49999897243272,
+        -4.000000514090308
+      ],
+      "radius_mm": 1.850000010205118,
+      "residual_mm": 1.687154151941428e-06
+    },
+    {
+      "center_mm": [
+        33.49999955296475,
+        -5.500000923871847,
+        -4.000000514090306
+      ],
+      "radius_mm": 1.8499998012678114,
+      "residual_mm": 1.71269022097853e-06
+    }
+  ],
+  "native_right_CAD_supplied": false,
+  "max_mesh_rounding_m": 1.3113021848920603e-09
+}

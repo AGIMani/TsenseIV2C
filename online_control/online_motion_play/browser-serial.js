@@ -53,14 +53,14 @@ export function serialSupport() {
   return '';
 }
 
+// Cancel homing only. Motion Play never sends motor-disable commands.
 export function emergencyFrames(model) {
   if (isA30Model(model)) return Array.from({length:18}, (_, slot) => {
     const [bus, node] = a30.address(slot);
-    return [a30.home(bus, node, 2, 0), a30.power(bus, node, 2)];
-  }).flat();
+    return a30.home(bus, node, 2, 0);
+  });
   return [6,6,2].flatMap((count, bus) => Array.from({length:count}, (_, i) =>
-    [v2.linearHome(bus,i+1,2,0), v2.linearPower(bus,i+1,false)]).flat())
-    .concat(Array.from({length:4}, (_, bus) => v2.rotaryDrive(bus,0,0)));
+    v2.linearHome(bus,i+1,2,0)));
 }
 
 export class BrowserSerial {

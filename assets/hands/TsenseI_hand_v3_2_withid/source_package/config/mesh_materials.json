@@ -1,0 +1,17 @@
+{
+  "materials": {
+    "structure_support": "0.33 0.68 0.44 1",
+    "structure_fastener": "0.49 0.52 0.56 1",
+    "structure_sensor": "0.39 0.45 0.53 1",
+    "structure_electronics": "0.25 0.57 0.57 1",
+    "structure_rubber": "0.24 0.25 0.27 1",
+    "structure_housing": "0.73 0.78 0.83 1",
+    "structure_stator": "0.84 0.53 0.20 1",
+    "structure_bearing": "0.86 0.82 0.49 1",
+    "structure_mover": "0.24 0.51 0.93 1",
+    "structure_rod": "0.86 0.26 0.29 1",
+    "structure_rotary_motor": "0.48 0.50 0.57 1"
+  },
+  "textures": "None required; all appearances use URDF RGBA materials.",
+  "right_hand_derivation": "Mirror of current left r03; hardware data remain provisional."
+}

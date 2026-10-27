@@ -1,0 +1,162 @@
+# Velocity 1 rad/s is the authorized display/mock placeholder. Acceleration and jerk remain unspecified.
+joint_limits:
+  right_hand_thumb_rota_block_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 2.09
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_thumb_rotaback_joint2:
+    has_position_limits: true
+    min_position: -1.74
+    max_position: -0.0
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_thumb_MCP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_thumb_PIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_index_MCP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_index_swing_joint:
+    has_position_limits: true
+    min_position: -0.35
+    max_position: 0.35
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_index_PIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_index_DIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_mid_MCP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_mid_swing_joint:
+    has_position_limits: true
+    min_position: -0.35
+    max_position: 0.35
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_mid_PIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_mid_DIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_ring_MCP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_ring_swing_joint:
+    has_position_limits: true
+    min_position: -0.35
+    max_position: 0.35
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_ring_PIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_ring_DIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_pinky_MCP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_pinky_swing_joint:
+    has_position_limits: true
+    min_position: -0.35
+    max_position: 0.35
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_pinky_PIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false
+  right_hand_pinky_DIP_joint:
+    has_position_limits: true
+    min_position: 0.0
+    max_position: 1.57
+    has_velocity_limits: true
+    max_velocity: 1.0
+    has_acceleration_limits: false
+    has_jerk_limits: false

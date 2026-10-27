@@ -1,0 +1,18 @@
+{
+  "right_geometric_mirror": true,
+  "native_right_CAD_supplied": false,
+  "links": 22,
+  "output_joints": 20,
+  "mass_kg": 0.952,
+  "visual_collision_meshes": 367,
+  "joint_command_relation": "right q equals corresponding left q",
+  "signed_linear_motor_strokes_unchanged": true,
+  "mirror_verified_poses": 1011,
+  "independent_FCL_spot_pose_queries": 12,
+  "ROS2_build_and_20_joint_state_TF_publication_passed": true,
+  "mock_and_MoveIt_runtime_checked": false,
+  "effort_velocity": "authorized display/mock placeholders",
+  "joint_dynamics_added": false,
+  "inherits_left_collision_findings": true,
+  "main_URDF_sha256": "cff6ca17617a763f718c3adc8977d8611bbccc86f41de3ab536cbf6463199062"
+}

@@ -160,3 +160,5 @@ Worker 状态的 `metrics.position_write_intervals` 给出实际成功写入的�
 不要只复制 online_motion_play 文件夹；使用完整迁移包或 package.py 生成的独立包，确保共享驱动、模型和协议资源齐全。
 
 Three.js 0.169.0 许可证见 vendor/LICENSE.three。
+
+Motion Play 所有型号均不下发电机失能指令：离开页面、切到后台、停止、断开、超时及异常处理只停止后续下发（V2 / A3.0 保留取消找零指令）。V2 校准的断电入口已移除，A3.0 原断电按钮改为停止下发。设备可能继续执行已接收的命令。

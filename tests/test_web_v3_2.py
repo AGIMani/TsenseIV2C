@@ -82,15 +82,20 @@ def test_web_session_rejects_stale_malformed_and_closed_frames():
 
 
 @pytest.mark.parametrize("side", ["left", "right"])
-def test_descriptor_has_all_original_visuals_and_joint_names(side):
-    model = model_description(side)
+@pytest.mark.parametrize("model_id,folder,prefix,count", [
+    ('TsenseI_v3_2', 'TsenseI_hand_v3_2', '/assets/', 22),
+    ('TsenseI_v3_2_withid', 'TsenseI_hand_v3_2_withid', '/assets-v3-2-withid/', 367),
+])
+def test_descriptor_has_all_original_visuals_and_joint_names(side, model_id, folder, prefix, count):
+    model = model_description(side, model_id)
     assert len(model["links"]) == 22
     assert len(model["joints"]) == 21
     assert sum(j["type"] == "revolute" for j in model["joints"]) == 20
     assert len(model["initial_pose"]) == 20
+    assert sum(len(link['visuals']) for link in model['links']) == count
     for link in model["links"]:
         for visual in link["visuals"]:
-            path = ROOT / "assets/hands/TsenseI_hand_v3_2" / visual["mesh"].removeprefix("/assets/")
+            path = ROOT / 'assets/hands' / folder / visual["mesh"].removeprefix(prefix)
             assert path.is_file()
 
 

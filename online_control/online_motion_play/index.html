@@ -36,7 +36,7 @@ header{display:flex;align-items:center;justify-content:space-between;gap:18px;pa
 <div class="toolbar"><span id="a32Enable"></span><span id="a32Disable"></span><span id="a32Reset"></span><span id="a32Init"></span></div>
 <div class="toolbar"><span id="a32HomeSlot"></span><label class="field">找零 Iq 码值<span id="a32HomeIq"></span></label><span id="a32Home"></span></div>
 <div class="file-note">14 路直线 + 4 路自研旋转 + 2 路 MIT。每次开启实时控制或动作同步，均从本次连接的新鲜完整反馈起步，再按 Ruckig 轨迹下发。反馈缺失时等待更新。可选找零仅覆盖自研电机，完成后重新使能。</div>
-<div class="file-note">A3.2 停止操作只停止后续下发，不发送失能；设备可能继续执行已接收的命令或找零。</div>
+<div class="file-note">所有型号的停止、断开和离开页面操作均不发送失能；设备可能继续执行已接收的命令。</div>
 <div id="a32Telemetry" role="status"></div><div id="a32Message" class="file-note"></div>
 <div class="toolbar"><button id="a32DownloadLog" disabled>下载控制记录</button><a href="/control-log-viewer" target="_blank" rel="noopener">数据查看器</a></div>
 <div id="a32LogStatus" class="file-note">连接 SDK 后自动记录</div>

@@ -1,0 +1,430 @@
+{
+  "hardware_release_ready": false,
+  "damping_friction_excluded_by_user": true,
+  "joints": [
+    {
+      "joint": "right_hand_thumb_rota_block_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        2.09
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "rotary_motor"
+    },
+    {
+      "joint": "right_hand_thumb_rotaback_joint2",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        -1.74,
+        -0.0
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "rotary_motor"
+    },
+    {
+      "joint": "right_hand_thumb_MCP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_thumb_PIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_index_MCP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_index_swing_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        -0.35,
+        0.35
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "rotary_motor"
+    },
+    {
+      "joint": "right_hand_index_PIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_index_DIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_mid_MCP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_mid_swing_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        -0.35,
+        0.35
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "rotary_motor"
+    },
+    {
+      "joint": "right_hand_mid_PIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_mid_DIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_ring_MCP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_ring_swing_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        -0.35,
+        0.35
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "rotary_motor"
+    },
+    {
+      "joint": "right_hand_ring_PIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_ring_DIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_pinky_MCP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_pinky_swing_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        -0.35,
+        0.35
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "rotary_motor"
+    },
+    {
+      "joint": "right_hand_pinky_PIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    },
+    {
+      "joint": "right_hand_pinky_DIP_joint",
+      "position_unit": "rad",
+      "nominal_position_bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "actual_position_bounds_rad": null,
+      "max_joint_torque_Nm": null,
+      "max_joint_velocity_rad_s": null,
+      "installed_motor_model": null,
+      "driver_channel": null,
+      "encoder_zero": null,
+      "calibration_status": "pending measurement",
+      "in_URDF_effort_Nm": 1.0,
+      "in_URDF_velocity_rad_s": 1.0,
+      "in_URDF_effort_velocity_status": "display/mock placeholder authorized by user",
+      "drive": "linear_motor_with_linkage",
+      "actual_mover_stroke_bounds_m": null,
+      "max_linear_force_N": null,
+      "max_linear_speed_m_s": null
+    }
+  ],
+  "conversion": "For linear drives, output torque equals linear force times ds/dq; output speed depends on ds/dq. A constant motor force cannot be inserted as a joint torque rating.",
+  "right_hand_derivation": "Mirror of current left r03; hardware data remain provisional."
+}

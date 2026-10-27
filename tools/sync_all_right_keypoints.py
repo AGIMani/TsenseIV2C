@@ -58,6 +58,10 @@ def prepare(profile_path):
             raise ValueError(f"{model}: invalid coordinates for point {row['id']}")
         row['link'] = right_name(row['link'])
         row['local_xyz'] = [(-x if i == 'xyz'.index(axis) else x) for i, x in enumerate(xyz)]
+        # Child link frames already include the reflected root translation.
+        # Points on the root itself must reflect about the offset plane too.
+        if row['link'] == data.get('base_link', 'base_link'):
+            row['local_xyz']['xyz'.index(axis)] += 2 * profile.get('mirror_plane_offset_m', 0.)
     if 'base_link' in result:
         result['base_link'] = right_name(result['base_link'])
     result.update(hand_side='right', urdf_path=right['urdf'],

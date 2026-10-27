@@ -1,0 +1,210 @@
+{
+  "model_id": "right-mirror-raised-5mm-standard-DIP-5bd3d21b150e",
+  "kinematics_sha256": "5bd3d21b150e0e2bab3a05247abab06320d07e65a796458ff36d875bf8257118",
+  "role": "Editable source of output position intervals. Rebuild dependent envelopes and tree after edits; not a controller stop configuration.",
+  "output_ranges": {
+    "index_mcp_flexion": {
+      "control": "003_base",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "index_pip_flexion": {
+      "control": "003_middle",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "index_dip_flexion": {
+      "control": "003_distal",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "index_mcp_swing": {
+      "control": "003_swing",
+      "bounds_rad": [
+        -0.35,
+        0.35
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "middle_mcp_flexion": {
+      "control": "004_base",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "middle_pip_flexion": {
+      "control": "004_middle",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "middle_dip_flexion": {
+      "control": "004_distal",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "middle_mcp_swing": {
+      "control": "004_swing",
+      "bounds_rad": [
+        -0.35,
+        0.35
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "ring_mcp_flexion": {
+      "control": "005_base",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "ring_pip_flexion": {
+      "control": "005_middle",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "ring_dip_flexion": {
+      "control": "005_distal",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "ring_mcp_swing": {
+      "control": "005_swing",
+      "bounds_rad": [
+        -0.35,
+        0.35
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "little_mcp_flexion": {
+      "control": "006_base",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "little_pip_flexion": {
+      "control": "006_middle",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "little_dip_flexion": {
+      "control": "006_distal",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "little_mcp_swing": {
+      "control": "006_swing",
+      "bounds_rad": [
+        -0.35,
+        0.35
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "thumb_rot1": {
+      "control": "002_rot1",
+      "bounds_rad": [
+        0.0,
+        2.09
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "thumb_rot2": {
+      "control": "002_rot2",
+      "bounds_rad": [
+        -1.74,
+        -0.0
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "thumb_f2_flexion": {
+      "control": "002_f2",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    },
+    "thumb_f1_flexion": {
+      "control": "002_f1",
+      "bounds_rad": [
+        0.0,
+        1.57
+      ],
+      "range_kind": "user_adopted_legacy_nominal_not_hardware_verified",
+      "measured_mechanical_stops": false,
+      "evidence": null
+    }
+  },
+  "visual_mesh_migration_from": "raised-5mm-no-stops-7bf1820c7305",
+  "user_requested_middle_DIP_replacement": true,
+  "right_hand_derivation": "Mirror of current left r03; hardware data remain provisional."
+}

@@ -438,9 +438,8 @@ def test_homing_failure_and_reset_semantics(device):
     assert len(d.port.writes) == 18 and not d.armed
     assert all(f[5] == 0x22 and f[8] == 2 for f in d.port.writes)
     d.port.writes.clear()
-    d.stop(power_off=True)
-    assert len(d.port.writes) == 36
-    assert all(f[5] in (0x21, 0x22) and f[8] == 2 for f in d.port.writes)
+    d.stop()
+    assert not d.port.writes
 
 
 def test_external_fault_or_missing_self_feedback_stops_stream(device):

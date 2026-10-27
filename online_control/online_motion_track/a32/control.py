@@ -309,8 +309,8 @@ class A32Control(SafeTrajectoryMixin):
             issue = self.arm_issue(self.device.get_state())
             if issue:
                 raise ValueError(issue)
-            # A reconnect/resume must start at the current measured hand pose.
-            seed = self.device.starting_pose()
+            # Prefer measured feedback, falling back to the current software pose.
+            seed = self.device.starting_pose(self.pose)
             if self.guard is not None:
                 self.guard.filter.sync_pose_from_dict(seed)
                 if self.guard.filter.data.ncon:

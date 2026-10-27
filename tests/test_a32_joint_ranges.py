@@ -92,8 +92,7 @@ def test_four_finger_dip_original_geometry_and_hardware_limits(model_id, side, m
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent(model_id, side):
     profile = load_hand_profile(model_id)
-    source = (ROOT / "assets/hands/TsenseI_hand_v3_2_withid/source_20_outputs/TsenseI_hand_left_v3_2_withid.urdf" if model_id.endswith("withid")
-              and side == "left" else ROOT / "assets/hands/TsenseI_hand_v3_2_withid/urdf/TsenseI_hand_right_v3_2_withid.urdf" if model_id.endswith("withid")
+    source = (ROOT / f"assets/hands/TsenseI_hand_v3_2_withid/source_20_outputs/TsenseI_hand_{side}_v3_2_withid.urdf" if model_id.endswith("withid")
               else Path(os.environ.get("A32_REFERENCE_SDK", ROOT / "vendor/a3-cpp-sdk")) /
               f"daxian_hand_v3_2/urdf/daxian_hand_{side}_v3_2.urdf")
     old, new = UrdfModel(source), UrdfModel(profile.path("urdf", side))
@@ -101,7 +100,9 @@ def test_transformed_urdf_preserves_original_pose_and_rebuild_is_idempotent(mode
         q = {name: lo + fraction * (hi - lo) for name, (lo, hi) in new.joint_limits().items()}
         source_q = ({name: model_to_legacy(model_id, name, angle)
                      + thumb_origin_offset(model_id, name) for name, angle in q.items()}
-                    if model_id == "TsenseI_v3_2" else q)
+                    if model_id == "TsenseI_v3_2" else
+                    {name: -angle if name.endswith('_thumb_rotaback_joint2') and old.joint_by_name[name].lower < 0
+                     else angle for name, angle in q.items()})
         a = old.forward_kinematics(source_q)
         b = new.forward_kinematics(q)
         for name in a:
