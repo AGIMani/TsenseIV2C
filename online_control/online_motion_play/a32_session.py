@@ -31,6 +31,14 @@ from utils.motion_limits import configure_ruckig
 
 MODEL_IDS = ("TsenseI_v3_2", "TsenseI_v3_2_withid")
 
+# User-supplied compensation applies to motor outputs, not model radians.
+MOTOR_FINGER_SCALES = {
+    "left": {"thumb": 1.0, "index": 1.0560, "mid": 1.0808,
+             "ring": 1.1049, "pinky": 1.0514},
+    "right": {"thumb": 1.0, "index": 1.09, "mid": 1.10,
+              "ring": 1.10, "pinky": 1.06},
+}
+
 
 def synchronized(method):
     @wraps(method)
@@ -66,7 +74,18 @@ class A32Session:
         self.pose = self.validate_pose(self.profile.init_pose(side))
         self.names = tuple(self.limits)
         self.target_pose = dict(self.pose)
+        self.motor_compensation_enabled = True
+        self.configured_motor_scales = {
+            name: MOTOR_FINGER_SCALES[side][name.removeprefix(f"{side}_hand_").split("_")[0]]
+            for name in self.names
+        }
+        # Precompute both display curves so toggling during playback cannot
+        # stall the SDK sampling clock with hundreds of conversion calls.
         self.downlink_ranges = self._downlink_ranges()
+        self._downlink_ranges_by_compensation = {True: self.downlink_ranges}
+        self.motor_compensation_enabled = False
+        self._downlink_ranges_by_compensation[False] = self._downlink_ranges()
+        self.motor_compensation_enabled = True
         self.data_dir = Path(data_dir)
         self.recorder = A32SessionRecorder(recording_dir,
                                           model_id=model_id, hand_side=side,
@@ -109,10 +128,17 @@ class A32Session:
     def connected(self):
         return bool(self.device.is_connected)
 
+    @property
+    def motor_scales(self):
+        if self.motor_compensation_enabled:
+            return self.configured_motor_scales
+        return {name: 1.0 for name in self.names}
+
     def _downlink_ranges(self):
         if not hasattr(self.device, "prepare_targets"):
             return {}  # Lightweight test transports may omit pure preview data.
-        endpoints = [self.device.prepare_targets({name: limits[i] for name, limits in self.limits.items()}, clamp=True)
+        endpoints = [self.device.prepare_targets({name: limits[i] for name, limits in self.limits.items()},
+                                                 clamp=True, motor_scales=self.motor_scales)
                      for i in (0, 1)]
         result = {}
         for channel in self.device.channels:
@@ -128,11 +154,12 @@ class A32Session:
                 fraction = sample / 32
                 pose = dict(self.pose)
                 pose[joint] = lo + fraction * (hi - lo)
-                target = self.device.prepare_targets(pose, clamp=True)
+                target = self.device.prepare_targets(pose, clamp=True, motor_scales=self.motor_scales)
                 curve.append([pose[joint], target[key][channel["index"]]])
             result[joint] = {"min": min(values), "max": max(values), "unit": channel["unit"],
                              "slot": f"{channel['channel']} {channel['index']}",
-                             "at_ui_min": values[0], "at_ui_max": values[1], "curve": curve}
+                             "at_ui_min": values[0], "at_ui_max": values[1], "curve": curve,
+                             "motor_scale": self.motor_scales[joint]}
         return result
 
     def _reset_planner(self):
@@ -204,6 +231,7 @@ class A32Session:
             "motionStreamLoop": check("motionStreamLoop", "循环播放", self.loop),
             "isConnectOffline": check("isConnectOffline", "动作同步下位机", self.sync, self.connected),
             "realtimeJointControl": check("realtimeJointControl", "实时关节控制", self.armed and not self.sync, self.connected),
+            "a32BypassMotorCompensation": check("a32BypassMotorCompensation", "取消系数补偿", not self.motor_compensation_enabled),
             "a32Enable": button("a32Enable", "使能 18 self + 2 MIT", self.connected and not busy and not device.get("enabled")),
             "a32Disable": button("a32Disable", "停止下发", self.connected),
             "a32Reset": button("a32Reset", "复位找零状态", self.connected),
@@ -343,7 +371,8 @@ class A32Session:
                         raise ValueError(f"A3.2 轨迹将超出关节可用范围：{name}")
             if self.armed and self._command_requested:
                 try:
-                    targets = self.device.send_joint_targets(candidate, clamp=True)
+                    targets = self.device.send_joint_targets(candidate, clamp=True,
+                                                             motor_scales=self.motor_scales)
                 except Exception as exc:
                     self.recorder.record_command(self._preview_targets(candidate), pose=candidate,
                                                  sent=False, error=str(exc), control_dt_s=elapsed)
@@ -379,7 +408,8 @@ class A32Session:
 
     def _preview_targets(self, pose):
         try:
-            return self.device.prepare_targets(pose, clamp=True)
+            return self.device.prepare_targets(pose, clamp=True,
+                                               motor_scales=self.motor_scales)
         except Exception:
             return {"joint_angles_rad": dict(pose)}
 
@@ -494,6 +524,9 @@ class A32Session:
             self.transition, self.interval = entry["transition"], entry["interval"]
         elif key == "motionStreamLoop":
             self.loop = value
+        elif key == "a32BypassMotorCompensation":
+            self.motor_compensation_enabled = not value
+            self.downlink_ranges = self._downlink_ranges_by_compensation[not value]
         elif key == "a32Enable":
             self._enable(self.validate_pose(self.device.starting_pose(self.pose)))
             self.message = "SDK 已使能，尚未下发轨迹；可开启实时关节控制或动作同步"

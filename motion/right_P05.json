@@ -1,0 +1,53 @@
+{
+  "_model_id": "TsenseI_v3_2_withid",
+  "_hand_side": "right",
+  "_joint_coordinate_version": "a32-signed-swing-v2",
+  "_swing_axis_alignment": "id-cad-direction-v2",
+  "motions": {
+    "right_P05": {
+      "pose": {
+        "right_hand_thumb_rota_block_joint": 0.0,
+        "right_hand_thumb_rotaback_joint2": 0.0,
+        "right_hand_thumb_MCP_joint": 0.005,
+        "right_hand_thumb_PIP_joint": 0.005,
+        "right_hand_index_MCP_joint": 0.38008035120680517,
+        "right_hand_index_swing_joint": -0.18781488080710979,
+        "right_hand_index_PIP_joint": 0.5352052151240612,
+        "right_hand_index_DIP_joint": 0.46338491640449453,
+        "right_hand_mid_MCP_joint": 0.33110641239584426,
+        "right_hand_mid_swing_joint": 0.058800142499688964,
+        "right_hand_mid_PIP_joint": 0.6370102703928904,
+        "right_hand_mid_DIP_joint": 0.5559920865153136,
+        "right_hand_ring_MCP_joint": 0.3484375318681479,
+        "right_hand_ring_swing_joint": -0.06363470452771325,
+        "right_hand_ring_PIP_joint": 0.5071403207519923,
+        "right_hand_ring_DIP_joint": 0.4542393911240442,
+        "right_hand_pinky_MCP_joint": 0.5719793024635816,
+        "right_hand_pinky_swing_joint": -0.03138101995085805,
+        "right_hand_pinky_PIP_joint": 0.3240378289252672,
+        "right_hand_pinky_DIP_joint": 0.23286182880108347
+      },
+      "transition": 1.0,
+      "interval": 0.2,
+      "_source_angles_deg": {
+        "right_hand_index_MCP_joint": 21.777,
+        "right_hand_index_swing_joint": -10.761,
+        "right_hand_index_PIP_joint": 30.665,
+        "right_hand_index_DIP_joint": 26.55,
+        "right_hand_mid_MCP_joint": 18.971,
+        "right_hand_mid_swing_joint": 3.369,
+        "right_hand_mid_PIP_joint": 36.498,
+        "right_hand_mid_DIP_joint": 31.856,
+        "right_hand_ring_MCP_joint": 19.964,
+        "right_hand_ring_swing_joint": -3.646,
+        "right_hand_ring_PIP_joint": 29.057,
+        "right_hand_ring_DIP_joint": 26.026,
+        "right_hand_pinky_MCP_joint": 32.772,
+        "right_hand_pinky_swing_joint": -1.798,
+        "right_hand_pinky_PIP_joint": 18.566,
+        "right_hand_pinky_DIP_joint": 13.342
+      },
+      "_note": "Right-hand C5/E5/F5/G5 from supplied image; swing signs unchanged; unspecified thumb uses model initial pose."
+    }
+  }
+}

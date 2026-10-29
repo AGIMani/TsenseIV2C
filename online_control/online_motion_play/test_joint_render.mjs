@@ -85,3 +85,27 @@ test('regression fixture reproduces the previous rendering failure', () => {
     .replace("      let group = $('finger-' + finger);", "      const [finger, ...parts] = spec.short.split('_'); const part = parts.join('_'); let group = $('finger-' + finger);");
   assert.throws(() => harness(broken).ui.render(snapshot('TsenseI_v2', 'left')), /finger is not defined/);
 });
+
+test('A3.2 compensation checkbox renders server state and respects control ownership', () => {
+  const actionSection = html.slice(html.indexOf('<h2>动作与序列</h2>'), html.indexOf('id="a32Motors"'));
+  assert.ok(actionSection.includes('id="a32BypassMotorCompensation"'));
+  const h = harness(), state = snapshot('TsenseI_v3_2', 'left');
+  state.controls.a32BypassMotorCompensation = {
+    id:'left:a32BypassMotorCompensation', kind:'check', enabled:true,
+    text:'取消系数补偿', value:true,
+  };
+  h.ui.render(state);
+  const label = h.$('a32BypassMotorCompensation').children[0];
+  const input = label.children[0];
+  assert.equal(input.type, 'checkbox');
+  assert.equal(input.checked, true);
+  assert.equal(label.children[1].textContent, '取消系数补偿');
+  state.controls.a32BypassMotorCompensation.value = false;
+  h.ui.render(state);
+  assert.equal(input.checked, false);
+  h.ui.render({...state, control:{owned:false, available:true}});
+  assert.equal(input.disabled, true);
+  assert.equal(h.$('a32BypassMotorCompensation').hidden, false);
+  h.ui.render(snapshot('TsenseI_v2', 'left'));
+  assert.equal(h.$('a32BypassMotorCompensation').hidden, true);
+});

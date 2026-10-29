@@ -9,7 +9,7 @@ from types import SimpleNamespace
 import pytest
 
 import server
-from a32_session import A32Session, MODEL_IDS
+from a32_session import A32Session, MODEL_IDS, MOTOR_FINGER_SCALES
 from hand_profiles import load_hand_profile
 from a32_kinematics.joint_coordinates import COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, is_finger_swing
 from test_server import bridge
@@ -70,7 +70,7 @@ class FakeDevice:
             raise ValueError("A3.2 起步需要完整有效的反馈")
         return dict(self.pose)
 
-    def send_joint_targets(self, pose, *, clamp):
+    def send_joint_targets(self, pose, *, clamp, motor_scales=None):
         assert clamp is True
         assert self.is_connected and self.enabled
         self.calls.append(("send", dict(pose)))
@@ -627,3 +627,82 @@ def test_real_driver_reconnect_rebases_playback_from_new_feedback(tmp_path, mode
     finally:
         value.close()
     assert ("estop",) not in backend.calls and ("enable", False) not in backend.calls
+
+
+@pytest.mark.parametrize("model_id", MODEL_IDS)
+@pytest.mark.parametrize("side", ["left", "right"])
+@pytest.mark.parametrize("compensation", [True, False])
+def test_all_motion_play_motor_commands_are_compensated(tmp_path, model_id, side, compensation):
+    import sys
+    sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tests"))
+    from test_a32_driver import SimulatedNativeHand
+    from a32_driver import A32Device
+
+    backend = SimulatedNativeHand()
+    device = A32Device(side, model_id=model_id, backend=backend)
+    s = A32Session(tmp_path, side, model_id=model_id, device=device, clock=Clock(), start=False)
+    try:
+        assert s.snapshot()["controls"]["a32BypassMotorCompensation"]["value"] is False
+        widget(s, "a32BypassMotorCompensation", not compensation)
+        assert s.snapshot()["controls"]["a32BypassMotorCompensation"]["value"] is (not compensation)
+        s.dispatch("connect", {})
+        widget(s, "realtimeJointControl", True)
+        pose = {name: (lo + hi) / 3 for name, (lo, hi) in s.limits.items()}
+        pose.update({name: -.1 for name in pose if is_finger_swing(name)})
+        s.pose = dict(pose)
+        s._reset_planner()
+        name = f"{side}_hand_index_PIP_joint"
+        widget(s, name, pose[name])
+        tick(s)
+        raw = device.prepare_targets(s.pose)
+        sent = next(call for call in reversed(backend.calls) if call[0] == "targets")
+        preview = s._preview_targets(s.pose)
+        for channel in device.channels:
+            joint = channel["joint"]
+            finger = joint.removeprefix(f"{side}_hand_").split("_")[0]
+            scale = MOTOR_FINGER_SCALES[side][finger] if compensation else 1.
+            key, slot = ("self" if channel["channel"] == "self" else "mit_pos"), channel["index"]
+            expected = raw[key][slot] * scale
+            assert channel["limits"][0] <= expected <= channel["limits"][1]
+            assert sent[1 if key == "self" else 2][slot] == pytest.approx(expected)
+            assert preview[key][slot] == pytest.approx(expected)
+            assert s.downlink_ranges[joint]["motor_scale"] == scale
+        assert s.pose == pytest.approx(pose)
+        s.persist({"test": {"pose": pose, "transition": .1, "interval": 1}})
+        # Exercise real UI paths: load, initial pose, and synchronized playback.
+        for action in ("loadmotion", "a32Init", "motionstreamplay"):
+            if action == "motionstreamplay":
+                widget(s, "isConnectOffline", True)
+            widget(s, action)
+            for _ in range(3):
+                tick(s)
+                sent = next(call for call in reversed(backend.calls) if call[0] == "targets")
+                raw = device.prepare_targets(s.pose)
+                for channel in device.channels:
+                    key = "self" if channel["channel"] == "self" else "mit_pos"
+                    lo, hi = channel["limits"]
+                    expected = min(hi, max(lo, raw[key][channel["index"]] * s.motor_scales[channel["joint"]]))
+                    assert sent[1 if key == "self" else 2][channel["index"]] == pytest.approx(expected)
+        for enabled in (not compensation, compensation):
+            count = len(backend.calls)
+            widget(s, "a32BypassMotorCompensation", not enabled)
+            assert len(backend.calls) == count  # The checkbox itself sends no frame.
+            tick(s)
+            sent = next(call for call in reversed(backend.calls) if call[0] == "targets")
+            expected = device.prepare_targets(s.pose, motor_scales=s.motor_scales)
+            assert sent[1] == pytest.approx(expected["self"])
+            assert sent[2] == pytest.approx(expected["mit_pos"])
+            assert s.snapshot()["controls"]["a32BypassMotorCompensation"]["value"] is (not enabled)
+            for channel in device.channels:
+                assert s.downlink_ranges[channel["joint"]]["motor_scale"] == s.motor_scales[channel["joint"]]
+        for endpoint in (0, 1):
+            edge = {name: limits[endpoint] for name, limits in s.limits.items()}
+            raw = device.prepare_targets(edge)
+            scaled = s._preview_targets(edge)
+            for channel in device.channels:
+                key = "self" if channel["channel"] == "self" else "mit_pos"
+                lo, hi = channel["limits"]
+                expected = min(hi, max(lo, raw[key][channel["index"]] * s.motor_scales[channel["joint"]]))
+                assert scaled[key][channel["index"]] == pytest.approx(expected)
+    finally:
+        s.close()

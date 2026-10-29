@@ -430,13 +430,20 @@ class A32Device:
             # Only a new SDK telemetry frame can confirm the resulting state.
             return self.get_state()
 
-    def prepare_targets(self, pose, *, clamp=True):
+    def prepare_targets(self, pose, *, clamp=True, motor_scales=None):
         """Pure conversion useful for previews/tests; never loads or calls a DLL."""
         constrained = self.constrain_pose(pose)
         changed = {name: value for name, value in constrained.items() if abs(value - pose[name]) > 1e-9}
         if changed and not clamp:
             raise A32DriverError(f"A3.2 target outside calibrated joint limits: {sorted(changed)}")
+        scales = motor_scales or {}
+        if set(scales) - set(self._by_joint):
+            raise A32DriverError("Unknown A3.2 motor scale joint")
+        for scale in scales.values():
+            if isinstance(scale, bool) or not isinstance(scale, Real) or not math.isfinite(scale) or scale <= 0:
+                raise A32DriverError("A3.2 motor scales must be finite and positive")
         converted = self.mapper.convert(constrained)
+        scaled_clamps = {}
         own, mit = [0.] * 18, [0.] * 2
         for c in self.channels:
             values = converted.linear_strokes_mm if c["unit"] == "mm" else converted.rotary_positions_deg
@@ -444,11 +451,18 @@ class A32Device:
             lo, hi = c["limits"]
             if value < lo - 2e-6 or value > hi + 2e-6:
                 raise A32DriverError(f"A3.2 conversion exceeds physical limits: {c['joint']}")
-            (own if c["channel"] == "self" else mit)[c["index"]] = min(hi, max(lo, value))
+            value *= scales.get(c["joint"], 1.0)
+            bounded = min(hi, max(lo, value))
+            if abs(bounded - value) > 2e-6:
+                if not clamp:
+                    raise A32DriverError(f"A3.2 scaled target exceeds physical limits: {c['joint']}")
+                scaled_clamps[c["joint"]] = bounded
+            (own if c["channel"] == "self" else mit)[c["index"]] = bounded
         return {**converted.as_dict(), "model_id": self.model_id, "self": own, "mit_pos": mit,
-                "applied_pose": dict(constrained), "clamped_joints_rad": changed}
+                "applied_pose": dict(constrained), "clamped_joints_rad": changed,
+                "motor_scales": dict(scales), "clamped_motor_targets": scaled_clamps}
 
-    def send_joint_targets(self, pose, *, clamp=True, control=False):
+    def send_joint_targets(self, pose, *, clamp=True, control=False, motor_scales=None):
         with self._lock:
             self._permit_hardware()
             state = self.get_control_state() if control else self.get_state()
@@ -458,7 +472,7 @@ class A32Device:
                 raise A32DriverError("A3.2 is not enabled; enable before sending")
             if state["homing"]:
                 raise A32DriverError("Wait for A3.2 homing to complete before sending")
-            targets = self.prepare_targets(pose, clamp=clamp)
+            targets = self.prepare_targets(pose, clamp=clamp, motor_scales=motor_scales)
             try:
                 backend = self._transport()
                 if control and hasattr(backend, 'send_targets'):
