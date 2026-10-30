@@ -6,6 +6,7 @@ A3.0 browser serial encoder or launches an SDK executable.
 from __future__ import annotations
 
 import json
+from joint_feedback import a32_feedback
 import copy
 import io
 import math
@@ -216,6 +217,7 @@ class A32Session:
     def snapshot(self):
         device = self.device.get_state()
         busy = bool(device.get("homing"))
+        feedback = a32_feedback(self.device, device)
         button = lambda key, text, enabled=True: self.spec(key, "button", text=text, enabled=enabled)
         check = lambda key, text, value, enabled=True: self.spec(key, "check", text=text, value=value, enabled=enabled and not busy)
         number = lambda key, value, maximum=600: self.spec(key, "number", value=value, min=0., max=maximum, step=.01, enabled=not busy)
@@ -243,7 +245,7 @@ class A32Session:
         joints = []
         for name, (lo, hi) in self.limits.items():
             short = name.replace(self.side + "_hand_", "").replace("_joint2", "").replace("_joint", "").lower()
-            joints.append(self.spec(name, "number", name=name, short=short, value=self.pose[name], min=lo, max=hi, step=.001,
+            joints.append(self.spec(name, "number", name=name, short=short, feedback=feedback.get(name), value=self.pose[name], min=lo, max=hi, step=.001,
                                     enabled=not busy and not self.playback, downlink=self.downlink_ranges.get(name)))
         dialogs = []
         if self.dialog:

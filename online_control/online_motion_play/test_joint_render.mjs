@@ -11,7 +11,7 @@ const source = html.slice(html.indexOf('function control(spec,'), html.indexOf('
 function harness(script = source) {
   const elements = new Map(), loaded = [];
   class Element {
-    constructor() { this.children = []; this.dataset = {}; this.style = {}; this.attributes = {}; this.classList = {remove() {}, toggle() {}}; }
+    constructor() { this.children = []; this.dataset = {}; this.style = {}; this.attributes = {}; this.classes = new Set(); this.classList = {remove: name => this.classes.delete(name), toggle: (name, enabled) => enabled ? this.classes.add(name) : this.classes.delete(name)}; }
     set id(id) { elements.set(id, this); }
     append(...children) { this.children.push(...children); }
     replaceChildren(...children) { this.children = children; }
@@ -32,8 +32,8 @@ function harness(script = source) {
     isA30Model:model => model.startsWith('TsenseI_v3_0'),
     isA32Model:model => model.startsWith('TsenseI_v3_2'),
   });
-  vm.runInContext(script + '\nglobalThis.ui = {render, setJointDisplayMode, jointRows};', context);
-  return {ui:context.ui, $, loaded};
+  vm.runInContext(script + '\nglobalThis.ui = {render, setJointDisplayMode, jointRows, markJointTelemetryMissing};', context);
+  return {ui:context.ui, $, loaded, document:context.document};
 }
 
 function snapshot(model, side) {
@@ -108,4 +108,45 @@ test('A3.2 compensation checkbox renders server state and respects control owner
   assert.equal(h.$('a32BypassMotorCompensation').hidden, false);
   h.ui.render(snapshot('TsenseI_v2', 'left'));
   assert.equal(h.$('a32BypassMotorCompensation').hidden, true);
+});
+
+
+test('live numbers follow measured feedback in every unit and flag missing/stale channels', () => {
+  const h = harness(), state = snapshot('TsenseI_v3_2', 'left');
+  state.controls.realtimeJointControl = {id:'live', kind:'check', enabled:true, value:true};
+  const joint = state.joints[0];
+  joint.feedback = {rad:.2, stroke:-4.2};
+  h.ui.render(state);
+  const row = h.ui.jointRows.get(joint.name), input = row.binding.el;
+  assert.equal(Number(input.value), .2);
+  assert.equal(Number(row.slider.value), .5, 'feedback never becomes the command target');
+  assert.equal(input.classes.has('telemetry-missing'), false);
+  assert.equal(h.ui.jointRows.get(state.joints[1].name).binding.el.classes.has('telemetry-missing'), true);
+  h.document.activeElement = input;
+  joint.feedback = {rad:.3, stroke:-5};
+  h.ui.render(state);
+  assert.equal(Number(input.value), .3, 'untouched focus must not freeze feedback');
+  for (const [mode, expected] of [['deg',17.1887], ['stroke',-5], ['rad',.3]]) {
+    h.ui.setJointDisplayMode(mode);
+    assert.equal(Number(input.value), expected);
+  }
+  joint.feedback = null;
+  h.ui.render(state);
+  assert.equal(Number(input.value), .3, 'keep the last measured number when telemetry is lost');
+  assert.equal(input.classes.has('telemetry-missing'), true);
+  joint.feedback = {rad:.4, stroke:-6};
+  h.ui.render(state);
+  assert.equal(Number(input.value), .4);
+  assert.equal(input.classes.has('telemetry-missing'), false);
+  h.ui.markJointTelemetryMissing();
+  assert.equal(input.classes.has('telemetry-missing'), true);
+  input.value = '.7'; input.oninput();
+  h.ui.render(state);
+  assert.equal(input.value, '.7', 'active manual input survives a telemetry poll');
+  row.binding.dirty = false;
+  h.document.activeElement = null;
+  state.controls.realtimeJointControl.value = false;
+  h.ui.render(state);
+  assert.equal(Number(input.value), .5);
+  assert.equal(input.classes.has('telemetry-missing'), false);
 });

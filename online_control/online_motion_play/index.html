@@ -8,6 +8,7 @@
 [hidden]{display:none!important}*{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button,select,input[type=number],input[type=text]{border:1px solid #cbd5e1;border-radius:7px;background:white;color:inherit;padding:8px 11px}button{cursor:pointer;font-weight:550;white-space:nowrap}button:hover{background:#eef4ff;border-color:#8dabdf}button:disabled{opacity:.45;cursor:default}button.primary{background:var(--blue);color:white;border-color:var(--blue)}button.stop{color:#b52d3a;background:#fff4f4;border-color:#efc3c9}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #92b9ff;outline-offset:2px}input[type=checkbox],input[type=range]{accent-color:var(--blue)}input[type=range]{width:100%;min-width:50px;cursor:pointer}input[type=number]{width:92px;text-align:right}input[type=text]{min-width:180px}select{min-width:95px;max-width:100%}
 header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:22px 28px;background:#fff;border-bottom:1px solid var(--line)}h1{margin:0;font-size:23px;letter-spacing:-.5px}h1 small{font-size:12px;color:#7e8da2;font-weight:500;margin-left:14px}h2{font-size:15px;margin:0}h3{font-size:13px;margin:0;color:#4b6280}.subtitle{color:#77879b;font-size:12px;margin-top:6px}.connection{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.badge{border-radius:18px;background:#edf2f8;color:#728199;font-size:12px;padding:7px 12px;white-space:nowrap}.badge.online{background:#e5f6ee;color:#1e7e57}main{max-width:1540px;margin:auto;padding:22px 28px;display:grid;grid-template-columns:minmax(420px,1.15fr) minmax(370px,1fr);gap:20px}.card{border:1px solid var(--line);border-radius:12px;background:white;overflow:hidden;box-shadow:0 2px 5px #1a345204}.card-head{padding:15px 18px;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}.stack{display:flex;flex-direction:column;gap:18px}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}.viewer{position:relative;height:435px;background:radial-gradient(ellipse at 50% 45%,#fff,#e8eef6);overflow:hidden}.viewer canvas{display:block;width:100%;height:100%}.viewer-info{position:absolute;left:18px;bottom:16px;color:#708198;font-size:12px;pointer-events:none}.viewer-note{position:absolute;inset:45% 15px auto;text-align:center;color:#7588a2;pointer-events:none}.viewer-tools{padding:12px 18px;display:flex;justify-content:space-between;gap:12px;align-items:center}.section{padding:16px 18px;display:flex;flex-direction:column;gap:13px}.check{display:inline-flex;align-items:center;gap:7px;font-size:13px;cursor:pointer}.check input{width:16px;height:16px}.field{display:flex;align-items:center;gap:8px;color:#65758a;font-size:13px}.motion-picker{flex:1;min-width:180px}.motion-picker select{width:100%}.joints{padding:3px 18px 10px;max-height:778px;overflow:auto}.finger{border-bottom:1px solid #edf0f5;padding:13px 0 9px}.finger:last-child{border-bottom:0}.finger-title{display:flex;justify-content:space-between;margin-bottom:5px}.finger-title span{font-size:11px;color:#8a98ac}.joint{display:grid;grid-template-columns:85px 1fr 82px;gap:12px;align-items:center;padding:5px 0}.joint label{font-size:12px;color:#61728a}.joint input[type=number]{width:82px;font-variant-numeric:tabular-nums;padding:6px}.joint output{font-size:10px}.motor-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.motor-row>span{font-size:12px;color:#75859b;min-width:62px}.statusbar{padding:0 28px 22px;max-width:1540px;margin:auto;display:flex;justify-content:space-between;gap:12px;color:#7b8899;font-size:12px}.dialog-layer{position:fixed;inset:0;background:#10233d55;z-index:10;display:flex;justify-content:center;align-items:center;padding:20px}.dialog-layer:empty{display:none}.dialog-card{width:min(530px,100%);max-height:85vh;overflow:auto;background:white;border:1px solid var(--line);border-radius:12px;padding:22px;box-shadow:0 22px 80px #16263b44}.dialog-card h2{font-size:18px;margin-bottom:18px}.dialog-items{display:flex;flex-wrap:wrap;gap:12px;align-items:center}.dialog-label{width:100%;white-space:pre-wrap;line-height:1.7}.dialog-card input[type=text]{width:100%}#toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:30;background:#273f5d;color:white;padding:12px 20px;border-radius:8px;box-shadow:0 4px 20px #182d3433;max-width:90%;white-space:pre-wrap}#toast:empty{display:none}.disconnected main{opacity:.65}.file-note{font-size:12px;color:#8190a4}.divider{height:1px;background:#edf0f4;margin:2px 0}@media(min-width:1500px){.viewer{height:490px}}@media(max-width:950px){header{align-items:flex-start;flex-direction:column}main{grid-template-columns:1fr;padding:16px}.joints{max-height:none}.viewer{height:410px}.statusbar{padding:0 16px 20px}}@media(max-width:520px){header{padding:18px}h1 small{display:none}.viewer{height:330px}.joint{grid-template-columns:72px 1fr 76px;gap:8px}.connection select{max-width:160px}.toolbar{gap:7px}.viewer-tools{flex-wrap:wrap}}
 .joint-range{grid-column:1 / -1;font-size:11px;color:#61728a;line-height:1.6;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.joint input[type=number].telemetry-missing{color:#c62828}
 .language-toggle{margin-left:auto;min-width:42px;padding:6px 9px;font-size:12px;line-height:1.4;flex:none}
 </style>
 <script type="importmap">{"imports":{"three":"/vendor/three.module.js"}}</script>
@@ -224,6 +225,7 @@ function cycleJointDisplayMode() {
 updateJointDisplayButton();
 document.getElementById('jointDisplayToggle').onclick = cycleJointDisplayMode;
 function renderJoints(joints) {
+  const live = Boolean(state?.controls.realtimeJointControl?.value);
   for (const spec of joints) {
     const [finger, ...parts] = spec.short.split('_');
     const part = parts.join('_');
@@ -267,9 +269,26 @@ function renderJoints(joints) {
     row.slider.min = displayMin; row.slider.max = displayMax; row.slider.step = displayStep(spec);
     const downlink = spec.downlink;
     const displayedValue = toDisplay(spec, spec.value);
+    const feedbackKey = jointDisplayMode === 'stroke' && downlink ? 'stroke' : 'rad';
+    const fresh = Number.isFinite(spec.feedback?.[feedbackKey]);
+    if (!live) row.lastFeedback = null;
+    else if (spec.feedback) {
+      row.lastFeedback ||= {};
+      for (const key of ['rad', 'stroke']) {
+        if (Number.isFinite(spec.feedback[key])) row.lastFeedback[key] = spec.feedback[key];
+      }
+    }
+    const feedback = row.lastFeedback?.[feedbackKey];
+    const numberValue = live && Number.isFinite(feedback)
+      ? (jointDisplayMode === 'deg' ? feedback * 180 / Math.PI : feedback)
+      : displayedValue;
     row.binding.el.min = displayMin; row.binding.el.max = displayMax; row.binding.el.step = displayStep(spec);
     row.binding.el.setAttribute('aria-label', `${fingerNames[finger]} ${part} ${modeLabel(spec)}`);
-    if (document.activeElement !== row.binding.el && !row.binding.dirty && !row.binding.sending) row.binding.el.value = formatDisplay(spec, displayedValue);
+    row.binding.el.classList.toggle('telemetry-missing', live && !fresh);
+    row.binding.el.title = live ? (fresh ? '实时遥测值' : '遥测缺失、过期或无效；当前数字不是实时实测值') : '';
+    // A focused but untouched field still follows telemetry. Preserve only an
+    // active edit/drag until its command has been submitted.
+    if ((live || document.activeElement !== row.binding.el) && !row.binding.dirty && !row.binding.sending && !pendingJoints.has(spec.name)) row.binding.el.value = formatDisplay(spec, numberValue);
     row.range.textContent = downlink ? `当前 ${modeLabel(spec)} [${rangeNumber(displayMin)}, ${rangeNumber(displayMax)}] · 原始弧度 [${rangeNumber(spec.min)}, ${rangeNumber(spec.max)}] → 下发 [${rangeNumber(downlink.min)}, ${rangeNumber(downlink.max)}] ${downlink.unit === 'deg' ? '°' : 'mm'} · ${downlink.slot}` : `当前 ${modeLabel(spec)} [${rangeNumber(displayMin)}, ${rangeNumber(displayMax)}]`;
     row.range.title = downlink ? `UI 最小值对应 ${rangeNumber(downlink.at_ui_min)}，UI 最大值对应 ${rangeNumber(downlink.at_ui_max)}；直线行程由机构非线性转换。` : '';
     if (document.activeElement !== row.slider && !pendingJoints.has(spec.name)) row.slider.value = displayedValue;
@@ -300,7 +319,19 @@ function renderDialogs(dialogs) {
   $('dialogs').style.background = selected && !selected.modal ? '#10233d33' : '';
 }
 let renderedModel = '';
+let lastJointStateAt = 0;
+function markJointTelemetryMissing() {
+  if (!state?.controls.realtimeJointControl?.value) return;
+  for (const row of jointRows.values()) {
+    row.binding.el.classList.toggle('telemetry-missing', true);
+    row.binding.el.title = '遥测缺失、过期或无效；当前数字不是实时实测值';
+  }
+}
+setInterval(() => {
+  if (Date.now() - lastJointStateAt > 500) markJointTelemetryMissing();
+}, 100);
 function render(next) {
+  lastJointStateAt = Date.now();
   const identity = next.model_id + ':' + next.side;
   if (renderedModel !== identity) {
     pendingJoints.clear(); jointRows.clear(); $('joints').replaceChildren();
@@ -396,7 +427,7 @@ async function poll() {
     if (!pendingCommands && revision === commandRevision) render(next);
     connected = true;
   }
-  catch (error) { $('connection').textContent = '服务已断开'; $('status').textContent = '服务器连接已中断，正在重试…'; document.body.classList.add('disconnected'); if (connected) notify(error.message); connected = false; }
+  catch (error) { markJointTelemetryMissing(); $('connection').textContent = '服务已断开'; $('status').textContent = '服务器连接已中断，正在重试…'; document.body.classList.add('disconnected'); if (connected) notify(error.message); connected = false; }
   setTimeout(poll, connected ? 80 : 1500);
 }
 async function refreshPorts() {

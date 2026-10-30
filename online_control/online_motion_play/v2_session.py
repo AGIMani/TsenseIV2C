@@ -6,6 +6,7 @@ Ruckig, protocol conversion and DownlinkGuard, without GUI compatibility objects
 from __future__ import annotations
 
 import json
+from joint_feedback import v2_feedback
 import math
 from pathlib import Path
 import threading
@@ -142,6 +143,7 @@ class V2Session:
     def snapshot(self):
         with self._lock:
             busy = self.homing.active or self.calibration is not None
+            feedback = v2_feedback(self.usb, self.side)
             names = list(self.motions)
             button = lambda key, text, enabled=True: self.spec(key, 'button', text=text, enabled=enabled)
             check = lambda key, text, value: self.spec(key, 'check', text=text, value=value, enabled=not busy)
@@ -172,6 +174,7 @@ class V2Session:
             ranges = v2_ranges(self.side, joints)
             for joint in joints:
                 joint['downlink'] = ranges[joint['name']]
+                joint['feedback'] = feedback.get(joint['name'])
             return {'model_id': self.model_id, 'side': self.side,
                     'urdf': f'/assets/hands/TsenseI_hand/urdf/TsenseI__hand_{self.side}_v1.urdf',
                     'controls': controls, 'joints': joints, 'dialogs': self._dialogs(),

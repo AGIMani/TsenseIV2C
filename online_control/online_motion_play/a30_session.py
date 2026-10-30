@@ -1,5 +1,6 @@
 """A3.0 manual motion editor; isolated model, files and H7 transport."""
 import json
+from joint_feedback import a30_feedback
 import math
 from pathlib import Path
 import time
@@ -54,6 +55,7 @@ class A30Session:
 
     def snapshot(self):
         busy = bool(self.device.homing)
+        feedback = a30_feedback(self.device)
         button = lambda key, text, enabled=True: self.spec(key, "button", text=text, enabled=enabled)
         check = lambda key, text, value: self.spec(key, "check", text=text, value=value, enabled=not busy)
         number = lambda key, value, maximum=600: self.spec(key, "number", value=value, min=0., max=maximum, step=.01, enabled=not busy)
@@ -80,7 +82,7 @@ class A30Session:
         joints = []
         for name, (lo, hi) in self.limits.items():
             short = name.replace(self.side+"_hand_", "").replace("_joint2", "").replace("_joint", "").lower()
-            joints.append(self.spec(name, "number", name=name, short=short, value=self.pose[name], min=lo, max=hi, step=.001,
+            joints.append(self.spec(name, "number", name=name, short=short, feedback=feedback.get(name), value=self.pose[name], min=lo, max=hi, step=.001,
                                     enabled=not busy and not self.playback, downlink=self.downlink_ranges[name]))
         dialogs = []
         if self.dialog:

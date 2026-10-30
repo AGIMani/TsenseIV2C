@@ -9,7 +9,7 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE / "app" if (HERE / "app/src").is_dir() else HERE.parents[1]
 WEB_FILES = ("server.py", "v2_session.py", "v2_homing.py", "downlink_policy.py", "joint_ranges.md", "a30_device.py", "a30_session.py", "a32_session.py", "a32_recording.py", "browser_serial.py", "browser-serial.js", "serial-protocol.js", "a30-serial-protocol.js", "access.py", "index.html", "deploy.sh", "deploy_config.py",
              "package.py", "generate_joint_ranges.py", "requirements-server.txt", "build-constraints.txt", "README.md",
-             "serial-worker.js", "worker-client.js", "position-guard.js", "motion-stream.js")
+             "serial-worker.js", "worker-client.js", "position-guard.js", "motion-stream.js", "joint_feedback.py")
 
 
 def files():
