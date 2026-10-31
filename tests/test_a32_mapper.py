@@ -92,13 +92,13 @@ def test_project_cad_matches_supplied_source_after_explicit_renames():
 def test_strict_limits_and_explicit_preview_clamp():
     mapper = A32StrokeMapper()
     pose = load_hand_profile("TsenseI_v3_2").init_pose()
-    pose["left_hand_index_MCP_joint"] = 1.57
+    pose["left_hand_index_MCP_joint"] = 1.58
     with pytest.raises(A32Error, match="AngleLimit"):
         mapper.convert(pose)
     preview = mapper.preview(pose)
-    assert preview["valid"] and pose["left_hand_index_MCP_joint"] == 1.57
+    assert preview["valid"] and pose["left_hand_index_MCP_joint"] == 1.58
     assert set(preview["clamped_joints_rad"]) == {"left_hand_index_MCP_joint"}
-    assert preview["clamped_joints_rad"]["left_hand_index_MCP_joint"] == 1.565
+    assert preview["clamped_joints_rad"]["left_hand_index_MCP_joint"] == 1.57
     pose["left_hand_index_MCP_joint"] = float("nan")
     failed = mapper.preview(pose)
     assert not failed["valid"] and not failed["linear_strokes_mm"]
@@ -114,9 +114,9 @@ def test_extended_mcp_range_uses_sdk_full_linear_domain(model_id, side, method):
         name = channel["joint"]
         if not name.endswith("_MCP_joint"):
             continue
-        upper = 1.565
-        assert channel["limits_rad"] == [.005, upper]
-        for angle in (.005, upper):
+        upper = 1.57
+        assert channel["limits_rad"] == [0., upper]
+        for angle in (0., upper):
             pose[name] = angle
             result = mapper.convert(pose)
             reference = sdk_stroke.joint_angle_deg_to_actuator(channel["motor_index"] - 1, math.degrees(angle))

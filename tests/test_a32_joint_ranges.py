@@ -41,7 +41,7 @@ def test_new_limits_initial_pose_and_retarget_seed(model_id, side):
     suffix = "" if side == "left" else "_right"
     assert yaml.safe_load((profile.root / f"q_init{suffix}.yaml").read_text())["q"] == pose
     for name, value in pose.items():
-        assert value == (0. if is_finger_swing(name) else .005 if requested_limits(name) else 0.)
+        assert value == 0.
     solver = profile.create_retargeter(side)
     np.testing.assert_array_equal(solver.init_q, [pose[name] for name in solver.joint_names])
     assert device._backend is None
@@ -49,22 +49,22 @@ def test_new_limits_initial_pose_and_retarget_seed(model_id, side):
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
 @pytest.mark.parametrize("side", ["left", "right"])
-def test_all_mcp_models_extend_to_1565_with_sdk_scaled_strokes(model_id, side):
+def test_all_mcp_models_extend_to_157_with_sdk_scaled_strokes(model_id, side):
     profile = load_hand_profile(model_id)
     device = A32Device(side, model_id=model_id)
     pose = profile.init_pose(side)
     for finger in ("thumb", "index", "mid", "ring", "pinky"):
         name = f"{side}_hand_{finger}_MCP_joint"
-        assert profile.joint_limits(side)[name] == (.005, 1.565)
-        expected_upper = 1.565
-        assert device.joint_limits()[name] == pytest.approx((.005, expected_upper), abs=1e-10, rel=0)
-        pose[name] = 1.565
+        assert profile.joint_limits(side)[name] == (0., 1.57)
+        expected_upper = 1.57
+        assert device.joint_limits()[name] == pytest.approx((0., expected_upper), abs=1e-10, rel=0)
+        pose[name] = 1.57
     targets = device.prepare_targets(pose, clamp=True)
     for finger in ("thumb", "index", "mid", "ring", "pinky"):
         name = f"{side}_hand_{finger}_MCP_joint"
-        expected_upper = 1.565
+        expected_upper = 1.57
         assert targets["applied_pose"][name] == pytest.approx(expected_upper, abs=1e-10, rel=0)
-        assert pose[name] == 1.565
+        assert pose[name] == 1.57
     for channel in device.channels:
         value = targets["self" if channel["channel"] == "self" else "mit_pos"][channel["index"]]
         assert channel["limits"][0] <= value <= channel["limits"][1]
@@ -80,7 +80,7 @@ def test_four_finger_dip_original_geometry_and_hardware_limits(model_id, side, m
     pose = load_hand_profile(model_id).init_pose(side)
     dips = {f"{side}_hand_{finger}_DIP_joint" for finger in ("index", "mid", "ring", "pinky")}
     for name in dips:
-        pose[name] = 1.565
+        pose[name] = 1.57
     converted = mapper.convert(pose)
     limited = mapper.convert(device.constrain_pose(pose))
     for name in dips:

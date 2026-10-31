@@ -48,7 +48,7 @@ def test_compensation_scales_selected_joints_and_clamps(side, joint, half, upper
 
 def test_pinky_reduction_retains_positive_lower_limit():
     name = 'left_hand_pinky_DIP_joint'
-    assert compensate_command_pose({name: .005}, {name: (.005, 1.565)})[name] == .005
+    assert compensate_command_pose({name: 0.}, {name: (0., 1.57)})[name] == 0.
 
 
 @pytest.mark.parametrize('model', (*A30_MODEL_IDS, *A32_MODEL_IDS))

@@ -26,8 +26,10 @@ SWING_CENTER = 0.
 # Reference ID CAD range; the hardware command reserves 0.01 rad at each end.
 SWING_LIMITS = (-.35, .35)
 SWING_COMMAND_LIMITS = (-.34, .34)
-FLEXION_LIMITS = (.005, 1.565)
-MCP_LIMITS = (.005, 1.565)
+# Match the active A3.2 URDF and SDK domain.  Keeping a narrower application
+# range here silently rejects valid motion files and clips their downlink.
+FLEXION_LIMITS = (0.0, 1.57)
+MCP_LIMITS = (0.0, 1.57)
 
 
 def thumb_origin_offset(model_id: str, name: str) -> float:

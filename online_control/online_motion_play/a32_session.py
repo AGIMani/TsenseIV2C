@@ -75,7 +75,10 @@ class A32Session:
         self.pose = self.validate_pose(self.profile.init_pose(side))
         self.names = tuple(self.limits)
         self.target_pose = dict(self.pose)
-        self.motor_compensation_enabled = True
+        # Compensation is opt-in from the editor.  The checkbox is labelled
+        # “增加系数补偿”, so its unchecked/default state sends raw SDK targets
+        # and its checked state applies the configured scales.
+        self.motor_compensation_enabled = False
         self.configured_motor_scales = {
             name: MOTOR_FINGER_SCALES[side][name.removeprefix(f"{side}_hand_").split("_")[0]]
             for name in self.names
@@ -83,10 +86,10 @@ class A32Session:
         # Precompute both display curves so toggling during playback cannot
         # stall the SDK sampling clock with hundreds of conversion calls.
         self.downlink_ranges = self._downlink_ranges()
-        self._downlink_ranges_by_compensation = {True: self.downlink_ranges}
-        self.motor_compensation_enabled = False
-        self._downlink_ranges_by_compensation[False] = self._downlink_ranges()
+        self._downlink_ranges_by_compensation = {False: self.downlink_ranges}
         self.motor_compensation_enabled = True
+        self._downlink_ranges_by_compensation[True] = self._downlink_ranges()
+        self.motor_compensation_enabled = False
         self.data_dir = Path(data_dir)
         self.recorder = A32SessionRecorder(recording_dir,
                                           model_id=model_id, hand_side=side,
@@ -233,7 +236,7 @@ class A32Session:
             "motionStreamLoop": check("motionStreamLoop", "循环播放", self.loop),
             "isConnectOffline": check("isConnectOffline", "动作同步下位机", self.sync, self.connected),
             "realtimeJointControl": check("realtimeJointControl", "实时关节控制", self.armed and not self.sync, self.connected),
-            "a32BypassMotorCompensation": check("a32BypassMotorCompensation", "取消系数补偿", not self.motor_compensation_enabled),
+            "a32EnableMotorCompensation": check("a32EnableMotorCompensation", "增加系数补偿", self.motor_compensation_enabled),
             "a32Enable": button("a32Enable", "使能 18 self + 2 MIT", self.connected and not busy and not device.get("enabled")),
             "a32Disable": button("a32Disable", "停止下发", self.connected),
             "a32Reset": button("a32Reset", "复位找零状态", self.connected),
@@ -526,9 +529,9 @@ class A32Session:
             self.transition, self.interval = entry["transition"], entry["interval"]
         elif key == "motionStreamLoop":
             self.loop = value
-        elif key == "a32BypassMotorCompensation":
-            self.motor_compensation_enabled = not value
-            self.downlink_ranges = self._downlink_ranges_by_compensation[not value]
+        elif key == "a32EnableMotorCompensation":
+            self.motor_compensation_enabled = value
+            self.downlink_ranges = self._downlink_ranges_by_compensation[value]
         elif key == "a32Enable":
             self._enable(self.validate_pose(self.device.starting_pose(self.pose)))
             self.message = "SDK 已使能，尚未下发轨迹；可开启实时关节控制或动作同步"

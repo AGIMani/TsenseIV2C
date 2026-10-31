@@ -247,7 +247,7 @@
     }
   ],
   "joint_coordinate_version": "a32-signed-swing-v2",
-  "range_note": "2026-10-12: SDK 1.1.15 四类连杆闭环查表；精确 90° 行程上限写入通道交集。应用屈曲范围仍为 [0.005, 1.565] rad，swing 模型 [-0.35, 0.35]，命令 [-0.34, 0.34] rad。两侧共用 A3.2 槽位映射。",
+  "range_note": "2026-10-12: SDK 1.1.15 四类连杆闭环查表；精确 90° 行程上限写入通道交集。应用屈曲范围仍为 [0, 1.57] rad，swing 模型 [-0.35, 0.35]，命令 [-0.34, 0.34] rad。两侧共用 A3.2 槽位映射。",
   "sdk_version": "1.1.15",
   "conversion": "sdk-1.1.15-calibrated-linkage",
   "supported_sides": [

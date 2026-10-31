@@ -432,8 +432,8 @@ def test_legacy_motion_coordinates_convert_once_without_rewriting_source(tmp_pat
         pose = migrated["old"]["pose"]
         assert pose["left_hand_index_swing_joint"] == pytest.approx(-.2 if model_id == "TsenseI_v3_2" else .2)
         assert pose["left_hand_index_MCP_joint"] == 1.4
-        assert pose["left_hand_index_DIP_joint"] == 1.565
-        assert pose["left_hand_index_PIP_joint"] == .005
+        assert pose["left_hand_index_DIP_joint"] == 1.57
+        assert pose["left_hand_index_PIP_joint"] == 0.
         current = session.payload(migrated)
         assert current["_joint_coordinate_version"] == COORDINATE_VERSION
         assert current["_swing_axis_alignment"] == SWING_AXIS_ALIGNMENT
@@ -459,10 +459,10 @@ def test_mcp_editor_keeps_requested_angles_with_sdk_scaled_downlink(tmp_path, mo
         controls = {row["name"]: row for row in session.snapshot()["joints"]}
         for finger in ("thumb", "index", "mid", "ring", "pinky"):
             name = f"{side}_hand_{finger}_MCP_joint"
-            assert session.limits[name] == (.005, 1.565)
-            assert (controls[name]["min"], controls[name]["max"]) == (.005, 1.565)
-            widget(session, name, 1.565)
-        assert all(session.pose[f"{side}_hand_{finger}_MCP_joint"] == 1.565
+            assert session.limits[name] == (0., 1.57)
+            assert (controls[name]["min"], controls[name]["max"]) == (0., 1.57)
+            widget(session, name, 1.57)
+        assert all(session.pose[f"{side}_hand_{finger}_MCP_joint"] == 1.57
                    for finger in ("thumb", "index", "mid", "ring", "pinky"))
         pose = dict(session.pose)
         targets = session._preview_targets(pose)
@@ -470,7 +470,7 @@ def test_mcp_editor_keeps_requested_angles_with_sdk_scaled_downlink(tmp_path, mo
             name = channel["joint"]
             if not name.endswith("_MCP_joint"):
                 continue
-            upper = 1.565
+            upper = 1.57
             assert targets["applied_pose"][name] == pytest.approx(upper, abs=1e-10, rel=0)
             assert targets["self"][channel["index"]] == pytest.approx(controls[name]["downlink"]["at_ui_max"])
         assert session.pose == pose
@@ -632,7 +632,7 @@ def test_real_driver_reconnect_rebases_playback_from_new_feedback(tmp_path, mode
 @pytest.mark.parametrize("model_id", MODEL_IDS)
 @pytest.mark.parametrize("side", ["left", "right"])
 @pytest.mark.parametrize("compensation", [True, False])
-def test_all_motion_play_motor_commands_are_compensated(tmp_path, model_id, side, compensation):
+def test_motion_play_motor_compensation_is_opt_in(tmp_path, model_id, side, compensation):
     import sys
     sys.path.insert(0, str(Path(__file__).resolve().parents[2] / "tests"))
     from test_a32_driver import SimulatedNativeHand
@@ -642,9 +642,9 @@ def test_all_motion_play_motor_commands_are_compensated(tmp_path, model_id, side
     device = A32Device(side, model_id=model_id, backend=backend)
     s = A32Session(tmp_path, side, model_id=model_id, device=device, clock=Clock(), start=False)
     try:
-        assert s.snapshot()["controls"]["a32BypassMotorCompensation"]["value"] is False
-        widget(s, "a32BypassMotorCompensation", not compensation)
-        assert s.snapshot()["controls"]["a32BypassMotorCompensation"]["value"] is (not compensation)
+        assert s.snapshot()["controls"]["a32EnableMotorCompensation"]["value"] is False
+        widget(s, "a32EnableMotorCompensation", compensation)
+        assert s.snapshot()["controls"]["a32EnableMotorCompensation"]["value"] is compensation
         s.dispatch("connect", {})
         widget(s, "realtimeJointControl", True)
         pose = {name: (lo + hi) / 3 for name, (lo, hi) in s.limits.items()}
@@ -685,14 +685,14 @@ def test_all_motion_play_motor_commands_are_compensated(tmp_path, model_id, side
                     assert sent[1 if key == "self" else 2][channel["index"]] == pytest.approx(expected)
         for enabled in (not compensation, compensation):
             count = len(backend.calls)
-            widget(s, "a32BypassMotorCompensation", not enabled)
+            widget(s, "a32EnableMotorCompensation", enabled)
             assert len(backend.calls) == count  # The checkbox itself sends no frame.
             tick(s)
             sent = next(call for call in reversed(backend.calls) if call[0] == "targets")
             expected = device.prepare_targets(s.pose, motor_scales=s.motor_scales)
             assert sent[1] == pytest.approx(expected["self"])
             assert sent[2] == pytest.approx(expected["mit_pos"])
-            assert s.snapshot()["controls"]["a32BypassMotorCompensation"]["value"] is (not enabled)
+            assert s.snapshot()["controls"]["a32EnableMotorCompensation"]["value"] is enabled
             for channel in device.channels:
                 assert s.downlink_ranges[channel["joint"]]["motor_scale"] == s.motor_scales[channel["joint"]]
         for endpoint in (0, 1):

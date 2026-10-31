@@ -752,9 +752,9 @@ kinematics: Source and application rotation2 both positive [0, 1.74]; source ori
 inertials: Supplied URDF inertials retained; MJCF remains a kinematic collision proxy
 keypoints: Existing per-hand local coordinates retained; review pending
 installed_sha256:
-  urdf/TsenseI_hand_left_v3_2_withid.urdf: f0fb7687f1af15f8dde00f12b39d0743cc6d6605f07d85a3ac9940c5c9359e05
-  urdf/TsenseI_hand_right_v3_2_withid.urdf: 0c021a36aca2c03932bbefbd82f747976755adacd5026a249be572ce1568bc0f
-  mjcf/mjmodel.xml: 3bcd47c2fe3359de60479a37a3b27edcef635f5d46cadbc65aea5e5ba2796ac2
-  mjcf/mjmodel_right.xml: 1b476ef2ffadeb8ae1687d1ae18fa1ce9d47b3badbf04d286a6d8c9ca33cf087
+  urdf/TsenseI_hand_left_v3_2_withid.urdf: 054b687e8446d017fa72c04451641486d6baafb485086020d04a629461427ed6
+  urdf/TsenseI_hand_right_v3_2_withid.urdf: 74a0001ecf4e0c99bf598f4a5f79f4168c658557dac67cdef993aed0ce039227
+  mjcf/mjmodel.xml: 1ef23b78e62bde3f5f0b65c7c53188ff802c5dea2af1f843e6ef4ca41edea42f
+  mjcf/mjmodel_right.xml: ed1fb211f0823534cdf861837229a54d9893f5a3f030af6950a370fbaca79225
 source_normalization: User requested source URDF rotation2 normalization on 2026-10-27;
   negative-angle originals backed up beside source files

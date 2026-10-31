@@ -10,7 +10,7 @@ size share one curve: large MCP 19.63 mm, medium PIP/thumb MCP 16.95 mm, small
 DIP/thumb PIP/pinky PIP 12.44 mm. Feedback includes exact 0/90 degree endpoints
 and the SDK's float32 boundary tolerances; command angles still use its guards.
 
-Application flexion remains 0.005..1.565 rad, including index/ring MCP. Swing
+Application flexion matches the active URDF at 0..1.57 rad, including index/ring MCP. Swing
 remains signed and is converted directly to degrees. The old `lut`/`exact`
 method arguments remain accepted metadata; both use the new formula, identified
 by `conversion="sdk-1.1.15"`. The offline mapper never loads a native library.

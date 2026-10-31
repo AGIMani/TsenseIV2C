@@ -22,7 +22,7 @@ def test_profiles_load_all_assets_without_missing_meshes(model_id, side):
     profile = load_hand_profile(model_id)
     assert len(profile.joint_limits(side)) == 20
     for name, value in profile.init_pose(side).items():
-        assert value == (0. if is_finger_swing(name) else .005 if requested_limits(name) else 0.)
+        assert value == 0.
     for key in ("urdf", "keypoints", "eval_config", "mjcf"):
         assert profile.path(key, side).is_file()
     model = UrdfModel(profile.path("urdf", side))

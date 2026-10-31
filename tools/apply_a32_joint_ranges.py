@@ -146,7 +146,7 @@ def sync_installed_assets(model_ids=None):
     hardware["joint_coordinate_version"] = COORDINATE_VERSION
     hardware["sdk_version"] = SDK_VERSION
     hardware["conversion"] = f"{METHOD}-calibrated-linkage"
-    hardware["range_note"] = f"2026-10-10: SDK {SDK_VERSION} calibrated closed-loop conversion, one curve per motor size; thumb MCP slot 17 uses the medium 16.95 mm stroke. Application flexion remains [0.005, 1.565] rad; swing model [-0.35, 0.35], hardware command [-0.34, 0.34] rad. Preserve calibrated direction/offset, thumb zero and MIT limits. No hardware motion used for validation."
+    hardware["range_note"] = f"2026-10-30: SDK {SDK_VERSION} calibrated closed-loop conversion, one curve per motor size; thumb MCP slot 17 uses the medium 16.95 mm stroke. Application flexion matches the URDF at [0, 1.57] rad; swing model [-0.35, 0.35], hardware command [-0.34, 0.34] rad. Preserve calibrated direction/offset, thumb zero and MIT limits. No hardware motion used for validation."
     path.write_text(json.dumps(hardware, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     bare = load_hand_profile("TsenseI_v3_2")
     path = bare.root / "sdk_source_mapping.yaml"

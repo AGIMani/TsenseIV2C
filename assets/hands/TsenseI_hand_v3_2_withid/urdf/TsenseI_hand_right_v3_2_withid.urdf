@@ -3958,21 +3958,21 @@
     <parent link="right_hand_thumb_rotaback_link2" />
     <child link="right_hand_thumb_MCP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_thumb_PIP_joint" type="revolute">
     <origin xyz="-0.0053114137218506358 -0.025846448194589706 -2.0539125955565396e-15" rpy="-3.8857805861880479e-16 -4.2188474935755949e-15 -0.1290378382195399" />
     <parent link="right_hand_thumb_MCP_link" />
     <child link="right_hand_thumb_PIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_index_MCP_joint" type="revolute">
     <origin xyz="0.027099703634998501 0.035567214335181868 0.087707234999650913" rpy="-1.4508509931644693 0.42625833852372441 -3.084615774699254" />
     <parent link="base_link" />
     <child link="right_hand_index_MCP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_index_swing_joint" type="revolute">
     <origin xyz="0.018196447538264333 -0.019340354107076393 -3.2139486642566995e-06" rpy="-1.5707963267948974 -6.4392935428259079e-15 -2.0005586058915856" />
@@ -3986,21 +3986,21 @@
     <parent link="right_hand_index_swing_link" />
     <child link="right_hand_index_PIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_index_DIP_joint" type="revolute">
     <origin xyz="-0.005311413721869232 -0.025846448194579805 -1.1900203045200897e-15" rpy="2.7755575615628914e-17 0 -0.12903783821920919" />
     <parent link="right_hand_index_PIP_link" />
     <child link="right_hand_index_DIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_mid_MCP_joint" type="revolute">
     <origin xyz="0.027099703634997883 0.0095860674645024194 0.088138007230611604" rpy="-1.5707963267948961 0.42976227909668507 -3.1344499886106498" />
     <parent link="base_link" />
     <child link="right_hand_mid_MCP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_mid_swing_joint" type="revolute">
     <origin xyz="0.016651037339347238 -0.018632041099237523 -3.2139486486977478e-06" rpy="-1.570796326794897 1.021405182655144e-14 -2.0005586058915852" />
@@ -4014,21 +4014,21 @@
     <parent link="right_hand_mid_swing_link" />
     <child link="right_hand_mid_PIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_mid_DIP_joint" type="revolute">
     <origin xyz="-0.0053114137218693014 -0.02584644819457986 -5.9934696094998685e-16" rpy="2.7755575615628914e-17 0 -0.12903783821921641" />
     <parent link="right_hand_mid_PIP_link" />
     <child link="right_hand_mid_DIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_ring_MCP_joint" type="revolute">
     <origin xyz="0.027099703634997717 -0.014488449981419661 0.080993503376345019" rpy="-1.6667660125609913 0.42864098926109384 3.1087726476133133" />
     <parent link="base_link" />
     <child link="right_hand_ring_MCP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_ring_swing_joint" type="revolute">
     <origin xyz="0.018196447538263112 -0.019340354107076241 -3.2139486561156422e-06" rpy="-1.5707963267948979 2.4424906541753444e-15 -2.0005586058916132" />
@@ -4042,21 +4042,21 @@
     <parent link="right_hand_ring_swing_link" />
     <child link="right_hand_ring_PIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_ring_DIP_joint" type="revolute">
     <origin xyz="-0.0053114137218728263 -0.025846448194579971 -1.8496055381733711e-12" rpy="2.7755575615628914e-17 0 -0.12903783821922268" />
     <parent link="right_hand_ring_PIP_link" />
     <child link="right_hand_ring_DIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_pinky_MCP_joint" type="revolute">
     <origin xyz="0.027099703634997516 -0.035715192884881314 0.07037092455483579" rpy="-1.7043559433280713 0.42725082875541376 3.0931711956586163" />
     <parent link="base_link" />
     <child link="right_hand_pinky_MCP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_pinky_swing_joint" type="revolute">
     <origin xyz="0.01819644753826722 -0.019340354107075734 -3.2139486648014026e-06" rpy="-1.570796326794897 -4.2188474935755949e-14 -2.0005586058915821" />
@@ -4070,13 +4070,13 @@
     <parent link="right_hand_pinky_swing_link" />
     <child link="right_hand_pinky_PIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="right_hand_pinky_DIP_joint" type="revolute">
     <origin xyz="-0.0063032454065007973 -0.025224375205066263 0.00020675515638993863" rpy="0.0062711979857275543 0.025075123623853113 0.00012198116402324438" />
     <parent link="right_hand_pinky_PIP_link" />
     <child link="right_hand_pinky_DIP_link" />
     <axis xyz="0 0 -1" />
-    <limit effort="1.0" lower="0.005" upper="1.565" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
 </robot>

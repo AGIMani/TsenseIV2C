@@ -267,7 +267,7 @@ def prepare_configs() -> None:
                      "init_max_iters": 2, "topo_max_iters": 3},
         "mirror_axis": "x",
         "notes": ["SDK meshes and functional joint names retained; application joint ranges are versioned.",
-                  "PIP/DIP/MCP 0.005..1.565; commands intersect mechanism limits; swing aligned with reference ID CAD, model -0.35..0.35, command -0.34..0.34 rad; thumb zero matches user reference CAD.",
+                  "PIP/DIP/MCP 0..1.57; commands intersect mechanism limits; swing aligned with reference ID CAD, model -0.35..0.35, command -0.34..0.34 rad; thumb zero matches user reference CAD.",
                   "Keypoints are draft until manually calibrated; collision proxies are geometric approximations."],
     }, preserve=True)
     write_source_mapping()

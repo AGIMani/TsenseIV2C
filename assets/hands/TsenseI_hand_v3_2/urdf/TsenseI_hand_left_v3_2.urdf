@@ -135,7 +135,7 @@
     <parent link="left_hand_thumb_rotaback_link2" />
     <child link="left_hand_thumb_MCP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_thumb_PIP_link">
     <inertial>
@@ -164,7 +164,7 @@
     <parent link="left_hand_thumb_MCP_link" />
     <child link="left_hand_thumb_PIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_index_MCP_link">
     <inertial>
@@ -193,7 +193,7 @@
     <parent link="base_link" />
     <child link="left_hand_index_MCP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_index_swing_link">
     <inertial>
@@ -251,7 +251,7 @@
     <parent link="left_hand_index_swing_link" />
     <child link="left_hand_index_PIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_index_DIP_link">
     <inertial>
@@ -280,7 +280,7 @@
     <parent link="left_hand_index_PIP_link" />
     <child link="left_hand_index_DIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_mid_MCP_link">
     <inertial>
@@ -309,7 +309,7 @@
     <parent link="base_link" />
     <child link="left_hand_mid_MCP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_mid_swing_link">
     <inertial>
@@ -367,7 +367,7 @@
     <parent link="left_hand_mid_swing_link" />
     <child link="left_hand_mid_PIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_mid_DIP_link">
     <inertial>
@@ -396,7 +396,7 @@
     <parent link="left_hand_mid_PIP_link" />
     <child link="left_hand_mid_DIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_ring_MCP_link">
     <inertial>
@@ -425,7 +425,7 @@
     <parent link="base_link" />
     <child link="left_hand_ring_MCP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_ring_swing_link">
     <inertial>
@@ -483,7 +483,7 @@
     <parent link="left_hand_ring_swing_link" />
     <child link="left_hand_ring_PIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_ring_DIP_link">
     <inertial>
@@ -512,7 +512,7 @@
     <parent link="left_hand_ring_PIP_link" />
     <child link="left_hand_ring_DIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_pinky_swing_link">
     <inertial>
@@ -541,7 +541,7 @@
     <parent link="base_link" />
     <child link="left_hand_pinky_swing_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_pinky_MCP_link">
     <inertial>
@@ -599,7 +599,7 @@
     <parent link="left_hand_pinky_MCP_link" />
     <child link="left_hand_pinky_PIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
   <link name="left_hand_pinky_DIP_link">
     <inertial>
@@ -628,6 +628,6 @@
     <parent link="left_hand_pinky_PIP_link" />
     <child link="left_hand_pinky_DIP_link" />
     <axis xyz="0 1 0" />
-    <limit lower="0.005" upper="1.565" effort="0" velocity="0" />
+    <limit lower="0.0" upper="1.57" effort="0" velocity="0" />
   </joint>
 </robot>
