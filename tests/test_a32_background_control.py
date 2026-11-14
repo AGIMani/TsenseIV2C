@@ -33,7 +33,8 @@ def test_background_push_and_read_only_status_do_not_renew_pc_lease(tmp_path, mo
     try:
         install_result(session)
         session.last_seen, session.control.client_at = 111., 222.
-        result = session.process_background({'hand': {}, 'sequence': 1}, accept)
+        result = session.process_background({'hand': {}, 'sequence': 1,
+                                             'capture_unix_ms': time.time()*1000}, accept)
         assert result['tracking'] and session.control.frame_id == 1
         assert session.control.target_at > 222.
         assert session.last_seen == 111. and session.control.client_at == 222.

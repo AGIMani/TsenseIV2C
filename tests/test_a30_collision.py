@@ -90,22 +90,3 @@ def test_mirrored_bounds_and_safety_agree_and_pinch_pairs_remain_enabled():
         expected = {"left_hand_thumb_PIP_link", f"left_hand_{finger}_DIP_link"}
         assert any({left.model.body(left.model.geom_bodyid[g]).name for g in pair} == expected
                    for pair in left.pairs)
-
-
-@pytest.mark.parametrize("mode", ["monitor", "stop", "mink"])
-def test_web_conversion_and_log_use_post_collision_pose(mode, tmp_path):
-    s = WebSession(recording=True, log_dir=tmp_path, collision_mode=mode, model_id="TsenseI_v3_0")
-    try:
-        world = s.pipeline.session.retargeter.fk.compute(crossed(s.pipeline.session.profile, "left")).tolist()
-        result = s.process({"sequence": 0, "timestamp_ms": 1000, "capture_unix_ms": 1789600000000,
-                            "hand": {"label": "Left", "world": world, "normalized": world}})
-        assert result["tracking"], result["message"]
-        assert result["collision"]["mode"] == mode
-        expected = s.pipeline.stroke_mapper.preview(result["pose"])
-        assert result["actuation"]["linear_strokes_mm"] == expected["linear_strokes_mm"]
-        assert result["actuation"]["rotary_positions_deg"] == expected["rotary_positions_deg"]
-        if mode == "monitor":
-            assert result["pose"] == result["retarget_joint_angles_rad"]
-    finally: s.close()
-    row = json.loads(s.recorder.path.read_text(encoding="utf-8").splitlines()[1])
-    assert row["collision_diagnostics"]["mode"] == mode

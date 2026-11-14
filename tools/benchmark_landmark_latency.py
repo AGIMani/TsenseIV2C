@@ -143,8 +143,8 @@ def load_packets(source):
             row = json.loads(line)
             if row["type"] == "session":
                 metadata = row["metadata"]
-                if metadata["model_id"] != "TsenseI_v3_0" or metadata["hand_side"] != "left":
-                    raise ValueError("This replay expects a left A3.0 recording")
+                if metadata["model_id"] != "TsenseI_v3_2_withid" or metadata["hand_side"] != "left":
+                    raise ValueError("This replay expects a left A3.2 with ID recording")
             if row["type"] != "mediapipe_raw":
                 continue
             selected = next((i for i, h in enumerate(row["handedness"])
@@ -161,14 +161,14 @@ def load_packets(source):
 
 
 def recorded_comparison(source, repeats):
-    from online_control.online_motion_track.a30 import session as module
+    from online_control.online_motion_track.a32 import session as module
     packets, elapsed = load_packets(source)
     samples = {"before": [], "after": []}
     output = {"before": [], "after": []}
     rounds = []
-    with patch.object(module, "A30Control", partial(module.A30Control, start=False)):
+    with patch.object(module, "A32Control", partial(module.A32Control, start=False)):
         for run in range(repeats):
-            sessions = {name: module.A30WebSession(recording=False, collision_mode="mink")
+            sessions = {name: module.A32WebSession(recording=False, collision_mode="mink")
                         for name in samples}
             sessions["before"].filter = BaselineFilter()
             current = {name: [] for name in samples}
@@ -210,7 +210,7 @@ def recorded_comparison(source, repeats):
     timing = compare_timing(samples)
     return {"source": str(source), "frames": len(packets), "repeats": repeats,
             "server_process": timing, "rounds": rounds, "low_motion_windows": windows,
-            "scope": "Offline A30WebSession.process including retarget, Mink, control.push and snapshot; no running control thread or physical I/O",
+            "scope": "Offline A32WebSession.process including retarget, Mink, control.push and snapshot; no running control thread or physical I/O",
             "passes": timing["passes"] and all(r["passes"] for r in rounds)
             and all(w["after"]["point_std_rms_mm"] <= w["before"]["point_std_rms_mm"] for w in windows)}
 

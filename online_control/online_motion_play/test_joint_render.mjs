@@ -11,7 +11,7 @@ const source = html.slice(html.indexOf('function control(spec,'), html.indexOf('
 function harness(script = source) {
   const elements = new Map(), loaded = [];
   class Element {
-    constructor() { this.children = []; this.dataset = {}; this.style = {}; this.attributes = {}; this.classes = new Set(); this.classList = {remove: name => this.classes.delete(name), toggle: (name, enabled) => enabled ? this.classes.add(name) : this.classes.delete(name)}; }
+    constructor() { this.hidden = false; this.children = []; this.dataset = {}; this.style = {}; this.attributes = {}; this.classes = new Set(); this.classList = {remove: name => this.classes.delete(name), toggle: (name, enabled) => enabled ? this.classes.add(name) : this.classes.delete(name)}; }
     set id(id) { elements.set(id, this); }
     append(...children) { this.children.push(...children); }
     replaceChildren(...children) { this.children = children; }
@@ -28,16 +28,13 @@ function harness(script = source) {
     state:null, ownsControl:false, viewerReady:true,
     loadingSide:'', failedModelSide:'', modelSide:'',
     loadModel:url => loaded.push(url), applyPose() {}, sendWidget() {},
-    localSerial:{sampleMetrics:() => ({})}, serialSupport:() => '',
-    isA30Model:model => model.startsWith('TsenseI_v3_0'),
-    isA32Model:model => model.startsWith('TsenseI_v3_2'),
   });
   vm.runInContext(script + '\nglobalThis.ui = {render, setJointDisplayMode, jointRows, markJointTelemetryMissing};', context);
   return {ui:context.ui, $, loaded, document:context.document};
 }
 
 function snapshot(model, side) {
-  const count = model === 'TsenseI_v2' ? 21 : 20;
+  const count = 20;
   const joints = Array.from({length:count}, (_, i) => ({
     id:`${model}:${side}:${i}`, name:`${side}_hand_index_joint${i}`, short:`index_joint${i}`,
     kind:'number', enabled:true, min:0, max:1, step:.001, value:.5,
@@ -50,7 +47,7 @@ function snapshot(model, side) {
 
 test('model/side changes and repeated polls render every joint in all three units', () => {
   const h = harness();
-  for (const model of ['TsenseI_v2', 'TsenseI_v3_0', 'TsenseI_v3_0_withid', 'TsenseI_v3_2', 'TsenseI_v3_2_withid']) {
+  for (const model of ['TsenseI_v3_2_withid']) {
     for (const side of ['left', 'right']) {
       const state = snapshot(model, side);
       h.ui.render(state);
@@ -83,13 +80,13 @@ test('model selector keeps the connected/read-only restrictions', () => {
 test('regression fixture reproduces the previous rendering failure', () => {
   const broken = source.replace("    const [finger, ...parts] = spec.short.split('_');\n    const part = parts.join('_');\n", '')
     .replace("      let group = $('finger-' + finger);", "      const [finger, ...parts] = spec.short.split('_'); const part = parts.join('_'); let group = $('finger-' + finger);");
-  assert.throws(() => harness(broken).ui.render(snapshot('TsenseI_v2', 'left')), /finger is not defined/);
+  assert.throws(() => harness(broken).ui.render(snapshot('TsenseI_v3_2_withid', 'left')), /finger is not defined/);
 });
 
 test('A3.2 compensation checkbox renders server state and respects control ownership', () => {
   const actionSection = html.slice(html.indexOf('<h2>动作与序列</h2>'), html.indexOf('id="a32Motors"'));
   assert.ok(actionSection.includes('id="a32EnableMotorCompensation"'));
-  const h = harness(), state = snapshot('TsenseI_v3_2', 'left');
+  const h = harness(), state = snapshot('TsenseI_v3_2_withid', 'left');
   state.controls.a32EnableMotorCompensation = {
     id:'left:a32EnableMotorCompensation', kind:'check', enabled:true,
     text:'增加系数补偿', value:true,
@@ -106,13 +103,11 @@ test('A3.2 compensation checkbox renders server state and respects control owner
   h.ui.render({...state, control:{owned:false, available:true}});
   assert.equal(input.disabled, true);
   assert.equal(h.$('a32EnableMotorCompensation').hidden, false);
-  h.ui.render(snapshot('TsenseI_v2', 'left'));
-  assert.equal(h.$('a32EnableMotorCompensation').hidden, true);
 });
 
 
 test('live numbers follow measured feedback in every unit and flag missing/stale channels', () => {
-  const h = harness(), state = snapshot('TsenseI_v3_2', 'left');
+  const h = harness(), state = snapshot('TsenseI_v3_2_withid', 'left');
   state.controls.realtimeJointControl = {id:'live', kind:'check', enabled:true, value:true};
   const joint = state.joints[0];
   joint.feedback = {rad:.2, stroke:-4.2};

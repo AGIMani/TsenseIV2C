@@ -8,7 +8,7 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 
-from hand_profiles import A32_MODEL_IDS
+A32_MODEL_IDS = ("TsenseI_v3_2_withid",)
 from online_control.online_motion_track.a32 import session as session_module
 from test_a32_tracking_recording import make_session
 

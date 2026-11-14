@@ -15,25 +15,14 @@ header{display:flex;align-items:center;justify-content:space-between;gap:18px;pa
 <script type="module" src="/shared/ui-language.js"></script>
 </head>
 <body>
-<header><div><h1>灵巧手动作控制 <small>FORM 2 / MOTION STUDIO</small></h1><div class="subtitle">关节调节 · 动作编排 · 电机校准</div></div><div class="connection"><span id="connection" class="badge">连接服务中…</span><button id="control" disabled>获取控制</button><select id="ports" aria-label="本机下位机串口"><option value="">选择串口</option></select><button id="refreshPorts" title="刷新已授权的本机串口">刷新</button><button id="authorizePort">授权本机串口</button><button id="connect">连接下位机</button><button id="stop" class="stop">停止下发</button><button id="language-toggle" class="language-toggle" type="button" translate="no" aria-label="Switch to English" title="Switch to English">EN</button></div></header>
-<label id="serialBaudField" style="margin-left:28px" title="原生 CDC 通常忽略此值；UART 必须与固件一致">串口速率 <select id="serialBaud"><option>115200</option><option>230400</option><option>460800</option><option>921600</option><option>1000000</option><option>2000000</option><option>3000000</option></select></label>
-<div id="a32Connection" class="toolbar" style="margin:12px 28px" hidden><label>SDK 连接 <select id="a32Transport"><option value="usb">USB CDC</option><option value="eth">ETH TCP</option></select></label><label id="a32PortField">服务电脑串口 <input id="a32Port" type="text" value="auto" aria-label="SDK USB 串口" placeholder="auto / COM3 / /dev/ttyACM0"></label><label id="a32HostField" hidden>设备 IP <input id="a32Host" type="text" placeholder="192.168.1.100" aria-label="SDK ETH 设备 IP"></label><label id="a32TcpField" hidden>TCP 端口 <input id="a32TcpPort" type="number" value="5001" min="1" max="65535"></label></div>
-<p id="serialNote" role="status" style="margin:12px 28px;color:#61728a;font-size:13px">正在检查浏览器串口支持…</p>
+<header><div><h1>灵巧手动作控制 <small>FORM 2 / MOTION STUDIO</small></h1><div class="subtitle">关节调节 · 动作编排 · 电机校准</div></div><div class="connection"><span id="connection" class="badge">连接服务中…</span><button id="control" disabled>获取控制</button><button id="connect">连接下位机</button><button id="stop" class="stop">停止下发</button><button id="language-toggle" class="language-toggle" type="button" translate="no" aria-label="Switch to English" title="Switch to English">EN</button></div></header>
+<div id="a32Connection" class="toolbar" style="margin:12px 28px"><label>SDK 连接 <select id="a32Transport"><option value="usb">USB CDC</option><option value="eth">ETH TCP</option></select></label><label id="a32PortField">服务电脑串口 <input id="a32Port" type="text" value="auto" aria-label="SDK USB 串口" placeholder="auto / COM3 / /dev/ttyACM0"></label><label id="a32HostField" hidden>设备 IP <input id="a32Host" type="text" placeholder="192.168.1.100" aria-label="SDK ETH 设备 IP"></label><label id="a32TcpField" hidden>TCP 端口 <input id="a32TcpPort" type="number" value="5001" min="1" max="65535"></label></div>
+<p id="serialNote" role="status" style="margin:12px 28px;color:#61728a;font-size:13px">正在检查 SDK 状态…</p>
 <main>
 <div class="stack">
-<section class="card"><div class="card-head"><h2>手部模型</h2><div class="toolbar"><select id="modelSelect" aria-label="手部型号"><option value="TsenseI_v2">V2 · 21关节</option><option value="TsenseI_v3_0">A3.0 · 20关节</option><option value="TsenseI_v3_0_withid">A3.0 with ID · 20关节</option><option value="TsenseI_v3_2">A3.2 · 20关节 · SDK</option><option value="TsenseI_v3_2_withid">A3.2 with ID · 20关节 · SDK</option></select><span id="handSide"></span><span id="dof" class="badge">21 自由度</span></div></div><div class="viewer" id="viewer"><div class="viewer-note" id="modelNote">正在载入手部模型…</div><div class="viewer-info">左键旋转 · 中键平移 · 滚轮缩放</div></div><div class="viewer-tools"><span id="realtimeJointControl"></span><button id="resetView">重置视角</button></div></section>
-<section class="card"><div class="card-head"><h2>动作与序列</h2><span id="motionCount" class="badge">0 个动作</span></div><div class="section"><div class="toolbar"><span id="choosemotion" class="motion-picker"></span><span id="loadmotion"></span></div><div class="toolbar"><span id="savemotion"></span><span id="deletemotion"></span><button id="import">选择动作文件</button><button id="export">导出动作文件</button><input type="file" id="file" accept=".txt,.json" hidden></div><div class="toolbar"><label class="field">过渡 (s)<span id="transition"></span></label><label class="field">间隔 (s)<span id="interval"></span></label></div><div class="divider"></div><div class="toolbar"><span id="motionstreamplay"></span><span id="motionStreamLoop"></span><span id="isConnectOffline"></span><span id="a32EnableMotorCompensation" hidden title="勾选后，左右手所有姿态下发增加当前手别的补偿系数；取消勾选使用原始下发值。"></span></div><div class="file-note" id="motionSendStatus" role="status"></div><div class="file-note" id="fileNote">支持现有 .txt / .json 动作文件</div></div></section>
-<section class="card" id="motorCard"><div class="card-head"><h2>电机控制</h2><span id="openSendLog"></span></div><div class="section" id="v2Motors"><div class="motor-row"><span>直线电机</span><span id="allzero"></span><span id="allreset"></span></div><div class="motor-row"><span>旋转电机</span><span id="calibrationRotateMotor"></span><span id="oneKeyZero"></span><span id="motiondirectlysend"></span></div></div>
-<div class="section" id="a30Motors" hidden>
-<div class="toolbar"><label class="field">直线找零 Iq<span id="a30LinearIq"></span></label><label class="field">旋转找零 Iq<span id="a30RotaryIq"></span></label></div>
-<div class="file-note">Iq 为已标定的电流码值，不是安培；两类电机分别填写。</div>
-<div class="toolbar"><span id="a30Home"></span><span id="a30Reset"></span><span id="a30Init"></span><span id="a30PowerOff"></span></div>
-<div class="file-note">9路行程(mm) + 11路角度(°)，外接角度按各通道配置的减速比换算。外接两路无独立找零/复位/断电指令。复位回零态不移动关节；回到初始姿态在实时控制开启时通过 Ruckig 下发。</div>
-<div class="file-note">实时控制无需先找零；每次开启均需20路新鲜有效反馈，从当前实测姿态起步。</div>
-<div id="a30Telemetry" role="status"></div><div id="a30Seed" class="file-note"></div><div id="a30Clipped" class="file-note" role="status"></div><div id="a30Message" class="file-note"></div>
-<details><summary>找零结果</summary><div id="a30Report" class="dialog-label">尚未执行找零</div></details>
-</div>
-<div class="section" id="a32Motors" hidden>
+<section class="card"><div class="card-head"><h2>手部模型</h2><div class="toolbar"><select id="modelSelect" aria-label="手部型号"><option value="TsenseI_v3_2_withid">A3.2 with ID · 20关节 · SDK</option></select><span id="handSide"></span><span id="dof" class="badge">20 自由度</span></div></div><div class="viewer" id="viewer"><div class="viewer-note" id="modelNote">正在载入手部模型…</div><div class="viewer-info">左键旋转 · 中键平移 · 滚轮缩放</div></div><div class="viewer-tools"><span id="realtimeJointControl"></span><button id="resetView">重置视角</button></div></section>
+<section class="card"><div class="card-head"><h2>动作与序列</h2><span id="motionCount" class="badge">0 个动作</span></div><div class="section"><div class="toolbar"><span id="choosemotion" class="motion-picker"></span><span id="loadmotion"></span></div><div class="toolbar"><span id="savemotion"></span><span id="deletemotion"></span><button id="import">选择动作文件</button><button id="export">导出动作文件</button><input type="file" id="file" accept=".txt,.json" hidden></div><div class="toolbar"><label class="field">过渡 (s)<span id="transition"></span></label><label class="field">间隔 (s)<span id="interval"></span></label></div><div class="divider"></div><div class="toolbar"><span id="motionstreamplay"></span><span id="motionStreamLoop"></span><span id="isConnectOffline"></span><span id="a32EnableMotorCompensation" title="勾选后，左右手所有姿态下发增加当前手别的补偿系数；取消勾选使用原始下发值。"></span></div><div class="file-note" id="motionSendStatus" role="status"></div><div class="file-note" id="fileNote">支持现有 .txt / .json 动作文件</div></div></section>
+<section class="card" id="motorCard"><div class="card-head"><h2>电机控制</h2></div><div class="section" id="a32Motors">
 <div class="toolbar"><span id="a32Enable"></span><span id="a32Disable"></span><span id="a32Reset"></span><span id="a32Init"></span></div>
 <div class="toolbar"><span id="a32HomeSlot"></span><label class="field">找零 Iq 码值<span id="a32HomeIq"></span></label><span id="a32Home"></span></div>
 <div class="file-note">14 路直线 + 4 路自研旋转 + 2 路 MIT。每次开启实时控制或动作同步，均从本次连接的新鲜完整反馈起步，再按 Ruckig 轨迹下发。反馈缺失时等待更新。可选找零仅覆盖自研电机，完成后重新使能。</div>
@@ -45,37 +34,21 @@ header{display:flex;align-items:center;justify-content:space-between;gap:18px;pa
 </div>
 </section>
 </div>
-<section class="card"><div class="card-head"><h2>关节控制</h2><div class="toolbar"><span id="jointUnits" class="file-note">滑块：弧度</span><button id="jointDisplayToggle" type="button" title="切换滑块和数值输入的显示单位">显示：弧度</button></div></div><div id="jointNote" class="section file-note">每个关节显示 UI 输入范围与 USB 下发范围；零行程为 0。A3.0 外接旋转范围为电机端角度，已包含各通道配置的减速比。</div><div class="joints" id="joints"></div></section>
+<section class="card"><div class="card-head"><h2>关节控制</h2><div class="toolbar"><span id="jointUnits" class="file-note">滑块：弧度</span><button id="jointDisplayToggle" type="button" title="切换滑块和数值输入的显示单位">显示：弧度</button></div></div><div id="jointNote" class="section file-note">关节输入使用当前模型范围；下方同时显示实际 SDK 下发单位和范围。</div><div class="joints" id="joints"></div></section>
 </main>
 <footer class="statusbar"><span id="status">等待服务响应</span><span>Form2 · Online Motion Play</span></footer>
 <div id="dialogs" class="dialog-layer"></div><div id="toast" role="status" aria-live="polite"></div>
 <script type="module">
 import {createAluminumMaterial, createAluminumEnvironment} from "./shared/aluminum.js";
-import {isA30Model, isA32Model} from "./shared/hand-models.js";
-import {serialSupport} from '/browser-serial.js';
-import {WorkerSerial} from '/worker-client.js';
 const $ = id => document.getElementById(id);
 let state = null, connected = false, toastTimer, commandTail = Promise.resolve();
 let authenticated = false, ownsControl = false;
 const clientId = [...crypto.getRandomValues(new Uint8Array(16))].map(n => n.toString(16).padStart(2,'0')).join('');
 const bindings = new Map(), pendingJoints = new Map();
-let localPorts = [];
-const localSerial = new WorkerSerial(clientId, () => {
-  if (localSerial.error) notify(localSerial.error);
-});
 function notify(text) { $('toast').textContent = text; clearTimeout(toastTimer); toastTimer = setTimeout(() => $('toast').textContent = '', 5500); }
 async function api(action, body) {
   const headers = {'X-Motion-Client':clientId};
-  if (action === 'serial_stream') {
-    return fetch('/api/serial_stream',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({token:body.token}),signal:body.signal,cache:'no-store'});
-  }
-  if (action === 'serial_binary' || action === 'serial_rx') {
-    const response = await fetch('/api/'+action, {method:'POST', headers:{...headers,'Content-Type':'application/octet-stream'},
-      body, signal:AbortSignal.timeout(180), cache:'no-store'});
-    if (!response.ok) { const error = await response.json(); throw Error(error.error || response.statusText); }
-    return new Uint8Array(await response.arrayBuffer());
-  }
-  const response = await fetch('/api/' + action, {signal:AbortSignal.timeout(action === 'serial' ? 180 : 12000),
+  const response = await fetch('/api/' + action, {signal:AbortSignal.timeout(12000),
     ...(body === undefined ? {cache:'no-store',headers} : {method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify(body)})});
   const data = await response.json();
   if (!response.ok) throw Error(data.error || response.statusText); return data;
@@ -340,20 +313,13 @@ function render(next) {
   }
   state = next; document.body.classList.remove('disconnected');
   ownsControl = next.control.owned;
-  if (localSerial.active && !ownsControl) void localSerial.disconnect('控制权已释放，请重新连接本机串口');
   $('modelSelect').value = next.model_id;
   $('modelSelect').disabled = !ownsControl || next.connected;
   $('dof').textContent = `${next.joints.length} 自由度`;
-  const a30 = isA30Model(next.model_id);
-  const a32 = isA32Model(next.model_id);
-  $('v2Motors').hidden = a30 || a32; $('a30Motors').hidden = !a30; $('a32Motors').hidden = !a32;
-  $('a32Connection').hidden = !a32;
-  $('a32EnableMotorCompensation').hidden = !a32;
-  for (const id of ['ports','refreshPorts','authorizePort','serialBaudField','openSendLog']) $(id).hidden = a32;
-  $('jointNote').textContent = a32 ? '关节输入使用当前模型范围。四指 swing 默认为 0，输入范围 [-0.35, 0.35] rad，下发前限幅到 [-0.34, 0.34] rad；下方同时显示实际 SDK 下发单位和范围。' : '每个关节显示 UI 输入范围与 USB 下发范围；零行程为 0。A3.0 外接旋转范围为电机端角度，已包含各通道配置的减速比。';
+  $('jointNote').textContent = '关节输入使用当前模型范围。四指 swing 默认为 0，输入范围 [-0.35, 0.35] rad，下发前限幅到 [-0.34, 0.34] rad；下方同时显示实际 SDK 下发单位和范围。';
   updateJointDisplayButton();
   for (const id of ['a32Transport','a32Port','a32Host','a32TcpPort']) $(id).disabled = !ownsControl || next.connected;
-  if (a32) {
+  {
     const d = next.device;
     const self = d.self || [], mit = d.mit || [];
     $('a32Telemetry').textContent = `${d.feedback_valid ? '遥测就绪' : '遥测缺失或不完整，仍可下发'} · self ${self.filter(row => row.online).length}/18 + MIT ${mit.filter(row => row.online).length}/2 · ${d.enabled ? '已使能' : '未使能'} · ${d.command_started ? '轨迹下发中' : d.armed ? '等待关节或动作指令' : '未下发轨迹'}${d.seed_missing?.length ? ` · ${d.seed_missing.length} 路反馈无法用于起步（非实测）` : ''}`;
@@ -368,44 +334,23 @@ function render(next) {
       ...self.map(row => `self ${row.slot} · ${row.joint || ''} · CAN${row.bus ?? '?'} 节点 ${row.can_node ?? row.node ?? '?'} · ${row.online ? '在线' : '离线'} · 位置 ${row.position ?? '—'} ${row.unit || ''} · 电流 ${row.iq ?? '—'} / 目标 ${row.iq_ref ?? '—'} ${currentUnit(row)} · 找零 ${row.homing_label || row.homing || 'WAIT'}`),
       ...mit.map(row => `MIT ${row.index} · ${row.joint || ''} · ${row.online ? '在线' : '离线'} · 有效 ${!!row.valid} · 故障 ${row.fault ?? '—'} · 输出轴 ${row.position ?? '—'}° · 电流 ${row.iq ?? '—'} A`)].join('\n');
   }
-  if (a30) {
-    const d = next.device;
-    $('a30Telemetry').textContent = `${d.fresh ? '遥测正常' : '等待有效新鲜遥测'} · 在线 ${d.self_online ?? '?'}/18 + ${d.external_online ?? '?'}/2 · 收 ${d.rx} / 发 ${d.tx} 帧 · ${d.armed ? '实时下发中' : '未下发'}`;
-    $('a30Seed').textContent = d.seed_missing?.length ? `本次开启：${d.seed_missing.length}路缺失反馈，起步值采用页面姿态（不是实测位置）` : '';
-    $('a30Clipped').textContent = d.seed_clipped?.length ? '本次开启的边界修正：' + d.seed_clipped.map(r => `${r.joint} 实测 ${r.raw.toFixed(4)} ${r.unit} → 起步采用 ${r.applied.toFixed(4)} ${r.unit}`).join('；') : '';
-    $('a30Message').textContent = d.error || (d.homing ? `找零 ${Math.min(18,d.homing.slot+1)}/18 · ${d.homing.phase}` : next.message);
-    $('a30Report').textContent = d.report.length ? d.report.map(r => `${r.joint}：${r.success ? '完成' : r.reason}`).join('\n') : '尚未执行找零';
-  }
   $('control').textContent = ownsControl ? '释放控制' : next.control.available ? '获取控制' : '只读查看';
   $('control').disabled = !ownsControl && !next.control.available;
-  for (const id of ['connect','stop','import','ports','authorizePort']) $(id).disabled = !ownsControl;
-  $('connect').disabled = !ownsControl || !!serialSupport() || !!localSerial.closing;
-  $('ports').disabled = !ownsControl || !!localSerial.port;
-  $('authorizePort').disabled = !ownsControl || !!serialSupport() || !!localSerial.port;
-  $('connection').textContent = localSerial.active ? '● 本机下位机已连接' : next.connected ? '其他电脑已连接' : '○ 本机串口未连接';
-  $('connection').classList.toggle('online',localSerial.active);
-  $('connect').textContent = localSerial.port ? '断开本机串口' : '连接本机串口';
-  $('serialBaud').disabled = localSerial.active;
-  const serialRates = localSerial.sampleMetrics();
-  $('serialNote').textContent = serialSupport() || localSerial.error || (localSerial.active ? `${localSerial.deviceLabel} · 本机写入 ${serialRates.positionHz.toFixed(1)} Hz · 接收 ${serialRates.rxKBs.toFixed(1)} KiB/s · 交换 ${serialRates.exchangeHz.toFixed(1)} Hz / ${localSerial.rttMs.toFixed(1)} ms · 收 ${localSerial.rxCount} 字节 / 发 ${localSerial.txCount} 帧` : '将 H7 插在这台电脑，点击“授权本机串口”选择设备。node0 不连接 USB。');
-  if (a32) {
-    $('connect').disabled = !ownsControl || next.sdk_local_access === false;
-    $('connect').textContent = next.connected ? '断开 SDK' : '连接本机 SDK';
-    $('connection').textContent = next.connected ? '● SDK 已连接服务电脑设备' : '○ SDK 未连接';
-    $('connection').classList.toggle('online', next.connected);
-    $('serialNote').textContent = next.sdk_local_access === false ? '当前为远程页面，可离线编辑 A3.2 动作。实机连接与控制请在运行 Python 服务的电脑上通过本机地址打开页面。' : 'A3.2 原生 SDK 在运行 Python 服务的电脑上连接 USB / ETH。左右手共用硬件槽位表，实机操作仅允许本机浏览器。';
-  }
-  $('motionSendStatus').textContent = a32
-    ? next.device.stop_reason || next.device.last_error
-      ? `下发已停止：${next.device.stop_reason || next.device.last_error}`
-      : next.device.command_started
-        ? `SDK 累计已发送 ${next.device.sample_ticks || 0} 帧轨迹目标（不代表设备已执行）`
-        : next.controls.isConnectOffline?.value
-          ? '同步已开启：点击加载选定动作或动作序列播放后下发'
-          : next.controls.realtimeJointControl?.value
-            ? '实时关节控制已开启；序列播放请切换到动作同步下位机'
-            : '离线预览：勾选动作同步下位机后再加载或播放'
-    : '';
+  for (const id of ['connect','stop','import']) $(id).disabled = !ownsControl;
+  $('connect').disabled = !ownsControl || next.sdk_local_access === false;
+  $('connect').textContent = next.connected ? '断开 SDK' : '连接本机 SDK';
+  $('connection').textContent = next.connected ? '● SDK 已连接服务电脑设备' : '○ SDK 未连接';
+  $('connection').classList.toggle('online', next.connected);
+  $('serialNote').textContent = next.sdk_local_access === false ? '当前为远程页面，可离线编辑 A3.2 with ID 动作。实机连接与控制请在运行 Python 服务的电脑上通过本机地址打开页面。' : 'A3.2 with ID 原生 SDK 在运行 Python 服务的电脑上连接 USB / ETH。实机操作仅允许本机浏览器。';
+  $('motionSendStatus').textContent = next.device.stop_reason || next.device.last_error
+    ? `下发已停止：${next.device.stop_reason || next.device.last_error}`
+    : next.device.command_started
+      ? `SDK 累计已发送 ${next.device.sample_ticks || 0} 帧轨迹目标（不代表设备已执行）`
+      : next.controls.isConnectOffline?.value
+        ? '同步已开启：点击加载选定动作或动作序列播放后下发'
+        : next.controls.realtimeJointControl?.value
+          ? '实时关节控制已开启；序列播放请切换到动作同步下位机'
+          : '离线预览：勾选动作同步下位机后再加载或播放';
   $('motionCount').textContent = `${next.count} 个动作`;
   $('status').textContent = (ownsControl ? '控制模式 · ' : '只读模式 · ') + (next.homing ? '正在执行一键找零' : next.playing ? '正在播放动作序列' : '就绪');
   $('fileNote').textContent = `工作副本：${next.file} · 修改自动保存，可导出 .txt / .json`;
@@ -430,53 +375,24 @@ async function poll() {
   catch (error) { markJointTelemetryMissing(); $('connection').textContent = '服务已断开'; $('status').textContent = '服务器连接已中断，正在重试…'; document.body.classList.add('disconnected'); if (connected) notify(error.message); connected = false; }
   setTimeout(poll, connected ? 80 : 1500);
 }
-async function refreshPorts() {
-  try {
-    const unsupported = serialSupport(); $('serialNote').textContent = unsupported;
-    if (unsupported) return;
-    const previous = localPorts[Number($('ports').value)];
-    localPorts = await navigator.serial.getPorts();
-    $('ports').replaceChildren(new Option(localPorts.length ? '选择已授权本机串口' : '请先授权本机串口',''),...localPorts.map((port,i) => {
-      const info = port.getInfo(), usb = info.usbVendorId ? ` · USB ${info.usbVendorId.toString(16).padStart(4,'0')}:${(info.usbProductId||0).toString(16).padStart(4,'0')}` : '';
-      return new Option(`本机串口 ${i+1}${usb}`,String(i));
-    }));
-    const selected = localPorts.indexOf(previous); if (selected >= 0) $('ports').value = String(selected);
-  }
-  catch (error) { notify(error.message); }
-}
-$('modelSelect').onchange = () => { pendingJoints.clear(); command('model',{model_id:$('modelSelect').value}); };
 $('a32Transport').onchange = () => {
   const eth = $('a32Transport').value === 'eth';
   $('a32PortField').hidden = eth; $('a32HostField').hidden = !eth; $('a32TcpField').hidden = !eth;
 };
-$('refreshPorts').onclick = refreshPorts;
-$('authorizePort').onclick = async () => {
-  try { const port = await navigator.serial.requestPort(); await refreshPorts(); $('ports').value = String(localPorts.indexOf(port)); }
-  catch (error) { if (error.name !== 'NotFoundError') notify(error.message); }
-};
 $('connect').onclick = async () => {
   try {
-    if (isA32Model(state?.model_id)) {
-      if (state.connected) { await command('disconnect',{}); return; }
-      await command('connect',{transport:$('a32Transport').value,port:$('a32Port').value.trim() || 'auto',host:$('a32Host').value.trim(),tcp_port:Number($('a32TcpPort').value)});
-      return;
-    }
-    if (localSerial.port) { await localSerial.disconnect(); return; }
-    if ($('ports').value === '') throw Error('请先授权并选择这台电脑的串口');
-    await commandTail;
-    await localSerial.connect(localPorts[Number($('ports').value)], state.model_id, Number($('serialBaud').value));
+    if (state.connected) { await command('disconnect',{}); return; }
+    await command('connect',{transport:$('a32Transport').value,port:$('a32Port').value.trim() || 'auto',host:$('a32Host').value.trim(),tcp_port:Number($('a32TcpPort').value)});
   } catch (error) { notify(error.message); }
 };
-$('stop').onclick = () => { pendingJoints.clear(); void localSerial.disconnect('已停止下发并断开本机串口'); command('stop',{}); };
-$('control').onclick = async () => { if (ownsControl) await localSerial.disconnect(); await command(ownsControl ? 'release' : 'control',{}); };
+$('stop').onclick = () => { pendingJoints.clear(); command('stop',{}); };
+$('control').onclick = () => command(ownsControl ? 'release' : 'control',{});
 function pauseNative() {
-  if (!ownsControl || !state?.connected || !isA32Model(state.model_id)) return;
+  if (!ownsControl || !state?.connected) return;
   void fetch('/api/stop',{method:'POST',keepalive:true,headers:{'X-Motion-Client':clientId,'Content-Type':'application/json'},body:JSON.stringify({reason:'page_hidden'})}).catch(() => {});
 }
-document.addEventListener('visibilitychange', () => { if (document.hidden) { if (localSerial.port) void localSerial.disconnect('页面已切到后台，已停止本机下发'); pauseNative(); } });
-window.addEventListener('pagehide', () => { void localSerial.disconnect(); pauseNative(); });
-navigator.serial?.addEventListener('connect',refreshPorts);
-navigator.serial?.addEventListener('disconnect',event => { if (event.target === localSerial.port) void localSerial.disconnect('本机 USB 已断开'); void refreshPorts(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden) pauseNative(); });
+window.addEventListener('pagehide', pauseNative);
 $('import').onclick = () => $('file').click();
 $('file').onchange = async () => {
   const file = $('file').files[0]; if (!file) return;
@@ -484,7 +400,7 @@ $('file').onchange = async () => {
   catch (error) { notify(error.message); } finally { $('file').value = ''; }
 };
 $('export').onclick = async () => {
-  try { await commandTail; const link = document.createElement('a'); link.href = '/api/download'; link.download = isA32Model(state.model_id) ? `motions_${state.model_id}_${state.side}.json` : `motions_${state.side}.json`; document.body.append(link); link.click(); link.remove(); }
+  try { await commandTail; const link = document.createElement('a'); link.href = '/api/download'; link.download = `motions_${state.model_id}_${state.side}.json`; document.body.append(link); link.click(); link.remove(); }
   catch (error) { notify(error.message); }
 };
 $('a32DownloadLog').onclick = async () => {
@@ -502,7 +418,6 @@ if (location.protocol === 'file:') notify('请先运行 python online_control/on
 async function startSession() {
   try { await api('control',{}); } catch (error) { notify(error.message); }
   authenticated = true;
-  refreshPorts();
   if (!viewerReady) initViewer();
 }
 
@@ -630,7 +545,7 @@ async function initViewer() {
     new ResizeObserver(() => { const {width,height} = $('viewer').getBoundingClientRect(); if (!width || !height) return; renderer.setSize(width,height,false); camera.aspect=width/height; camera.updateProjectionMatrix(); invalidateViewer(); }).observe($('viewer'));
     document.addEventListener('visibilitychange', () => { if (document.hidden) cancelViewerFrame(); else invalidateViewer(); });
     window.addEventListener('pagehide', () => { cancelViewerFrame(); modelLoadController?.abort(); });
-    viewerReady = true; await loadModel(state?.urdf || '/assets/hands/TsenseI_hand/urdf/TsenseI__hand_left_v1.urdf');
+    viewerReady = true; await loadModel(state?.urdf || '/assets/hands/TsenseI_hand_v3_2_withid/urdf/TsenseI_hand_left_v3_2_withid.urdf');
   } catch (error) { $('modelNote').textContent = '3D 视图不可用：' + error.message; }
 }
 startSession().catch(error => notify('连接服务失败：'+error.message));

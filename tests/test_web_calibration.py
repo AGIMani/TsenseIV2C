@@ -20,7 +20,7 @@ from hand_profiles import A30_MODEL_IDS, A32_MODEL_IDS
 from webxr import WEBXR_25_TO_MEDIAPIPE_21, WEBXR_HAND_JOINT_NAMES, WEBXR_PROTOCOL_SCHEMA
 
 
-@pytest.mark.parametrize('model', (*A32_MODEL_IDS, *A30_MODEL_IDS))
+@pytest.mark.parametrize('model', ('TsenseI_v3_2_withid',))
 @pytest.mark.parametrize('side', ('left', 'right'))
 def test_models_use_same_zero_pose_and_unsaved_solver(model, side):
     session = CalibrationSession(side, model_id=model)

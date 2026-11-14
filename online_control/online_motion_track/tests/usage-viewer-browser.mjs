@@ -24,7 +24,7 @@ try{
     const {WorkerRecorder}=await import('/worker-recorder.js');
     const root=await(await navigator.storage.getDirectory()).getDirectoryHandle('test-hand-logs',{create:true}),results=[];
     const r=new WorkerRecorder();await r.setDirectory(root);
-    for(const [model,folder] of [['TsenseI_v3_0','A30'],['TsenseI_v3_2','A32'],['TsenseI_v2','V2']]){
+    for(const [model,folder] of [['TsenseI_v3_2_withid','A32']]){
       await r.start({model_id:model,hand_side:'left',hand_name:'样机 01'});
       r.record('retarget',{frame_id:1,joints:{left_hand_index_MCP_joint:.2}});
       const file=await r.stop('test');
@@ -40,7 +40,7 @@ try{
     // Permission failure preserves export and IndexedDB instead of pretending to save.
     const {LocalRecorder}=await import('/local-recorder.js');
     const failed=new LocalRecorder(()=>{}, {dbName:'save-failure'});
-    await failed.start({model_id:'TsenseI_v3_0'});failed.directory={queryPermission:async()=>'denied'};
+    await failed.start({model_id:'TsenseI_v3_2_withid'});failed.directory={queryPermission:async()=>'denied'};
     const recovery=await failed.stop('test');
     if(!recovery.saveError||!recovery.url||(await failed.list()).length!==1)throw Error('permission failure lost recovery');
     URL.revokeObjectURL(recovery.url);failed.db.close();
@@ -49,7 +49,7 @@ try{
   });
   await page.goto(base+'/viewer');
   const header={type:'session',schema:'hand-control-session/v2',session_id:'browser-usage',started_at:'2026-09-24T01:00:00Z',
-    metadata:{model_id:'TsenseI_v3_0',hand_side:'left',hand_name:'样机 01'}};
+    metadata:{model_id:'TsenseI_v3_2_withid',hand_side:'left',hand_name:'样机 01'}};
   const fixture=(index)=>({name:`fixture_part00${index}.jsonl`,mimeType:'application/x-ndjson',buffer:Buffer.from([
     {...header,recording_part:{index,count:2,session_id:header.session_id}},
     {type:'joint_angles',stage:'retarget',t:index===1?0:60,hand_side:'left',joints:{left_hand_index_MCP_joint:.1}},
@@ -75,8 +75,9 @@ try{
   await page.locator('#usageModel').selectOption('A32');await page.locator('#usageSide').selectOption('right');
   await page.locator('#usageName').fill('右手样机 B');
   await page.locator('#usageStart').fill('2026-09-24T10:00');await page.locator('#usageEnd').fill('2026-09-24T10:30');
-  await page.locator('#usageAdd').click();assert.equal(await page.locator('#usageRows tr').count(),1);
+  await page.locator('#usageAdd').click();assert.equal(await page.locator('#usageRows tr').count(),2);
   assert((await page.locator('#usageTotals').textContent()).includes('0 时 30 分 0 秒'));
+  assert((await page.locator('#usageTotals').textContent()).includes('0 时 2 分 0 秒'));
   await page.locator('#file').setInputFiles(fixture(2));await page.waitForFunction(()=>!document.querySelector('#file').disabled);
   const out=new URL('../../../logs/usage-viewer-20260924/',import.meta.url);await mkdir(out,{recursive:true});
   await page.screenshot({path:new URL('viewer.png',out).pathname.replace(/^\/([A-Za-z]:)/,'$1'),fullPage:true});

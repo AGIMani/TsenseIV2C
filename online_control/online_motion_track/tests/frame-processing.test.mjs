@@ -4,6 +4,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {LatestFrameQueue} from '../static/latest-frame-queue.js';
 
 const app=readFileSync(new URL('../static/app.js',import.meta.url),'utf8');
 const source=app.slice(app.indexOf('async function processFrame(token)'),app.indexOf('function applyFrameUpdate'));
@@ -35,7 +36,7 @@ test('registers next camera frame after inference, without waiting on retarget',
   const h=setup(),pending=h.process(1);
   await flush();assert.deepEqual(h.events,['infer']);
   h.inference.resolve(h.detection);await pending;
-  assert.deepEqual(h.events,['infer','schedule','hand','offer','overlay']);
+  assert.deepEqual(h.events,['infer','schedule','offer','overlay']);
   assert.equal(h.packets[0].packet.session,'unit-session');
   assert.equal(h.packets[0].packet.hand.world.length,21);
   assert.equal(h.packets[0].packet.hand.world,h.records[0].data.world_landmarks[0]);
@@ -74,6 +75,39 @@ test('no-hand frames still reach the queue to end tracking', async()=>{
   const h=setup(),pending=h.process(1);await flush();
   h.inference.resolve({result:{},inference_ms:16});await pending;
   assert.equal(h.packets[0].packet.hand,null);
+});
+
+test('slow GPU inference updates both overlay and backend without renewing capture time', async()=>{
+  const h=setup(),sent=[],returned=[];
+  h.context.api=async(path,packet)=>{sent.push({path,packet});return {tracking:true};};
+  const submit=vm.runInNewContext(app.slice(app.indexOf('function submitQueuedFrame'),app.indexOf('function applyFrameUpdate'))+';submitQueuedFrame;',h.context);
+  h.context.framePipeline=new LatestFrameQueue({now:()=>h.context.performance.now(),
+    process:submit,onResult:frame=>returned.push(frame),onError:error=>{throw error;}});
+  const pending=h.process(1);await flush();
+  h.context.performance.now=()=>234;h.inference.resolve({...h.detection,inference_ms:134});
+  await pending;await flush();
+  assert.equal(h.overlays.length,1);assert.equal(returned.length,1);
+  assert.equal(sent[0].path,'/api/frame');
+  assert.equal(sent[0].packet.timestamp_ms,100);
+  assert.equal(sent[0].packet.source_age_ms,134);
+  assert.equal(h.records[0].data.timestamp_ms,100);
+  assert.equal(sent[0].packet.capture_unix_ms,returned[0].packet.capture_unix_ms);
+  assert.equal(returned[0].packet.source_age_ms,undefined);
+  assert.equal(h.context.framePipeline.stats.expired,0);
+});
+
+test('new camera pipeline requires the H7 freshness capability from a hardware server',async()=>{
+  const h=setup(),sent=[];
+  h.context.api=async(...args)=>sent.push(args);
+  h.context.session.hardware={armed:false};
+  const submit=vm.runInNewContext(app.slice(app.indexOf('function submitQueuedFrame'),app.indexOf('function applyFrameUpdate'))+';submitQueuedFrame;',h.context);
+  const frame={packet:{timestamp_ms:0,capture_unix_ms:123456}};
+  assert.throws(()=>submit(frame),/重启本机手势服务/);
+  assert.equal(sent.length,0);
+  h.context.session.camera_freshness_limit_ms=400;
+  await submit(frame);
+  assert.equal(sent[0][1].capture_unix_ms,123456);
+  assert.equal(sent[0][1].source_age_ms,100);
 });
 
 test('A3.2 sends raw detection and capture time to the server recorder', async()=>{

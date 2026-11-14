@@ -34,7 +34,7 @@ const checkRanges = state => {
   assert.equal(state.connected, false, 'offline smoke must never connect a hand');
   assert.equal(state.joints.length, 20);
   for (const joint of state.joints) {
-    const expected = joint.name.includes('_swing_') ? [-.35,.35] : /_(MCP|PIP|DIP)_/.test(joint.name) ? [.005,1.565] : null;
+    const expected = joint.name.includes('_swing_') ? [-.35,.35] : /_(MCP|PIP|DIP)_/.test(joint.name) ? [0,1.57] : null;
     if (expected) assert.deepEqual([joint.min,joint.max], expected);
   }
 };
@@ -53,7 +53,8 @@ const waitModel = async () => {
 try {
   await page.goto(base);
   await page.waitForFunction(() => document.querySelector('#control').textContent === '释放控制');
-  for (const model of ['TsenseI_v3_2', 'TsenseI_v3_2_withid']) {
+  assert.deepEqual(await page.locator('#modelSelect option').evaluateAll(options => options.map(option => option.value)), ['TsenseI_v3_2_withid']);
+  for (const model of ['TsenseI_v3_2_withid']) {
     console.log('MODEL', model);
     await page.locator('#modelSelect').selectOption(model);
     await page.waitForFunction(model => document.querySelector('#fileNote').textContent.includes(model.endsWith('_withid') ? 'motions_a32_withid_left' : 'motions_a32_left'), model);
@@ -66,8 +67,6 @@ try {
     }
     assert.match(await page.locator('#jointNote').textContent(), /\[-0\.35, 0\.35\].*\[-0\.34, 0\.34\]/);
     assert.equal(await page.locator('#a32Motors').isVisible(), true);
-    assert.equal(await page.locator('#a30Motors').isVisible(), false);
-    assert.equal(await page.locator('#ports').isVisible(), false);
     assert.equal(await page.locator('#a32Connection').isVisible(), true);
     assert.equal(await page.locator('#a32Enable button').isDisabled(), true);
     await page.locator('#a32Transport').selectOption('eth');
@@ -122,14 +121,6 @@ try {
   const output = process.env.MOTION_QA_OUTPUT || '.work/a32-browser';
   await mkdir(output, {recursive:true});
   await page.screenshot({path:output + '/motion-play-withid.png',fullPage:true});
-  for (const model of ['TsenseI_v3_0', 'TsenseI_v3_0_withid', 'TsenseI_v2']) {
-    console.log('MODEL', model);
-    await page.locator('#modelSelect').selectOption(model);
-    const file = {TsenseI_v3_0:'motions_a30_left.json', TsenseI_v3_0_withid:'motions_a30_withid_left.json', TsenseI_v2:'motions.json'}[model];
-    await page.waitForFunction(file => document.querySelector('#fileNote').textContent.includes(file), file);
-    await waitModel();
-    assert.equal(await page.locator('#a32Motors').isVisible(), false);
-  }
   // Hold a replacement load in flight, then return to the already displayed
   // model. The cancelled request must never replace the current hand or leave
   // a stale loading/error message behind.
@@ -166,7 +157,7 @@ try {
   await waitModel();
   assert.deepEqual(errors, []);
   assert.deepEqual(failedAssets, []);
-  console.log(JSON.stringify({ok:true, models:5, a32_sides:4, save_export_playback:true, controlReacquisitions:0, rapid_switch:true, displayedModels:displayedModels.length, errors, failedAssets}));
+  console.log(JSON.stringify({ok:true, models:1, a32_sides:2, save_export_playback:true, controlReacquisitions:0, rapid_switch:true, displayedModels:displayedModels.length, errors, failedAssets}));
 } finally {
   await browser.close();
 }

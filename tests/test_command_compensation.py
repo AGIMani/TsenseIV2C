@@ -11,9 +11,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / 'src')]
 from hand_profiles import A30_MODEL_IDS, A32_MODEL_IDS
 from online_control.online_motion_track.command_compensation import compensate_command_pose
 from online_control.online_motion_track.main import WebSession
-from online_control.online_motion_track.v2.session import V2WebSession
 from test_web_v3_2 import packet
-from test_web_v2 import MemoryUsb, packet as v2_packet
 
 
 # Explicit expected commands for a 0.5 rad input, independent of production constants.
@@ -51,7 +49,7 @@ def test_pinky_reduction_retains_positive_lower_limit():
     assert compensate_command_pose({name: 0.}, {name: (0., 1.57)})[name] == 0.
 
 
-@pytest.mark.parametrize('model', (*A30_MODEL_IDS, *A32_MODEL_IDS))
+@pytest.mark.parametrize('model', ('TsenseI_v3_2_withid',))
 @pytest.mark.parametrize('side', ['left', 'right'])
 @pytest.mark.parametrize('direct', [False, True])
 def test_a3_targets_are_compensated_once_before_collision(model, side, direct, monkeypatch):
@@ -95,33 +93,5 @@ def test_a3_targets_are_compensated_once_before_collision(model, side, direct, m
                 assert all(p[n] == pytest.approx(v) for p in device.writes for n, v in expected.items())
             finally:
                 controller.close()
-    finally:
-        session.close()
-
-
-@pytest.mark.parametrize('side', ['left', 'right'])
-@pytest.mark.parametrize('direct', [False, True])
-def test_v2_control_target_uses_compensated_angle(side, direct, monkeypatch):
-    session = V2WebSession(side, recording=False, collision_mode='off', usb=MemoryUsb())
-    try:
-        session.command('set_direct_mode', {'enabled': direct})
-        original = session.solver.retarget
-        def solve(*args, **kwargs):
-            result = original(*args, **kwargs)
-            angles = {**result.joint_values, **dict.fromkeys(expected_commands('left'), .5)}
-            return replace(result, joint_values=angles)
-        monkeypatch.setattr(session.solver, 'retarget', solve)
-        session.command('tracking_start', {})
-        for frame in range(4):
-            result = session.process(v2_packet(session, frame))
-        assert result['tracking'], result['message']
-        name = f'{side}_hand_index_PIP_joint'
-        assert result['retarget_joint_angles_rad'][name] == .5
-        assert result['collision_safe_target_joint_angles_rad'][name] == pytest.approx(.55)
-        assert session.previous_safe[name] == pytest.approx(.55)
-        for joint, expected in expected_commands(side).items():
-            assert result['retarget_joint_angles_rad'][joint] == .5
-            assert result['collision_safe_target_joint_angles_rad'][joint] == pytest.approx(expected)
-            assert session.previous_safe[joint] == pytest.approx(expected)
     finally:
         session.close()

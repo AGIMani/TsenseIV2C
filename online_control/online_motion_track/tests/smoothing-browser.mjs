@@ -28,8 +28,8 @@ const server = createServer(async(req,res)=>{
       let text=''; for await(const chunk of req) text+=chunk;
       const body=text?JSON.parse(text):{};
       let result={};
-      if(pathname==='/api/health')result={models:['TsenseI_v3_2'],a32_control_available:false,
-        a32_collision_modes:{TsenseI_v3_2:['off']}};
+      if(pathname==='/api/health')result={models:['TsenseI_v3_2_withid'],a32_control_available:false,
+        a32_collision_modes:{TsenseI_v3_2_withid:['off']}};
       if(pathname==='/api/session')result={...body,session:'fixture',pose,actuation:{}};
       if(pathname==='/api/frame') {
         frames.push(body);

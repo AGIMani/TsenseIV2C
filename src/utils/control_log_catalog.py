@@ -38,7 +38,7 @@ def set_control_log_parent(value: str) -> Path:
     if not parent.is_absolute():
         raise ValueError("日志父目录必须是绝对路径")
     parent = parent.resolve()
-    for model in ("A30", "A32", "V2"):
+    for model in ("A32",):
         (parent / model).mkdir(parents=True, exist_ok=True)
     PARENT_PATH_FILE.parent.mkdir(parents=True, exist_ok=True)
     temporary = PARENT_PATH_FILE.with_suffix(".txt.tmp")

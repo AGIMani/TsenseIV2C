@@ -1,4 +1,6 @@
 """A3.2 camera session with separately clocked native SDK downlink."""
+import math
+from numbers import Real
 import threading
 import time
 
@@ -7,8 +9,34 @@ from utils.control_session_recorder import control_log_directory
 from .control import A32Control
 
 
+def _camera_age_at_receive(packet, received_unix_ms):
+    """Keep capture age separate from queue age; never redate an old image."""
+    def finite_number(value):
+        if isinstance(value, bool) or not isinstance(value, Real):
+            return None
+        try:
+            return float(value) if math.isfinite(value) else None
+        except (OverflowError, ValueError):
+            return None
+
+    captured = finite_number(packet.get("capture_unix_ms"))
+    if captured is None or captured <= 0:
+        return None, "invalid_capture_timestamp"
+    age = received_unix_ms - captured
+    if age < 0:
+        return None, "future_capture_timestamp"
+    # Legacy clients carry the original wall-clock capture time only. New
+    # clients also supply a monotonic age covering inference and queue waiting.
+    if "source_age_ms" in packet:
+        source_age = finite_number(packet["source_age_ms"])
+        if source_age is None or source_age < 0:
+            return None, "invalid_source_age"
+        age = max(age, source_age)
+    return age, None
+
+
 class A32WebSession(WebSession):
-    def __init__(self, side="left", recording=False, log_dir=None, collision_mode="off", *, model_id="TsenseI_v3_2",
+    def __init__(self, side="left", recording=False, log_dir=None, collision_mode="off", *, model_id="TsenseI_v3_2_withid",
                  input_source="mediapipe"):
         angle_log_dir = log_dir if log_dir is not None else control_log_directory({"model_id": model_id})
         super().__init__(side, recording, angle_log_dir, collision_mode, model_id=model_id, input_source=input_source)
@@ -32,6 +60,7 @@ class A32WebSession(WebSession):
 
     def description(self):
         return {"model_id": self.model_id, "pose": self.pipeline.session.pose,
+                "camera_freshness_limit_ms": self.control.INPUT_TIMEOUT * 1000,
                 "input_source": self.input_source,
                 "init_pose": self.pipeline.session.profile.init_pose(self.pipeline.session.hand_side),
                 "joint_limits": self.control.device.joint_limits(),
@@ -139,14 +168,11 @@ class A32WebSession(WebSession):
     def _prepare_seed(self, pose):
         """Rebase the estimator and target guard before enabling, as on A3.0."""
         guard = None if self.control.direct_mode else self.pipeline.mink_guard
-        if guard and hasattr(guard, "q"):
+        if guard:
             q = guard._vector(pose)
             if not guard._feasible(q):
-                raise ValueError("反馈姿态不满足 Mink 最小间距，请调整实机或选择碰撞停止模式")
+                raise ValueError("反馈姿态不满足 Mink 最小间距，请调整实机姿态")
             guard.q = q.copy()
-        elif guard and hasattr(guard, "current"):
-            guard.current = dict(pose)
-            guard.guard.rebase(pose)
         self.pipeline.session.set_pose(pose)
         self.pipeline.session.retargeter.reset()
         self.filter.reset()
@@ -185,15 +211,18 @@ class A32WebSession(WebSession):
         if retarget:
             self.control.record_event("retarget", **details, joints=retarget,
                                       solve_ms=result.get("solve_ms"), tracking=bool(result["tracking"]),
-                                      control_accepted=bool(result["tracking"]), message=result.get("message", ""))
+                                      control_accepted=result.get("control_accepted", bool(result["tracking"])),
+                                      message=result.get("control_message") or result.get("message", ""))
         else:
             self.control.record_event("retarget_skipped", **details,
                 reason="no_hand" if not hand else "solve_rejected", message=result.get("message", ""))
-        if result["tracking"]:
+        if result.get("control_accepted", result["tracking"]):
             self.control.record_event("control_target", **details, self_collision=result.get("collision"))
         elif retarget:
-            self.control.record_event("control_target_skipped", **details, reason="control_rejected",
-                                      message=result.get("message", ""), self_collision=result.get("collision"))
+            self.control.record_event("control_target_skipped", **details,
+                                      reason=result.get("control_skip_reason") or "control_rejected",
+                                      message=result.get("control_message") or result.get("message", ""),
+                                      self_collision=result.get("collision"))
         for stage, key in (("direct", "direct_joint_angles_rad"), ("mink", "mink_joint_angles_rad")):
             if result.get(key):
                 self.control.record_event(stage, joints=result[key], **details)
@@ -230,6 +259,12 @@ class A32WebSession(WebSession):
         return self._process(packet, touch_client=False, commit=commit)
 
     def _process(self, packet, *, touch_client, commit=None):
+        # Start before acquiring the session lock: queued requests and a slow
+        # solver must not make an old observation appear fresh at control.push.
+        received_at = time.perf_counter()
+        camera_input = packet.get("source", self.input_source) == "mediapipe"
+        capture_age, camera_age_error = (_camera_age_at_receive(packet, time.time() * 1000)
+                                         if camera_input else (None, None))
         with self.lock:
             if self.closed:
                 raise ValueError("会话已停止，请重新开始")
@@ -244,10 +279,28 @@ class A32WebSession(WebSession):
                     result = super().process(packet, touch_client=False)
                 result["direct_mode"] = self.control.direct_mode
                 solved = time.perf_counter()
+                result["control_accepted"] = False
+                result["control_skip_reason"] = None
+                result["control_message"] = ""
+                if camera_input:
+                    result["source_age_at_solve_ms"] = (capture_age + (solved-received_at)*1000
+                                                        if capture_age is not None else None)
                 stage = "更新控制目标"
                 def apply_result():
                     if result["tracking"]:
-                        self.control.push(result["pose"], result["sequence"])
+                        with self.control.lock:
+                            if camera_input:
+                                age = (capture_age + (time.perf_counter()-received_at)*1000
+                                       if capture_age is not None else None)
+                                result["source_age_at_solve_ms"] = age
+                                reason = camera_age_error or (
+                                    "stale_camera_observation" if age >= self.control.INPUT_TIMEOUT*1000 else None)
+                                if reason:
+                                    result["control_skip_reason"] = reason
+                                    result["control_message"] = "相机观测已过期或时间无效；仅更新预览，不提交 H7 新目标"
+                                    return
+                            self.control.push(result["pose"], result["sequence"])
+                            result["control_accepted"] = True
                     elif packet.get("hand") is None or packet["hand"].get("label") != self.pipeline.expected_label:
                         self.control.hold()
                     else:
@@ -255,6 +308,7 @@ class A32WebSession(WebSession):
                 if commit is not None:
                     if not commit(apply_result):
                         return {**result, "tracking": False, "background_discarded": True,
+                                "control_accepted": False, "control_skip_reason": "source_cancelled_or_expired",
                                 "message": "输入已取消或过期，等待新数据",
                                 "discard_reason": "source_cancelled_or_expired"}
                 else:
@@ -267,7 +321,7 @@ class A32WebSession(WebSession):
                 state = self.status(touch_client=touch_client)
                 result["collision_safe_target_joint_angles_rad"] = state["target_joint_angles_rad"]
                 result["command_joint_angles_rad"] = state["command_joint_angles_rad"]
-                if state["armed"]:
+                if state["armed"] and not result["control_skip_reason"]:
                     result["pose"] = state["command_joint_angles_rad"]
                 result["hardware"] = state
                 ended = time.perf_counter()

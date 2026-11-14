@@ -13,7 +13,8 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 pytest.importorskip("ruckig")
 
 from a32_kinematics import A32StrokeMapper
-from hand_profiles import A32_MODEL_IDS, load_hand_profile
+from hand_profiles import load_hand_profile
+A32_MODEL_IDS = ("TsenseI_v3_2_withid",)
 from online_control.online_motion_track.a32.control import A32Control
 from online_control.online_motion_track.main import Application, WebSession, model_description
 
@@ -80,7 +81,7 @@ def control(model_id="TsenseI_v3_2", side="left"):
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
 @pytest.mark.parametrize("side", ["left", "right"])
-@pytest.mark.parametrize("collision_mode", ["stop", "mink"])
+@pytest.mark.parametrize("collision_mode", ["mink"])
 def test_protected_control_can_seed_before_first_collision_frame(model_id, side, collision_mode):
     profile = load_hand_profile(model_id)
     device = FakeDevice(model_id, side)
@@ -101,7 +102,7 @@ def test_protected_control_can_seed_before_first_collision_frame(model_id, side,
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
-@pytest.mark.parametrize("collision_mode", ["off", "monitor"])
+@pytest.mark.parametrize("collision_mode", ["off"])
 def test_unprotected_mode_requires_manual_arm_sends_and_stops_on_heartbeat_loss(model_id, collision_mode):
     device = FakeDevice(model_id)
     item = A32Control(load_hand_profile(model_id), "left", collision_mode, device=device, start=False)
@@ -134,7 +135,7 @@ def test_unprotected_mode_requires_manual_arm_sends_and_stops_on_heartbeat_loss(
         item.close()
 
 
-@pytest.mark.parametrize("collision_mode", ["off", "monitor"])
+@pytest.mark.parametrize("collision_mode", ["off"])
 def test_unprotected_mode_retains_sdk_telemetry_and_motor_fault_gates(collision_mode):
     device = FakeDevice("TsenseI_v3_2")
     item = A32Control(load_hand_profile("TsenseI_v3_2"), "left", collision_mode, device=device, start=False)
@@ -515,7 +516,7 @@ def test_disconnect_error_releases_control_owner():
     def command(action, data):
         assert action == "disconnect"
         raise RuntimeError("estop failed after link loss")
-    fake = SimpleNamespace(model_id="TsenseI_v3_2", control=object(), command=command, close=lambda: None)
+    fake = SimpleNamespace(model_id="TsenseI_v3_2_withid", control=object(), command=command, close=lambda: None)
     app.sessions["session"] = fake
     app.hardware_owner = "session"
     try:
@@ -634,7 +635,7 @@ def test_limit_overshoot_replans_before_any_sdk_write(model_id):
 def test_real_a32_collision_model_checks_every_published_sample(model_id):
     device = FakeDevice(model_id)
     device.feedback = load_hand_profile(model_id).init_pose('left')
-    item = A32Control(load_hand_profile(model_id), 'left', 'stop', device=device, start=False)
+    item = A32Control(load_hand_profile(model_id), 'left', 'mink', device=device, start=False)
     try:
         item.start_tracking()
         item.arm(True)

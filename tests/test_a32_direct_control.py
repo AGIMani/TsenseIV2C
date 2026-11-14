@@ -13,7 +13,7 @@ def forbidden(*args, **kwargs):
     raise AssertionError("direct mode entered a trajectory or collision filter")
 
 
-@pytest.mark.parametrize('normal_mode', ['stop', 'mink'])
+@pytest.mark.parametrize('normal_mode', ['mink'])
 @pytest.mark.parametrize('direct_mode', [False, True])
 def test_recording_metadata_and_state_describe_effective_mode(normal_mode, direct_mode):
     item, _ = control()
@@ -22,7 +22,7 @@ def test_recording_metadata_and_state_describe_effective_mode(normal_mode, direc
         item._normal_guard = item.guard
         recorder = item.recorder = Mock(writer=SimpleNamespace(active=True))
         item.set_direct_mode(direct_mode)
-        item.start_recording(camera_source='quest3-webxr', collision_mode='monitor',
+        item.start_recording(camera_source='quest3-webxr', collision_mode='off',
                              direct_mode=not direct_mode, ruckig_enabled=direct_mode)
         metadata = recorder.start.call_args.kwargs['metadata']
         assert metadata['camera_source'] == 'quest3-webxr'
@@ -71,7 +71,7 @@ def test_toggle_preserves_guard_and_clears_targets_derivatives_and_holds():
     item, device = control()
     try:
         normal = item._normal_guard = item.guard
-        item.mode = 'stop'
+        item.mode = 'mink'
         item.input.current_velocity = [1.] * 20
         item.input.current_acceleration = [2.] * 20
         item.finger_holds = {'index': {'left_hand_index_PIP_joint': .2}}
@@ -91,7 +91,7 @@ def test_toggle_preserves_guard_and_clears_targets_derivatives_and_holds():
         assert item.guard is normal and not item.direct_mode
         assert item.snapshot()['ruckig_enabled']
         assert item.snapshot()['collision_protection_enabled']
-        assert item.snapshot()['collision_mode'] == 'stop'
+        assert item.snapshot()['collision_mode'] == 'mink'
     finally:
         item.close()
 
@@ -202,7 +202,7 @@ def test_direct_recording_names_the_actual_command_path(tmp_path, monkeypatch):
 def test_solver_mode_and_seed_bypass_guard_without_skipping_normal_seed(monkeypatch):
     from online_control.online_motion_track import main
     model_session = SimpleNamespace(set_pose=Mock(), retargeter=SimpleNamespace(reset=Mock()))
-    guard = SimpleNamespace(current={}, guard=SimpleNamespace(rebase=Mock()))
+    guard = SimpleNamespace(_vector=Mock(side_effect=lambda value: [value['q']]), _feasible=Mock(return_value=True), q=None)
     pipeline = SimpleNamespace(session=model_session, mink_guard=guard, collision_bypass=False)
     fake = SimpleNamespace(pipeline=pipeline, filter=SimpleNamespace(reset=Mock()),
                            normalized_filter=SimpleNamespace(reset=Mock()),
@@ -215,6 +215,8 @@ def test_solver_mode_and_seed_bypass_guard_without_skipping_normal_seed(monkeypa
     _worker(pipe, {})
     assert not any(kind == 'error' for kind, value in sent)
     assert sent[3] == ('ok', {'tracking': True, 'direct_mode': True})
-    guard.guard.rebase.assert_called_once_with({'q': .6})
+    guard._vector.assert_called_once_with({'q': .6})
+    guard._feasible.assert_called_once_with([.6])
+    assert guard.q == [.6]
     assert model_session.set_pose.call_count == 2
     assert not pipeline.collision_bypass

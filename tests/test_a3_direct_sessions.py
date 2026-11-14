@@ -9,8 +9,6 @@ sys.path[:0] = [str(ROOT), str(ROOT / 'src')]
 
 from hand_profiles import A30_MODEL_IDS, A32_MODEL_IDS, HandModelProfile
 from online_control.online_motion_track import main
-from online_control.online_motion_track.a30 import session as a30_session
-from online_control.online_motion_track.a30.control import A30Control
 from online_control.online_motion_track.a32 import session as a32_session
 from online_control.online_motion_track.a32.control import A32Control
 from online_control.online_motion_track.a32.solver_process import SolverProcess
@@ -23,21 +21,17 @@ def collision_forbidden(*args, **kwargs):
     raise AssertionError('direct creation/processing entered a collision path')
 
 
-@pytest.mark.parametrize('model_id', (*A30_MODEL_IDS, *A32_MODEL_IDS))
-@pytest.mark.parametrize('requested_collision', ['stop', 'mink'])
+@pytest.mark.parametrize('model_id', ('TsenseI_v3_2_withid',))
+@pytest.mark.parametrize('requested_collision', ['off', 'mink'])
 @pytest.mark.parametrize('preview_only', [False, True])
 def test_application_direct_creation_forces_off_before_collision_construction(
         model_id, requested_collision, preview_only, tmp_path, monkeypatch):
     from online_control.online_motion_track.pipeline_v3_0 import collision
     from online_control.online_motion_track import mink_guard
-    from online_control.online_motion_track.a30 import control as a30_control
-    monkeypatch.setattr(main, 'a30_control_available', lambda: not preview_only)
     monkeypatch.setattr(main, 'a32_control_available', lambda: not preview_only)
-    monkeypatch.setattr(a30_session, 'A30Control', lambda *args, **kwargs: A30Control(*args, **kwargs, start=False))
     monkeypatch.setattr(a32_session, 'A32Control', lambda *args, **kwargs: A32Control(*args, **kwargs, start=False))
     monkeypatch.setattr(HandModelProfile, 'create_collision_filter', collision_forbidden)
     monkeypatch.setattr(collision, 'StopCollisionGuard', collision_forbidden)
-    monkeypatch.setattr(a30_control, 'StopCollisionGuard', collision_forbidden)
     monkeypatch.setattr(mink_guard, 'MinkCollisionGuard', collision_forbidden)
     app = main.Application(log_dir=tmp_path)
     try:
@@ -54,7 +48,6 @@ def test_application_direct_creation_forces_off_before_collision_construction(
             assert state['direct_mode'] and not state['ruckig_enabled']
             assert not state['collision_protection_enabled'] and not state['armed']
             assert not state['connected']
-        monkeypatch.setattr(session.pipeline, '_update_contacts', collision_forbidden)
         monkeypatch.setattr(session.pipeline.session, 'ensure_collision', collision_forbidden)
         world = session.pipeline.session.retargeter.fk.compute()
         observed = session.process({**packet(world), 'source': 'webxr'})
@@ -70,8 +63,8 @@ def test_application_direct_creation_forces_off_before_collision_construction(
         app.close()
 
 
-@pytest.mark.parametrize('model_id', A32_MODEL_IDS)
-@pytest.mark.parametrize('collision_mode', ['stop', 'mink'])
+@pytest.mark.parametrize('model_id', ('TsenseI_v3_2_withid',))
+@pytest.mark.parametrize('collision_mode', ['mink'])
 def test_real_solver_process_bypasses_and_restores_target_guard(model_id, collision_mode):
     if collision_mode == 'mink' and not main.mink_available(model_id):
         pytest.skip('Mink dependencies are unavailable')

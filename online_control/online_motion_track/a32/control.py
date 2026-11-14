@@ -22,6 +22,8 @@ class A32Control(SafeTrajectoryMixin):
 
     def __init__(self, profile, side, collision_mode, *, device=None, start=True,
                  recording_dir=None, recorder=None):
+        if collision_mode not in ("off", "mink"):
+            raise ValueError("碰撞模式必须为 off 或 mink")
         self.profile, self.side, self.mode = profile, side, collision_mode
         self.direct_mode = False
         self.device = device if device is not None else A32Device(side, model_id=profile.model_id)
@@ -62,7 +64,7 @@ class A32Control(SafeTrajectoryMixin):
         self._state_cache_error = None
         self._recording_cache = None
         self.guard = None
-        if collision_mode in ("stop", "mink"):
+        if collision_mode == "mink":
             from online_control.online_motion_track.pipeline_v3_0.collision import StopCollisionGuard
             self.guard = StopCollisionGuard(profile, side)
         self._normal_guard = self.guard
@@ -265,8 +267,8 @@ class A32Control(SafeTrajectoryMixin):
     def arm_issue(self, state):
         if not self.tracking_started:
             return "请先开始识别"
-        if not self.direct_mode and self.guard is None and self.mode not in ("off", "monitor"):
-            return "请先选择碰撞停止或 Mink 保护模式"
+        if not self.direct_mode and self.guard is None and self.mode != "off":
+            return "Mink 避碰的采样碰撞检查尚未就绪"
         if state.get("homing_active"):
             return "自研电机找零中"
         return self.telemetry_issue(state)

@@ -59,7 +59,7 @@ def main():
     app = make_server(0, wuji_source='sdk')
     app.application.wuji.client.sdk_loader = manager.sdk
     stopped, paused = threading.Event(), threading.Event()
-    profile = load_hand_profile('TsenseI_v3_2')
+    profile = load_hand_profile('TsenseI_v3_2_withid')
     points = {side: profile.create_retargeter(side).fk.compute().tolist() for side in ('left','right')}
     state = {'emitted': 0}
     def publish():

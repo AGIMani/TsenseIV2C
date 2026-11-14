@@ -42,6 +42,30 @@ test('pending frames that have become stale are skipped without replay', async()
   h.releases[1].resolve();await flush();
 });
 
+for (const inferenceMs of [134, 400, 1200]) test(`completed ${inferenceMs} ms inference reaches preview without changing capture time`, async()=>{
+  const h=harness(),item=frame(1,0);
+  item.packet.capture_unix_ms=123456;
+  h.setNow(inferenceMs);h.queue.offer(item);
+  assert.equal(h.calls.length,1);
+  assert.equal(item.packet.timestamp_ms,0);
+  assert.equal(item.packet.capture_unix_ms,123456);
+  assert.equal(item.queuedAt,inferenceMs);
+  assert.equal(item.requestStartedAt,inferenceMs);
+  h.releases[0].resolve();await flush();
+  assert.deepEqual(h.results,[1]);assert.equal(h.queue.stats.expired,0);
+});
+
+test('replacement gets its own wait budget, even when inference took longer than 120 ms', async()=>{
+  const h=harness();h.queue.offer(frame(1));
+  h.setNow(150);h.queue.offer(frame(2));
+  h.setNow(260);h.queue.offer(frame(3));
+  h.setNow(270);h.releases[0].resolve();await flush();
+  assert.deepEqual(h.calls.map(f=>f.id),[1,3]);
+  assert.equal(h.calls[1].queuedAt,260);
+  assert.deepEqual(h.drops,[[2,'queue_replaced']]);
+  h.releases[1].resolve();await flush();
+});
+
 test('stop suppresses late responses and queued work; a new session is independent', async()=>{
   const old=harness();old.queue.offer(frame(1));old.queue.offer(frame(2));old.queue.close();
   const fresh=harness();fresh.queue.offer(frame(100));

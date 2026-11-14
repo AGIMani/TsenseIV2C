@@ -5,10 +5,10 @@ import {createServer} from 'node:http';
 import {readFile} from 'node:fs/promises';
 import assert from 'node:assert/strict';
 
-const models=['TsenseI_v3_0','TsenseI_v3_0_withid','TsenseI_v3_2','TsenseI_v3_2_withid'];
+const models=['TsenseI_v3_2_withid'];
 const root=new URL('../../../',import.meta.url), sessions=new Map(), calls=[];
 const joint='left_hand_index_PIP_joint';
-let available=true, sequence=0;
+let available=true, minkAvailable=true, sequence=0;
 const pose=q=>({[joint]:q});
 function hardware(s){return {model_id:s.model_id,hand_side:'left',direct_mode:s.direct_mode,
   ruckig_enabled:!s.direct_mode,collision_protection_enabled:!s.direct_mode&&s.collision_mode!=='off',
@@ -29,7 +29,7 @@ const server=createServer(async(req,res)=>{
       const body=text?JSON.parse(text):{};calls.push({path:pathname,...body});
       const s=sessions.get(body.session);let result;
       if(pathname==='/api/health')result={models,a30_control_available:available,a32_control_available:available,
-        a30_collision_modes:['off','monitor','stop','mink'],a32_collision_modes:Object.fromEntries(models.map(m=>[m,['off','stop','mink']]))};
+        a32_collision_modes:Object.fromEntries(models.map(m=>[m,minkAvailable ? ['off','mink'] : ['off']]))};
       else if(pathname==='/api/session'){
         const id=`s${sessions.size+1}`;const entry={...body,session:id};sessions.set(id,entry);
         result={...entry,pose:pose(0),init_pose:pose(0),joint_limits:{[joint]:[0,2]},hardware:available?hardware(entry):null};
@@ -55,7 +55,7 @@ const server=createServer(async(req,res)=>{
     let content=await readFile(new URL(path,root));
     if(pathname==='/app.js')content=Buffer.from(content.toString()+`
       window.directTest={get viewer(){return viewer;},get session(){return session;},
-        get active(){return active;},get control(){return localControl;},sdk:a32Panel};`);
+        get active(){return active;},sdk:a32Panel};`);
     res.setHeader('Content-Type',pathname.endsWith('.js')?'text/javascript':pathname.endsWith('.css')?'text/css':pathname.endsWith('.png')?'image/png':'text/html');
     res.end(content);
   }catch(error){res.writeHead(500);res.end(error.message);}
@@ -69,6 +69,9 @@ try{
     const page=await browser.newPage();latestPage=page;page.setDefaultTimeout(10000);page.on('pageerror',error=>errors.push(error.message));
     await page.goto(`http://127.0.0.1:${server.address().port}/?model=${model}&source=webxr`);
     await page.waitForFunction(()=>window.directTest&&!document.querySelector('#direct-preview').disabled);
+    assert.deepEqual(await page.locator('#hand-model option').evaluateAll(options => options.map(option => option.value)), ['TsenseI_v3_2_withid']);
+    assert.deepEqual(await page.locator('#collision-mode option').evaluateAll(options => options.map(option => option.value)), ['mink', 'off']);
+    assert.equal(await page.locator('#collision-mode').inputValue(),'mink');
     assert.match(await page.locator('#direct-preview-note').textContent(),hasControl?/Ruckig 限速/:/预览模式/);
     await page.locator('label:has(#recording)').click();
     await page.locator('label:has(#direct-preview)').click();
@@ -96,17 +99,24 @@ try{
     assert(!calls.slice(before).some(c=>c.action==='arm'&&c.enabled),'mode switch must never arm');
     assert.equal(await page.locator('#collision-mode').isDisabled(),false);
     assert.equal(await page.locator('#collision-mode').inputValue(),'off');
-    await page.locator('#collision-mode').selectOption('stop');
+    await page.locator('#collision-mode').selectOption('mink');
     await page.locator('#start').click();
     await page.waitForFunction(()=>directTest.active&&directTest.session!==null);
     id=await page.evaluate(()=>directTest.session.session);
-    assert.equal(sessions.get(id).direct_mode,false);assert.equal(sessions.get(id).collision_mode,'stop');
+    assert.equal(sessions.get(id).direct_mode,false);assert.equal(sessions.get(id).collision_mode,'mink');
     await page.locator('label:has(#direct-preview)').click();
     await page.waitForFunction(()=>!document.querySelector('#direct-preview').disabled&&directTest.session===null);
     assert.equal(sessions.get(id).stopped,true);assert.equal(await page.locator('#collision-mode').inputValue(),'off');
     await page.close();cases++;
   }
+  minkAvailable=false;
+  const page=await browser.newPage();latestPage=page;page.on('pageerror',error=>errors.push(error.message));
+  await page.goto(`http://127.0.0.1:${server.address().port}/?model=${models[0]}&source=webxr`);
+  await page.waitForFunction(()=>window.directTest&&!document.querySelector('#direct-preview').disabled);
+  assert.equal(await page.locator('#collision-mode').inputValue(),'off');
+  assert.equal(await page.locator('#collision-mode option[value=mink]').isDisabled(),true);
+  await page.close();
   assert.deepEqual(errors,[]);
-  console.log(`PASS ${cases} A3 direct-mode UI cases (four models, control/preview-only): start, moving unarmed preview, mode teardown and collision selection; synthetic APIs only.`);
+  console.log(`PASS ${cases} A3.2 with ID UI cases (control/preview-only): collision selection, start, moving preview and direct-mode teardown; synthetic APIs only.`);
 }catch(error){console.error({errors,notice:await latestPage?.locator('#notice').textContent(),calls:calls.slice(-5)});throw error;}
 finally{await browser.close();await new Promise(resolve=>server.close(resolve));}

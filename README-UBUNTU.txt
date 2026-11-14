@@ -1,4 +1,6 @@
 hand 原生 Ubuntu 网页版迁移包
+当前网页范围：仅 A3.2 with ID（左右手），手势页只提供 Mink 避碰与关闭保护。
+动作播放不提供碰撞避让。旧型号和旧碰撞模式的下文记录仅供历史参考。
 目标：Ubuntu 24.04 LTS，x86_64 / amd64，Python 3.12。
 制作日期：2026-10-06（Asia/Shanghai）
 
@@ -42,7 +44,7 @@ hand 原生 Ubuntu 网页版迁移包
 只用手势工作台可改为 track；只用动作播放为 play。
 新环境默认位于项目 .venvs/track、.venvs/play。
 依赖需联网重新下载，这不是完全离线安装包。不要合并两套依赖清单。
-play 已移除 PySide6/shiboken6；动作文件格式、网页接口、驱动与协议保持兼容。
+play 已移除 PySide6/shiboken6；当前动作编辑器仅接受对应手别的 A3.2 with ID 动作文件。
 不再提供桌面 GUI 启动器或 GUI 环境清单。重构范围与测试详见 migration/ubuntu/VALIDATION.txt。
 
 A3.2/withid 已于 2026-10-10 更新到用户提供的 SDK 1.1.14，包括标定闭环
@@ -279,9 +281,8 @@ motion、网页配置与模型标定原样保留。
 旧网页动作原件在 migration/ubuntu/preserved-runtime-data：
 - motions.json：V2 左手，11 个动作。
 - motions_a30_left.json：A3.0 左手 15 个动作原件。
-- motions_a30_left_migrated.json：仅将旧型号名称 daxian_v3_0 改为
-  TsenseI_v3_0 的可导入副本；姿态与时间参数原样保留，并通过当前读取校验。
-文件未自动恢复到活动数据目录。选择对应模型和手别后，通过网页导入并先离线核对。
+- motions_a30_left_migrated.json：旧版迁移时生成的 A3.0 副本。
+这些文件作为历史数据保留，当前 A3.2 with ID 网页不会导入它们。
 
 Quest HTTPS 证书在新机按新 IP 重新生成；不附旧私钥与信任设置。
 网页 MediaPipe 在浏览器执行，Python 后端不需要旧 GUI 摄像头推理环境。

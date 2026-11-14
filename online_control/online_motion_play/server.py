@@ -27,33 +27,22 @@ HERE = Path(__file__).resolve().parent
 ROOT = HERE / "app" if (HERE / "app" / "src").is_dir() else HERE.parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 sys.path.insert(0, str(ROOT))
-from online_control.shared.stream import serve_records
 from online_control.shared.version import downlink_version
-from browser_serial import BrowserSerial
-from v2_session import V2Session
 from utils.control_clock import precise_control_timer
 from utils.control_log_catalog import control_log_catalog, control_log_file, set_control_log_parent
 
 
 class Bridge:
-    """Serialize UI commands and ticks; synchronized serial bytes bypass the queue.
-
-    HTTP workers enqueue ordinary actions. The service's main thread owns every
-    session and calls tick at 5 ms, without a GUI event loop. Transport ownership
-    has a separate lock so release/model changes cannot race a fast serial call.
-    """
+    """Serialize page commands while the A3.2 SDK keeps its own control clock."""
     TICK_S = .005
     WATCHDOG_S = .05
     CONTROLLER_LEASE_S = 5.
 
-    def __init__(self, data_dir=None, *, v2=None):
+    def __init__(self, data_dir=None, *, session=None):
+        from a32_session import A32Session
         self.data_dir = Path(data_dir) if data_dir else HERE / "runtime"
         self.data_dir.mkdir(parents=True, exist_ok=True)
-        self.v2 = v2 if v2 is not None else V2Session(self.data_dir)
-        self.a30 = None
-        self.a32 = None
-        self.serial = BrowserSerial()
-        self.v2.usb.serial_factory = self.serial.open
+        self.a32 = session if session is not None else A32Session(self.data_dir, model_id="TsenseI_v3_2_withid")
         self.controller = None
         self.last_seen = time.monotonic()
         self.jobs = queue.Queue()
@@ -63,21 +52,8 @@ class Bridge:
         self._last_watchdog = time.monotonic()
 
     def call(self, action, body=None, client=None, *, trusted_local=True):
-        if action in ("serial_binary", "serial_rx", "serial_stream"):
-            # Revocation closes the transport under this same lock, so neither
-            # an old client nor an old transport token can drain a new session.
-            with self._ownership:
-                if self._shutdown.is_set():
-                    raise ValueError("控制服务正在关闭")
-                if self.a32 is not None:
-                    raise ValueError("A3.2 不使用浏览器串口转发")
-                if client is None or client != self.controller or time.monotonic() - self.last_seen > self.CONTROLLER_LEASE_S:
-                    raise ValueError("当前为只读查看，请先获取控制权")
-                if action == "serial_stream":
-                    return self.serial.open_stream(body.get("token"))
-                result = self.serial.exchange_binary(body, receive_only=action == "serial_rx")
-                self.last_seen = time.monotonic()
-                return result
+        if action in ("serial_binary", "serial_rx", "serial_stream", "serial"):
+            raise ValueError("本服务使用原生 SDK，不支持浏览器串口")
         response = queue.Queue(maxsize=1)
         job = {"action": action, "body": body or {}, "response": response,
                "deadline": time.monotonic() + 10, "client": client, "trusted_local": trusted_local}
@@ -105,7 +81,6 @@ class Bridge:
             job["response"].put_nowait((False, str(exc)))
 
     def run(self, stop_event=None):
-        """Run on the main thread; one job per iteration prevents tick starvation."""
         next_tick = time.monotonic()
         while not self._shutdown.is_set() and not (stop_event and stop_event.is_set()):
             now = time.monotonic()
@@ -123,11 +98,6 @@ class Bridge:
         if now - self._last_watchdog >= self.WATCHDOG_S:
             self._last_watchdog = now
             self.check_lease()
-        # A3.2 already owns its controller thread; never tick it a second time.
-        if self.a30 is not None:
-            self.a30.tick()
-        elif self.a32 is None:
-            self.v2.tick()
 
     def request_shutdown(self):
         self._shutdown.set()
@@ -139,65 +109,36 @@ class Bridge:
         self.request_shutdown()
         with self._ownership:
             self.controller = None
-            self.serial.close()
-        errors = []
-        for session in (self.a32, self.a30, self.v2):
-            if session is None:
-                continue
-            try:
-                session.close()
-            except Exception as exc:
-                errors.append(exc)
-        while True:
-            try:
-                job = self.jobs.get_nowait()
-            except queue.Empty:
-                break
-            job["response"].put_nowait((False, "控制服务已关闭"))
-        if errors:
-            raise errors[0]
+        try:
+            self.a32.close()
+        finally:
+            while True:
+                try:
+                    job = self.jobs.get_nowait()
+                except queue.Empty:
+                    break
+                job["response"].put_nowait((False, "控制服务已关闭"))
 
     def stop(self, reason="user_stop"):
-        errors = []
-        for session in (self.a32, self.a30, self.v2):
-            if session is None:
-                continue
-            try:
-                if session is self.a30:
-                    session.stop()
-                else:
-                    session.stop(reason=reason)
-            except Exception as exc:
-                errors.append(exc)
-        if errors:
-            raise errors[0]
+        self.a32.stop(reason=reason)
 
     def check_lease(self):
         with self._ownership:
-            serial_expired = self.serial.expired
-            controller_expired = time.monotonic() - self.last_seen > self.CONTROLLER_LEASE_S and self.controller is not None
-            if not serial_expired and not controller_expired:
+            expired = self.controller is not None and time.monotonic() - self.last_seen > self.CONTROLLER_LEASE_S
+            if not expired:
                 return
-            self.serial.close()  # Invalidate pending commands before planners stop.
-            if controller_expired:
-                self.controller = None
-        self.stop(reason="controller_heartbeat_timeout" if controller_expired else "serial_heartbeat_timeout")
-        if self.a30 is not None:
-            self.a30.device.disconnect()
-        if self.a32 is not None and controller_expired:
-            self.a32.message = "控制页面心跳超时，已停止下发并释放控制权；SDK 连接保留，获取控制后可手动恢复"
-        self.v2.usb.disconnect()
+            self.controller = None
+        self.stop(reason="controller_heartbeat_timeout")
+        self.a32.message = "控制页面心跳超时，已停止下发并释放控制权；SDK 连接保留，获取控制后可手动恢复"
 
     def snapshot(self):
-        return (self.a32 or self.a30 or self.v2).snapshot()
+        return self.a32.snapshot()
 
     def dispatch(self, action, body, client=None, *, trusted_local=True):
-        # Evaluate hardware authorization at execution time, after prior model
-        # changes, never against an earlier HTTP worker's view of the model.
-        if self.a32 and not trusted_local and (
+        if not trusted_local and (
             action == "connect" or self.a32.connected and action in ("widget", "import", "stop", "disconnect", "release")
         ):
-            raise ValueError("A3.2 实机操作仅允许服务电脑本机同源浏览器；远程页面可离线查看和编辑")
+            raise ValueError("A3.2 with ID 实机操作仅允许服务电脑本机同源浏览器；远程页面可离线查看和编辑")
         if client is not None:
             self.check_lease()
             with self._ownership:
@@ -210,118 +151,45 @@ class Bridge:
                 if action == "release":
                     owned = self.controller == client
                     if owned:
-                        self.serial.close()
                         self.controller = None
                 elif action not in ("state", "ports", "export", "health", "recording_download") and self.controller != client:
                     raise ValueError("当前为只读查看，请先获取控制权")
             if action == "release":
                 if owned:
                     self.stop(reason="controller_release")
-                    if self.a30 is not None:
-                        self.a30.device.disconnect()
-                    if self.a32 is not None:
-                        self.a32.device.disconnect()
-                    self.v2.usb.disconnect()
+                    self.a32.device.disconnect()
                 return True
         with self._ownership:
             if client is None or client == self.controller:
                 self.last_seen = time.monotonic()
         if action == "health":
-            return {"status": "ok", "service": "online-motion-play", "serial_mode": "native-sdk" if self.a32 else "browser", "downlink_sha256": downlink_version(), "binary_stream": True}
+            return {"status": "ok", "service": "online-motion-play", "serial_mode": "native-sdk", "downlink_sha256": downlink_version(), "binary_stream": False}
         if action == "recording_download":
-            if not self.a32 or not trusted_local:
-                raise ValueError("A3.2 控制记录请在本机 A3.2 页面下载")
+            if not trusted_local:
+                raise ValueError("A3.2 控制记录请在本机页面下载")
             return self.a32.recording_download()
         if action == "state":
             result = self.snapshot()
             result["control"] = {"owned": client is None or client == self.controller,
                                  "available": self.controller is None}
-            result["serial_mode"] = "native-sdk" if self.a32 else "browser"
+            result["serial_mode"] = "native-sdk"
             result["sdk_local_access"] = bool(trusted_local)
             return result
         if action == "ports":
             return []
-        if action == "serial":
-            if self.a32:
-                raise ValueError("A3.2 使用服务所在电脑的原生 SDK，不使用浏览器串口协议")
-            with self._ownership:
-                return self.serial.exchange(body)
-        if action == "connect":
-            if self.a32:
-                return self.a32.dispatch(action, body)
-            if body.get("port") != "browser":
-                raise ValueError("请使用浏览器授权本机串口，服务器串口已禁用")
-            if self.v2.connected or (self.a30 and self.a30.device.connected):
-                raise ValueError("请先断开当前浏览器串口")
-            self.stop()
-            if self.a30:
-                self.a30.device.serial_factory = self.serial.open
-                self.a30.device.connect("browser")
-                self.a30.device.start_io()
-            elif not self.v2.usb.connect_port("browser") or not self.v2.usb.send_hand_type(self.v2.side):
-                self.v2.usb.disconnect()
-                self.serial.close()
-                raise ValueError("浏览器串口会话建立失败")
-            return {"token": self.serial.token, "transport": "binary-v1", "stream": True,
-                    "max_velocity": list(self.a30.device.input.max_velocity) if self.a30 else None}
-        if action == "disconnect":
-            if self.a32:
-                return self.a32.dispatch(action, body)
-            with self._ownership:
-                if body.get("token") and body["token"] != self.serial.token:
-                    return False
-                self.serial.close()
-            self.stop()
-            if self.a30:
-                self.a30.device.disconnect()
-            self.v2.usb.disconnect()
-            return True
         if action == "model":
-            model_id = body.get("model_id")
-            if model_id not in ("TsenseI_v2", "TsenseI_v3_0", "TsenseI_v3_0_withid", "TsenseI_v3_2", "TsenseI_v3_2_withid"):
-                raise ValueError("不支持的模型")
-            if self.v2.connected or (self.a30 and self.a30.device.connected) or (self.a32 and self.a32.connected):
-                raise ValueError("切换模型前请先停止并断开下位机")
-            if model_id == (self.a32.model_id if self.a32 else self.a30.model_id if self.a30 else "TsenseI_v2"):
-                return True
-            replacement = replacement_a32 = None
-            if model_id in ("TsenseI_v3_0", "TsenseI_v3_0_withid"):
-                from a30_session import A30Session
-                replacement = A30Session(self.data_dir, model_id=model_id)
-            elif model_id in ("TsenseI_v3_2", "TsenseI_v3_2_withid"):
-                from a32_session import A32Session
-                replacement_a32 = A32Session(self.data_dir, model_id=model_id)
-            self.stop(reason="model_change")
-            if self.a30:
-                self.a30.close()
-            if self.a32:
-                self.a32.close()
-            with self._ownership:
-                self.serial.close()
-                self.a30 = replacement
-                self.a32 = replacement_a32
+            if body.get("model_id") != "TsenseI_v3_2_withid":
+                raise ValueError("仅支持 A3.2 with ID")
             return True
-        if self.a32 is not None:
-            if action == "widget" and body.get("id") == self.a32.generation + ":handSide":
-                if self.a32.connected or type(body.get("value")) is not int or body["value"] not in (0, 1):
-                    raise ValueError("请断开 SDK 后选择有效手别")
-                from a32_session import A32Session
-                replacement = A32Session(self.data_dir, ("left", "right")[body["value"]], model_id=self.a32.model_id)
-                self.a32.close()
-                self.a32 = replacement
-                return True
-            return self.a32.dispatch(action, body)
-        if self.a30 is not None:
-            if action == "widget" and body.get("id") == self.a30.generation + ":handSide":
-                if self.a30.device.connected or type(body.get("value")) is not int or body["value"] not in (0, 1):
-                    raise ValueError("请断开下位机后选择有效手别")
-                from a30_session import A30Session
-                replacement = A30Session(self.data_dir, ("left", "right")[body["value"]], model_id=self.a30.model_id)
-                self.a30.close()
-                self.a30 = replacement
-                return True
-            return self.a30.dispatch(action, body)
-        return self.v2.dispatch(action, body)
+        if action == "widget" and body.get("id") == self.a32.generation + ":handSide":
+            if self.a32.connected or type(body.get("value")) is not int or body["value"] not in (0, 1):
+                raise ValueError("请断开 SDK 后选择有效手别")
+            from a32_session import A32Session
+            replacement = A32Session(self.data_dir, ("left", "right")[body["value"]], model_id=self.a32.model_id)
+            self.a32.close()
+            self.a32 = replacement
+            return True
+        return self.a32.dispatch(action, body)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -427,7 +295,7 @@ class Handler(BaseHTTPRequestHandler):
             if path == "/api/download":
                 payload = self.server.bridge.call("export", client="")
                 data = (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
-                model_prefix = payload.get("_model_id", "") + "_" if payload.get("_model_id") in ("TsenseI_v3_2", "TsenseI_v3_2_withid") else ""
+                model_prefix = payload.get("_model_id", "") + "_" if payload.get("_model_id") == "TsenseI_v3_2_withid" else ""
                 return self.reply(200, data, filename=f"motions_{model_prefix}{payload['_hand_side']}.json")
             if path == "/api/a32-log":
                 data, mime, name = self.server.bridge.call("recording_download", client=self.client_key(), trusted_local=self.local_sdk_request())
@@ -438,12 +306,7 @@ class Handler(BaseHTTPRequestHandler):
                 return self.reply(200, self.server.bridge.call(path.rsplit("/", 1)[-1], client=self.client_key(), trusted_local=self.local_sdk_request()))
             if path in ("/", "/index.html"):
                 target = HERE / "index.html"
-            elif getattr(self.server, 'serial_benchmark', False) and path in ('/bench-worker.html','/bench-worker.js','/bench-worker-core.js'):
-                target = HERE / path.lstrip('/')
-            elif path in ("/browser-serial.js", "/serial-protocol.js", "/a30-serial-protocol.js",
-                          "/serial-worker.js", "/worker-client.js", "/position-guard.js", "/motion-stream.js"):
-                target = HERE / path.lstrip("/")
-            elif path.startswith("/shared/") and path.rsplit("/", 1)[-1] in ("ui-language.js", "ui-translations.js", "aluminum.js", "hand-models.js", "stream.js", "serial-options.js", "serial-protocol.js", "a30-serial-protocol.js", "a30-telemetry.js", "serial-timing.js"):
+            elif path.startswith("/shared/") and path.rsplit("/", 1)[-1] in ("ui-language.js", "ui-translations.js", "aluminum.js"):
                 target = ROOT / "online_control/shared" / path.rsplit("/", 1)[-1]
             elif path.startswith("/vendor/"):
                 target = (HERE / path.lstrip("/")).resolve()
@@ -451,7 +314,7 @@ class Handler(BaseHTTPRequestHandler):
                     raise ValueError("无效路径")
             elif path.startswith("/assets/"):
                 target = (ROOT / path.lstrip("/")).resolve()
-                if not any(target.is_relative_to(ROOT / "assets" / "hands" / folder) for folder in ("TsenseI_hand", "TsenseI_hand_v3_0", "TsenseI_hand_v3_0_withid", "TsenseI_hand_v3_2", "TsenseI_hand_v3_2_withid")) or target.suffix.lower() not in (".urdf", ".stl"):
+                if not target.is_relative_to(ROOT / "assets/hands/TsenseI_hand_v3_2_withid") or target.suffix.lower() not in (".urdf", ".stl"):
                     raise ValueError("无效模型路径")
             else:
                 return self.reply(404, {"error": "Not found"})
@@ -461,17 +324,6 @@ class Handler(BaseHTTPRequestHandler):
             self.reply(400, {"error": str(exc)})
 
     def do_POST(self):
-        if urlsplit(self.path).path in ("/api/serial_binary", "/api/serial_rx"):
-            if not self.allowed() or self.headers.get("Content-Type") != "application/octet-stream":
-                return self.reply(403, {"error": "只接受允许地址的同源二进制请求"})
-            try:
-                length = int(self.headers.get("Content-Length", "0"))
-                if not 40 <= length <= 40 + BrowserSerial.MAX_RX:
-                    raise ValueError("二进制串口请求长度无效")
-                result = self.server.bridge.call(urlsplit(self.path).path.rsplit("/",1)[-1], self.rfile.read(length), client=self.client_key())
-                return self.reply(200, result, "application/octet-stream")
-            except (ValueError, KeyError, TypeError) as exc:
-                return self.reply(400, {"error": str(exc)})
         if not self.allowed() or self.headers.get("Content-Type", "").split(";")[0] != "application/json":
             return self.reply(403, {"error": "只接受允许地址的同源 JSON 请求"})
         try:
@@ -486,17 +338,14 @@ class Handler(BaseHTTPRequestHandler):
                 if not self.local_sdk_request() or not self.headers.get("Origin"):
                     return self.reply(403, {"error": "日志目录仅允许本机同源页面修改"})
                 parent = set_control_log_parent(body["parent"])
-                return self.reply(200, {"parent": str(parent), "folders": [str(parent / model) for model in ("A30", "A32", "V2")]})
-            if path == "/api/serial_stream":
-                records = self.server.bridge.call("serial_stream", body, client=self.client_key())
-                return serve_records(self, records)
+                return self.reply(200, {"parent": str(parent), "folders": [str(parent / "A32")]})
             if path == "/api/login":
                 # Compatibility for pages cached before password removal.
                 return self.reply(200, {"ok": True, "required": False})
             if path == "/api/logout":
                 self.server.bridge.call("release", client=self.client_key(), trusted_local=self.local_sdk_request())
                 return self.reply(200, {"ok": True})
-            if path not in {"/api/" + name for name in ("widget", "import", "connect", "disconnect", "stop", "control", "release", "model", "serial")}:
+            if path not in {"/api/" + name for name in ("widget", "import", "connect", "disconnect", "stop", "control", "release", "model")}:
                 return self.reply(404, {"error": "Not found"})
             result = self.server.bridge.call(path.rsplit("/", 1)[-1], body, client=self.client_key(), trusted_local=self.local_sdk_request())
             self.reply(200, {"ok": True, "result": result})
@@ -520,12 +369,9 @@ def main():
     parser.add_argument("--port", type=int)
     parser.add_argument("--check", action="store_true", help="Check dependencies, models and configuration, then exit")
     parser.add_argument("--no-browser", action="store_true")
-    parser.add_argument("--serial-benchmark", action="store_true", help="Expose memory-USB benchmark page on loopback only")
     args = parser.parse_args()
     config = json.loads(args.config.read_text(encoding="utf-8-sig")) if args.config else {}
     host = args.host or config.get("host", "127.0.0.1")
-    if args.serial_benchmark and host not in ('127.0.0.1','localhost','::1'):
-        parser.error('Serial benchmarks require a loopback bind')
     port = args.port if args.port is not None else config.get("port", 8765)
     if not isinstance(port, int) or not 1 <= port <= 65535:
         parser.error("port must be between 1 and 65535")
@@ -548,40 +394,20 @@ def main():
     data_dir.mkdir(parents=True, exist_ok=True)
     with tempfile.TemporaryFile(dir=data_dir) as writable:
         writable.write(b"deployment write check")
-    for side in ("left", "right"):
-        model_path = ROOT / "assets/hands/TsenseI_hand/urdf" / f"TsenseI__hand_{side}_v1.urdf"
-        if not model_path.is_file():
-            parser.error(f"Model missing: {model_path}; deploy the repository or generated bundle")
     bridge = Bridge(data_dir)
     if args.check:
         try:
+            from a32_session import A32Session
             for side in ("left", "right"):
-                check_session = V2Session(data_dir, side)
+                check_session = A32Session(data_dir, side, model_id="TsenseI_v3_2_withid", start=False)
                 try:
                     state = check_session.snapshot()
-                    if len(state["joints"]) != 21 or not (ROOT / state["urdf"].lstrip("/")).is_file():
-                        raise ValueError("V2 model or joint schema is incomplete")
+                    check_session.validate_pose(check_session.pose)
+                    if len(state["joints"]) != 20 or not (ROOT / state["urdf"].lstrip("/")).is_file():
+                        raise ValueError("A3.2 with ID model or joint schema is incomplete")
                 finally:
                     check_session.close()
-            from a30_session import A30Session
-            for model_id in ("TsenseI_v3_0", "TsenseI_v3_0_withid"):
-                for side in ("left", "right"):
-                    check_session = A30Session(data_dir, side, model_id=model_id)
-                    try:
-                        check_session.mapper.convert(check_session.pose)
-                        check_session.snapshot()
-                    finally:
-                        check_session.close()
-            from a32_session import A32Session, MODEL_IDS
-            for model_id in MODEL_IDS:
-                for side in ("left", "right"):
-                    check_session = A32Session(data_dir, side, model_id=model_id)
-                    try:
-                        check_session.validate_pose(check_session.pose)
-                        check_session.snapshot()
-                    finally:
-                        check_session.close()
-            print("CHECK OK: Qt-free V2 (21 joints), A3.0 / A3.2 with ID, left/right models, Ruckig, serial and writable data directory; no hardware connected")
+            print("CHECK OK: Qt-free A3.2 with ID, left/right models, Ruckig and writable data directory; no hardware connected")
         finally:
             bridge.close()
         return
@@ -589,7 +415,6 @@ def main():
     serving = False
     try:
         server = ControlHTTPServer((host, port), Handler)
-        server.serial_benchmark = args.serial_benchmark
         server.daemon_threads = True
         server.bridge = bridge
         server.access = access

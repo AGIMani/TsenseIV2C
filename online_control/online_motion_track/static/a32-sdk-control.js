@@ -12,7 +12,7 @@ export class A32SdkPanel {
     this.$('a32-transport').addEventListener('change', () => this.render());
   }
   configure(model, side, available) {
-    this.reset(); this.enabled = model === 'TsenseI_v3_2' || model === 'TsenseI_v3_2_withid';
+    this.reset(); this.enabled = model === 'TsenseI_v3_2_withid';
     this.available = available; this.side = side;
     this.$('a32-sdk-panel').hidden = !this.enabled;
     this.render();

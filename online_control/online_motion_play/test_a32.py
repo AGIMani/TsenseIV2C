@@ -347,7 +347,7 @@ def test_model_files_urdf_and_import_are_isolated(tmp_path, model_id, side):
         before = s.path.read_bytes()
         valid = s.payload()
         invalids = []
-        for key, value in (("_model_id", "TsenseI_v3_0"), ("_model_id", next(m for m in MODEL_IDS if m != model_id)), ("_hand_side", "right" if side == "left" else "left")):
+        for key, value in (("_model_id", "TsenseI_v3_0"), ("_model_id", "TsenseI_v3_2"), ("_hand_side", "right" if side == "left" else "left")):
             invalids.append({**valid, key: value})
         bad = copy.deepcopy(valid)
         bad["motions"]["one"]["pose"][s.names[0]] = float("nan")
@@ -368,6 +368,8 @@ def test_model_files_urdf_and_import_are_isolated(tmp_path, model_id, side):
 def test_bridge_switch_lease_and_native_transport_do_not_use_browser_serial(bridge, monkeypatch):
     import a32_session
     monkeypatch.setattr(a32_session, "A32Device", FakeDevice)
+    bridge.a32.close()
+    bridge.a32 = A32Session(bridge.data_dir, model_id=MODEL_IDS[0], start=False)
     bridge.dispatch("model", {"model_id": MODEL_IDS[0]})
     try:
         assert bridge.dispatch("state", {})["serial_mode"] == "native-sdk"
@@ -390,14 +392,14 @@ def test_bridge_switch_lease_and_native_transport_do_not_use_browser_serial(brid
         bridge.dispatch("widget", {"id": bridge.a32.generation + ":handSide", "value": 1})
         assert bridge.a32.side == "right"
         old_id = bridge.a32.generation + ":savemotion"
-        bridge.dispatch("model", {"model_id": MODEL_IDS[1]})
+        bridge.dispatch("widget", {"id": bridge.a32.generation + ":handSide", "value": 0})
         with pytest.raises(ValueError, match="模型"):
             bridge.dispatch("widget", {"id": old_id})
     finally:
-        bridge.dispatch("model", {"model_id": "TsenseI_v2"})
+        bridge.dispatch("disconnect", {})
 
 
-def test_bundle_contains_both_a32_models_native_config_and_no_exe():
+def test_bundle_contains_withid_native_config_and_no_exe():
     import package
     manifest = {name: path for path, name in package.files()}
     assert "a32_session.py" in manifest
@@ -534,6 +536,8 @@ def test_existing_signed_motion_keeps_numeric_command(tmp_path):
 def test_http_native_connection_requires_loopback_same_origin(bridge, monkeypatch, peer, origin, host, allowed):
     import a32_session
     monkeypatch.setattr(a32_session, "A32Device", FakeDevice)
+    bridge.a32.close()
+    bridge.a32 = A32Session(bridge.data_dir, model_id=MODEL_IDS[0], start=False)
     bridge.dispatch("model", {"model_id": MODEL_IDS[0]})
     handler = object.__new__(server.Handler)
     handler.path = "/api/connect"
@@ -560,12 +564,13 @@ def test_http_native_connection_requires_loopback_same_origin(bridge, monkeypatc
             assert "本机" in replies[-1][1]["error"]
     finally:
         bridge.dispatch("disconnect", {})
-        bridge.dispatch("model", {"model_id": "TsenseI_v2"})
 
 
 def test_remote_offline_edit_allowed_but_connected_widget_and_import_rejected(bridge, monkeypatch):
     import a32_session
     monkeypatch.setattr(a32_session, "A32Device", FakeDevice)
+    bridge.a32.close()
+    bridge.a32 = A32Session(bridge.data_dir, model_id=MODEL_IDS[0], start=False)
     bridge.dispatch("model", {"model_id": MODEL_IDS[0]})
     try:
         ident = bridge.a32.generation + ":" + bridge.a32.names[0]
@@ -580,7 +585,6 @@ def test_remote_offline_edit_allowed_but_connected_widget_and_import_rejected(br
         assert len(bridge.a32.device.calls) == count
     finally:
         bridge.dispatch("disconnect", {})
-        bridge.dispatch("model", {"model_id": "TsenseI_v2"})
 
 
 @pytest.mark.parametrize("model_id", MODEL_IDS)

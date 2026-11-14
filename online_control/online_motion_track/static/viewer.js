@@ -1,5 +1,4 @@
 import {createAluminumMaterial, createAluminumEnvironment} from "../../shared/aluminum.js";
-import {isA30Model, A30_MODEL_IDS} from "../../shared/hand-models.js";
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { STLLoader } from "three/addons/loaders/STLLoader.js";
@@ -89,7 +88,7 @@ export class Stage {
       -1,
       0.25,
     ).normalize();
-    if (["TsenseI_v2", "TsenseI_v3_2_withid", ...A30_MODEL_IDS].includes(this.modelId)) {
+    if (this.modelId === "TsenseI_v3_2_withid") {
       direction.set(side === "right" ? -1 : 1, -0.3, 0.25).normalize();
     }
     this.camera.position.copy(this.center).addScaledVector(direction, distance);
@@ -115,7 +114,7 @@ export class HandViewer extends Stage {
     this.environmentTarget = createAluminumEnvironment(THREE, this.renderer);
     this.scene.environment = this.environmentTarget.texture;
   }
-  async load(side, model = "TsenseI_v3_2") {
+  async load(side, model = "TsenseI_v3_2_withid") {
     const response = await fetch(`/api/model?side=${side}&model=${encodeURIComponent(model)}`);
     if (!response.ok) throw new Error("无法读取模型配置");
     const description = await response.json();

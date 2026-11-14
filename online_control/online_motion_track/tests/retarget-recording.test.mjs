@@ -10,7 +10,7 @@ function record(hand,update){
   const rows=[];
   const apply=vm.runInNewContext(block+';applyFrameUpdate;',{
     recorder:{record:(type,data)=>rows.push({type,...data})},$:()=>({value:'left'}),
-    isV2:()=>false,isA30:()=>false,isA32Model:model=>['TsenseI_v3_2','TsenseI_v3_2_withid'].includes(model),performance:{now:()=>120},
+    performance:{now:()=>120},
   });
   apply({frameId:12,hand,expected:'Left',timestamp_ms:100,inferredAt:105,requestStartedAt:110},update);
   return rows;

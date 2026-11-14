@@ -30,7 +30,7 @@ from utils.control_clock import precise_control_timer
 from utils.motion_limits import configure_ruckig
 
 
-MODEL_IDS = ("TsenseI_v3_2", "TsenseI_v3_2_withid")
+MODEL_IDS = ("TsenseI_v3_2_withid",)
 
 # User-supplied compensation applies to motor outputs, not model radians.
 MOTOR_FINGER_SCALES = {
@@ -50,7 +50,7 @@ def synchronized(method):
 
 
 class A32Session:
-    def __init__(self, data_dir, side="left", *, model_id="TsenseI_v3_2", device=None, clock=None, start=True, recording_dir=None):
+    def __init__(self, data_dir, side="left", *, model_id="TsenseI_v3_2_withid", device=None, clock=None, start=True, recording_dir=None):
         if model_id not in MODEL_IDS:
             raise ValueError("不支持的 A3.2 型号")
         self.model_id, self.side = model_id, side
@@ -125,8 +125,7 @@ class A32Session:
 
     @property
     def path(self):
-        suffix = "_withid" if self.model_id.endswith("_withid") else ""
-        return self.data_dir / f"motions_a32{suffix}_{self.side}.json"
+        return self.data_dir / f"motions_a32_withid_{self.side}.json"
 
     @property
     def connected(self):
@@ -289,7 +288,7 @@ class A32Session:
 
     def validate_file(self, data):
         if not isinstance(data, dict) or data.get("_model_id") != self.model_id or data.get("_hand_side") != self.side:
-            raise ValueError("请选择相同型号和手别的动作文件；A3.2 两款模型与 A3.0 / V2 分开保存")
+            raise ValueError("请选择相同型号和手别的 A3.2 with ID 动作文件")
         motions = data.get("motions")
         if not isinstance(motions, dict) or len(motions) > 2000:
             raise ValueError("motions 必须为不超过 2000 个动作的对象")

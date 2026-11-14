@@ -85,6 +85,7 @@ for(const page of ['app','calibration']) {
       LatestFrameQueue:class {},createQueue(){},performance,
       schedule:()=>events.push('frames'),cameraFrame:()=>events.push('frames'),
       inputSource:()=> 'realsense_rgbd',api:async(url,packet)=>{requests.push({url,packet});return {input_epoch:1,session:'rgbd-session'};},
+      ensureControlSession:async()=>{requests.push({url:'/api/session',packet:{input_source:'realsense_rgbd',camera_source:'realsense_rgbd'}});return {session:'rgbd-session'};},
       session:{session:'rgbd-session'},queue:null,inFlight:null,currentRows:()=>[],clearPreset(){},
       DetectorClient:class {constructor(){events.push('detector');}async ask(){events.push('init');return {delegate:'CPU'};}},
       stop:async()=>{throw Error('unexpected stop');},stopInput:async()=>{throw Error('unexpected stop');},
@@ -159,7 +160,7 @@ test('calibration freeze closes the native transport and disables the paired inp
   assert.equal(requests[0].packet.enabled,false);assert.equal(context.leapCamera,null);assert.equal(context.active,false);
 });
 
-test('RGB-D local hand confirmation requires accepted fused points instead of raw image landmarks',async()=>{
+test('RGB-D processing does not use the removed browser-serial hand gate',async()=>{
   const h=frameFixture('app'),observations=[];
   h.context.isControlModel=()=>true;
   h.context.localControl={observeHand:(...args)=>observations.push(args)};
@@ -172,5 +173,5 @@ test('RGB-D local hand confirmation requires accepted fused points instead of ra
   apply(frame,{tracking:true,solve_ms:1,fused_world:[[0,0,0]],depth_fusion:{status:'fused'}});
   apply(frame,{tracking:false,depth_fusion:{status:'unavailable'}});
   apply(frame,{tracking:true,solve_ms:1,fused_world:[[0,0,0]],display_discarded:true});
-  assert.deepEqual(observations,[[true,100],[false,100],[false,100]]);
+  assert.deepEqual(observations,[]);
 });

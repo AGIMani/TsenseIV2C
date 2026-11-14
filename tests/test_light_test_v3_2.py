@@ -74,18 +74,17 @@ def test_world_fallback_is_explicit_and_closed_fingertips_are_allowed():
     assert np.isfinite(prepare_points(points, "left")).all()
 
 
-@pytest.mark.parametrize("mode", ["monitor", "filter"])
-def test_collision_path_uses_v3_model_and_holds_on_solver_failure(mode, monkeypatch):
-    pipeline = MediaPipeHandPipeline("right", mode)
+def test_collision_path_uses_v3_model_and_holds_on_solver_failure(monkeypatch):
+    pipeline = MediaPipeHandPipeline("right", "mink")
     points = pipeline.session.retargeter.fk.compute()
     result = pipeline.process(observation(points, "right"))
     assert result.tracking
     # The legacy capsule overlay is empty with fitted mesh collision envelopes.
     assert not result.capsules
     import mujoco
-    assert np.count_nonzero(pipeline.session.collision.model.geom_type == mujoco.mjtGeom.mjGEOM_MESH) == 16
+    assert np.count_nonzero(pipeline.mink_guard.model.geom_type == mujoco.mjtGeom.mjGEOM_MESH) == 15
     assert all(n.startswith("right_hand_") for n in result.pose)
-    assert pipeline.session.collision.model.nq == 20
+    assert pipeline.mink_guard.model.nq == 20
     def broken(*args, **kwargs):
         raise RuntimeError("injected solver failure")
     monkeypatch.setattr(pipeline.session, "retarget", broken)

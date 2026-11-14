@@ -7,15 +7,15 @@ import tarfile
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE / "app" if (HERE / "app/src").is_dir() else HERE.parents[1]
-WEB_FILES = ("server.py", "v2_session.py", "v2_homing.py", "downlink_policy.py", "joint_ranges.md", "a30_device.py", "a30_session.py", "a32_session.py", "a32_recording.py", "browser_serial.py", "browser-serial.js", "serial-protocol.js", "a30-serial-protocol.js", "access.py", "index.html", "deploy.sh", "deploy_config.py",
-             "package.py", "generate_joint_ranges.py", "requirements-server.txt", "build-constraints.txt", "README.md",
-             "serial-worker.js", "worker-client.js", "position-guard.js", "motion-stream.js", "joint_feedback.py")
+WEB_FILES = ("server.py", "a32_session.py", "a32_recording.py", "access.py", "index.html",
+             "deploy.sh", "deploy_config.py", "package.py", "requirements-server.txt",
+             "build-constraints.txt", "README.md", "joint_feedback.py")
 
 
 def files():
-    for path in sorted((ROOT / 'online_control/shared').glob('*')):
-        if path.suffix in ('.py', '.js', '.json'):
-            yield path, 'app/' + path.relative_to(ROOT).as_posix()
+    for name in ('__init__.py', 'version.py', 'aluminum.js', 'ui-language.js', 'ui-translations.js'):
+        path = ROOT / 'online_control/shared' / name
+        yield path, 'app/' + path.relative_to(ROOT).as_posix()
     yield ROOT / 'online_control/__init__.py', 'app/online_control/__init__.py'
     yield ROOT / 'tools/hand_control_log_viewer.html', 'app/tools/hand_control_log_viewer.html'
     for name in WEB_FILES:
@@ -30,9 +30,9 @@ def files():
     # Keep shared source in its original structure; never include logs, working
     # poses, credentials, environments, camera weights or other workspace files.
     for path in sorted((ROOT / "src").rglob("*.py")):
-        if "ui" not in path.relative_to(ROOT / "src").parts:
+        if path.parts[len((ROOT / "src").parts)] in ("a32_driver", "a32_kinematics", "utils") or path.name in ("hand_profiles.py", "config_path.py"):
             yield path, "app/" + path.relative_to(ROOT).as_posix()
-    for folder in ("TsenseI_hand", "TsenseI_hand_v3_0", "TsenseI_hand_v3_0_withid", "TsenseI_hand_v3_2", "TsenseI_hand_v3_2_withid"):
+    for folder in ("TsenseI_hand_v3_2_withid",):
         models = ROOT / "assets/hands" / folder
         for directory, suffix in (("urdf", ".urdf"), ("meshes", ".stl")):
             for path in sorted((models / directory).rglob("*")):

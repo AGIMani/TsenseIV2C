@@ -113,7 +113,7 @@ try {
 import sys,json,numpy as np
 sys.path[:0]=['.','src']
 from hand_profiles import load_hand_profile
-p=load_hand_profile('TsenseI_v3_2');s=p.create_retargeter('left');q=p.init_pose()
+p=load_hand_profile('TsenseI_v3_2_withid');s=p.create_retargeter('left');q=p.init_pose()
 for n,(lo,hi) in p.joint_limits().items():
  if any('_'+f+'_' in n for f in ('index','mid','ring','pinky')) and any('_'+j+'_' in n for j in ('MCP','PIP','DIP')): q[n]=float(np.clip(1.2,lo,hi))
 extended={n:0. if '_mid_' in n else v for n,v in q.items()}

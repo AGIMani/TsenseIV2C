@@ -2,7 +2,8 @@
 import math
 
 import ruckig
-from a30_kinematics.mapper import JOINT_LIMIT_EPS_RAD
+# Numerical tolerance for joint-boundary roundoff.
+JOINT_LIMIT_EPS_RAD = 1e-7
 
 
 class SafeTrajectoryMixin:

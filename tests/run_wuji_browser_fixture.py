@@ -29,7 +29,7 @@ def main():
     os.environ["WUJI_BRIDGE_URL"] = f"http://127.0.0.1:{bridge.server_port}"
     app = make_server(0)
     stopped, paused = threading.Event(), threading.Event()
-    profile = load_hand_profile("TsenseI_v3_2")
+    profile = load_hand_profile("TsenseI_v3_2_withid")
     points = {side: profile.create_retargeter(side).fk.compute() for side in ("left", "right")}
 
 

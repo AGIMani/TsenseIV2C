@@ -7,10 +7,9 @@ checked by the browser; SDK snapshots carry their own age and online flags.
 from functools import lru_cache
 import math
 from numbers import Real
-import struct
 import threading
 
-from hand_profiles import A30_MODEL_IDS, A32_MODEL_IDS, load_hand_profile
+from hand_profiles import load_hand_profile
 
 
 _LOCK = threading.RLock()
@@ -23,89 +22,6 @@ def _finite(value):
 @lru_cache(maxsize=10)
 def _limits(model, side):
     return load_hand_profile(model).joint_limits(side)
-
-
-def _payload(value, sizes):
-    if not isinstance(value, str) or len(value) not in {n * 2 for n in sizes}:
-        raise ValueError("遥测十六进制 payload 长度无效")
-    try:
-        payload = bytes.fromhex(value)
-    except ValueError as exc:
-        raise ValueError("遥测 payload 不是有效十六进制") from exc
-    if len(payload) not in sizes:
-        raise ValueError("遥测 payload 长度无效")
-    return payload
-
-
-def _v2(payload, side, issues):
-    from usb.telemetry import parse_hand_telem_v2, parse_hand_telem_legacy
-    from usb.offline import get_hand_stroke_mapper
-    from kinematics.finger_linkage import (
-        LINEAR_SLOT_JOINTS, ROTARY_SLOT_JOINTS, cf_to_phi_deg, joint_deg_to_phi_rad,
-        MOTOR_F1, MOTOR_F2, MOTOR_F3,
-    )
-    parsed = (parse_hand_telem_v2(payload) if len(payload) == 780
-              else parse_hand_telem_legacy(payload))
-    if parsed is None:
-        raise ValueError("V2 遥测解析失败")
-    if parsed.get("hand_type", int(side == "right")) != int(side == "right"):
-        raise ValueError("遥测左右手与所选模型不一致")
-    mapper = get_hand_stroke_mapper()
-    pose = {}
-    # Use the original closed-loop kernels one measured channel at a time, so
-    # absent channels remain absent. Encoder overruns use the linkage bounds.
-    for name, row in zip(LINEAR_SLOT_JOINTS, parsed["linear"]):
-        value = row.pos_act_mm
-        if not _finite(value):
-            continue
-        params = mapper.thumb.params if "_thumb_" in name else mapper.four_finger.params
-        motor = MOTOR_F3 if "_MCP_" in name else MOTOR_F2 if "_PIP_" in name and "_thumb_" not in name else MOTOR_F1
-        try:
-            q = joint_deg_to_phi_rad(cf_to_phi_deg(-value, motor, params, clamp=True))
-        except (ValueError, ArithmeticError):
-            continue
-        pose[name.replace("left_hand_", f"{side}_hand_")] = q
-    for name, row in zip(ROTARY_SLOT_JOINTS, parsed["rotary"]):
-        value = row.pos_actual_mm  # The legacy field name carries degrees.
-        if not _finite(value):
-            continue
-        # Same hardware/URDF direction mapping as hand_angle_protocol. Apply
-        # the requested display bounds below, not the command-side 0.5 deg
-        # minimum which would turn a negative measurement into a positive one.
-        q = math.radians(value) * (-1 if side == "right" and "_pinky_rota_" in name else 1)
-        pose[name.replace("left_hand_", f"{side}_hand_")] = q
-    return pose
-
-
-@lru_cache(maxsize=4)
-def _a30_mapper(model, side):
-    from a30_kinematics import A30StrokeMapper
-    return A30StrokeMapper(side, model_id=model)
-
-
-def _a30(payload, model, side, issues):
-    from a30_kinematics.feedback import measured_pose
-    mapper = _a30_mapper(model, side)
-    # A fault is missing feedback for that axis, rather than permission to use
-    # its target, or a reason to discard other healthy measured axes.
-    packet = bytearray(payload)
-    if len(packet) == 484:
-        mask = struct.unpack_from("<H", packet, 2)[0]
-        for i in range(2):
-            offset = 444 + 20 * i
-            if struct.unpack_from("<I", packet, offset + 12)[0] or packet[offset + 16] == 5:
-                mask &= ~(1 << i)
-                issues.append(f"外接拇指电机 M{i + 1} 报告故障")
-        struct.pack_into("<H", packet, 2, mask)
-    missing, clipped = [], []
-    # The existing inverse accepts partial packets using a placeholder pose.
-    # Remove every placeholder before publishing. Finite out-of-range
-    # measurements retain the user's requested bounded display coordinate.
-    pose = measured_pose(packet, mapper, fallback_pose=load_hand_profile(model).init_pose(side),
-                         missing_joints=missing, clamp=True, clipped_joints=clipped)
-    for name in missing:
-        pose.pop(name, None)
-    return pose
 
 
 @lru_cache(maxsize=4)
@@ -175,26 +91,18 @@ def feedback_pose(data):
     if not isinstance(data, dict):
         raise ValueError("需要 JSON 对象")
     model, side = data.get("model_id"), data.get("side")
-    if model not in ("TsenseI_v2", *A30_MODEL_IDS, *A32_MODEL_IDS):
+    if model != "TsenseI_v3_2_withid":
         raise ValueError("未知手型")
     if side not in ("left", "right"):
         raise ValueError("手别必须为 left 或 right")
     with _LOCK:
         limits, issues = _limits(model, side), []
-        if model == "TsenseI_v2":
-            pose = _v2(_payload(data.get("telemetry"), (780, 932)), side, issues)
-        elif model in A30_MODEL_IDS:
-            pose = _a30(_payload(data.get("telemetry"), (444, 484)), model, side, issues)
-        else:
-            pose = _a32(data.get("telemetry"), model, side, issues)
+        pose = _a32(data.get("telemetry"), model, side, issues)
         valid = {}
         for name, q in pose.items():
             if name not in limits or not _finite(q):
                 continue
             low, high = limits[name]
-            # A3.2 swing is signed; retain the legacy display floor elsewhere.
-            if model not in A32_MODEL_IDS:
-                low = max(low, 0.)
             valid[name] = min(high, max(low, float(q)))
         missing = [name for name in limits if name not in valid]
         if missing and not issues:

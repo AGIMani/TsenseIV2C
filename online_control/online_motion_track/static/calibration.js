@@ -79,7 +79,7 @@ function moveCalibration(index,point) {
 }
 function createQueue() {
   queue?.close();const token=generation;
-  queue=new LatestFrameQueue({maxAgeMs:Infinity,
+  queue=new LatestFrameQueue({maxQueueWaitMs:Infinity,
     process:async item=>{
       inFlight=api(item.url,item.packet).catch(error=>({error:error.message,edit_revision:item.packet.edit_revision}));
       try{return await inFlight;}finally{inFlight=null;}

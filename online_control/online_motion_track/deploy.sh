@@ -1,14 +1,15 @@
 #!/usr/bin/env bash
 # Native systemd deployment. Run from the source checkout or extracted bundle.
 set -Eeuo pipefail
-DOMAIN=""; PORT=8766; MAX_SESSIONS=4; CADDY=1
+DOMAIN=""; PORT=8766; MAX_SESSIONS=4; CADDY=1; FULL=0
 while (($#)); do
   case "$1" in
     --domain) DOMAIN="${2:?Missing domain}"; shift 2 ;;
     --port) PORT="${2:?Missing port}"; shift 2 ;;
     --max-sessions) MAX_SESSIONS="${2:?Missing session count}"; shift 2 ;;
+    --full) FULL=1; shift ;;
     --no-caddy) CADDY=0; shift ;;
-    -h|--help) echo 'sudo bash deploy.sh --domain hand.example.com [--port 8766] [--max-sessions 4] [--no-caddy]'; exit 0 ;;
+    -h|--help) echo 'sudo bash deploy.sh --domain hand.example.com [--port 8766] [--max-sessions 4] [--full] [--no-caddy]'; exit 0 ;;
     *) echo "Unknown argument: $1" >&2; exit 2 ;;
   esac
 done
@@ -74,11 +75,17 @@ rollback() {
   exit "$code"
 }
 trap rollback ERR
-python3 "$SOURCE/package.py" --stage "$RELEASE"
+STAGE_ARGS=(--stage "$RELEASE")
+if ((FULL)); then STAGE_ARGS+=(--full); fi
+python3 "$SOURCE/package.py" "${STAGE_ARGS[@]}"
 python3 -m venv "$RELEASE/.venv"
-"$RELEASE/.venv/bin/python" -m pip install --only-binary=:all: -r "$RELEASE/requirements-server.txt"
+REQUIREMENTS="$RELEASE/requirements-server.txt"
+if ((FULL)); then REQUIREMENTS="$RELEASE/requirements-full.txt"; fi
+"$RELEASE/.venv/bin/python" -m pip install --only-binary=:all: -r "$REQUIREMENTS"
 "$RELEASE/.venv/bin/python" -m pip check
-OPENBLAS_NUM_THREADS=1 "$RELEASE/.venv/bin/python" "$RELEASE/server.py" --check
+CHECK_ARGS=(--check)
+if ((FULL)); then CHECK_ARGS+=(--collision-mode mink); fi
+OPENBLAS_NUM_THREADS=1 "$RELEASE/.venv/bin/python" "$RELEASE/server.py" "${CHECK_ARGS[@]}"
 if ((CADDY)) && ! command -v caddy >/dev/null; then
   apt-get install -y debian-keyring debian-archive-keyring apt-transport-https gnupg
   curl -fsSL https://dl.cloudsmith.io/public/caddy/stable/gpg.key | gpg --dearmor --yes -o /usr/share/keyrings/caddy-stable-archive-keyring.gpg

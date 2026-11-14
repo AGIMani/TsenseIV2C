@@ -1,12 +1,15 @@
 // One request in flight and one replaceable pending frame. No historic backlog.
 export class LatestFrameQueue {
-  constructor({process,onResult,onError,onDrop=()=>{},now=()=>performance.now(),maxAgeMs=120}) {
-    Object.assign(this,{process,onResult,onError,onDrop,now,maxAgeMs});
+  constructor({process,onResult,onError,onDrop=()=>{},now=()=>performance.now(),maxQueueWaitMs=120}) {
+    Object.assign(this,{process,onResult,onError,onDrop,now,maxQueueWaitMs});
     this.pending=null;this.running=false;this.closed=false;
     this.stats={offered:0,processed:0,replaced:0,expired:0};
   }
   offer(frame) {
     if(this.closed)return;
+    // Inference is already complete. Limit backlog here, not inference time.
+    // Keep the original capture timestamps for downstream hardware freshness.
+    frame.queuedAt=this.now();
     this.stats.offered++;
     if(this.pending){this.stats.replaced++;this.onDrop(this.pending,'queue_replaced');}
     this.pending=frame;
@@ -25,7 +28,7 @@ export class LatestFrameQueue {
     try{
       while(!this.closed&&this.pending){
         const frame=this.pending;this.pending=null;
-        if(this.now()-frame.packet.timestamp_ms>this.maxAgeMs){this.stats.expired++;this.onDrop(frame,'queue_expired');continue;}
+        if(this.now()-frame.queuedAt>this.maxQueueWaitMs){this.stats.expired++;this.onDrop(frame,'queue_expired');continue;}
         frame.requestStartedAt=this.now();
         this.current=frame;
         const result=await this.process(frame);

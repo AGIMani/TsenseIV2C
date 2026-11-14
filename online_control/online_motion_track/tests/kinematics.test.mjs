@@ -18,7 +18,7 @@ from online_control.online_motion_track.main import model_description
 from hand_profiles import load_hand_profile
 from TsenseI_retargeting.fk.urdf import UrdfModel
 out=[]
-for model_id in ('TsenseI_v3_2','TsenseI_v3_2_withid'):
+for model_id in ('TsenseI_v3_2_withid',):
  profile=load_hand_profile(model_id)
  for side in ('left','right'):
   model=UrdfModel(profile.path('urdf',side))

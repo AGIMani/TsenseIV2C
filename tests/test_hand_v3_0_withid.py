@@ -16,7 +16,6 @@ from hand_profiles import load_hand_profile
 from TsenseI_retargeting.fk.urdf import UrdfModel
 from TsenseI_retargeting.fk.fk import RobotKeypointFK
 from a30_kinematics import A30StrokeMapper
-from online_control.online_motion_track.pipeline_v3_0.actuation import A30Actuation
 from online_control.online_motion_track.main import Application, WebSession, make_server, model_description
 from prepare_hand_v3_0 import MIRROR, right_name
 
@@ -84,56 +83,3 @@ def test_only_cross_finger_pairs_in_mujoco_and_mink(side):
     assert filt.data.ncon>0  # Finger contact is still checked.
     for contact in filt.data.contact:
         assert finger(contact.geom1)!=finger(contact.geom2)
-
-
-@pytest.mark.parametrize('side',['left','right'])
-def test_same_pose_has_identical_wire_bytes_but_distinct_identity(side):
-    old,new=[A30Actuation(side,model_id=m) for m in ('TsenseI_v3_0',MODEL)]
-    rng=np.random.default_rng(32)
-    for _ in range(10):
-        pose={n:rng.uniform(lo,hi) for n,(lo,hi) in zip(new.joint_names,new._limits)}
-        a,b=old.convert(pose),new.convert(pose)
-        assert b.as_dict()['model_id']==MODEL
-        assert old.encode(a)==new.encode(b)
-
-
-@pytest.mark.parametrize('side',['left','right'])
-def test_retarget_session_uses_independent_keypoints_and_records_identity(side,tmp_path):
-    s=WebSession(side,True,tmp_path,model_id=MODEL)
-    try:
-        solver=s.pipeline.session.retargeter
-        assert 'withid' in str(solver.keypoint_path)
-        world=solver.fk.compute()
-        result=s.process({'sequence':0,'timestamp_ms':1000,'capture_unix_ms':1790175000000,
-            'hand':{'label':side.title(),'world':world.tolist(),'normalized':world.tolist()}})
-        assert result['tracking'] and result['actuation']['model_id']==MODEL
-    finally:s.close()
-    assert json.loads(s.recorder.path.read_text(encoding='utf-8').splitlines()[0])['model_id']==MODEL
-
-
-def test_http_assets_shared_module_control_and_package_inclusion():
-    server=make_server(0)
-    thread=threading.Thread(target=server.serve_forever,daemon=True); thread.start()
-    opener=urllib.request.build_opener(urllib.request.ProxyHandler({}))
-    def get(path):
-        with opener.open(f'http://127.0.0.1:{server.server_port}'+path,timeout=10) as response:return response.read()
-    try:
-        assert MODEL in json.loads(get('/api/health'))['models']
-        assert MODEL.encode() in get('/shared/hand-models.js')
-        for side in ('left','right'):
-            desc=json.loads(get(f'/api/model?model={MODEL}&side={side}'))
-            assert desc['calibration']['point_count']==21
-            for link in desc['links']:
-                for v in link['visuals']:
-                    assert v['mesh'].startswith('/assets-v3-0-withid/')
-                    assert len(get(v['mesh']))>84
-            response=server.application.create({'model_id':MODEL,'side':side,'recording':False,'collision_mode':'stop'})
-            assert response['hardware']['model_id']==MODEL
-            assert response['actuation']['model_id']==MODEL
-    finally:
-        server.application.close();server.shutdown();server.server_close();thread.join()
-    from online_control.online_motion_track.package import files
-    manifest={name:path for path,name in files(full=True)}
-    assert all(path.is_file() for path in manifest.values())
-    for name in ('hand_profile.yaml','robot_keypoints_21.yaml','robot_keypoints_21_right.yaml','mjcf/mjmodel.xml'):
-        assert f'app/assets/hands/TsenseI_hand_v3_0_withid/{name}' in manifest

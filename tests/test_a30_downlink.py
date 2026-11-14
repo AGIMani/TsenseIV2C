@@ -12,7 +12,6 @@ import pytest
 ROOT = Path(__file__).resolve().parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from a30_kinematics import downlink as wire
-from online_control.online_motion_track.pipeline_v3_0.actuation import A30Actuation
 from hand_profiles import load_hand_profile
 
 
@@ -71,55 +70,12 @@ def test_single_motor_builders_match_original(source, fn, args):
     assert getattr(wire, fn)(*args) == getattr(source, fn)(*args)
 
 
-@pytest.mark.parametrize("side", ["left", "right"])
-def test_conversion_to_frame_thumb_pip_and_external_scale(side):
-    adapter = A30Actuation(side)
-    pose = load_hand_profile("TsenseI_v3_0").init_pose(side)
-    pose[f"{side}_hand_thumb_PIP_joint"] = .5
-    pose[f"{side}_hand_thumb_rotaback_joint2"] = .3
-    pose[f"{side}_hand_thumb_rota_block_joint"] = .7
-    targets = adapter.convert(pose)
-    frame = adapter.encode(targets, seq=7)
-    vals = struct.unpack_from("<B18f2f2f2f3x", frame, 6)
-    assert vals[17] == pytest.approx(math.degrees(.5))
-    assert vals[19] == pytest.approx(math.degrees(.3)*50)
-    assert vals[20] == pytest.approx(math.degrees(.7)*30)
-    assert vals[21:] == (0, 0, 0, 0)
-    d = adapter.description()
-    assert d["encoder_ready"] and not d["hardware_enabled"] and not d["downlink_ready"]
-    assert all(c["firmware_channel"] for c in d["channels"])
 
 
-@pytest.mark.parametrize("bad", [float("nan"), float("inf"), 1e100, True, "2"])
-def test_invalid_targets_never_encode(bad):
-    a = A30Actuation()
-    t = a.convert(load_hand_profile("TsenseI_v3_0").init_pose())
-    t.rotary_positions_deg["left_hand_thumb_rotaback_joint2"] = bad
-    with pytest.raises(ValueError):
-        a.encode(t)
 
 
-def test_wrong_side_missing_channels_and_bad_external_inputs():
-    a = A30Actuation()
-    t = a.convert(load_hand_profile("TsenseI_v3_0").init_pose())
-    for kw in ({"hand_side": "right"}, {"mit_vel_rpm": [1]}, {"mit_iq_ff_a": [0, float("nan")]}, {"seq": -1}):
-        with pytest.raises(ValueError):
-            a.encode(t, **kw)
-    t.rotary_positions_deg.pop("left_hand_thumb_PIP_joint")
-    with pytest.raises(ValueError):
-        a.encode(t)
 
 
-def test_encoder_layout_is_isolated_from_public_mapping_mutation():
-    a = A30Actuation()
-    t = a.convert(load_hand_profile("TsenseI_v3_0").init_pose())
-    expected = a.encode(t)
-    rows = wire.channel_mapping()
-    rows[0]["joint"] = "corrupted"
-    rows[4]["position_sign"] = 1
-    rows.clear()
-    assert a.encode(t) == expected
-    assert len(wire.channel_mapping()) == 20
 
 
 @pytest.mark.parametrize("value", [0, .25, Fraction(1, 4)])

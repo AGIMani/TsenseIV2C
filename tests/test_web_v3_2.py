@@ -2,6 +2,7 @@ from pathlib import Path
 import json
 import sys
 import threading
+import time
 import urllib.error
 import urllib.request
 
@@ -15,7 +16,7 @@ from online_control.online_motion_track.main import Application, WebSession, mak
 
 def packet(world, side="left", sequence=0):
     return {"sequence": sequence, "timestamp_ms": 1000 + sequence * 50,
-            "capture_unix_ms": 1789600000000 + sequence * 50,
+            "capture_unix_ms": time.time() * 1000,
             "camera_size": [640, 480], "hand": {"label": side.title(),
             "world": world.tolist(), "normalized": np.zeros((21, 3)).tolist()}}
 
@@ -33,7 +34,7 @@ def test_browser_points_drive_real_solver_and_recording(side, tmp_path):
             assert result["tracking"]
             assert len(result["pose"]) == 20
             assert len(result["points"]) == 21
-            assert result["actuation"]["model_id"] == "TsenseI_v3_2"
+            assert result["actuation"]["model_id"] == "TsenseI_v3_2_withid"
             assert result["actuation"]["method"] == "lut"
             assert result["actuation"]["valid"]
             assert len(result["actuation"]["linear_strokes_mm"]) == 14
@@ -83,7 +84,6 @@ def test_web_session_rejects_stale_malformed_and_closed_frames():
 
 @pytest.mark.parametrize("side", ["left", "right"])
 @pytest.mark.parametrize("model_id,folder,prefix,count", [
-    ('TsenseI_v3_2', 'TsenseI_hand_v3_2', '/assets/', 22),
     ('TsenseI_v3_2_withid', 'TsenseI_hand_v3_2_withid', '/assets-v3-2-withid/', 367),
 ])
 def test_descriptor_has_all_original_visuals_and_joint_names(side, model_id, folder, prefix, count):

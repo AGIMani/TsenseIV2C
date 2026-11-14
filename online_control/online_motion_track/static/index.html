@@ -54,11 +54,7 @@
           <div class="control-item">
             <label for="hand-model">手型</label>
             <div class="select-wrap"><select id="hand-model">
-              <option value="TsenseI_v3_2">A3.2</option>
               <option value="TsenseI_v3_2_withid">A3.2 with ID</option>
-              <option value="TsenseI_v3_0">A3.0</option>
-              <option value="TsenseI_v3_0_withid">A3.0 with ID</option>
-              <option value="TsenseI_v2" disabled>V2 · 下位机控制</option>
             </select></div>
           </div>
           <div class="control-item">
@@ -130,30 +126,9 @@
             ><span>开始识别</span>
           </button>
         </section>
-        <section id="hardware-panel" class="hardware-panel" hidden aria-label="下位机控制">
-          <div class="hardware-heading"><strong id="hardware-title">V2 下位机控制</strong><span id="hardware-status">未连接 · Ruckig 已开启</span></div>
-          <p class="hardware-note">Chrome / Edge 直连这台电脑的 USB 串口，无需安装 Python。连接并收到位置反馈后即可开启识别与实时下发，一键找零可选。每次开启均从反馈姿态平滑起步。计算在服务器进行，串口与记录在本机；停止识别会断开串口并下载记录。</p>
-          <div class="hardware-controls">
-            <label for="serial-port">本机串口</label><select id="serial-port"><option value="new">选择新的 USB 串口…</option></select>
-            <button id="refresh-ports" class="secondary">已授权串口</button>
-            <label for="serial-baud" title="原生 CDC 通常忽略此值；UART 必须与固件一致">串口速率</label><select id="serial-baud"><option>115200</option><option>230400</option><option>460800</option><option>921600</option><option>1000000</option><option>2000000</option><option>3000000</option></select>
-            <button id="connect-serial" class="secondary">连接串口</button>
-            <label for="homing-iq">找零 Iq</label><input id="homing-iq" type="number" min="0" max="5000" step="50" value="700">
-            <button id="home-hand" class="secondary" disabled>一键找零</button>
-            <button id="homing-result-open" class="secondary" disabled>查看找零结果</button>
-            <button id="arm-hand" class="secondary" disabled>开启实时下发</button>
-            <button id="emergency-hand" class="danger" disabled>停止并断电</button>
-            <button id="close-control" class="secondary" disabled>结束会话并保存</button>
-          </div>
-          <p id="arm-blockers" class="hardware-note" role="status">请连接串口并开始手势识别</p>
-          <p id="serial-diagnostics" class="hardware-note"></p>
-          <div class="hardware-footer"><span id="control-stats">碰撞检查 → Ruckig → 采样碰撞复查 → 下发</span>
-            <div><a id="download-control" hidden>下载全链路记录</a> <a href="/data-viewer" target="_blank" rel="noopener">打开数据查看器</a></div>
-          </div>
-        </section>
         <section id="a32-sdk-panel" class="hardware-panel" hidden aria-label="A3.2 SDK 控制">
           <div class="hardware-heading"><strong>A3.2 · 本机 SDK 控制</strong><span id="a32-sdk-state">未连接</span></div>
-          <p class="hardware-note">两种模型使用同一套 A3.2 驱动。开始识别后可手动开启实时下发；关闭碰撞保护或仅检测也可下发。每次开启均需本次连接的新鲜完整反馈，并从当前实测位置起步。找零可选，仅覆盖 18 路自研电机。</p>
+          <p class="hardware-note">A3.2 with ID 使用本机原生 SDK。开始识别后可手动开启实时下发；关闭碰撞保护时也可下发。每次开启均需本次连接的新鲜完整反馈，并从当前实测位置起步。找零可选，仅覆盖 18 路自研电机。</p>
           <div class="hardware-controls">
             <label for="a32-transport">连接方式</label><select id="a32-transport"><option value="usb">USB CDC</option><option value="eth">ETH TCP</option></select>
             <label for="a32-address">设备</label><input id="a32-address" type="text" placeholder="auto 或 /dev/ttyACM0">
@@ -167,23 +142,10 @@
           <p id="a32-sdk-detail" class="hardware-note"></p>
           <p class="hardware-note">A3.2 停止操作只停止后续下发，不发送失能；设备可能继续执行已接收的命令或找零。</p>
         </section>
-        <details id="joint-enable-panel" class="joint-enable-panel" open>
-          <summary>关节电源控制 <span id="joint-enable-count"></span></summary>
-          <div class="joint-enable-toolbar">
-            <button id="enable-all-joints" class="secondary" type="button">全部使能</button>
-            <button id="disable-all-joints" class="secondary" type="button">全部失能</button>
-            <span id="joint-enable-note">失能发送电机断电指令，位置槽位不清零。</span>
-          </div>
-          <div id="joint-enable-groups" class="joint-enable-groups"></div>
-        </details>
-        <section id="a30-integration" class="local-recordings" aria-label="A3.0 接口状态" hidden>
-          <strong>A3.0 · 碰撞与执行器预览</strong>
-          <span>首次使用请完成 21 点标定。输出 9 路直线行程 + 11 路旋转角度，四指 DIP、拇指 PIP 直接输出角度；本机串口下发与 Ruckig 已接入。找零覆盖 18 路自研电机；外接两路按反馈起步，源协议无独立找零或断电命令。</span>
-        </section>
         <section class="local-recordings" aria-label="本机数据记录">
           <label>设备名称 <input id="recording-hand-name" type="text" maxlength="80" placeholder="可选，如样机 01"></label>
           <button id="recording-directory" class="secondary" type="button">选择日志根目录</button>
-          <span id="recording-directory-status">请选择独立日志目录 · 按 A30 / A32 / V2 保存 · 每段 512 MiB</span>
+          <span id="recording-directory-status">请选择独立日志目录 · 按 A32 保存 · 每段 512 MiB</span>
           <span>本机数据</span><select id="local-recordings" aria-label="本机历史记录"><option value="">本机历史记录</option></select>
           <button id="recover-recording" class="secondary">下载所选记录</button>
           <button id="delete-recording" class="secondary">删除所选缓存</button>
@@ -388,13 +350,6 @@
         </footer>
       </main>
     </div>
-    <dialog id="homing-result-dialog" class="homing-dialog" aria-labelledby="homing-result-title" aria-describedby="homing-result-note">
-      <div class="homing-dialog-heading"><span class="eyebrow">HOMING RESULT</span><h2 id="homing-result-title">一键找零结果</h2></div>
-      <p id="homing-result-summary"></p>
-      <div class="homing-result-scroll"><table id="homing-result-table"><thead><tr><th>关节</th><th>电机通道</th><th>未成功原因</th></tr></thead><tbody id="homing-result-rows"></tbody></table></div>
-      <p id="homing-result-note" class="homing-result-note"></p>
-      <form method="dialog"><button class="primary" id="homing-result-close" value="close" autofocus>知道了</button></form>
-    </dialog>
     <noscript>此页面需要启用 JavaScript。</noscript>
   </body>
 </html>

@@ -24,7 +24,7 @@ page.on('response',async r=>{
 });
 try{
   await page.goto((process.env.WEB_URL||'https://127.0.0.1:8766')+'/?model='+
-    (process.env.HAND_MODEL||'TsenseI_v3_0')+'&source=wuji_glove');
+    (process.env.HAND_MODEL||'TsenseI_v3_2_withid')+'&source=wuji_glove');
   await page.waitForFunction(()=>!document.querySelector('#start').disabled);
   if(await page.locator('#recording').isChecked())await page.locator('label').filter({has:page.locator('#recording')}).click();
   await page.locator('#start').click();

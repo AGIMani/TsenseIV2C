@@ -32,9 +32,9 @@ def files(*, full=False):
                  "a32_motion_recording.md", "a32_connection_diagnostics.md", "a32_joint_ranges.md", "a32_gesture_control_policy.md",
                  "online_webxr_quest3.md", "webxr_quest3_input.md", "leapmotion2_input.md", "realsense_rgbd_input.md", "online_control_latency.md", "motion_limits.md"):
         yield ROOT / "docs" / name, "docs/" + name
-    for path in sorted((ROOT / 'online_control/shared').glob('*')):
-        if path.suffix in ('.py', '.js', '.json'):
-            yield path, 'app/' + path.relative_to(ROOT).as_posix()
+    for name in ('__init__.py', 'version.py', 'aluminum.js', 'ui-language.js', 'ui-translations.js'):
+        path = ROOT / 'online_control/shared' / name
+        yield path, 'app/' + path.relative_to(ROOT).as_posix()
     yield ROOT / 'online_control/__init__.py', 'app/online_control/__init__.py'
     shared = ["src/hand_profiles.py", "src/config_path.py", "src/tracking/wuji_mediapipe.py",
               "src/tracking/webxr.py", "src/tracking/cloudxr.py",
@@ -49,7 +49,8 @@ def files(*, full=False):
         yield ROOT / relative, "app/" + relative
     for path in sorted((ROOT / "TsenseI_retargeting/fk").glob("*.py")):
         yield path, "app/" + path.relative_to(ROOT).as_posix()
-    for path in sorted((ROOT / "online_control/online_motion_track/a30").glob("*.py")):
+    for name in ("__init__.py", "grouped_ruckig.py"):
+        path = ROOT / "online_control/online_motion_track/a30" / name
         yield path, "app/" + path.relative_to(ROOT).as_posix()
     for path in sorted((ROOT / "online_control/online_motion_track/a32").glob("*.py")):
         yield path, "app/" + path.relative_to(ROOT).as_posix()
@@ -72,15 +73,15 @@ def files(*, full=False):
             yield sdk / relative, "app/vendor/a3-cpp-sdk/" + relative
     yield sdk / "sdk-source.json", "app/vendor/a3-cpp-sdk/sdk-source.json"
     yield sdk / "README-migration.txt", "app/vendor/a3-cpp-sdk/README-migration.txt"
-    for path in sorted((ROOT / "online_control/online_motion_track/pipeline_v3_0").glob("*.py")):
-        yield path, "app/" + path.relative_to(ROOT).as_posix()
-    for folder in ("TsenseI_hand_v3_0", "TsenseI_hand_v3_0_withid", "TsenseI_hand_v3_2_withid"):
+    if full:
+        for name in ("__init__.py", "collision.py"):
+            path = ROOT / "online_control/online_motion_track/pipeline_v3_0" / name
+            yield path, "app/" + path.relative_to(ROOT).as_posix()
+    for folder in ("TsenseI_hand_v3_2_withid",):
         for path in sorted((ROOT / "assets/hands" / folder).rglob("*")):
             if path.is_file() and path.suffix.lower() in (".urdf", ".stl", ".yaml", ".xml"):
                 yield path, "app/" + path.relative_to(ROOT).as_posix()
     for path in sorted((ROOT / "src/a32_kinematics").glob("*.py")):
-        yield path, "app/" + path.relative_to(ROOT).as_posix()
-    for path in sorted((ROOT / "src/a30_kinematics").glob("*.py")):
         yield path, "app/" + path.relative_to(ROOT).as_posix()
     for name in ("A3.2_source.urdf", "geometry_inferred.mat"):
         path = ROOT / "src/a32_kinematics/model" / name
@@ -88,6 +89,8 @@ def files(*, full=False):
     web = "app/online_control/online_motion_track/"
     yield HERE / "main.py", web + "main.py"
     yield HERE / "feedback.py", web + "feedback.py"
+    yield HERE / "command_compensation.py", web + "command_compensation.py"
+    yield HERE / "optimized_skeleton.py", web + "optimized_skeleton.py"
     yield HERE / "calibration.py", web + "calibration.py"
     yield HERE / "landmark_filter.py", web + "landmark_filter.py"
     yield HERE / "direct_filter.py", web + "direct_filter.py"
@@ -99,21 +102,13 @@ def files(*, full=False):
                  "realsense_source.py", "rgbd_fusion.py", "rgbd_input.py"):
         yield HERE / name, web + name
     for path in sorted((ROOT / "vendor/realsense-hand-tracking").iterdir()):
-        if path.is_file():
+        if path.is_file() and path.name not in {'serial-trace.js', 'stream-clock.js'}:
             yield path, "app/" + path.relative_to(ROOT).as_posix()
     yield HERE / "requirements-realsense.txt", "requirements-realsense.txt"
     yield ROOT / "migration/ubuntu/70-hand-realsense.rules", "migration/ubuntu/70-hand-realsense.rules"
     for path in sorted((HERE / "static").rglob("*")):
         if path.is_file():
             yield path, web + path.relative_to(HERE).as_posix()
-    model = ROOT / "assets/hands/TsenseI_hand_v3_2"
-    for folder, suffix in (("urdf", ".urdf"), ("meshes", ".stl"), ("mjcf/collision_meshes", ".stl")):
-        for path in sorted((model / folder).rglob("*")):
-            if path.is_file() and path.suffix.lower() == suffix:
-                yield path, "app/" + path.relative_to(ROOT).as_posix()
-    for name in ("hand_profile.yaml", "robot_keypoints_21.yaml", "robot_keypoints_21_right.yaml",
-                 "eval_config.yaml", "eval_config_right.yaml"):
-        yield model / name, "app/" + (model / name).relative_to(ROOT).as_posix()
     vendor = HERE / "node_modules"
     for name in ("three/LICENSE", "three/build/three.module.js", "three/build/three.core.js",
                  "three/examples/jsm/controls/OrbitControls.js", "three/examples/jsm/controls/TransformControls.js", "three/examples/jsm/loaders/STLLoader.js",
@@ -125,30 +120,14 @@ def files(*, full=False):
     if full:
         # Runtime-only allowlist: no Qt, user recordings, motion files or keys.
         extra = [
-            "online_control/online_motion_track/v2/__init__.py", "online_control/online_motion_track/v2/session.py",
             "online_control/online_motion_track/mink_guard.py",
-            "online_control/online_motion_track/pipeline_v2/collision_guard.py", "online_control/online_motion_track/pipeline_v2/control_pipeline.py",
-            "online_control/online_motion_track/pipeline_v2/moveit_style_planner.py", "online_control/online_motion_track/pipeline_v2/pipeline_geometry.py",
-            "online_control/online_motion_track/pipeline_v2/session_logger.py", "online_control/online_motion_track/pipeline_v2/tracking_transition.py",
-            "src/joint_schema.py", "src/kinematics/__init__.py", "src/kinematics/finger_linkage.py",
+            "online_control/online_motion_track/pipeline_v2/collision_guard.py",
+            "online_control/online_motion_track/pipeline_v2/moveit_style_planner.py",
             "src/physics/__init__.py", "src/physics/mujoco_filter.py",
-            "src/protocol/__init__.py", "src/protocol/hand_angle_protocol.py", "src/protocol/hand_display_protocol.py",
-            "src/usb/__init__.py", "src/usb/offline.py", "src/usb/telemetry.py",
-            "src/utils/control_session_recorder.py",
-            "src/utils/downlink_guard.py", "src/utils/hand_init.py",
-            "src/utils/retarget_runtime.py", "src/utils/ruckig_interpolator.py",
         ]
         for relative in extra:
             yield ROOT / relative, "app/" + relative
-        v2 = ROOT / "assets/hands/TsenseI_hand"
-        for folder, suffix in (("urdf", ".urdf"), ("meshes", ".stl"), ("mjcf", ".xml")):
-            for path in sorted((v2 / folder).rglob("*")):
-                if path.is_file() and path.suffix.lower() == suffix:
-                    yield path, "app/" + path.relative_to(ROOT).as_posix()
-        for path in sorted(v2.glob("*.yaml")):
-            yield path, "app/" + path.relative_to(ROOT).as_posix()
-        for path in sorted((model / "mjcf").glob("*.xml")):
-            yield path, "app/" + path.relative_to(ROOT).as_posix()
+
 
 
 def payloads(*, full=False):
@@ -190,7 +169,7 @@ def build(destination, archive=False, *, full=False):
             checksums[relative] = hashlib.sha256(data).hexdigest()
             write(relative, data)
         write("manifest.json", json.dumps({"application": "TsenseI Hand Web",
-              "features": ["v3.2", "v3.2_withid", "a32_native_sdk", "v3.0", "v2", "mink"] if full else ["v3.2", "v3.2_withid", "v3.0"], "sha256": checksums}, indent=2).encode())
+              "features": ["v3.2_withid", "a32_native_sdk", "mink"] if full else ["v3.2_withid", "a32_native_sdk"], "sha256": checksums}, indent=2).encode())
     finally:
         if bundle:
             bundle.close()
@@ -202,6 +181,6 @@ if __name__ == "__main__":
     group = parser.add_mutually_exclusive_group(required=True)
     group.add_argument("--stage", type=Path)
     group.add_argument("--output", type=Path)
-    parser.add_argument("--full", action="store_true", help="Include V2/Ruckig and V3.2 Mink preview runtime")
+    parser.add_argument("--full", action="store_true", help="Include A3.2 with ID Mink and sampled collision safety runtime")
     args = parser.parse_args()
     print(build(args.stage or args.output, archive=args.output is not None, full=args.full))

@@ -60,7 +60,7 @@ export const messages = {
   "A3.2 SDK 控制": "A3.2 SDK control",
   "A3.2 · 本机 SDK 控制": "A3.2 · Local SDK control",
   "未连接": "Disconnected",
-  "两种模型使用同一套 A3.2 驱动。开始识别后可手动开启实时下发；关闭碰撞保护或仅检测也可下发。每次开启均需本次连接的新鲜完整反馈，并从当前实测位置起步。找零可选，仅覆盖 18 路自研电机。": "Both models use the same A3.2 driver. Start tracking and manually enable live output, including with protection off or in monitor mode. Each start requires fresh, complete feedback from the current connection and begins at the measured pose. Optional homing covers only the 18 in-house motors.",
+  "A3.2 with ID 使用本机原生 SDK。开始识别后可手动开启实时下发；关闭碰撞保护时也可下发。每次开启均需本次连接的新鲜完整反馈，并从当前实测位置起步。找零可选，仅覆盖 18 路自研电机。": "A3.2 with ID uses the local native SDK. Start tracking and manually enable live output; output is also available with collision protection off. Each start requires fresh, complete feedback from the current connection and begins at the measured pose. Optional homing covers only the 18 in-house motors.",
   "连接方式": "Connection type",
   "设备": "Device",
   "auto 或 /dev/ttyACM0": "auto or /dev/ttyACM0",

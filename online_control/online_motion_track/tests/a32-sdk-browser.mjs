@@ -15,14 +15,14 @@ const errors = [];
 const page = await browser.newPage({viewport: {width: 1440, height: 1100}});
 page.on('pageerror', error => errors.push(error.message));
 try {
-  for (const model of ['TsenseI_v3_2', 'TsenseI_v3_2_withid']) {
+  for (const model of ['TsenseI_v3_2_withid']) {
     await page.goto(`${base}/?model=${model}`);
     await page.waitForFunction(() => !document.getElementById('start').disabled);
     assert.equal(await page.locator('#hand-model').inputValue(), model);
     assert.equal(await page.locator('#model-stage canvas').count(), 1);
     assert(await page.locator('#a32-sdk-panel').isVisible());
-    assert(await page.locator('#hardware-panel').isHidden());
-    assert.equal(await page.locator('#collision-mode').inputValue(), 'stop');
+    assert.equal(await page.locator('#hardware-panel').count(), 0);
+    assert.equal(await page.locator('#collision-mode').inputValue(), 'mink');
     await page.screenshot({path: `${output}/${model}-left.png`, fullPage: true});
     // A local session owns its SDK instance, but creation is preview-only.
     // This explicit API session has no UI heartbeat. Make its requests from
@@ -34,7 +34,7 @@ try {
         if (!r.ok()) throw new Error(result.error);
         return result;
       };
-      const created = await post('/api/session', {model_id: model, side: 'left', recording: false, collision_mode: 'stop'});
+      const created = await post('/api/session', {model_id: model, side: 'left', recording: false, collision_mode: 'mink'});
       const status = await post('/api/a32/control', {session: created.session, action: 'status'});
       const frame = await post('/api/frame', {session: created.session, sequence: 0, timestamp_ms: 1,
         capture_unix_ms: Date.now(), camera_size: [640, 480], hand: null});
@@ -62,7 +62,7 @@ try {
     await page.setViewportSize({width: 1440, height: 1100});
   }
   assert.deepEqual(errors, []);
-  console.log('A32_BROWSER_OK: both models, real meshes, left/right, SDK panel, camera inference/frame/stop, session, missing-hand hold, mobile layout');
+  console.log('A32_BROWSER_OK: A3.2 with ID, real meshes, left/right, SDK panel, camera inference/frame/stop, session, missing-hand hold, mobile layout');
 } catch (error) {
   console.error({errors, state: await page.locator('#camera-state').textContent(),
     notice: await page.locator('#notice').textContent()});

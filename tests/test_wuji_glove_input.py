@@ -167,7 +167,7 @@ def test_http_bridge_sdk_callback_contract_and_disconnect():
         worker.join()
 
 
-@pytest.mark.parametrize("model", ["TsenseI_v3_0", "TsenseI_v3_0_withid", "TsenseI_v3_2", "TsenseI_v3_2_withid"])
+@pytest.mark.parametrize("model", ["TsenseI_v3_2_withid"])
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_real_solver_metric_geometry_and_recording(model, side, tmp_path):
     session = WebSession(side, True, tmp_path, model_id=model, input_source="wuji_glove")
@@ -195,7 +195,7 @@ def test_real_solver_metric_geometry_and_recording(model, side, tmp_path):
 def test_application_uses_server_observation_not_browser_forgery():
     app = Application()
     try:
-        created = app.create({"model_id": "TsenseI_v3_2", "side": "left", "input_source": "wuji_glove", "recording": False})
+        created = app.create({"model_id": "TsenseI_v3_2_withid", "side": "left", "input_source": "wuji_glove", "recording": False})
         token = created["session"]
         app.wuji_create({"session": token})
         session = app.get(token)
@@ -251,43 +251,13 @@ def test_combined_wuji_request_deduplicates_and_never_uses_browser_skeleton():
 def test_combined_wuji_request_rejects_non_wuji_session():
     app = Application()
     try:
-        token = app.create({'model_id':'TsenseI_v3_2','recording':False})['session']
+        token = app.create({'model_id':'TsenseI_v3_2_withid','recording':False})['session']
         with pytest.raises(ValueError, match='Wuji'):
             app.wuji_frame({'session':token})
     finally:
         app.close()
 
 
-@pytest.mark.parametrize("side", ["left", "right"])
-def test_v2_glove_preserves_metric_bones_and_records_source(side, tmp_path, monkeypatch):
-    from online_control.online_motion_track.v2 import session as module
-    from test_web_v2 import MemoryUsb
-    monkeypatch.setattr(module, "UsbController", MemoryUsb)
-    # This test checks metric geometry/recording. A real 500 Hz watchdog is
-    # nondeterministic during cold solver initialization in the test process.
-    monkeypatch.setattr(module.LightControlPipeline, "start", lambda self: None)
-    def camera_preprocess(*_):
-        pytest.fail("Glove metric bones must bypass camera correction")
-    monkeypatch.setattr(module, "preprocess_wuji_world_points", camera_preprocess)
-    session = module.V2WebSession(side, True, tmp_path, collision_mode="off", input_source="wuji_glove")
-    world = session.solver.fk.compute() * .8
-    if side == "right":
-        world[:, 0] *= -1
-    packet = {"source": "wuji_glove", "capture_unix_ms": 1_700_000_000_000,
-              "hand": {"label": side.title(), "world": world.tolist()}, "raw_wuji": {"sequence": 1}}
-    try:
-        session.command("tracking_start", {})
-        for i in range(5):
-            result = session.process(packet | {"sequence": i, "timestamp_ms": 1000 + i * 50})
-        assert result["tracking"] and result["depth_source"] == "wuji_glove_metric", result.get("message")
-        assert not session.control.snapshot()["armed"]
-        assert not session.process(packet | {"sequence": 5, "timestamp_ms": 1250, "hand": None})["tracking"]
-    finally:
-        session.close()
-    import json
-    rows = [json.loads(line) for line in session.recorder.path.read_text(encoding="utf-8").splitlines()]
-    assert {"wuji_glove_raw", "wuji_glove", "retarget"} <= {r["type"] for r in rows}
-    assert not {"mediapipe", "mediapipe_raw"} & {r["type"] for r in rows}
 
 
 def test_a32_glove_native_recording_does_not_require_image_points(tmp_path, monkeypatch):

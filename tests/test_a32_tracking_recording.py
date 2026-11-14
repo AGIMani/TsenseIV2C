@@ -11,7 +11,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 pytest.importorskip("ruckig")
 
 from a32_driver import A32Device
-from hand_profiles import A32_MODEL_IDS
+A32_MODEL_IDS = ("TsenseI_v3_2_withid",)
 from online_control.online_motion_track.a32 import session as session_module
 from online_control.online_motion_track.a32.control import A32Control
 from test_a32_driver import SimulatedNativeHand
@@ -19,7 +19,7 @@ from test_a32_tracking_control import PassGuard
 from test_web_v3_2 import packet
 
 
-def make_session(tmp_path, monkeypatch, model_id="TsenseI_v3_2", *, default_dir=False):
+def make_session(tmp_path, monkeypatch, model_id="TsenseI_v3_2_withid", *, default_dir=False):
     backend = SimulatedNativeHand()
     device = A32Device(model_id=model_id, backend=backend)
 

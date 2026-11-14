@@ -51,7 +51,7 @@ def test_reconnect_never_replays_previously_sent_pose(model_id, transport, link_
         device.close()
 
 
-@pytest.mark.parametrize("model_id", ["TsenseI_v3_2", "TsenseI_v3_2_withid"])
+@pytest.mark.parametrize("model_id", ["TsenseI_v3_2_withid"])
 @pytest.mark.parametrize("direct_mode", [False, True])
 def test_tracking_reconnect_seeds_new_feedback_and_waits_for_new_target(tmp_path, monkeypatch, model_id, direct_mode):
     session, backend = make_session(tmp_path, monkeypatch, model_id)
@@ -73,8 +73,9 @@ def test_tracking_reconnect_seeds_new_feedback_and_waits_for_new_target(tmp_path
         control.step(.002)
         assert len(backend.calls) == before + 1
         backend.state = copy.deepcopy(CASE["feedback"])
+        expected_feedback = control.device.starting_pose(control.pose)
         session.command("arm", {"enabled": True})
-        assert max(q for n, q in control.pose.items() if "swing" not in n and "rota" not in n) == pytest.approx(.005)
+        assert control.pose == pytest.approx(expected_feedback)
         assert control.target == control.pose and control.target_at == 0
         first = backend.calls[-3]
         assert first[0] == "targets"

@@ -56,7 +56,7 @@
 <body>
 <main>
   <h1>手部控制全链路数据查看器</h1>
-  <div class="hint">本页完全本地运行。选择 A30、A32、V2 日志目录中的文件（可多选），文件不会上传。</div>
+  <div class="hint">本页完全本地运行。选择 A32 日志文件（可多选），文件不会上传。</div>
 
   <details class="panel " open data-fold="section-1"><summary>日志选择与视图设置</summary><div class="fold-body toolbar">
     <label>数据文件 <input id="file" type="file" multiple accept=".jsonl,.json,text/plain"></label>
@@ -79,17 +79,17 @@
     <div class="fold-body">
       <p class="hint">导入全链路日志后自动登记；可多选文件累计，重复导入及分段不会重复计时。时长为记录会话的覆盖时段，包含预览和暂停，不代表电机通电时长。设备名称可区分同型号的实物。</p>
       <div class="chart-tools">
-        <button id="usageRefreshFolder" type="button">刷新 A30 文件夹</button>
-        <label>查看单份日志曲线 <select id="usageLogFile"><option value="">选择 A30 日志</option></select></label>
+        <button id="usageRefreshFolder" type="button">刷新 A32 文件夹</button>
+        <label>查看单份日志曲线 <select id="usageLogFile"><option value="">选择 A32 日志</option></select></label>
         <button id="usageOpenLog" type="button">打开所选日志</button>
       </div>
       <div class="chart-tools">
         <label>日志父目录 <input id="usageParentPath" type="text" autocomplete="off" placeholder="日志父目录的 Linux 绝对路径"></label>
-        <button id="usageSaveParent" type="button">确认并创建 A30 / A32 / V2</button>
+        <button id="usageSaveParent" type="button">确认并创建 A32 目录</button>
         <span id="usageLogParent" class="hint"></span>
       </div>
       <div class="chart-tools">
-        <label>型号 <select id="usageModel"><option value="A30">A30</option><option value="A32">A32</option><option value="V2">V2</option></select></label>
+        <label>型号 <select id="usageModel"><option value="A32">A3.2 with ID</option></select></label>
         <label>手侧 <select id="usageSide"><option value="left">左手</option><option value="right">右手</option></select></label>
         <label>设备名称 <input id="usageName" maxlength="80" placeholder="可选，如样机 01"></label>
         <label>开始 <input id="usageStart" type="datetime-local" step="1"></label>
@@ -1409,7 +1409,7 @@ async function saveLogParent(){
     $('usageParentPath').value=result.parent;
     $('usageParentPath').dataset.savedParent=result.parent;
     await loadLocalCatalog();
-    $('usageStatus').textContent=`父目录已保存：${result.parent}；已确认 A30、A32、V2 三个子目录。`;
+    $('usageStatus').textContent=`父目录已保存：${result.parent}；已确认 A32 子目录。`;
   }catch(error){$('usageStatus').textContent=`父目录保存失败：${error.message}`;}
   finally{button.disabled=false;}
 }

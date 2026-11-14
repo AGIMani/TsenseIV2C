@@ -2,7 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 import {A32SdkPanel} from '../static/a32-sdk-control.js';
 
-test('A32 uses A30 startup gates: first telemetry, active tracking, no fresh-hand requirement', async () => {
+test('A3.2 with ID startup requires telemetry and tracking, but not a fresh hand', async () => {
   const previous = globalThis.document;
   const elements = new Map();
   globalThis.document = {getElementById(id) {
@@ -19,7 +19,7 @@ test('A32 uses A30 startup gates: first telemetry, active tracking, no fresh-han
       isRunning: () => running, notice() {}, record() {}, display() {},
     });
     panel.begin = () => {}; // No polling or device access in this UI test.
-    for (const model of ['TsenseI_v3_2', 'TsenseI_v3_2_withid']) {
+    for (const model of ['TsenseI_v3_2_withid']) {
       panel.configure(model, 'left', true);
       panel.update({connected: true, ready: false, feedback_valid: false,
         telemetry_age_ms: -1, telemetry_seen: false, target_ready: true, seed_missing: Array(20).fill('joint')});
@@ -33,10 +33,10 @@ test('A32 uses A30 startup gates: first telemetry, active tracking, no fresh-han
       assert.equal(elements.get('a32-arm').disabled, false);
       panel.update({...panel.state, telemetry_units: {self_current: 'A', external_current: 'A'}});
       assert.match(elements.get('a32-sdk-detail').textContent, /电流反馈 A · 找零 Iq 仍为码值/);
-      for (const collision_mode of ['off', 'monitor']) {
+      for (const collision_mode of ['off']) {
         panel.update({...panel.state, collision_mode, sample_collision_ready: false});
         assert.equal(elements.get('a32-arm').disabled, false);
-        assert.match(elements.get('a32-sdk-detail').textContent, collision_mode === 'off' ? /碰撞保护关闭/ : /仅检测 · 不修正/);
+        assert.match(elements.get('a32-sdk-detail').textContent, /碰撞保护关闭/);
       }
       await panel.command('arm');
       assert.equal(calls.at(-1).enabled, true);

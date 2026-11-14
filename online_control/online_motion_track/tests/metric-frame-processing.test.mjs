@@ -27,7 +27,7 @@ for(const source of ['webxr','wuji_glove','leapmotion']){
     assert.equal(h.records.length,1);assert.equal(h.records[0][0],`${source}_raw`);
     h.offer(2,{source,combined_frame:true,update:null,hand:null,age_ms:400});
     assert.equal(h.uploaded.length,0);assert.equal(h.applied.length,1);
-    assert.equal(h.observed.at(-1)[0],false,'loss immediately invalidates browser control');
+    assert.equal(h.observed.length,0,'SDK control does not use the removed browser-serial hand gate');
     assert.equal(h.context.latestWorld,null,'loss immediately clears the tracked skeleton');
     assert.equal(h.records.at(-1)[1].frame_id,null,'unsolved loss must not reuse a server solve frame ID');
   });

@@ -1,4 +1,4 @@
-"""V2/V3.2 web UI: browser GPU detection, Python retarget and local V2 control.
+"""A3.2 with ID web UI: browser detection, retargeting and native SDK control.
 
 python online_control/online_motion_track/main.py --port 8766
 Install browser dependencies once: npm ci --prefix online_control/online_motion_track
@@ -32,9 +32,9 @@ import numpy as np
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(ROOT / "src/tracking"), str(ROOT / "tools")]
-from hand_profiles import A30_MODEL_IDS, A32_MODEL_IDS, load_hand_profile
+from hand_profiles import load_hand_profile
 from wuji_mediapipe import _OneEuroLandmarkFilter
-from online_control.online_motion_track.landmark_filter import ResponsiveLandmarkFilter, A32LandmarkFilter
+from online_control.online_motion_track.landmark_filter import A32LandmarkFilter
 from online_control.online_motion_track.webxr_input import WebXRInputRelay
 from online_control.online_motion_track.wuji_input import WujiInputRelay, resolve_wuji_config
 from online_control.online_motion_track.leapmotion_input import LeapMotionInputRelay
@@ -43,7 +43,6 @@ from online_control.online_motion_track.realsense_source import RealSenseSource
 from online_control.online_motion_track.source_worker import SourceWorker
 from online_control.online_motion_track.optimized_skeleton import optimized_skeleton
 from online_control.online_motion_track.calibration import CalibrationSession
-from online_control.shared.stream import serve_records
 from online_control.shared.version import downlink_version
 from online_control.online_motion_track.pipeline_v3_2.pipeline import MediaPipeHandPipeline
 from online_control.online_motion_track.pipeline_v3_2.recording import SessionRecorder, json_safe
@@ -58,11 +57,12 @@ def origin(element):
     return {"xyz": vector(element, "xyz"), "rpy": vector(element, "rpy")}
 
 
-MODEL_IDS = (*A32_MODEL_IDS, *A30_MODEL_IDS, "TsenseI_v2")
-ASSET_PREFIXES = {"TsenseI_v3_2_withid": "/assets-v3-2-withid/", "TsenseI_v3_0_withid": "/assets-v3-0-withid/", "TsenseI_v3_2": "/assets/", "TsenseI_v3_0": "/assets-v3-0/", "TsenseI_v2": "/assets-v2/"}
+MODEL_ID = "TsenseI_v3_2_withid"
+MODEL_IDS = (MODEL_ID,)
+ASSET_PREFIXES = {MODEL_ID: "/assets-v3-2-withid/"}
 
 
-def model_description(side, model_id="TsenseI_v3_2"):
+def model_description(side, model_id=MODEL_ID):
     if side not in ("left", "right"):
         raise ValueError("手别必须为 left 或 right")
     if model_id not in MODEL_IDS:
@@ -111,38 +111,31 @@ class StaleFrameError(ValueError):
 
 
 class WebSession:
-    model_id = "TsenseI_v3_2"
-    def __init__(self, side="left", recording=True, log_dir=None, collision_mode="off", *, model_id="TsenseI_v3_2",
+    model_id = MODEL_ID
+    def __init__(self, side="left", recording=True, log_dir=None, collision_mode="off", *, model_id=MODEL_ID,
                  input_source="mediapipe"):
         if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
             raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove、leapmotion 或 realsense_rgbd")
         self.input_source = input_source
         self.mediapipe_filter_enabled = True
         self.direct_mode = False
-        if model_id not in (*A32_MODEL_IDS, *A30_MODEL_IDS):
+        if model_id != MODEL_ID:
             raise ValueError("Unsupported preview model")
         self.model_id = model_id
         if side not in ("left", "right"):
             raise ValueError("手别无效")
-        if model_id in A30_MODEL_IDS and collision_mode not in a30_collision_modes(model_id):
-            raise ValueError("A3.0 碰撞模式不可用，请安装完整依赖并检查 MJCF 模型")
-        if model_id in A32_MODEL_IDS and collision_mode not in a32_collision_modes(model_id):
+        if collision_mode not in a32_collision_modes(model_id):
             raise ValueError("A3.2 碰撞模式不可用，请检查依赖与模型资源")
         if collision_mode == "mink" and not mink_available(model_id):
-            raise ValueError("Mink 未安装或缺少模型，请安装 requirements-mink.txt")
-        pipeline_type = MediaPipeHandPipeline
-        if model_id in A30_MODEL_IDS:
-            from online_control.online_motion_track.pipeline_v3_0.pipeline import MediaPipeHandPipeline as pipeline_type
-        self.pipeline = pipeline_type(side, collision_mode, model_id=model_id, retarget_options={"kinematics_backend": "numpy"})
+            raise ValueError("Mink 未安装或缺少模型，请安装 requirements-full.txt")
+        self.pipeline = MediaPipeHandPipeline(side, collision_mode, model_id=model_id, retarget_options={"kinematics_backend": "numpy"})
         self.lock = threading.Lock()
         self.closed = False
         self.last_seen = time.monotonic()
         self.created_at = self.last_seen
         self.last_sequence = -1
         self.last_timestamp = -1.0
-        self.filter = (A32LandmarkFilter() if model_id in A32_MODEL_IDS else
-                       ResponsiveLandmarkFilter() if model_id in A30_MODEL_IDS else
-                       _OneEuroLandmarkFilter(min_cutoff=1.5, beta=.25, derivative_cutoff=1.))
+        self.filter = A32LandmarkFilter()
         self.normalized_filter = _OneEuroLandmarkFilter(min_cutoff=1.5, beta=.25, derivative_cutoff=1.)
         self.recorder = SessionRecorder(log_dir or HERE / "logs", self.pipeline,
             camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2", "realsense_rgbd": "realsense-rgbd"}.get(input_source, "browser-webcam"),
@@ -256,42 +249,27 @@ class WebSession:
                     self.recorder.close(reason="web_session_stopped")
 
 
-def mink_available(model_id="TsenseI_v3_2"):
-    return (all(importlib.util.find_spec(name) is not None for name in ("mink", "mujoco", "qpsolvers"))
+def mink_available(model_id=MODEL_ID):
+    return (all(importlib.util.find_spec(name) is not None for name in ("mink", "mujoco", "qpsolvers", "daqp"))
             and (HERE / "mink_guard.py").is_file()
             and all(load_hand_profile(model_id).path("mjcf", side).is_file()
                     for side in ("left", "right")))
 
 
-def a30_collision_modes(model_id="TsenseI_v3_0"):
-    modes = ["off"]
+def _a3_sample_checker_available(model_id=MODEL_ID):
     profile = load_hand_profile(model_id)
-    if (importlib.util.find_spec("mujoco") is not None
+    return (importlib.util.find_spec("mujoco") is not None
             and (ROOT / "src/physics/mujoco_filter.py").is_file()
-            and all(profile.path("mjcf", side).is_file() for side in ("left", "right"))):
-        modes.append("monitor")
-        if (ROOT / "online_control/online_motion_track/pipeline_v2/collision_guard.py").is_file():
-            modes.append("stop")
-        if mink_available(model_id):
-            modes.append("mink")
+            and (HERE / "pipeline_v2/collision_guard.py").is_file()
+            and (HERE / "pipeline_v3_0/collision.py").is_file()
+            and all(profile.path("mjcf", side).is_file() for side in ("left", "right")))
+
+
+def a32_collision_modes(model_id=MODEL_ID):
+    modes = ["off"]
+    if _a3_sample_checker_available(model_id) and mink_available(model_id):
+        modes.append("mink")
     return modes
-
-
-def v2_available():
-    return (all(importlib.util.find_spec(name) is not None for name in ("mujoco", "ruckig", "serial"))
-            and (ROOT / "online_control/online_motion_track/v2/session.py").is_file()
-            and (ROOT / "assets/hands/TsenseI_hand/hand_profile.yaml").is_file())
-
-
-def a30_control_available():
-    return (importlib.util.find_spec("ruckig") is not None
-            and (ROOT / "online_control/online_motion_track/a30/session.py").is_file()
-            and "stop" in a30_collision_modes())
-
-
-def a32_collision_modes(model_id="TsenseI_v3_2"):
-    # The path checker consumes a profile and has no A30 wire assumptions.
-    return a30_collision_modes(model_id)
 
 
 def a32_control_available():
@@ -318,8 +296,7 @@ class Application:
         self.max_sessions = max_sessions
         self.owners = {}
         self.collision_mode = collision_mode
-        self.mink_available = mink_available()
-        self.v2_available = v2_available()
+        self.mink_available = "mink" in a32_collision_modes()
         self.hardware_lock = threading.RLock()
         self.hardware_owner = None
         self.recordings = {}
@@ -338,7 +315,7 @@ class Application:
         previous = self.metric_workers.pop(token, None)
         if previous:
             previous.cancel()
-        if session.model_id in A32_MODEL_IDS and hasattr(session, 'control'):
+        if session.model_id == MODEL_ID and hasattr(session, 'control'):
             if session.input_source != 'wuji_glove' or self.wuji.supports_background:
                 self.metric_workers[token] = SourceWorker(token, session, relay, session.input_source)
                 return True
@@ -361,10 +338,13 @@ class Application:
         direct_mode = data.get("direct_mode", False)
         if not isinstance(direct_mode, bool):
             raise ValueError("direct_mode 必须为布尔值")
-        model_id = data.get("model_id", "TsenseI_v3_2")
+        model_id = data.get("model_id", MODEL_ID)
         if model_id not in MODEL_IDS:
             raise ValueError("未知手型")
-        if direct_mode and model_id in (*A30_MODEL_IDS, *A32_MODEL_IDS):
+        allowed_collision_modes = ("off", "mink")
+        if "collision_mode" in data and data["collision_mode"] not in allowed_collision_modes:
+            raise ValueError(f"该型号的碰撞模式必须为 {' / '.join(allowed_collision_modes)}")
+        if direct_mode:
             # A3 direct control is a complete mode: no target/sample collision
             # correction and no Ruckig, including preview-only deployments.
             data = {**data, "collision_mode": "off"}
@@ -375,20 +355,7 @@ class Application:
                 raise ValueError("每个访问地址最多开启两个会话，请先停止其他页面")
             if data.get('mode') == 'calibration':
                 session = CalibrationSession(data.get('side', 'left'), model_id=model_id, input_source=input_source)
-            elif model_id == "TsenseI_v2":
-                if not self.v2_available:
-                    raise ValueError("V2 运行环境未安装，请安装 online_control/online_motion_track/v2/requirements.txt")
-                from online_control.online_motion_track.v2.session import V2WebSession
-                session = V2WebSession(data.get("side", "left"),
-                    False if self.public else bool(data.get("recording", True)),
-                    Path(self.log_dir) / "v2" if self.log_dir else None,
-                    collision_mode=data.get("collision_mode", "avoid"), input_source=input_source)
-            elif model_id in A30_MODEL_IDS and a30_control_available():
-                from online_control.online_motion_track.a30.session import A30WebSession
-                session = A30WebSession(data.get("side", "left"),
-                    False if self.public else bool(data.get("recording", True)), self.log_dir,
-                    collision_mode=data.get("collision_mode", "stop"), model_id=model_id, input_source=input_source)
-            elif model_id in A32_MODEL_IDS and a32_control_available() and not self.public:
+            elif a32_control_available() and not self.public:
                 from online_control.online_motion_track.a32.session import A32WebSession
                 session = A32WebSession(data.get("side", "left"),
                     bool(data.get("recording", True)), self.log_dir,
@@ -396,7 +363,7 @@ class Application:
             else:
                 session = WebSession(data.get("side", "left"),
                                      False if self.public else bool(data.get("recording", True)), self.log_dir,
-                                     collision_mode=data.get("collision_mode", "off" if model_id in A30_MODEL_IDS else self.collision_mode),
+                                     collision_mode=data.get("collision_mode", self.collision_mode),
                                      model_id=model_id, input_source=input_source)
             session.input_source = input_source
             session.camera_source = camera_source
@@ -416,15 +383,7 @@ class Application:
             self.owners[token] = owner
             if isinstance(session, CalibrationSession):
                 return {'session': token, **session.description(), 'save_allowed': not self.public}
-            if model_id == "TsenseI_v2":
-                response = session.description()
-                for suffix, path in (("control", session.recorder.path),
-                                     ("frames", session.frame_logger.path if session.frame_logger else None)):
-                    if path:
-                        self.recordings[f"{token}-{suffix}"] = Path(path)
-                response["download_id"] = f"{token}-control" if session.recorder.path else None
-                return {"session": token, **response}
-        if model_id in (*A30_MODEL_IDS, *A32_MODEL_IDS) and hasattr(session, "control"):
+        if hasattr(session, "control"):
             return {"session": token, **session.description()}
         return {"session": token, "model_id": model_id, "pose": session.pipeline.session.pose,
                 "direct_mode": session.direct_mode,
@@ -793,19 +752,13 @@ class Application:
             return result
         return session.process(data)
 
-    def a30_command(self, data):
-        session = self.get(data["session"])
-        if session.model_id not in A30_MODEL_IDS or not hasattr(session, "control"):
-            raise ValueError("A3.0 控制会话不可用")
-        return session.command(data.get("action", "status"), data)
-
     def a32_command(self, data):
         token, action = data["session"], data.get("action", "status")
         with self.hardware_lock:
             if self.public:
                 raise ValueError("A3.2 控制需在连接设备的本地服务运行")
             session = self.get(token)
-            if session.model_id not in A32_MODEL_IDS or not hasattr(session, "control"):
+            if session.model_id != MODEL_ID or not hasattr(session, "control"):
                 raise ValueError("A3.2 SDK 控制会话不可用")
             worker = self.metric_workers.get(token)
             if worker:
@@ -827,47 +780,10 @@ class Application:
                     self.hardware_owner = None
             return session.command(action, data)
 
-    def v2_command(self, data):
-        token = data["session"]
-        action = data.get("action", "status")
-        with self.hardware_lock:
-            session = self.get(token)
-            if session.model_id != "TsenseI_v2":
-                raise ValueError("下位机控制仅支持 V2")
-            if action == "status":
-                return session.status()
-            if action in ("tracking_start", "browser_rebase", "set_direct_mode"):
-                return session.command(action, data)
-            if self.public:
-                raise ValueError("公共服务禁用串口与下位机操作，请在连接设备的电脑运行本地服务")
-            if action == "ports":
-                return {"ports": [{"port": d.port, "label": d.display_name}
-                                  for d in session.control.scan_devices()]}
-            if action == "connect":
-                if self.hardware_owner not in (None, token):
-                    raise ValueError("下位机已由另一个页面控制，请先在原页面断开")
-                devices = {d.port: d for d in session.control.scan_devices()}
-                port = data.get("port")
-                if port not in devices:
-                    raise ValueError("串口已不可用，请刷新串口列表")
-                self.hardware_owner = token
-                if not session.control.connect(devices[port]):
-                    self.hardware_owner = None
-                    raise ValueError(session.control.snapshot().get("last_error") or "串口连接失败")
-                return session.status()
-            if action in ("arm", "home", "cancel_home", "emergency_stop", "disconnect"):
-                if self.hardware_owner != token:
-                    raise ValueError("请先在当前页面连接串口")
-                result = session.command(action, data)
-                if action == "disconnect":
-                    self.hardware_owner = None
-                return result
-            raise ValueError("未知控制操作")
-
     def expire(self):
         with self.lock:
             now = time.monotonic()
-            expired = [k for k, s in self.sessions.items() if now - s.last_seen > (120 if isinstance(s, CalibrationSession) else 3 if s.model_id in ("TsenseI_v2", *A30_MODEL_IDS) or (s.model_id in A32_MODEL_IDS and hasattr(s, "control")) else 120)
+            expired = [k for k, s in self.sessions.items() if now - s.last_seen > (120 if isinstance(s, CalibrationSession) else 3 if hasattr(s, "control") else 120)
                        or (self.public and now - s.created_at > 900)]
         for token in expired:
             self.remove(token)
@@ -990,37 +906,31 @@ class Handler(BaseHTTPRequestHandler):
             try:
                 query = parse_qs(url.query)
                 self.send_json(model_description(query.get("side", ["left"])[0],
-                                                 query.get("model", ["TsenseI_v3_2"])[0]))
+                                                 query.get("model", [MODEL_ID])[0]))
             except ValueError as exc:
                 self.send_json({"error": str(exc)}, 400)
             return
         if url.path == "/api/health":
-            self.send_json({"ok": True, "model": "TsenseI_v3_2",
+            self.send_json({"ok": True, "model": MODEL_ID,
                             "server_pid": os.getpid(),
                             "recording_allowed": not self.application.public,
-                            "browser_serial": True, "browser_recording": True,
+                            "browser_serial": False, "browser_recording": True,
                             "input_sources": ["mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"], "webxr_stale_after_ms": self.application.webxr.stale_after_ms,
                             "camera_sources": ["browser", "leapmotion_camera", "realsense_rgbd"], "leap_camera_target_fps": 120,
                             "wuji_transport": self.application.wuji.source,
-                            "control_chain_revision": "a30-stream-20260924-v2",
-                            "downlink_sha256": downlink_version(), "a30_binary_stream": True,
-                            "a30_control_available": a30_control_available(),
+                            "control_chain_revision": "a32-withid",
+                            "downlink_sha256": downlink_version(),
                             "a32_control_available": a32_control_available() and not self.application.public,
-                            "a32_collision_modes": {m: a32_collision_modes(m) for m in A32_MODEL_IDS},
+                            "a32_collision_modes": {MODEL_ID: a32_collision_modes()},
                             "mink_available": self.application.mink_available,
-                            "a30_collision_modes": a30_collision_modes(),
                             "collision_mode": self.application.collision_mode,
-                            "models": [*A32_MODEL_IDS, *A30_MODEL_IDS] + (["TsenseI_v2"] if self.application.v2_available else []),
-                            "hardware_allowed": not self.application.public and self.application.v2_available,
+                            "models": list(MODEL_IDS),
+                            "hardware_allowed": not self.application.public and a32_control_available(),
                             "public": self.application.public})
             return
         mappings = {
             "/shared/": ROOT / "online_control/shared",
-            "/assets-v2/": ROOT / "assets/hands/TsenseI_hand",
-            "/assets-v3-0-withid/": ROOT / "assets/hands/TsenseI_hand_v3_0_withid",
-            "/assets-v3-0/": ROOT / "assets/hands/TsenseI_hand_v3_0",
             "/assets-v3-2-withid/": ROOT / "assets/hands/TsenseI_hand_v3_2_withid",
-            "/assets/": ROOT / "assets/hands/TsenseI_hand_v3_2",
             "/vendor/three/": HERE / "node_modules/three",
             "/vendor/mediapipe/": HERE / "node_modules/@mediapipe/tasks-vision",
             "/": HERE / "static",
@@ -1112,7 +1022,7 @@ class Handler(BaseHTTPRequestHandler):
                     self.send_json({"error": "日志目录仅允许本机同源页面修改"}, 403)
                     return
                 parent = set_control_log_parent(data["parent"])
-                response = {"parent": str(parent), "folders": [str(parent / model) for model in ("A30", "A32", "V2")]}
+                response = {"parent": str(parent), "folders": [str(parent / "A32")]}
             elif self.path == "/api/session":
                 owner = self.client_address[0]
                 # Backend is loopback-only; Caddy replaces this header itself.
@@ -1166,24 +1076,11 @@ class Handler(BaseHTTPRequestHandler):
                 self.application.get(data["session"])
                 self.application.webxr.close(data["session"])
                 response = {"ok": True}
-            elif self.path == "/api/a30/stream":
-                session = self.application.get(data["session"])
-                if session.model_id not in A30_MODEL_IDS:
-                    raise ValueError("此会话不支持 A3 二进制下发")
-                records = session.control.open_stream(data.get("epoch"), preview=data.get("preview") is True)
-                return serve_records(self, records)
-            elif self.path == "/api/a30/control":
-                response = self.application.a30_command(data)
             elif self.path == "/api/a32/control":
                 if not origin_header or not ipaddress.ip_address(self.client_address[0]).is_loopback:
                     self.send_json({"error": "SDK 控制接口仅接受本机同源页面"}, 403)
                     return
                 response = self.application.a32_command(data)
-            elif self.path == "/api/v2/control":
-                if not origin_header or not ipaddress.ip_address(self.client_address[0]).is_loopback:
-                    self.send_json({"error": "控制接口仅接受本机同源页面"}, 403)
-                    return
-                response = self.application.v2_command(data)
             elif self.path == "/api/stop":
                 self.application.remove(data["session"])
                 response = {"ok": True}
@@ -1367,7 +1264,7 @@ def main():
     parser.add_argument("--allowed-host", action="append", default=[])
     parser.add_argument("--max-sessions", type=int, default=4)
     parser.add_argument("--collision-mode", choices=("off", "mink"), default="off")
-    parser.add_argument("--check", action="store_true", help="Validate A3.0/A3.2 assets and left/right analytic solvers; exit")
+    parser.add_argument("--check", action="store_true", help="Validate A3.2 with ID assets and left/right analytic solvers; exit")
     args = parser.parse_args()
     try:
         wuji_config = resolve_wuji_config(args.wuji_url, source=args.wuji_source,
@@ -1376,8 +1273,8 @@ def main():
         parser.error(str(exc))
     if bool(args.tls_cert) != bool(args.tls_key):
         parser.error("--tls-cert 与 --tls-key 必须同时配置")
-    if args.collision_mode == "mink" and not mink_available():
-        parser.error("请先安装：python -m pip install -r online_control/online_motion_track/requirements-mink.txt")
+    if args.collision_mode == "mink" and "mink" not in a32_collision_modes():
+        parser.error("Mink 避碰依赖或采样碰撞检查缺失；请使用完整包并安装 requirements-full.txt")
     if not (HERE / "node_modules/@mediapipe/tasks-vision/vision_bundle.mjs").is_file():
         parser.error("请先执行 npm ci --prefix online_control/online_motion_track")
     if not (ROOT / "hand_landmarker.task").is_file():
@@ -1387,7 +1284,7 @@ def main():
     if args.public and not args.allowed_host:
         parser.error("公网模式必须配置 --allowed-host，例如 hand.example.com")
     if args.check:
-        for model_id, side in ((m, s) for m in (*A32_MODEL_IDS, *A30_MODEL_IDS) for s in ("left", "right")):
+        for model_id, side in ((MODEL_ID, side) for side in ("left", "right")):
             model_description(side, model_id)
             checked = WebSession(side, recording=False, model_id=model_id,
                                  collision_mode=args.collision_mode)
@@ -1401,7 +1298,7 @@ def main():
                 checked.pipeline.mink_guard.project(result.joint_values)
                 print(side, checked.pipeline.mink_guard.diagnostics)
             checked.close()
-        print("CHECK OK: A3.0/A3.2 assets, left/right analytic retarget; no camera/GPU server dependency", flush=True)
+        print("CHECK OK: A3.2 with ID assets, left/right analytic retarget; no camera/GPU server dependency", flush=True)
         return
     try:
         server = make_server(args.port, args.log_dir, public=args.public,

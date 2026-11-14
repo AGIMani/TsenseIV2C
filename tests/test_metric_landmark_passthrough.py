@@ -17,7 +17,7 @@ from online_control.online_motion_track.pipeline_v3_2.pipeline import prepare_po
 from keypoint_mediapipe_input import align_world_landmarks
 
 SOURCES = ("webxr", "wuji_glove", "leapmotion", "mediapipe")
-MODELS = (*A30_MODEL_IDS, *A32_MODEL_IDS)
+MODELS = ("TsenseI_v3_2_withid",)
 
 
 def moving_points(rest, index):
@@ -82,7 +82,7 @@ def test_real_web_pipeline_keeps_each_metric_sample_and_filters_camera(model, so
         session.close()
 
 
-@pytest.mark.parametrize("model", A32_MODEL_IDS)
+@pytest.mark.parametrize("model", MODELS)
 @pytest.mark.parametrize("source", SOURCES)
 def test_separate_solver_process_preserves_metric_motion(model, source):
     baseline = WebSession(recording=False, model_id=model, collision_mode="off", input_source=source)
@@ -122,41 +122,5 @@ def test_calibration_keeps_current_metric_geometry_and_wrist_alignment(model, so
                 np.testing.assert_allclose(result["input_points"], expected, atol=1e-12)
             else:
                 assert np.max(np.abs(np.asarray(result["input_points"]) - expected)) > 1e-5
-    finally:
-        session.close()
-
-
-@pytest.mark.parametrize("source", SOURCES)
-@pytest.mark.parametrize("side", ("left", "right"))
-def test_v2_keeps_metric_points_before_wrist_transform_and_camera_correction(source, side, monkeypatch):
-    from online_control.online_motion_track.v2 import session as module
-    from test_web_v2 import MemoryUsb
-    monkeypatch.setattr(module, "UsbController", MemoryUsb)
-    monkeypatch.setattr(module.LightControlPipeline, "start", lambda self: None)
-    session = module.V2WebSession(side, recording=False, collision_mode="off", input_source=source)
-    frames = []
-    session.frame_logger = SimpleNamespace(record_frame=lambda row: frames.append(deepcopy(row)),
-                                           close=lambda **kwargs: None)
-    try:
-        rest = session.solver.fk.compute() * .8
-        if side == "right":
-            rest[:, 0] *= -1
-        session.command("tracking_start", {})
-        for index in range(4):
-            world = moving_points(rest, index)
-            session.process(packet(source, side, index, world))
-            frame = frames[-1]
-            np.testing.assert_array_equal(frame["raw_world_points_21_m"], world)
-            actual = frame["smoothed_world_points_21_m"]
-            if source != "mediapipe":
-                np.testing.assert_array_equal(actual, world)
-            elif index == 0:
-                # The unchanged V2 camera filter stores its initial state as float32.
-                np.testing.assert_allclose(actual, world, atol=1e-8)
-            else:
-                assert np.max(np.abs(actual - world)) > 1e-5
-            if source != "mediapipe":
-                np.testing.assert_array_equal(frame["source_points_21_m"], world - world[0])
-                assert frame["raw_normalized_points_21"] is None
     finally:
         session.close()

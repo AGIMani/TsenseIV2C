@@ -7,7 +7,7 @@ function setup(onError=()=>{}){
   const worker={postMessage(m){messages.push(structuredClone(m));}};
   const r=new WorkerRecorder(onError,{makeWorker:()=>worker});
   const reply=(m,result={})=>worker.onmessage({data:{request:m.request,result}});
-  async function start(){const p=r.start({model_id:'TsenseI_v3_0'});await Promise.resolve();
+  async function start(){const p=r.start({model_id:'TsenseI_v3_2_withid'});await Promise.resolve();
     reply(messages.at(-1),{id:'test',info:{id:'test'},seq:1});await p;}
   return {r,worker,messages,reply,start};
 }

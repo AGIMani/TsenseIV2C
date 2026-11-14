@@ -5,6 +5,7 @@
   "scripts": {
     "test:smoothing": "node --test tests/overlay.test.mjs tests/frame-processing.test.mjs && node tests/smoothing-browser.mjs",
     "test:camera": "node --test tests/camera-stream.test.mjs tests/camera-selector.test.mjs tests/frame-processing.test.mjs",
+    "test:camera-latency": "node --test tests/latest-frame-queue.test.mjs tests/frame-processing.test.mjs tests/frame-display.test.mjs && node tests/camera-latency-browser.mjs",
     "test:a3-direct": "node --test tests/direct-preview.test.mjs tests/frame-display.test.mjs tests/a32-sdk-recording.test.mjs tests/a30-stream.test.mjs tests/collision-off-downlink.test.mjs && node tests/a3-direct-browser.mjs",
     "test:feedback": "node --test tests/feedback-preview.test.mjs && node tests/feedback-browser.mjs",
     "test:calibration": "node tests/calibration-browser.mjs",

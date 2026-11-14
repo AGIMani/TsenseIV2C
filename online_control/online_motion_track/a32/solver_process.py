@@ -123,14 +123,11 @@ def _worker(connection, options):
                     result = None
                 elif action == 'seed':
                     guard = None if getattr(session.pipeline, 'collision_bypass', False) else session.pipeline.mink_guard
-                    if guard and hasattr(guard, 'q'):
+                    if guard:
                         q = guard._vector(value)
                         if not guard._feasible(q):
                             raise ValueError('反馈姿态不满足 Mink 最小间距')
                         guard.q = q.copy()
-                    elif guard and hasattr(guard, 'current'):
-                        guard.current = dict(value)
-                        guard.guard.rebase(value)
                     session.pipeline.session.set_pose(value)
                     session.pipeline.session.retargeter.reset()
                     session.filter.reset()

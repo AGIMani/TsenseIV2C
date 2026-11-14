@@ -17,11 +17,11 @@ from online_control.online_motion_play import package as play_package
 
 
 @pytest.mark.parametrize("bundle", ["track", "track_full", "play"])
-def test_all_non_v2_urdf_collision_references_survive_packaging(bundle):
+def test_withid_collision_references_survive_packaging_without_other_models(bundle):
     entries = (play_package.files() if bundle == "play"
                else track_package.files(full=bundle == "track_full"))
     manifest = {source.resolve(): relative for source, relative in entries}
-    for model_id in (*A30_MODEL_IDS, *A32_MODEL_IDS):
+    for model_id in ("TsenseI_v3_2_withid",):
         profile = load_hand_profile(model_id)
         for side in ("left", "right"):
             urdf = profile.path("urdf", side)
@@ -31,6 +31,9 @@ def test_all_non_v2_urdf_collision_references_survive_packaging(bundle):
                 assert dependency.is_file()
                 assert dependency in manifest
                 assert manifest[dependency] == "app/" + dependency.relative_to(ROOT).as_posix()
+    model_root = ROOT / "assets/hands"
+    packaged_models = {path.relative_to(model_root).parts[0] for path in manifest if path.is_relative_to(model_root)}
+    assert packaged_models == {"TsenseI_hand_v3_2_withid"}
     if bundle != "play":
         helper = ROOT / "online_control/online_motion_track/collision_queries.py"
         assert helper in manifest

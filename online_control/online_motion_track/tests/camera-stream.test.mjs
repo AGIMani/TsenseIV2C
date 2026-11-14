@@ -141,6 +141,7 @@ test('page startup awaits RealSense configuration, while Leap keeps its separate
       enumerateCameras:async()=>{},cameras:async()=>{},LatestFrameQueue:class {},createQueue(){},performance,
       schedule:()=>events.push('frames'),cameraFrame:()=>events.push('frames'),
       inputSource:()=> 'mediapipe',api:async()=>({input_epoch:1}),session:{session:'test'},
+      ensureControlSession:async()=>({session:'test'}),
       queue:null,inFlight:null,settleTimer:null,currentRows:()=>[],clearPreset(){},
       openMediaPipeCamera:options=>openMediaPipeCamera({...options,mediaDevices:h.mediaDevices}),
       DetectorClient:class {constructor(){events.push('detector');} ask(){events.push('init');return init.promise;}},

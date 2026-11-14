@@ -85,10 +85,13 @@ def test_configure_removes_old_password_preserves_port_and_data(tmp_path, monkey
 
 def test_bundle_manifest_excludes_runtime_secrets_and_environment():
     manifest = dict((relative, path) for path, relative in package.files())
-    assert {"server.py", "deploy.sh", "requirements-server.txt", "app/src/joint_schema.py",
-            "serial-worker.js", "worker-client.js", "position-guard.js", "motion-stream.js"} <= manifest.keys()
+    assert {"server.py", "deploy.sh", "requirements-server.txt", "a32_session.py",
+            "app/src/a32_driver/device.py"} <= manifest.keys()
+    assert not {"serial-worker.js", "worker-client.js", "a30_session.py", "v2_session.py"} & manifest.keys()
     assert not any(name.startswith('bench-worker') for name in manifest)
-    assert "app/assets/hands/TsenseI_hand/urdf/TsenseI__hand_right_v1.urdf" in manifest
+    assert any(name.startswith("app/assets/hands/TsenseI_hand_v3_2_withid/urdf/") for name in manifest)
+    assert not any(name.startswith("app/assets/hands/") and
+                   not name.startswith("app/assets/hands/TsenseI_hand_v3_2_withid/") for name in manifest)
     assert not any(part in ("runtime", ".venv", "__pycache__", ".git") for name in manifest for part in name.split("/"))
     assert "config.json" not in manifest and "access-password.txt" not in manifest
 
@@ -132,10 +135,8 @@ def live_server(tmp_path_factory, encoded):
 
 
 def test_http_password_free_control_download_and_legacy_logout(live_server):
-    with urllib.request.urlopen(live_server + "/shared/serial-timing.js", timeout=5) as response:
-        assert b"export function makePacer(" in response.read()
-    with urllib.request.urlopen(live_server + "/shared/a30-telemetry.js", timeout=5) as response:
-        assert b"export function telemetry(" in response.read()
+    with urllib.request.urlopen(live_server + "/shared/ui-language.js", timeout=5) as response:
+        assert b"translate" in response.read()
     cookiejar = http.cookiejar.CookieJar()
     client = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cookiejar))
 
@@ -164,11 +165,17 @@ def test_http_password_free_control_download_and_legacy_logout(live_server):
     with pytest.raises(urllib.error.HTTPError) as denied:
         request("state", extra={"Origin": "https://evil.example"})
     assert denied.value.code == 403
-    with request("import", {"text": '{"pose":{"left_hand_index_MCP_joint":0.3}}'}) as response:
+    with request("state") as response:
+        pose = json.load(response)["pose"]
+    pose["left_hand_index_MCP_joint"] = .3
+    with request("export") as response:
+        payload = json.load(response)
+    payload["motions"] = {"pose": {"pose": pose, "transition": .2, "interval": 0}}
+    with request("import", {"text": json.dumps(payload)}) as response:
         assert json.load(response)["ok"]
     with request("download") as response:
         assert "attachment" in response.headers["Content-Disposition"]
-        assert json.load(response)["pose"]["left_hand_index_MCP_joint"] == .3
+        assert json.load(response)["motions"]["pose"]["pose"]["left_hand_index_MCP_joint"] == .3
     with request("logout", {}) as response:
         assert json.load(response)["ok"]
     with request("state") as response:

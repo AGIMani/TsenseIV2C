@@ -13,7 +13,7 @@ const fixture=JSON.parse(execFileSync(process.env.HAND_PYTHON||'python3',[
 sys.path[:0]=['.','src','src/tracking']
 from hand_profiles import load_hand_profile
 from webxr import WEBXR_HAND_JOINT_NAMES, WEBXR_25_TO_MEDIAPIPE_21
-p=load_hand_profile('TsenseI_v3_2');s=p.create_retargeter('left')
+p=load_hand_profile('TsenseI_v3_2_withid');s=p.create_retargeter('left')
 points=s.fk.compute(p.init_pose()).tolist()
 native=[[0,0,0] for _ in range(25)]
 for i,j in enumerate(WEBXR_25_TO_MEDIAPIPE_21):native[j]=points[i]

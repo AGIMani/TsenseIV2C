@@ -18,7 +18,7 @@ class SyntheticLeapRelay:
     def __init__(self):
         self.channels = {}
         self.paused = False
-        profile = load_hand_profile('TsenseI_v3_2')
+        profile = load_hand_profile('TsenseI_v3_2_withid')
         self.points = {side: profile.create_retargeter(side).fk.compute() for side in ('left', 'right')}
 
     def create(self, session, side):

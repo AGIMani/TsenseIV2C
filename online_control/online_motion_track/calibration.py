@@ -11,7 +11,7 @@ import time
 import numpy as np
 import yaml
 
-from hand_profiles import A30_MODEL_IDS, A32_MODEL_IDS, load_hand_profile
+from hand_profiles import load_hand_profile
 from keypoint_preview_solver import PreviewSolver
 from keypoint_mediapipe_input import align_world_landmarks, palm_frame
 from keypoint_pose_presets import COMMON_PRESETS, KAPANDJI_LABELS, make_preset, model_flexion_hint
@@ -31,8 +31,8 @@ class CalibrationSession:
     file_lock = threading.Lock()
 
     def __init__(self, side='left', *, model_id='TsenseI_v3_2_withid', input_source='mediapipe'):
-        if model_id not in (*A32_MODEL_IDS, *A30_MODEL_IDS) or side not in ('left', 'right'):
-            raise ValueError('动态标定支持 A3.0 / A3.2（含 with ID）的左右手')
+        if model_id != 'TsenseI_v3_2_withid' or side not in ('left', 'right'):
+            raise ValueError('动态标定仅支持 A3.2 with ID 的左右手')
         self.model_id, self.side = model_id, side
         self.input_source, self.input_side = input_source, side
         self.profile = load_hand_profile(model_id)

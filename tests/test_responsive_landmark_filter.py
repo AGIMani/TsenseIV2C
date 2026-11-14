@@ -87,7 +87,7 @@ def test_bundle_includes_filter_and_queue():
             assert entries[prefix + name].is_file()
 
 
-@pytest.mark.parametrize('model', ['TsenseI_v3_0', 'TsenseI_v3_2'])
+@pytest.mark.parametrize('model', ['TsenseI_v3_2_withid'])
 def test_real_web_session_filter_selection_loss_and_skipped_sequences(model):
     from online_control.online_motion_track.main import WebSession
     session = WebSession(recording=False, model_id=model)

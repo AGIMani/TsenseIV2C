@@ -1,4 +1,4 @@
-"""A3 stop policy with cached kinematic checks and the shared path policy."""
+"""Cached kinematic checks for the final sampled trajectory safety gate."""
 import time
 from online_control.online_motion_track.pipeline_v2.collision_guard import SelfCollisionGuard
 from online_control.online_motion_track.collision_queries import KinematicContactChecker
@@ -47,7 +47,7 @@ class StopCollisionGuard:
             path_step_rad=.025, max_path_steps=128, bisection_iterations=14)
         self.filter.sync_pose_from_dict(self.current)
         if self.filter.data.ncon:
-            raise ValueError("A3.0 初始姿态碰撞，请检查碰撞模型")
+            raise ValueError("初始姿态碰撞，请检查碰撞模型")
         self.diagnostics = {"mode": "stop", "limited": False}
 
     def project(self, pose):

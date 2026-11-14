@@ -83,7 +83,7 @@ const state=async()=>{
 };
 const stop=async()=>{await page.locator('#start').click();await page.waitForFunction(()=>!document.querySelector('#input-source').disabled);};
 try {
-  await page.goto(url+'/?source=realsense_rgbd&model=TsenseI_v3_2');
+  await page.goto(url+'/?source=realsense_rgbd&model=TsenseI_v3_2_withid');
   await page.addStyleTag({content:'#model-stage,#feedback-stage,#skeleton-stage{height:200px!important;min-height:200px!important;}'});await ready();
   console.log('RGBD_UI page ready');
   for(const source of ['mediapipe','realsense_rgbd','leapmotion_camera','leapmotion','webxr','wuji_glove'])

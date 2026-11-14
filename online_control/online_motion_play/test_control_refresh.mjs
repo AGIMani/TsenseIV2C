@@ -6,7 +6,7 @@ import {readFile} from 'node:fs/promises';
 const html = await readFile(new URL('./index.html', import.meta.url), 'utf8');
 const controlSource = html.slice(html.indexOf('function control('), html.indexOf('const fingerNames'));
 const commandSource = html.slice(html.indexOf('let commandRevision'), html.indexOf('function control('));
-const pollSource = html.slice(html.indexOf('async function poll()'), html.indexOf('async function refreshPorts()'));
+const pollSource = html.slice(html.indexOf('async function poll()'), html.indexOf("$('a32Transport').onchange"));
 
 test('unchanged polls leave the native select untouched, changed options still refresh', () => {
   const writes = [];

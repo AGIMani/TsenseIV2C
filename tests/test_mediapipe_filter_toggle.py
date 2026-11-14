@@ -56,7 +56,7 @@ def test_live_filter_choice_and_recorded_points(model, side, tmp_path):
     assert frames[2]['raw_world_points_21_m'] == frames[2]['smoothed_world_points_21_m']
 
 
-@pytest.mark.parametrize('model', ('TsenseI_v3_2', 'TsenseI_v3_2_withid'))
+@pytest.mark.parametrize('model', MODELS)
 def test_filter_toggle_reaches_separate_solver_process(model):
     reference = WebSession(recording=False, model_id=model)
     try:
@@ -78,33 +78,3 @@ def test_filter_toggle_reaches_separate_solver_process(model):
                 assert np.max(np.abs(np.asarray(result['points']) - expected)) > 1e-5
     finally:
         solver.close()
-
-
-@pytest.mark.parametrize('side', ('left', 'right'))
-def test_v2_live_filter_toggle(side, monkeypatch):
-    from online_control.online_motion_track.v2 import session as module
-    from test_web_v2 import MemoryUsb
-    monkeypatch.setattr(module.LightControlPipeline, 'start', lambda self: None)
-    session = module.V2WebSession(side, recording=False, collision_mode='off', usb=MemoryUsb())
-    frames = []
-    session.frame_logger = SimpleNamespace(record_frame=lambda row: frames.append(deepcopy(row)),
-                                           close=lambda **kwargs: None)
-    try:
-        rest = session.solver.fk.compute() * .8
-        if side == 'right':
-            rest[:, 0] *= -1
-        session.command('tracking_start', {})
-        for index, enabled in enumerate(CHOICES):
-            world = moving_points(rest, index)
-            result = session.process(packet('mediapipe', side, index, world) |
-                                     {'mediapipe_filter_enabled': enabled})
-            assert result['mediapipe_filter_enabled'] is enabled
-            frame = frames[-1]
-            assert frame['mediapipe_filter_enabled'] is enabled
-            for key in ('smoothed_world_points_21_m', 'smoothed_normalized_points_21'):
-                if not enabled or index in (0, 4):
-                    np.testing.assert_allclose(frame[key], world, atol=1e-8)
-                else:
-                    assert np.max(np.abs(frame[key] - world)) > 1e-5
-    finally:
-        session.close()

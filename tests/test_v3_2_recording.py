@@ -12,6 +12,7 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src")]
 from online_control.online_motion_track.pipeline_v3_2.skeleton_angles import skeleton_joint_angles, ANGLE_KEYS
 from online_control.online_motion_track.pipeline_v3_2.pipeline import MediaPipeHandPipeline
 from online_control.online_motion_track.pipeline_v3_2.recording import SessionRecorder
+from online_control.online_motion_track.command_compensation import compensate_command_pose
 
 
 def radial_hand():
@@ -64,16 +65,17 @@ def test_unobservable_angles_are_null():
 
 
 def test_log_distinguishes_retarget_collision_output_and_held_frames(tmp_path, monkeypatch):
-    pipeline = MediaPipeHandPipeline("left", "filter")
+    guard = SimpleNamespace(diagnostics={"mode": "mink"},
+                            project=lambda q: {n: v / 2 for n, v in q.items()})
+    pipeline = MediaPipeHandPipeline("left", "mink", collision_guard=guard)
     points = pipeline.session.retargeter.fk.compute()
     raw = {n: .2 for n in pipeline.session.limits}
     monkeypatch.setattr(pipeline.session, "retarget", lambda *args, **kwargs: dict(raw))
-    monkeypatch.setattr(pipeline.session.collision, "step_dict", lambda q: {n: v / 2 for n, v in q.items()})
     obs = frame(points)
     result = pipeline.process(obs)
     assert result.tracking
     assert result.retarget_pose == raw
-    assert result.pose == {n: .1 for n in raw}
+    assert result.pose == {n: v / 2 for n, v in compensate_command_pose(raw, pipeline.session.limits).items()}
     recorder = SessionRecorder(tmp_path, pipeline, camera_source=0, smoothing=True)
     recorder.record_frame(0, obs, result, capture_timestamp_ns=123, camera_size=[640, 480])
     held = pipeline.process(None)
@@ -89,9 +91,10 @@ def test_log_distinguishes_retarget_collision_output_and_held_frames(tmp_path, m
     assert records[-1]["frame_count"] == 3
     good, lost, wrong = [row for row in records if row["type"] == "frame"]
     stages = [row for row in records if row["type"] == "joint_angles"]
-    assert len(stages) == 1
+    assert len(stages) == 2
     assert stages[0]["stage"] == "retarget" and stages[0]["joints"] == raw
     assert stages[0]["frame_id"] == 0
+    assert stages[1]["stage"] == "mink" and stages[1]["joints"] == result.pose
     assert good["source_points_21_m"] == points.tolist()
     assert not lost["tracking"] and not wrong["tracking"]
     assert all("skeleton_joint_angles_rad" not in row and "output_joint_angles_rad" not in row for row in records)

@@ -1,13 +1,16 @@
 from hashlib import sha256
 from pathlib import Path
 
-# Covers policy plus low-level conversion/protocol code shared by both bundles.
+
+# Covers the A3.2 SDK conversion and motion policy shared by both web bundles.
 def downlink_version():
-    import a30_kinematics.downlink as protocol
+    import a32_driver.device as device
+    import a32_kinematics.mapper as mapper
     import utils.motion_limits as motion_limits
-    paths = [Path(protocol.__file__), Path(motion_limits.__file__), *sorted(p for p in Path(__file__).parent.iterdir()
-              if p.suffix in ('.py', '.js'))]
+    shared = Path(__file__).parent
+    paths = [Path(device.__file__), Path(mapper.__file__), Path(motion_limits.__file__),
+             *(shared / name for name in ("version.py", "aluminum.js", "ui-language.js", "ui-translations.js"))]
     digest = sha256()
     for path in paths:
-        digest.update(path.read_bytes().replace(b'\r\n',b'\n'))
+        digest.update(path.read_bytes().replace(b'\r\n', b'\n'))
     return digest.hexdigest()

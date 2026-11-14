@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import {readFileSync} from 'node:fs';
 import vm from 'node:vm';
+import {A32SdkPanel} from '../static/a32-sdk-control.js';
 
 const app=readFileSync(new URL('../static/app.js',import.meta.url),'utf8');
 const source=app.slice(app.indexOf('function applyFrameUpdate'),app.indexOf('function offerQuestFrame'));
@@ -14,7 +15,7 @@ function harness({direct=false,a30=false,a32=true}={}){
     directMode:()=>direct,showResponsePose:pose=>poses.push(pose),a32Panel:{update:value=>hardware.push(value)},
     renderHardware:value=>hardware.push(value),performance:{now:()=>120},latestWorld:[],
     skeleton:{setPoints:(points,side)=>skeletons.push({points,side})},fpsCount:0,fpsStart:0};
-  return {poses,hardware,records,tracking,skeletons,elements,apply:vm.runInNewContext(source+';applyFrameUpdate;',context)};
+  return {context,poses,hardware,records,tracking,skeletons,elements,apply:vm.runInNewContext(source+';applyFrameUpdate;',context)};
 }
 for(const flag of ['background_discarded','display_discarded'])test(`${flag} solve is recorded but cannot move viewer or replace hardware state`,()=>{
   const h=harness();
@@ -76,6 +77,45 @@ test('skeleton renders optimized points, not raw input or the sampled command po
   assert.equal(h.skeletons[0].points,optimized);
   assert.equal(h.skeletons[0].side,'Left');
   assert.match(h.elements.get('skeleton-status').textContent,/优化后/);
+});
+
+for(const armed of [false,true])test(`old observation keeps preview visible but is not recorded as an H7 target (armed=${armed})`,()=>{
+  const h=harness(),optimized=Array.from({length:21},(_,i)=>[i*.01,.02,.03]);
+  h.apply({frameId:6,hand:{label:'Left'},expected:'Left',timestamp_ms:0},
+    {tracking:true,control_accepted:false,control_skip_reason:'stale_camera_frame',
+      control_message:'预览已更新 · 观测过期，未更新 H7 目标',source_age_at_solve_ms:600,
+      solve_ms:10,pose:{q:.8},retarget_joint_angles_rad:{q:.8},optimized_points:optimized,
+      command_joint_angles_rad:{q:.1},hardware:{armed}});
+  assert.equal(h.poses[0].q,.8);
+  assert.equal(h.skeletons[0].points,optimized);
+  assert.deepEqual(h.records.map(r=>r.type),['retarget','control_target_skipped']);
+  assert.equal(h.records[0].data.control_accepted,false);
+  assert.equal(h.records[1].data.reason,'stale_camera_frame');
+  assert.match(h.elements.get('tracking-text').textContent,/未更新 H7/);
+});
+
+test('SDK polls preserve preview-only poses and resume command display after a fresh observation',()=>{
+  const h=harness();
+  // Use the real poll update method without constructing DOM button handlers.
+  class Panel {
+    constructor(options){Object.assign(this,options,{enabled:true,lastTick:0});}
+    update(...args){return A32SdkPanel.prototype.update.call(this,...args);}
+    render(){}
+  }
+  Object.assign(h.context,{A32SdkPanel:Panel,api(){},ensureControlSession(){},notice(){},
+    viewer:{setPose:pose=>h.poses.push(pose)}});
+  const binding=app.slice(app.indexOf('const a32Panel ='),app.indexOf('const feedbackPreview ='));
+  const panel=vm.runInNewContext(binding+';a32Panel;',h.context);
+  panel.enabled=true;panel.render=()=>{};
+  const frame={frameId:1,hand:{label:'Left'},expected:'Left',timestamp_ms:0};
+  const update={tracking:true,solve_ms:1,pose:{q:.8},retarget_joint_angles_rad:{q:.8},
+    hardware:{armed:true},command_joint_angles_rad:{q:.1}};
+  h.apply(frame,{...update,control_accepted:false,control_skip_reason:'stale_camera_observation'});
+  panel.update({armed:true,command_joint_angles_rad:{q:.1}},{display:true});
+  assert.deepEqual(h.poses.map(p=>p.q),[.8]);
+  h.apply(frame,{...update,control_accepted:true});
+  panel.update({armed:true,command_joint_angles_rad:{q:.2}},{display:true});
+  assert.deepEqual(h.poses.map(p=>p.q),[.8,.1,.2]);
 });
 
 for(const optimized of [undefined,[],Array.from({length:21},()=>[NaN,0,0])])

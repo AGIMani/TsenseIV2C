@@ -65,7 +65,8 @@ def test_all_models_and_parent_editor_create_directories(tmp_path, monkeypatch):
         assert not config.exists()
     parent = catalog.set_control_log_parent(str(tmp_path / "chosen parent"))
     assert config.read_text(encoding="utf-8").strip() == str(parent)
-    assert all((parent / folder).is_dir() for folder in ("A30", "A32", "V2"))
+    assert (parent / "A32").is_dir()
+    (parent / "V2").mkdir()  # Historic logs remain readable when already present.
     _write(parent / "A32" / "hand_control_a32.jsonl", model="daxian_v3_2", side="right")
     _write(parent / "V2" / "hand_control_v2.jsonl", model="daxian_v2", side="left")
     assert catalog.control_log_catalog("A32")["records"][0]["side"] == "right"
@@ -123,7 +124,8 @@ def test_catalog_endpoint_is_local_only(tmp_path, monkeypatch):
                                          {"Content-Type": "application/json", "Origin": base})
         with opener.open(request, timeout=5) as response:
             assert json.load(response)["parent"] == str(other)
-        assert all((other / folder).is_dir() for folder in ("A30", "A32", "V2"))
+        assert (other / "A32").is_dir()
+        assert not (other / "A30").exists() and not (other / "V2").exists()
         assert config.read_text(encoding="utf-8").strip() == str(other)
         server.application.public = True
         try:
