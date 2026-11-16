@@ -32,22 +32,20 @@ retarget:
   init_max_iters: 2
   topo_max_iters: 3
 mirror_axis: y
-right_hand_provisional: true
+right_hand_provisional: false
 collision_scope: different_fingers_only
 notes:
-- 2026-11-16 supplied left exterior CAD; all source visual meshes, inertias, joint
+- Both hands supplied by the 2026-11-16 shell package; mesh bytes, inertias, joint
   origins, axes and limits retained.
-- Right hand is an exact Y=0 geometric mirror; equal named angles produce mirrored
-  poses.
-- Right STL winding/normals, joint axial vectors, mass centres and inertia tensors
-  reflected together.
-- Stable application names alias the new semantic names; thumb IP is the historical
+- Base coordinates use the supplied wrist mounting hole; no extra mirror or root rotation
+  applied.
+- Only the two active runtime URDFs are retained; source provenance is recorded as
+  metadata and hashes.
+- Stable application names alias the supplied semantic names; thumb IP uses the historical
   thumb_PIP channel.
-- The palm frame is an identity alias of the supplied base; it adds no duplicate mass
-  or visual.
-- Keypoints regenerated from source joint centres and surface caps; physical calibration
-  remains unreviewed.
-- Collision envelopes rebuilt from the new exterior; different-finger-only collision
-  policy retained.
+- The palm frame is a massless identity alias of the supplied base.
+- Keypoints regenerated per side from joint centres and surface caps; physical calibration
+  remains pending.
+- Collision envelopes rebuilt; different-finger-only collision policy retained.
 mirror_plane_offset_m: 0.0
-cad_version: customer-exterior-20261116
+cad_version: customer-shell-20261116

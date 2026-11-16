@@ -39,7 +39,7 @@ def test_named_outputs_match_reference_and_units(side, method, tolerance_mm):
     assert pose == before
     assert len(result.linear_strokes_mm) == 14 and len(result.rotary_positions_deg) == 6
     assert result.clamped_joints_rad == {}
-    assert set(pose) == set(load_hand_profile("TsenseI_v3_2").joint_limits(side))
+    assert set(pose) == set(load_hand_profile("TsenseI_v3_2_withid").joint_limits(side))
     for channel, value in zip(mapper.description()["channels"], expected):
         name = channel["joint"]
         if channel["type"] == "linear":
@@ -54,7 +54,7 @@ def test_named_outputs_match_reference_and_units(side, method, tolerance_mm):
 @pytest.mark.parametrize("method", ["exact", "lut"])
 def test_pinky_flexion_and_signed_swing_remain_independent(side, method):
     mapper = A32StrokeMapper(side, method=method)
-    pose = load_hand_profile("TsenseI_v3_2").init_pose(side)
+    pose = load_hand_profile("TsenseI_v3_2_withid").init_pose(side)
     mcp, swing = (f"{side}_hand_pinky_{part}_joint" for part in ("MCP", "swing"))
     pose[mcp] = 1.0  # Legal flexion must not be clamped to swing's 0.35 rad.
     expected = sdk_stroke.joint_angle_deg_to_actuator(16, math.degrees(pose[mcp]))
@@ -71,27 +71,17 @@ def test_pinky_flexion_and_signed_swing_remain_independent(side, method):
         assert mcp not in strict.rotary_positions_deg and swing not in strict.linear_strokes_mm
 
 
-def test_project_cad_matches_supplied_source_after_explicit_renames():
-    """Names alone are insufficient: verify axes, origins, limits and chain."""
-    mapper = A32StrokeMapper()
-    from apply_a32_joint_ranges import apply_urdf_coordinates
-    source = {j.get("name"): j for j in apply_urdf_coordinates(ET.parse(MODEL_DIR / "A3.2_source.urdf").getroot()).findall("joint")}
-    target = {j.get("name"): j for j in ET.parse(load_hand_profile("TsenseI_v3_2").path("urdf")).getroot().findall("joint")}
-    active_children = {j.find("child").get("link"): name for name, j in source.items() if j.get("type") != "fixed"}
-    target_children = {j.find("child").get("link"): name for name, j in target.items() if j.get("type") != "fixed"}
-    rename = dict(zip(mapper.source_joint_names, mapper.joint_names))
-    for src_name, dst_name in rename.items():
-        a, b = source[src_name], target[dst_name]
-        for node, attr in (("axis", "xyz"), ("origin", "xyz"), ("origin", "rpy"), ("limit", "lower"), ("limit", "upper")):
-            np.testing.assert_allclose(np.fromstring(a.find(node).get(attr), sep=" "),
-                                       np.fromstring(b.find(node).get(attr), sep=" "), atol=1e-12, rtol=0)
-        ancestor = active_children.get(a.find("parent").get("link"))
-        assert rename.get(ancestor) == target_children.get(b.find("parent").get("link"))
+def test_current_shell_uses_stable_sdk_channels_with_exact_model_ranges():
+    profile = load_hand_profile("TsenseI_v3_2_withid")
+    for side in ("left", "right"):
+        mapper = A32StrokeMapper(side, model_id=profile.model_id)
+        assert dict(zip(mapper.joint_names, mapper._limits)) == profile.joint_limits(side)
+        assert all(c["source_sign"] == 1 for c in mapper.description()["channels"])
 
 
 def test_strict_limits_and_explicit_preview_clamp():
     mapper = A32StrokeMapper()
-    pose = load_hand_profile("TsenseI_v3_2").init_pose()
+    pose = load_hand_profile("TsenseI_v3_2_withid").init_pose()
     pose["left_hand_index_MCP_joint"] = 1.58
     with pytest.raises(A32Error, match="AngleLimit"):
         mapper.convert(pose)
@@ -129,22 +119,11 @@ def test_extended_mcp_range_uses_sdk_full_linear_domain(model_id, side, method):
 def test_v2_and_wrong_side_poses_are_rejected():
     mapper = A32StrokeMapper()
     with pytest.raises(ValueError, match="own complete 20-joint"):
-        mapper.convert(load_hand_profile("TsenseI_v2").init_pose())
+        mapper.convert({"retired_v2_joint": 0.})
     with pytest.raises(ValueError, match="own complete 20-joint"):
-        mapper.convert(load_hand_profile("TsenseI_v3_2").init_pose("right"))
+        mapper.convert(load_hand_profile("TsenseI_v3_2_withid").init_pose("right"))
     with pytest.raises(ValueError, match="own complete 20-joint"):
         mapper.convert({})
-
-
-def test_v2_globals_unchanged_by_a32_conversion():
-    from usb import offline
-    cfg = {name: .3 for name in offline.JOINT_ORDER}
-    before = offline.joint_angles_to_hand_positions(cfg)
-    v2_mapper = offline._ensure_hand_stroke_mapper()
-    a32 = A32StrokeMapper()
-    a32.convert(load_hand_profile("TsenseI_v3_2").init_pose())
-    assert offline._ensure_hand_stroke_mapper() is v2_mapper
-    assert offline.joint_angles_to_hand_positions(cfg) == before
 
 
 def test_minimal_bundle_contains_independent_a32_runtime(tmp_path):

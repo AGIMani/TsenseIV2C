@@ -1,0 +1,86 @@
+{
+  "units": "m",
+  "numbers": "correspondence with the left hand; do not renumber by screen position",
+  "holes": [
+    {
+      "number": 1,
+      "center_root_m": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "mouth_diameter_mm": 3.7000026712962897,
+      "selected_as_root": true
+    },
+    {
+      "number": 2,
+      "center_root_m": [
+        -4.6455894686658894e-15,
+        -0.005499998668270544,
+        0.0
+      ],
+      "mouth_diameter_mm": 2.49999930373298,
+      "selected_as_root": false
+    },
+    {
+      "number": 3,
+      "center_root_m": [
+        -4.225786387479502e-15,
+        -0.013499999389954428,
+        1.3877787807814457e-17
+      ],
+      "mouth_diameter_mm": 2.5000000508782603,
+      "selected_as_root": false
+    },
+    {
+      "number": 4,
+      "center_root_m": [
+        3.684552662974738e-15,
+        -0.018999998668262928,
+        1.3877787807814457e-17
+      ],
+      "mouth_diameter_mm": 3.7000010613225727,
+      "selected_as_root": false
+    },
+    {
+      "number": 5,
+      "center_root_m": [
+        -0.03999999977670789,
+        -3.469446951953614e-18,
+        0.0
+      ],
+      "mouth_diameter_mm": 3.7000026712962897,
+      "selected_as_root": false
+    },
+    {
+      "number": 6,
+      "center_root_m": [
+        -0.039999999888353885,
+        -0.005499998668271646,
+        0.0
+      ],
+      "mouth_diameter_mm": 2.4999988723649036,
+      "selected_as_root": false
+    },
+    {
+      "number": 7,
+      "center_root_m": [
+        -0.03999999988835391,
+        -0.013499999389954867,
+        0.0
+      ],
+      "mouth_diameter_mm": 2.499999619509056,
+      "selected_as_root": false
+    },
+    {
+      "number": 8,
+      "center_root_m": [
+        -0.03999999977671158,
+        -0.018999998668262935,
+        0.0
+      ],
+      "mouth_diameter_mm": 3.7000010613225727,
+      "selected_as_root": false
+    }
+  ]
+}

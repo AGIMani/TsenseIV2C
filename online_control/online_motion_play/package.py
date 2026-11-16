@@ -65,7 +65,7 @@ def files():
     yield sdk / "sdk-source.json", "app/vendor/a3-cpp-sdk/sdk-source.json"
     yield sdk / "README-migration.txt", "app/vendor/a3-cpp-sdk/README-migration.txt"
     for path in sorted((ROOT / "src/a32_kinematics/model").glob("*")):
-        if path.suffix.lower() in (".mat", ".urdf"):
+        if path.suffix.lower() == ".mat":
             yield path, "app/" + path.relative_to(ROOT).as_posix()
     for name in ("a32_motion_play.md", "A32_NATIVE_SDK.md", "a32_platform_integration.md", "a32_integration_validation.md", "a32_connection_diagnostics.md", "a32_motion_recording.md", "a32_joint_ranges.md", "motion_limits.md"):
         path = ROOT / "docs" / name

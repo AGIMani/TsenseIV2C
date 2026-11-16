@@ -30,7 +30,7 @@ def test_recorded_a32_mesh_pose_uses_same_distance_query_as_final_validation():
     assert np.all(guard.distances(projected) >= guard.margins - 1e-7)
 
 
-@pytest.mark.parametrize('model', ['TsenseI_v3_0', 'TsenseI_v3_0_withid', 'TsenseI_v3_2', 'TsenseI_v3_2_withid'])
+@pytest.mark.parametrize('model', ['TsenseI_v3_2_withid'])
 @pytest.mark.parametrize('side', ['left', 'right'])
 def test_fast_feasibility_matches_all_pair_clearance_validation(model, side):
     guard = MinkCollisionGuard(load_hand_profile(model), side)
@@ -43,7 +43,7 @@ def test_fast_feasibility_matches_all_pair_clearance_validation(model, side):
 
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_converging_fingers_are_separated_and_release_without_lag(side):
-    profile = load_hand_profile("TsenseI_v3_2")
+    profile = load_hand_profile("TsenseI_v3_2_withid")
     guard = MinkCollisionGuard(profile, side)
     pose = profile.init_pose(side)
     pose[f"{side}_hand_ring_swing_joint"] = .695
@@ -60,7 +60,7 @@ def test_converging_fingers_are_separated_and_release_without_lag(side):
 
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_thumb_and_random_fast_targets_stay_feasible(side):
-    profile = load_hand_profile("TsenseI_v3_2")
+    profile = load_hand_profile("TsenseI_v3_2_withid")
     guard = MinkCollisionGuard(profile, side)
     rng = np.random.default_rng(731)
     collisions = thumb_collisions = 0
@@ -83,7 +83,7 @@ def test_thumb_and_random_fast_targets_stay_feasible(side):
 
 
 def test_failed_qp_holds_safe_pose_and_nonfinite_input_is_rejected():
-    p = load_hand_profile("TsenseI_v3_2")
+    p = load_hand_profile("TsenseI_v3_2_withid")
     g = MinkCollisionGuard(p, "left")
     q = p.init_pose()
     q["left_hand_ring_swing_joint"] = .695

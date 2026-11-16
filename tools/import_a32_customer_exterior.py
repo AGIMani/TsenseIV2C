@@ -1,7 +1,7 @@
-"""Install the 2026-11-16 left exterior CAD and its exact Y=0 mirror.
+"""Install both hands from the 2026-11-16 shell package.
 
 The application's stable 20 channel names are aliases for the supplied names.
-No source joint angle, origin, or left-hand mesh is altered. Run with the track
+No source joint angle, origin, inertia or mesh is altered. Run with the track
 environment; this tool only generates assets and never connects to hardware.
 """
 from __future__ import annotations
@@ -28,7 +28,7 @@ from collision_outer_hull import source_points
 from generate_profile_collision import generate_profile
 
 MODEL = "TsenseI_v3_2_withid"
-VERSION = "customer-exterior-20261116"
+VERSION = "customer-shell-20261116"
 DEST = ROOT / "assets/hands/TsenseI_hand_v3_2_withid"
 MIRROR = np.array([1., -1., 1.])
 FINGERS = {"index": "index", "middle": "mid", "ring": "ring", "little": "pinky"}
@@ -104,19 +104,6 @@ def normalized_urdf(source, side):
         if relative.parts[:2] != ("..", "meshes"):
             raise ValueError(f"Unexpected source mesh: {relative}")
         mesh.set("filename", str(PurePosixPath("../meshes") / side / PurePosixPath(*relative.parts[2:])))
-    if side == "right":
-        # Y reflection: S R(r,p,y) S = R(-r,p,-y). Axis is an axial vector,
-        # so a_right = det(S) S a_left; equal angles then mirror every pose.
-        for origin in root.iter("origin"):
-            if "xyz" in origin.attrib:
-                origin.set("xyz", fmt(np.fromstring(origin.get("xyz"), sep=" ") * MIRROR))
-            if "rpy" in origin.attrib:
-                origin.set("rpy", fmt(np.fromstring(origin.get("rpy"), sep=" ") * -MIRROR))
-        for axis in root.iter("axis"):
-            axis.set("xyz", fmt(np.fromstring(axis.get("xyz"), sep=" ") * -MIRROR))
-        for inertia in root.iter("inertia"):
-            for element in ("ixy", "iyz"):
-                inertia.set(element, str(-float(inertia.get(element))))
     # Historical consumers address this palm frame. It is an identity alias,
     # with no duplicate mesh or mass; the supplied base retains its full inertia.
     palm = f"{side.title()}_hand_palm_link"
@@ -132,7 +119,7 @@ def normalized_urdf(source, side):
         root.remove(element)
     for name in order:
         root.append(elements[joints[name]])
-    root.set("name", f"TsenseI_hand_v3_2_withid_{side}_customer_exterior")
+    root.set("name", f"TsenseI_hand_v3_2_withid_{side}_customer_shell")
     root.set("a32_cad_source", VERSION)
     root.set("a32_joint_coordinates", "a32-signed-swing-v2")
     root.set("a32_swing_axis_alignment", "id-cad-direction-v2")
@@ -141,124 +128,119 @@ def normalized_urdf(source, side):
 
 
 def annotate_keypoints(stage, template):
-    model = UrdfModel(stage / "urdf/TsenseI_hand_left_v3_2_withid.urdf")
-    rows = copy.deepcopy(template["keypoints"])
-    palm = source_points(model, "base_link")
-    # The source palm's wrist end is its minimum-Z cap. Use the cap centre so
-    # the baseline follows this CAD instead of retaining stale local annotations.
-    cap = palm[palm[:, 2] <= palm[:, 2].min() + .001]
-    wrist = (cap.min(axis=0) + cap.max(axis=0)) / 2
-    rows[0].update(link="base_link", local_xyz=wrist.tolist())
-    joint_links = ["thumb_rotaback_link2", "thumb_MCP_link", "thumb_PIP_link"]
-    for index, suffix in zip((1, 2, 3), joint_links):
-        rows[index].update(link="left_hand_" + suffix, local_xyz=[0., 0., 0.])
-    for finger, start in (("index", 5), ("mid", 9), ("ring", 13), ("pinky", 17)):
-        for index, part in zip(range(start, start + 3), ("MCP", "PIP", "DIP")):
-            rows[index].update(link=f"left_hand_{finger}_{part}_link", local_xyz=[0., 0., 0.])
-    for index in (4, 8, 12, 16, 20):
-        link = rows[index - 1]["link"]
-        points = source_points(model, link)
-        # Distal link +Y is the longitudinal axis in the supplied CAD.
-        cap = points[points[:, 1] >= points[:, 1].max() - .001]
-        tip = (cap.min(axis=0) + cap.max(axis=0)) / 2
-        rows[index].update(link=link, local_xyz=tip.tolist())
-    for row in rows:
-        row.update(annotation_status="auto_initialized",
-                   note="Source CAD joint centre or distal/wrist surface cap; mirrored exactly for right hand.")
+    # Each supplied side owns its geometry, including its wrist mounting frame.
     for side in ("left", "right"):
+        model = UrdfModel(stage / f"urdf/TsenseI_hand_{side}_v3_2_withid.urdf")
+        rows = copy.deepcopy(template["keypoints"])
+        palm = source_points(model, "base_link")
+        cap = palm[palm[:, 2] <= palm[:, 2].min() + .001]
+        rows[0].update(link="base_link", local_xyz=((cap.min(axis=0) + cap.max(axis=0)) / 2).tolist())
+        for index, suffix in zip((1, 2, 3), ("thumb_rotaback_link2", "thumb_MCP_link", "thumb_PIP_link")):
+            rows[index].update(link=f"{side}_hand_" + suffix, local_xyz=[0., 0., 0.])
+        for finger, start in (("index", 5), ("mid", 9), ("ring", 13), ("pinky", 17)):
+            for index, part in zip(range(start, start + 3), ("MCP", "PIP", "DIP")):
+                rows[index].update(link=f"{side}_hand_{finger}_{part}_link", local_xyz=[0., 0., 0.])
+        for index in (4, 8, 12, 16, 20):
+            link = rows[index - 1]["link"]
+            points = source_points(model, link)
+            # +Y follows the left distal phalanx; the supplied right is its Y mirror.
+            direction = 1 if side == "left" else -1
+            extent = points[:, 1] * direction
+            cap = points[extent >= extent.max() - .001]
+            rows[index].update(link=link, local_xyz=((cap.min(axis=0) + cap.max(axis=0)) / 2).tolist())
+        for row in rows:
+            row.update(annotation_status="auto_initialized",
+                       note="Supplied shell joint centre or distal/wrist surface cap; physical calibration pending.")
         data = copy.deepcopy(template)
         data.update(hand_side=side, urdf_path=f"urdf/TsenseI_hand_{side}_v3_2_withid.urdf",
-                    quality_status="Draft", annotation_version=4,
-                    generated_by="tools/import_a32_customer_exterior.py", keypoints=copy.deepcopy(rows))
-        if side == "right":
-            for row in data["keypoints"]:
-                row["link"] = row["link"].replace("left_hand_", "right_hand_")
-                row["local_xyz"] = (np.asarray(row["local_xyz"]) * MIRROR).tolist()
+                    quality_status="Draft", annotation_version=5,
+                    generated_by="tools/import_a32_customer_exterior.py", keypoints=rows)
         write_yaml(stage / ("robot_keypoints_21" + ("_right" if side == "right" else "") + ".yaml"), data)
 
 
 def install(package, *, destination=DEST):
     package, destination = Path(package).resolve(), Path(destination).resolve()
     with zipfile.ZipFile(package) as archive:
-        candidates = [n for n in archive.namelist() if n.endswith("/urdf/tsensei_hand_left.urdf")]
-        if len(candidates) != 1:
-            raise ValueError("Expected exactly one source left URDF")
-        urdf_name = candidates[0]
-        prefix = urdf_name.removesuffix("urdf/tsensei_hand_left.urdf")
-        source = ET.fromstring(archive.read(urdf_name))
-        if {j.get("name") for j in source.findall("joint")} != set(JOINT_SUFFIXES):
-            raise ValueError("Source does not contain the expected twenty independent joints")
-        limits = json.loads(archive.read(prefix + "config/joint_limits.json"))
-        expected = {j["joint"]: (j["lower_rad"], j["upper_rad"]) for j in limits["joints"]}
-        actual = {j.get("name"): tuple(float(j.find("limit").get(k)) for k in ("lower", "upper"))
-                  for j in source.findall("joint")}
-        if actual != expected or len(source.findall("link")) != 21:
-            raise ValueError("Source structure or joint_limits.json disagrees with URDF")
+        sources, prefixes = {}, {}
+        for side in ("left", "right"):
+            candidates = [n for n in archive.namelist() if n.endswith(f"/urdf/tsensei_hand_{side}.urdf")]
+            if len(candidates) != 1:
+                raise ValueError(f"Expected exactly one supplied {side} URDF")
+            name = candidates[0]
+            prefixes[side] = name.rsplit("urdf/", 1)[0]
+            source = sources[side] = ET.fromstring(archive.read(name))
+            if {j.get("name") for j in source.findall("joint")} != set(JOINT_SUFFIXES):
+                raise ValueError("Source does not contain the expected twenty independent joints")
+            limits = json.loads(archive.read(prefixes[side] + "config/joint_limits.json"))
+            expected = {j["joint"]: (j["lower_rad"], j["upper_rad"]) for j in limits["joints"]}
+            actual = {j.get("name"): tuple(float(j.find("limit").get(k)) for k in ("lower", "upper"))
+                      for j in source.findall("joint")}
+            if actual != expected or len(source.findall("link")) != 21:
+                raise ValueError("Source structure or joint_limits.json disagrees with URDF")
         stage = Path(tempfile.mkdtemp(prefix=".a32-customer-", dir=destination.parent))
         try:
-            # Keep tunable profile/masks and stable group ordering, not obsolete CAD.
             for name in ("hand_profile.yaml", "joint_groups.yaml", "joint_groups_right.yaml",
                          "eval_config.yaml", "eval_config_right.yaml", "collision_geometry.yaml"):
                 shutil.copy2(destination / name, stage / name)
             template = yaml.safe_load((destination / "robot_keypoints_21.yaml").read_text())
-            original_hashes = {}
-            for name in archive.namelist():
-                if not name.startswith(prefix) or name.endswith("/"):
-                    continue
-                relative = PurePosixPath(name[len(prefix):])
-                if relative.is_absolute() or ".." in relative.parts:
-                    raise ValueError("Unsafe archive path")
-                raw = archive.read(name)
-                original_hashes[str(relative)] = hashlib.sha256(raw).hexdigest()
-                if relative.parts[0] == "meshes":
-                    for side in ("left", "right"):
+            imported_hashes, maps, source_joints, source_inertials = {}, {}, {}, {}
+            for side, prefix in prefixes.items():
+                for name in archive.namelist():
+                    if not name.startswith(prefix) or name.endswith("/"):
+                        continue
+                    relative = PurePosixPath(name[len(prefix):])
+                    if relative.is_absolute() or ".." in relative.parts:
+                        raise ValueError("Unsafe archive path")
+                    if relative.parts[0] == "meshes" and relative.suffix.lower() == ".stl":
                         target = stage / "meshes" / side / Path(*relative.parts[1:])
-                        target.parent.mkdir(parents=True, exist_ok=True)
-                        target.write_bytes(raw if side == "left" else mirror_stl(raw))
-                else:
-                    # Archive ancillary files as provenance only. Nothing from
-                    # the supplied package is imported or executed by this tool.
-                    target = stage / "source_package" / Path(relative)
+                    elif relative.parts[0] == "config" and relative.suffix.lower() in (".json", ".yaml"):
+                        target = stage / "source_package" / side / Path(relative)
+                    else:
+                        # Do not retain additional URDFs, ROS duplicates, launch
+                        # scripts or references to a removed model in this project.
+                        continue
+                    raw = archive.read(name)
                     target.parent.mkdir(parents=True, exist_ok=True)
                     target.write_bytes(raw)
-            maps = {}
-            for side in ("left", "right"):
+                    imported_hashes[str(target.relative_to(stage))] = hashlib.sha256(raw).hexdigest()
+                source = sources[side]
                 root, joints, links = normalized_urdf(source, side)
                 filename = f"TsenseI_hand_{side}_v3_2_withid.urdf"
-                for directory in ("urdf", "source_20_outputs"):
-                    write_xml(stage / directory / filename, copy.deepcopy(root))
+                write_xml(stage / "urdf" / filename, root)
                 model = UrdfModel(stage / "urdf" / filename)
                 if model.missing_meshes():
                     raise ValueError(model.missing_meshes())
                 suffix = "_right" if side == "right" else ""
                 write_yaml(stage / f"q_init{suffix}.yaml", {"q": {name: 0. for name in model.joint_names()}})
                 maps[side] = {"joints": joints, "links": links}
+                source_joints[side] = {j.get("name"): {tag: dict(j.find(tag).attrib)
+                    for tag in ("parent", "child", "origin", "axis", "limit")} for j in source.findall("joint")}
+                source_inertials[side] = {l.get("name"): {tag: dict(l.find("inertial/" + tag).attrib)
+                    for tag in ("origin", "mass", "inertia")} for l in source.findall("link")}
             annotate_keypoints(stage, template)
             profile = yaml.safe_load((stage / "hand_profile.yaml").read_text())
-            profile.update(mirror_axis="y", mirror_plane_offset_m=0., right_hand_provisional=True,
+            profile.update(mirror_axis="y", mirror_plane_offset_m=0., right_hand_provisional=False,
                            cad_version=VERSION, notes=[
-                               "2026-11-16 supplied left exterior CAD; all source visual meshes, inertias, joint origins, axes and limits retained.",
-                               "Right hand is an exact Y=0 geometric mirror; equal named angles produce mirrored poses.",
-                               "Right STL winding/normals, joint axial vectors, mass centres and inertia tensors reflected together.",
-                               "Stable application names alias the new semantic names; thumb IP is the historical thumb_PIP channel.",
-                               "The palm frame is an identity alias of the supplied base; it adds no duplicate mass or visual.",
-                               "Keypoints regenerated from source joint centres and surface caps; physical calibration remains unreviewed.",
-                               "Collision envelopes rebuilt from the new exterior; different-finger-only collision policy retained."])
+                               "Both hands supplied by the 2026-11-16 shell package; mesh bytes, inertias, joint origins, axes and limits retained.",
+                               "Base coordinates use the supplied wrist mounting hole; no extra mirror or root rotation applied.",
+                               "Only the two active runtime URDFs are retained; source provenance is recorded as metadata and hashes.",
+                               "Stable application names alias the supplied semantic names; thumb IP uses the historical thumb_PIP channel.",
+                               "The palm frame is a massless identity alias of the supplied base.",
+                               "Keypoints regenerated per side from joint centres and surface caps; physical calibration remains pending.",
+                               "Collision envelopes rebuilt; different-finger-only collision policy retained."])
             write_yaml(stage / "hand_profile.yaml", profile)
             generate_profile(MODEL, profile_root=stage, force=True)
             manifest = {
                 "source": package.name, "cad_version": VERSION, "imported_on": "2026-11-16",
-                "archive_sha256": sha(package), "source_package_sha256": original_hashes,
-                "source_urdf_snapshots": {side: f"source_20_outputs/TsenseI_hand_{side}_v3_2_withid.urdf" for side in maps},
-                "original_urdf": "source_package/urdf/tsensei_hand_left.urdf",
-                "original_meshes": "meshes/left (byte-identical to the original package meshes)",
-                "name_mapping": maps,
-                "right_mirror": {"axis": "y", "plane_offset_m": 0., "position": "p_right = S p_left", "rotation": "R_right = S R_left S", "joint_axis": "axis_right = -S axis_left", "inertia": "I_right = S I_left S", "S": [1, -1, 1], "equal_application_angles": True},
-                "kinematics": "Source left origins, axes and exact URDF limits retained; names only aliased; right mirrored at equal angles.",
+                "archive_sha256": sha(package), "imported_files_sha256": imported_hashes,
+                "source_archive_members": {side: prefix + f"urdf/tsensei_hand_{side}.urdf" for side, prefix in prefixes.items()},
+                "source_urdf_sha256": {side: hashlib.sha256(archive.read(prefix + f"urdf/tsensei_hand_{side}.urdf")).hexdigest() for side, prefix in prefixes.items()},
+                "name_mapping": maps, "source_joint_attributes": source_joints, "source_inertial_attributes": source_inertials,
+                "kinematics": "Both supplied sides retained exactly; names and asset paths only aliased.",
                 "joint_coordinate_version": "a32-signed-swing-v2", "swing_axis_alignment": "id-cad-direction-v2",
                 "thumb_zero_alignment": "source-cad-20261116", "thumb_origin_offsets_rad": {},
-                "inertials": "Physical source URDF inertials retained and reflected; MJCF remains a kinematic collision proxy.",
-                "keypoints": "Source joint centres and 1 mm distal/wrist surface caps; right exact mirror; awaiting physical calibration.",
+                "inertials": "Physical supplied URDF inertials retained; MJCF is a kinematic collision proxy.",
+                "keypoints": "Joint centres and 1 mm distal/wrist surface caps from each supplied side; physical calibration pending.",
                 "installed_sha256": {str(p.relative_to(stage)): sha(p) for pattern in ("urdf/*.urdf", "mjcf/mjmodel*.xml") for p in sorted(stage.glob(pattern))},
             }
             write_yaml(stage / "source_mapping.yaml", manifest)

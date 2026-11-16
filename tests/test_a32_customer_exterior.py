@@ -1,6 +1,8 @@
 """Geometry and source fidelity checks for the 2026-11-16 replacement CAD."""
 from pathlib import Path
 import sys
+import hashlib
+import os
 import unittest
 import xml.etree.ElementTree as ET
 
@@ -25,32 +27,44 @@ class CustomerExteriorTests(unittest.TestCase):
                       for side in cls.models}
 
     def test_source_joint_frames_and_exact_limits_survive_aliasing(self):
-        source = ET.parse(ASSETS / "source_package/urdf/tsensei_hand_left.urdf").getroot()
-        installed = self.models["left"].root
-        by_name = {j.get("name"): j for j in installed.findall("joint")}
-        for joint in source.findall("joint"):
-            mapped = by_name["left_hand_" + JOINT_SUFFIXES[joint.get("name")]]
-            for element in ("origin", "axis", "limit"):
-                self.assertEqual(joint.find(element).attrib, mapped.find(element).attrib)
-        self.assertEqual(len(installed.findall(".//visual")), 37)
-        self.assertEqual(len(self.models["left"].joint_names()), 20)
-        for model in self.models.values():
+        mapping = yaml.safe_load((ASSETS / "source_mapping.yaml").read_text())
+        for side, model in self.models.items():
+            by_name = {j.get("name"): j for j in model.root.findall("joint")}
+            for name, source in mapping["source_joint_attributes"][side].items():
+                joint = by_name[mapping["name_mapping"][side]["joints"][name]]
+                for element in ("origin", "axis", "limit"):
+                    self.assertEqual(source[element], joint.find(element).attrib)
+                for element in ("parent", "child"):
+                    self.assertEqual(mapping["name_mapping"][side]["links"][source[element]["link"]],
+                                     joint.find(element).get("link"))
+            self.assertEqual(len(model.root.findall(".//visual")), 37)
+            self.assertEqual(len(model.joint_names()), 20)
             self.assertFalse(model.missing_meshes())
 
-    def test_every_mesh_reflects_with_preserved_winding(self):
-        # Equality verifies both vertex reflection and reversed face order, not
-        # just mirrored bounding boxes. The left files retain original bytes.
-        import hashlib
+    def test_every_supplied_mesh_is_byte_identical_and_hashes_match(self):
         mapping = yaml.safe_load((ASSETS / "source_mapping.yaml").read_text())
-        paths = sorted((ASSETS / "meshes/left").rglob("*.stl"))
-        self.assertGreater(len(paths), 50)
-        for left in paths:
-            relative = left.relative_to(ASSETS / "meshes/left")
-            original_key = str(Path("meshes") / relative)
-            self.assertEqual(hashlib.sha256(left.read_bytes()).hexdigest(),
-                             mapping["source_package_sha256"][original_key])
-            self.assertEqual(mirror_stl(left.read_bytes()),
-                             (ASSETS / "meshes/right" / relative).read_bytes())
+        for name, digest in mapping["imported_files_sha256"].items():
+            self.assertEqual(hashlib.sha256((ASSETS / name).read_bytes()).hexdigest(), digest, name)
+        for name, digest in mapping["installed_sha256"].items():
+            self.assertEqual(hashlib.sha256((ASSETS / name).read_bytes()).hexdigest(), digest, name)
+        for side in ("left", "right"):
+            self.assertGreater(len(list((ASSETS / "meshes" / side).rglob("*.stl"))), 50)
+            source = mapping["source_inertial_attributes"][side]
+            for name, attrs in source.items():
+                link = self.models[side].root.find("./link[@name='" + mapping["name_mapping"][side]["links"][name] + "']")
+                for tag, expected in attrs.items():
+                    self.assertEqual(link.find("inertial/" + tag).attrib, expected)
+
+    def test_project_contains_only_the_two_active_urdfs(self):
+        found = set()
+        for folder, dirs, files in os.walk(ROOT):
+            dirs[:] = [d for d in dirs if d not in (".git", ".venvs", "node_modules", ".work")]
+            found.update(Path(folder) / name for name in files if name.lower().endswith((".urdf", ".xacro")))
+        self.assertEqual(found, {ASSETS / "urdf" / f"TsenseI_hand_{side}_v3_2_withid.urdf" for side in self.models})
+        for side in self.models:
+            base = __import__('json').loads((ASSETS / f"source_package/{side}/config/base_frame.json").read_text())
+            self.assertEqual(base["selected_hole_number"], 1)
+            self.assertEqual(base["mounting_face_new_z_m"], 0)
 
     def test_all_link_poses_and_keypoints_mirror_at_equal_angles(self):
         rng = np.random.default_rng(20261116)

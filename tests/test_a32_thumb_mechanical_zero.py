@@ -23,23 +23,11 @@ from apply_a32_joint_ranges import apply_urdf_coordinates
 from measure_a32_thumb_zero import measure
 
 
-def test_measured_offsets_reproduce_reference_and_export_precision():
-    report = measure()
-    assert report["reference_sha256"] == THUMB_ZERO_REFERENCE_SHA256
-    assert report["thumb_middle_opening_deg"] == pytest.approx(46.893124983914774, abs=1e-9)
-    for model_id, result in report["models"].items():
-        assert result["orientation_residual_deg"] < .001
-        for name, angle in result["origin_offsets_rad"].items():
-            suffix = name.removeprefix("left_hand_")
-            assert THUMB_ORIGIN_OFFSETS[model_id][suffix] == pytest.approx(angle, abs=1e-8)
-
-
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
 @pytest.mark.parametrize("side", ["left", "right"])
 def test_zero_thumb_matches_reference_orientation_and_preserves_mirror(model_id, side):
     profile = load_hand_profile(model_id)
-    ref = UrdfModel(profile.root / 'source_20_outputs/TsenseI_hand_left_v3_2_withid.urdf'
-                    if model_id.endswith('withid') else ROOT / THUMB_ZERO_REFERENCE)
+    ref = UrdfModel(profile.path('urdf', 'left'))
     model = UrdfModel(profile.path("urdf", side))
     a, b = ref.forward_kinematics({}), model.forward_kinematics({})
     palm = "Left_hand_palm_link" if side == "left" else "Right_hand_palm_link"
@@ -61,25 +49,6 @@ def test_zero_thumb_matches_reference_orientation_and_preserves_mirror(model_id,
         WITHID_THUMB_ZERO_ALIGNMENT if model_id.endswith('withid') else THUMB_ZERO_ALIGNMENT)
     before = ET.tostring(root)
     assert ET.tostring(apply_urdf_coordinates(root, model_id=model_id)) == before
-
-
-@pytest.mark.parametrize("side", ["left", "right"])
-def test_previous_stop_contact_zero_is_undone_once(side):
-    profile = load_hand_profile("TsenseI_v3_2")
-    root = ET.parse(profile.path("urdf", side)).getroot()
-    name = f"{side}_hand_thumb_rotaback_joint2"
-    joint = root.find(f"./joint[@name='{name}']")
-    origin = joint.find("origin")
-    expected = Rotation.from_euler("xyz", np.fromstring(origin.get("rpy"), sep=" "))
-    axis = np.fromstring(joint.find("axis").get("xyz"), sep=" ")
-    previous = expected * Rotation.from_rotvec(axis * LEGACY_THUMB_ROTABACK_ORIGIN_OFFSET)
-    origin.set("rpy", " ".join(map(str, previous.as_euler("xyz"))))
-    root.set("a32_thumb_zero_alignment", LEGACY_THUMB_ZERO_ALIGNMENT)
-    apply_urdf_coordinates(root, model_id=profile.model_id)
-    actual = Rotation.from_euler("xyz", np.fromstring(origin.get("rpy"), sep=" "))
-    np.testing.assert_allclose(actual.as_matrix(), expected.as_matrix(), atol=1e-14)
-    before = ET.tostring(root)
-    assert ET.tostring(apply_urdf_coordinates(root, model_id=profile.model_id)) == before
 
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)

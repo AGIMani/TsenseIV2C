@@ -1,0 +1,21 @@
+initial_positions:
+  index_mcp_flexion_joint: 0.0
+  index_mcp_swing_joint: 0.0
+  index_pip_flexion_joint: 0.0
+  index_dip_flexion_joint: 0.0
+  middle_mcp_flexion_joint: 0.0
+  middle_mcp_swing_joint: 0.0
+  middle_pip_flexion_joint: 0.0
+  middle_dip_flexion_joint: 0.0
+  ring_mcp_flexion_joint: 0.0
+  ring_mcp_swing_joint: 0.0
+  ring_pip_flexion_joint: 0.0
+  ring_dip_flexion_joint: 0.0
+  little_mcp_flexion_joint: 0.0
+  little_mcp_swing_joint: 0.0
+  little_pip_flexion_joint: 0.0
+  little_dip_flexion_joint: 0.0
+  thumb_base_rotation_1_joint: 0.0
+  thumb_base_rotation_2_joint: 0.0
+  thumb_mcp_flexion_joint: 0.0
+  thumb_ip_flexion_joint: 0.0

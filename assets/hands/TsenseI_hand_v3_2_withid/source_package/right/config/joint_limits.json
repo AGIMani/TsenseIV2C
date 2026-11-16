@@ -1,0 +1,266 @@
+{
+  "units": "radians",
+  "zero_reference": "current mechanical-stop pose",
+  "joints": [
+    {
+      "joint": "index_mcp_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "index_mcp_swing_joint",
+      "type": "revolute",
+      "lower_rad": -0.3490658503988659,
+      "upper_rad": 0.3490658503988659,
+      "lower_deg": -20.0,
+      "upper_deg": 20.0,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "index_pip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "index_dip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "middle_mcp_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "middle_mcp_swing_joint",
+      "type": "revolute",
+      "lower_rad": -0.3490658503988659,
+      "upper_rad": 0.3490658503988659,
+      "lower_deg": -20.0,
+      "upper_deg": 20.0,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "middle_pip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "middle_dip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "ring_mcp_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "ring_mcp_swing_joint",
+      "type": "revolute",
+      "lower_rad": -0.3490658503988659,
+      "upper_rad": 0.3490658503988659,
+      "lower_deg": -20.0,
+      "upper_deg": 20.0,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "ring_pip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "ring_dip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "little_mcp_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "little_mcp_swing_joint",
+      "type": "revolute",
+      "lower_rad": -0.3490658503988659,
+      "upper_rad": 0.3490658503988659,
+      "lower_deg": -20.0,
+      "upper_deg": 20.0,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "little_pip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "little_dip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.57,
+      "lower_deg": 0.0,
+      "upper_deg": 89.95437383553924,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "thumb_base_rotation_1_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 2.2689280275926285,
+      "lower_deg": 0.0,
+      "upper_deg": 130.0,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "thumb_base_rotation_2_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.7453292519943295,
+      "lower_deg": 0.0,
+      "upper_deg": 100.0,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        1.0
+      ]
+    },
+    {
+      "joint": "thumb_mcp_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.5707963267948966,
+      "lower_deg": 0.0,
+      "upper_deg": 90.0,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    },
+    {
+      "joint": "thumb_ip_flexion_joint",
+      "type": "revolute",
+      "lower_rad": 0.0,
+      "upper_rad": 1.5707963267948966,
+      "lower_deg": 0.0,
+      "upper_deg": 90.0,
+      "axis_joint_frame": [
+        0.0,
+        0.0,
+        -1.0
+      ]
+    }
+  ]
+}

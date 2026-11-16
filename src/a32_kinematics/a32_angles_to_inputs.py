@@ -15,7 +15,7 @@ from pathlib import Path
 import xml.etree.ElementTree as ET
 
 import numpy as np
-from .geometry_constants import configuration
+from .geometry_constants import configuration, ORIGINAL_MOTORS, SOURCE_ROBOT_NAME, REFERENCE_AXES, REFERENCE_LIMITS
 
 
 MODEL_DIR = Path(__file__).resolve().parent / "model"
@@ -73,8 +73,16 @@ def _rotation(axis, q):
 
 
 def load_kinematic_model(urdf_path=None):
-    """读取源 URDF 的活动旋转关节名称、轴向和限位，保留原始顺序。"""
-    root = ET.parse(urdf_path or MODEL_DIR / "A3.2_source.urdf").getroot()
+    """Load the numeric linkage oracle, or joints from an explicit URDF.
+
+    The legacy CAD file is no longer distributed. Its scalar calibration lives
+    beside the existing linkage coefficients and is independent of viewer CAD.
+    """
+    if urdf_path is None:
+        bounds = np.asarray(REFERENCE_LIMITS, dtype=float)
+        return KinematicModel(SOURCE_ROBOT_NAME, tuple(m['jointName'] for m in ORIGINAL_MOTORS),
+                              np.array([_axis(v) for v in REFERENCE_AXES]), bounds[:, 0].copy(), bounds[:, 1].copy())
+    root = ET.parse(urdf_path).getroot()
     names, axes, lower, upper = [], [], [], []
     for joint in root.findall("joint"):
         kind = joint.attrib["type"]

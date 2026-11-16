@@ -101,7 +101,7 @@ def files(*, full=False):
                 yield path, "app/" + path.relative_to(ROOT).as_posix()
     for path in sorted((ROOT / "src/a32_kinematics").glob("*.py")):
         yield path, "app/" + path.relative_to(ROOT).as_posix()
-    for name in ("A3.2_source.urdf", "geometry_inferred.mat"):
+    for name in ("geometry_inferred.mat",):
         path = ROOT / "src/a32_kinematics/model" / name
         yield path, "app/" + path.relative_to(ROOT).as_posix()
     web = "app/online_control/online_motion_track/"

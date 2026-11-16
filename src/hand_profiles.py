@@ -14,13 +14,9 @@ import xml.etree.ElementTree as ET
 import yaml
 
 ROOT = Path(__file__).resolve().parents[1]
-A30_MODEL_IDS = ("TsenseI_v3_0", "TsenseI_v3_0_withid")
-A32_MODEL_IDS = ("TsenseI_v3_2", "TsenseI_v3_2_withid")
+A30_MODEL_IDS = ()
+A32_MODEL_IDS = ("TsenseI_v3_2_withid",)
 PROFILE_PATHS = {
-    "TsenseI_v3_0_withid": ROOT / "assets/hands/TsenseI_hand_v3_0_withid/hand_profile.yaml",
-    "TsenseI_v3_0": ROOT / "assets/hands/TsenseI_hand_v3_0/hand_profile.yaml",
-    "TsenseI_v2": ROOT / "assets/hands/TsenseI_hand/hand_profile.yaml",
-    "TsenseI_v3_2": ROOT / "assets/hands/TsenseI_hand_v3_2/hand_profile.yaml",
     "TsenseI_v3_2_withid": ROOT / "assets/hands/TsenseI_hand_v3_2_withid/hand_profile.yaml",
 }
 
@@ -99,7 +95,9 @@ class HandModelProfile:
         return filt
 
 
-def load_hand_profile(model_id: str = "TsenseI_v2") -> HandModelProfile:
+def load_hand_profile(model_id: str = "TsenseI_v3_2_withid") -> HandModelProfile:
+    if model_id not in PROFILE_PATHS:
+        raise ValueError(f"Model is not installed: {model_id}; only TsenseI_v3_2_withid shell CAD is available")
     path = PROFILE_PATHS[model_id]
     data = yaml.safe_load(path.read_text(encoding="utf-8"))
     if data["model_id"] != model_id or data["schema_version"] != 1:
@@ -118,7 +116,7 @@ class HandModelSession:
     Retarget input is 21 world points in the chosen hand's robot wrist frame,
     not image pixel coordinates. Camera/Quest coordinate conversion is upstream.
     """
-    def __init__(self, model_id: str = "TsenseI_v3_2", hand_side: str = "left"):
+    def __init__(self, model_id: str = "TsenseI_v3_2_withid", hand_side: str = "left"):
         self.profile = load_hand_profile(model_id)
         self.hand_side = hand_side
         self.limits = self.profile.joint_limits(hand_side)

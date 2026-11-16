@@ -1,0 +1,33 @@
+{
+  "root_link": "hand_base_link",
+  "origin": "right wrist mounting hole corresponding to left-hand hole 1 at bottom mounting face",
+  "selected_hole_number": 1,
+  "coordinate_units": "m",
+  "axes_rotated": false,
+  "positive_axes": {
+    "x": "palm outward",
+    "y": "towards thumb (right-handed frame)",
+    "z": "towards fingertips"
+  },
+  "new_origin_in_previous_root_m": [
+    0.0029000003499876463,
+    0.003999999778516394,
+    -0.09313800774435944
+  ],
+  "position_conversion": "p_new = p_previous - new_origin_in_previous_root_m",
+  "orientation_new_relative_to_previous_rpy_rad": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "mounting_face_new_z_m": 0.0,
+  "handedness": "right",
+  "mirroring": {
+    "source_hand": "left",
+    "reflection_plane": "XZ; Y=0 through the corresponding root origin",
+    "point_mapping": "p_right = diag(1,-1,1) * p_left",
+    "joint_angle_mapping": "q_right[joint] = q_left[joint]",
+    "all_link_frames_right_handed": true,
+    "mesh_winding_reversed": true
+  }
+}

@@ -35,86 +35,31 @@ def test_profiles_load_all_assets_without_missing_meshes(model_id, side):
     assert all(point["link"] in model.links for point in points["keypoints"])
 
 
-def test_sdk_bare_provenance_retains_existing_calibrated_landmarks():
-    profile = load_hand_profile("TsenseI_v3_2")
-    manifest = yaml.safe_load((profile.root / "sdk_source_mapping.yaml").read_text(encoding="utf-8"))
-    assert manifest["geometry_matches"] and manifest["existing_keypoint_annotations_preserved"]
-    for side in ("left", "right"):
-        assert hashlib.sha256(profile.path("urdf", side).read_bytes()).hexdigest() == manifest["sides"][side]["installed_urdf_sha256"]
-    assert profile.calibration_status()["reviewed_count"] > 0
+def test_only_shell_profile_is_registered_and_retired_models_fail_clearly():
+    from hand_profiles import PROFILE_PATHS
+    assert tuple(PROFILE_PATHS) == ("TsenseI_v3_2_withid",)
+    profile = load_hand_profile()
+    assert profile.mirror_axis == "y" and not profile.right_hand_provisional
+    for name in ("TsenseI_v2", "TsenseI_v3_0", "TsenseI_v3_0_withid", "TsenseI_v3_2"):
+        with pytest.raises(ValueError, match="not installed"):
+            load_hand_profile(name)
 
 
 @pytest.mark.parametrize("side", ["left", "right"])
-def test_id_import_retains_every_joint_frame_mesh_and_base_scale(side):
+def test_id_import_retains_supplied_frames_inertias_and_metre_scale(side):
     profile = load_hand_profile("TsenseI_v3_2_withid")
-    source = UrdfModel(profile.root / f"source_20_outputs/TsenseI_hand_{side}_v3_2_withid.urdf")
-    target = UrdfModel(profile.path("urdf", side))
-    assert len(source.joints) == len(target.joints)
-    for a, b in zip(source.joints, target.joints, strict=True):
-        assert (a.name, a.parent, a.child, a.type) == (b.name, b.parent, b.child, b.type)
-        # The supplied 2026-11-16 CAD owns its exact limits, including 130/100
-        # degree thumb roots and exact 20 degree swing; never apply bare ranges.
-        expected_limits = (a.lower, a.upper)
-        sign = -1 if a.name.endswith('_thumb_rotaback_joint2') and a.lower < 0 else 1
-        if sign == -1:
-            expected_limits = (-a.upper, -a.lower)
-        if expected_limits[0] is None:
-            assert (b.lower, b.upper) == expected_limits
-        else:
-            np.testing.assert_allclose((b.lower, b.upper), expected_limits, atol=1e-14)
-        np.testing.assert_allclose(a.origin, b.origin, atol=1e-14)
-        np.testing.assert_array_equal(sign * a.axis, b.axis)
-    assert len(source.root.findall('.//visual')) == len(target.root.findall('.//visual')) == 37
-    assert sum(float(n.get('value')) for n in target.root.findall('.//mass')) == pytest.approx(1.053011880784252)
-    for a, b in zip(source.root.findall('link'), target.root.findall('link'), strict=True):
-        ai, bi = a.find('inertial'), b.find('inertial')
-        if ai is None:
-            assert bi is None
-        else:
-            assert ET.tostring(ai).strip() == ET.tostring(bi).strip()
-    for link, meshes in source.visual_meshes_by_link().items():
-        for a, b in zip(meshes, target.visual_meshes_by_link()[link], strict=True):
-            assert hashlib.sha256(a.path.read_bytes()).digest() == hashlib.sha256(b.path.read_bytes()).digest()
-            np.testing.assert_array_equal(a.origin, b.origin)
-            np.testing.assert_array_equal(a.scale, b.scale)
-    np.testing.assert_array_equal(target.visual_meshes_by_link()["base_link"][0].scale,
-                                  [1.] * 3 if profile.root.joinpath("source_20_outputs").exists() else [.001] * 3)
-    manifest = yaml.safe_load((profile.root / "source_mapping.yaml").read_text(encoding="utf-8"))
-    for name, digest in manifest["source_package_sha256"].items():
-        # Original left meshes are shared byte-for-byte; the rest of the
-        # supplied package is archived separately from executable app policy.
-        path = (profile.root / 'meshes/left' / name.removeprefix('meshes/')) if name.startswith('meshes/') else (profile.root / 'source_package' / name)
-        assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
-    for name, digest in manifest['installed_sha256'].items():
+    model = UrdfModel(profile.path("urdf", side))
+    metadata = yaml.safe_load((profile.root / "source_mapping.yaml").read_text())
+    aliases = metadata["name_mapping"][side]
+    for name, attrs in metadata["source_joint_attributes"][side].items():
+        joint = model.root.find("./joint[@name='" + aliases["joints"][name] + "']")
+        for tag in ("origin", "axis", "limit"):
+            assert joint.find(tag).attrib == attrs[tag]
+    assert len(model.root.findall('.//visual')) == 37
+    assert sum(float(n.get('value')) for n in model.root.findall('.//mass')) == pytest.approx(1.053011880784252)
+    np.testing.assert_array_equal(model.visual_meshes_by_link()["base_link"][0].scale, [1.] * 3)
+    for name, digest in metadata["imported_files_sha256"].items():
         assert hashlib.sha256((profile.root / name).read_bytes()).hexdigest() == digest
-
-
-@pytest.mark.parametrize("side", ["left", "right"])
-def test_bare_and_id_swing_axes_have_same_direction_after_root_alignment(side):
-    bare, shell = (UrdfModel(load_hand_profile(name).path("urdf", side)) for name in A32_MODEL_IDS)
-    neutral = {name: reverse_swing(name, 0.) for name in bare.joint_names()}
-    a, b = bare.forward_kinematics(neutral), shell.forward_kinematics(neutral)
-    rotate_z_90 = np.array([[0, -1, 0], [1, 0, 0], [0, 0, 1]])
-    swings = []
-    for name in bare.joint_names():
-        if '_thumb_' in name:
-            continue  # Raised thumb has new source frames; tested against its own CAD above.
-        x, y = bare.joint_by_name[name], shell.joint_by_name[name]
-        source_axis = rotate_z_90 @ a[x.parent][:3, :3] @ x.origin[:3, :3] @ x.axis
-        shell_axis = b[y.parent][:3, :3] @ y.origin[:3, :3] @ y.axis
-        cosine = np.dot(source_axis, shell_axis) / np.linalg.norm(source_axis) / np.linalg.norm(shell_axis)
-        assert cosine > .95
-        if is_finger_swing(name):
-            assert cosine > .9999
-            assert model_joint_to_source_sign("TsenseI_v3_2", name) == 1
-            assert model_joint_to_source_sign("TsenseI_v3_2_withid", name) == 1
-            swings.append(name)
-    assert swings == [f"{side}_hand_{f}_swing_joint" for f in ("index", "mid", "ring", "pinky")]
-    # Different frames and link dimensions are deliberate; same names do not
-    # justify copying the bare shell's landmarks or its X mirror.
-    assert load_hand_profile("TsenseI_v3_2").mirror_axis == "x"
-    assert load_hand_profile("TsenseI_v3_2_withid").mirror_axis == "y"
-    assert load_hand_profile("TsenseI_v3_2_withid").right_hand_provisional
 
 
 def test_id_right_frames_are_equal_angle_xz_mirrors():
@@ -222,8 +167,8 @@ def test_id_mapper_commands_same_signed_swing_without_second_reversal(method, si
     bare = A32StrokeMapper(side, method=method)
     shell = A32StrokeMapper(side, method=method, model_id="TsenseI_v3_2_withid")
     # Both models share SDK channels, while their CAD limits are independent.
-    bare_limits = load_hand_profile(A32_MODEL_IDS[0]).joint_limits(side)
-    shell_limits = load_hand_profile(A32_MODEL_IDS[1]).joint_limits(side)
+    bare_limits = dict(zip(bare.joint_names, bare._limits))
+    shell_limits = load_hand_profile("TsenseI_v3_2_withid").joint_limits(side)
     assert shell_limits[f'{side}_hand_thumb_rota_block_joint'][1] == pytest.approx(np.deg2rad(130))
     pose = {name: (max(lo, bare_limits[name][0]) + min(hi, bare_limits[name][1])) * .25
             for name, (lo, hi) in shell_limits.items()}

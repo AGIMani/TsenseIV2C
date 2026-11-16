@@ -6,7 +6,7 @@ unit: meter
 base_link: base_link
 hand_side: left
 quality_status: Draft
-annotation_version: 4
+annotation_version: 5
 generated_by: tools/import_a32_customer_exterior.py
 keypoints:
 - id: 0
@@ -15,16 +15,16 @@ keypoints:
   finger: palm
   link: base_link
   local_xyz:
-  - -0.017100000055506825
-  - 0.00549999950453639
-  - -0.09303800761699677
+  - -0.020000000405494475
+  - 0.009499999283052785
+  - 0.00010000012736267883
   parent: null
   child: null
   type: root
   weight: 0.5
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 1
   source_name: ThumbCMC
   semantic: cmc
@@ -39,8 +39,8 @@ keypoints:
   type: joint_proxy
   weight: 0.7
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 2
   source_name: ThumbMCP
   semantic: mcp
@@ -55,8 +55,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 3
   source_name: ThumbIP
   semantic: ip
@@ -71,8 +71,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 4
   source_name: ThumbTip
   semantic: tip
@@ -87,8 +87,8 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 5
   source_name: IndexMCP
   semantic: mcp
@@ -103,8 +103,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 6
   source_name: IndexPIP
   semantic: pip
@@ -119,8 +119,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 7
   source_name: IndexDIP
   semantic: dip
@@ -135,8 +135,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 8
   source_name: IndexTip
   semantic: tip
@@ -151,8 +151,8 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 9
   source_name: MiddleMCP
   semantic: mcp
@@ -167,8 +167,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 10
   source_name: MiddlePIP
   semantic: pip
@@ -183,8 +183,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 11
   source_name: MiddleDIP
   semantic: dip
@@ -199,8 +199,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 12
   source_name: MiddleTip
   semantic: tip
@@ -215,8 +215,8 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 13
   source_name: RingMCP
   semantic: mcp
@@ -231,8 +231,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 14
   source_name: RingPIP
   semantic: pip
@@ -247,8 +247,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 15
   source_name: RingDIP
   semantic: dip
@@ -263,8 +263,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 16
   source_name: RingTip
   semantic: tip
@@ -279,8 +279,8 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 17
   source_name: PinkyMCP
   semantic: mcp
@@ -295,8 +295,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 18
   source_name: PinkyPIP
   semantic: pip
@@ -311,8 +311,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 19
   source_name: PinkyDIP
   semantic: dip
@@ -327,8 +327,8 @@ keypoints:
   type: joint_proxy
   weight: 1.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.
 - id: 20
   source_name: PinkyTip
   semantic: tip
@@ -343,5 +343,5 @@ keypoints:
   type: fingertip
   weight: 2.0
   annotation_status: auto_initialized
-  note: Source CAD joint centre or distal/wrist surface cap; mirrored exactly for
-    right hand.
+  note: Supplied shell joint centre or distal/wrist surface cap; physical calibration
+    pending.

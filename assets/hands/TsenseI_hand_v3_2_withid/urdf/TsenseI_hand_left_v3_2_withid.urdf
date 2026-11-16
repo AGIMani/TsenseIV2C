@@ -1,18 +1,20 @@
 <?xml version='1.0' encoding='utf-8'?>
-<robot name="TsenseI_hand_v3_2_withid_left_customer_exterior" a32_cad_source="customer-exterior-20261116" a32_joint_coordinates="a32-signed-swing-v2" a32_swing_axis_alignment="id-cad-direction-v2" a32_thumb_zero_alignment="source-cad-20261116">
+<robot name="TsenseI_hand_v3_2_withid_left_customer_shell" a32_cad_source="customer-shell-20261116" a32_joint_coordinates="a32-signed-swing-v2" a32_swing_axis_alignment="id-cad-direction-v2" a32_thumb_zero_alignment="source-cad-20261116">
   <link name="base_link">
     <inertial>
-      <origin xyz="-0.01563347057991394 0.0072793913337745346 -0.036956130907176567" rpy="0 0 0" />
+      <origin xyz="-0.018533470929901586 0.01127939111229093 0.056181876837182877" rpy="0 0 0" />
       <mass value="0.45598896500071223" />
       <inertia ixx="0.00044257897630057663" ixy="8.5792351686655507e-06" ixz="7.9428989279037611e-06" iyy="0.00020581597457990092" iyz="2.0218982640395409e-05" izz="0.00031094165699747543" />
     </inertial>
     <visual name="hand_base_link_housing">
+      <origin rpy="0 0 0" xyz="-0.0029000003499876463 0.0039999997785163943 0.093138007744359444" />
       <geometry>
         <mesh filename="../meshes/left/visual/hand_base_link_housing.stl" scale="1 1 1" />
       </geometry>
       <material name="housing" />
     </visual>
     <visual name="hand_base_link_rubber">
+      <origin rpy="0 0 0" xyz="-0.0029000003499876463 0.0039999997785163943 0.093138007744359444" />
       <geometry>
         <mesh filename="../meshes/left/visual/hand_base_link_rubber.stl" scale="1 1 1" />
       </geometry>
@@ -510,7 +512,7 @@
   <joint name="left_hand_thumb_rota_block_joint" type="revolute">
     <parent link="base_link" />
     <child link="left_hand_thumb_rota_block_link" />
-    <origin rpy="0.35982536134702964 0.20380723004130577 -1.5107941390476678" xyz="-0.0061115590289906657 -0.017194911964842286 -0.05307703223894665" />
+    <origin rpy="0.35982536134702964 0.20380723004130577 -1.5107941390476678" xyz="-0.0090115593789783129 -0.013194912186325892 0.040060975505412794" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="2.2689280275926285" velocity="1.0" />
   </joint>
@@ -538,7 +540,7 @@
   <joint name="left_hand_index_MCP_joint" type="revolute">
     <parent link="base_link" />
     <child link="left_hand_index_MCP_link" />
-    <origin rpy="1.4508509931644664 0.42625833852376749 3.0846157746992446" xyz="-0.0035002959033684079 -0.026067215557077018 -0.0014307722306180061" />
+    <origin rpy="1.4508509931644664 0.42625833852376749 3.0846157746992446" xyz="-0.0064002962533560546 -0.022067215778560623 0.091707235513741436" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
@@ -566,7 +568,7 @@
   <joint name="left_hand_mid_MCP_joint" type="revolute">
     <parent link="base_link" />
     <child link="left_hand_mid_MCP_link" />
-    <origin rpy="1.5707963267948966 0.42976227909668024 3.1344499886106463" xyz="-0.0035002959033684062 -8.6068686397637421e-05 -0.0009999999996577187" />
+    <origin rpy="1.5707963267948966 0.42976227909668024 3.1344499886106463" xyz="-0.0064002962533560529 0.0039139310921187569 0.092138007744701725" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
@@ -594,7 +596,7 @@
   <joint name="left_hand_ring_MCP_joint" type="revolute">
     <parent link="base_link" />
     <child link="left_hand_ring_MCP_link" />
-    <origin rpy="1.6667660125609913 0.42864098926106908 -3.1087726476133182" xyz="-0.003500295903368407 0.023988448759532415 -0.0081445038539247599" />
+    <origin rpy="1.6667660125609913 0.42864098926106908 -3.1087726476133182" xyz="-0.0064002962533560529 0.027988448538048809 0.084993503890434682" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
@@ -622,7 +624,7 @@
   <joint name="left_hand_pinky_MCP_joint" type="revolute">
     <parent link="base_link" />
     <child link="left_hand_pinky_MCP_link" />
-    <origin rpy="1.7043559433280664 0.42725082875539505 -3.0931711956586239" xyz="-0.0035002959033685163 0.045215191662985862 -0.018767082675433741" />
+    <origin rpy="1.7043559433280664 0.42725082875539505 -3.0931711956586239" xyz="-0.0064002962533561622 0.049215191441502257 0.074370925068925703" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>

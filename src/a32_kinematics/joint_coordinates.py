@@ -33,7 +33,7 @@ SWING_COMMAND_LIMITS = (-math.pi / 9., math.pi / 9.)
 # range here silently rejects valid motion files and clips their downlink.
 FLEXION_LIMITS = (0.0, 1.57)
 MCP_LIMITS = (0.0, 1.57)
-WITHID_CAD_VERSION = "customer-exterior-20261116"
+WITHID_CAD_VERSION = "customer-shell-20261116"
 WITHID_THUMB_ZERO_ALIGNMENT = "source-cad-20261116"
 WITHID_SWING_LIMITS = (-math.pi / 9., math.pi / 9.)
 WITHID_THUMB_LIMITS = {
