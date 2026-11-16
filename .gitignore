@@ -57,6 +57,7 @@ assets/hands/_backups/
 
 # Local test runs, deployment scratch space and source backups.
 /.work/
+/exports/
 /backups/
 *.rar
 *.zip
