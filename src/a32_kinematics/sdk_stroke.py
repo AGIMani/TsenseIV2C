@@ -3,7 +3,8 @@
 The 1.1.15 SDK uses four calibrated linkage curves and uniform lookup tables
 for both forward and feedback conversion.  This module mirrors that algorithm
 for offline previews and planning; it never opens a device or loads the native
-transport library.
+transport library. Joint limits follow the local 2026-11-16 CAD patch; the
+underlying four calibrated 0..90-degree linkage curves are unchanged.
 """
 from __future__ import annotations
 
@@ -241,7 +242,7 @@ def joint_angle_deg_to_actuator(index, angle_deg):
     degrees = _finite_real(angle_deg, "angle")
     joint = JOINTS[index]
     if joint.linear:
-        return _solve_linear(joint.linkage, degrees)
+        return _solve_linear(joint.linkage, max(math.degrees(joint.lo), min(math.degrees(joint.hi), degrees)))
     radians = degrees * DEG
     if radians < joint.lo - 1e-10 or radians > joint.hi + 1e-10:
         raise A32Error("AngleLimit", f"SDK joint {index + 1}: {degrees} degrees outside limits")
@@ -279,4 +280,4 @@ def inverse_actuator(index, value):
         if radians < joint.lo - ANGLE_ROUNDING_TOLERANCE_RAD or radians > joint.hi + ANGLE_ROUNDING_TOLERANCE_RAD:
             raise A32Error("AngleLimit", f"SDK joint {index + 1}: feedback outside angle limits")
         return max(joint.lo, min(joint.hi, radians))
-    return math.radians(_inverse_linear(joint.linkage, value))
+    return max(joint.lo, min(joint.hi, math.radians(_inverse_linear(joint.linkage, value))))

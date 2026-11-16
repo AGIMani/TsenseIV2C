@@ -27,6 +27,8 @@ def observation_depth_source(observation) -> str:
         return "webxr_metric"
     if getattr(observation, "source", "mediapipe") == "wuji_glove":
         return "wuji_glove_metric"
+    if getattr(observation, "source", "mediapipe") == "manus_glove":
+        return "manus_glove_metric"
     if getattr(observation, "source", "mediapipe") == "leapmotion":
         return "leapmotion_metric"
     if getattr(observation, "source", "mediapipe") == "realsense_rgbd":
@@ -151,6 +153,8 @@ class MediaPipeHandPipeline:
             message = "正在跟随 · Quest 3 WebXR 三维关节"
         elif depth == "wuji_glove_metric":
             message = "正在跟随 · Wuji 手套 21 点骨架"
+        elif depth == "manus_glove_metric":
+            message = "正在跟随 · Manus 手套 21 点骨架"
         elif depth == "leapmotion_metric":
             message = "正在跟随 · Leap Motion 2 三维 21 点骨架"
         elif depth == "realsense_rgbd_fused":

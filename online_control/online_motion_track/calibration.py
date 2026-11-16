@@ -117,7 +117,9 @@ class CalibrationSession:
         with self.lock:
             self._touch()
             source, side = data.get('source', self.input_source), data.get('side', self.input_side)
-            if source not in ('mediapipe', 'webxr', 'wuji_glove', 'leapmotion', 'realsense_rgbd') or side not in ('left', 'right'):
+            if source == 'manus':
+                source = 'manus_glove'
+            if source not in ('mediapipe', 'webxr', 'wuji_glove', 'manus_glove', 'leapmotion', 'realsense_rgbd') or side not in ('left', 'right'):
                 raise ValueError('输入源或手别无效')
             if type(data.get('enabled')) is not bool:
                 raise ValueError('enabled 必须为布尔值')

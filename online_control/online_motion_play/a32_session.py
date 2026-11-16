@@ -22,7 +22,7 @@ from ruckig import InputParameter, OutputParameter, Result, Ruckig
 from a32_driver import A32Device
 from a32_kinematics.joint_coordinates import (
     COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, POSITIVE_COORDINATE_VERSION,
-    POSITIVE_SWING_AXIS_ALIGNMENT, requested_limits, migrate_legacy_pose, migrate_positive_pose,
+    POSITIVE_SWING_AXIS_ALIGNMENT, migrate_legacy_pose, migrate_positive_pose, migrate_signed_pose,
 )
 from a32_recording import A32SessionRecorder
 from hand_profiles import load_hand_profile
@@ -67,11 +67,10 @@ class A32Session:
         self.device = device if device is not None else A32Device(side, model_id=model_id)
         self.limits = {name: tuple(0.0 if abs(value) < 1e-12 else value for value in bounds)
                        for name, bounds in self.device.joint_limits().items()}
-        # Expose the authored flexion and swing ranges in the editor. Hardware
-        # conversion clips to the mechanism intersection (including index/ring
-        # MCP) and the narrower swing command range.
-        self.limits.update({name: bounds for name, bounds in self.profile.joint_limits(side).items()
-                            if requested_limits(name) is not None})
+        # All twenty editor joints use the authored model domain, including
+        # both thumb base rotations. SDK preview/downlink independently clips
+        # to the calibrated mechanism and hardware limits.
+        self.limits.update(self.profile.joint_limits(side))
         self.pose = self.validate_pose(self.profile.init_pose(side))
         self.names = tuple(self.limits)
         self.target_pose = dict(self.pose)
@@ -247,6 +246,8 @@ class A32Session:
         joints = []
         for name, (lo, hi) in self.limits.items():
             short = name.replace(self.side + "_hand_", "").replace("_joint2", "").replace("_joint", "").lower()
+            if short == "thumb_pip":
+                short = "thumb_ip"  # Anatomical label; retain the stable SDK/motion key.
             joints.append(self.spec(name, "number", name=name, short=short, feedback=feedback.get(name), value=self.pose[name], min=lo, max=hi, step=.001,
                                     enabled=not busy and not self.playback, downlink=self.downlink_ranges.get(name)))
         dialogs = []
@@ -283,7 +284,7 @@ class A32Session:
         for name, value in pose.items():
             lo, hi = self.limits[name]
             if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not lo - 1e-8 <= value <= hi + 1e-8:
-                raise ValueError(f"A3.2 关节数值超出模型与实机可用范围：{name}")
+                raise ValueError(f"A3.2 关节数值超出模型范围：{name}")
         return {name: min(self.limits[name][1], max(self.limits[name][0], value)) for name, value in pose.items()}
 
     def validate_file(self, data):
@@ -306,7 +307,9 @@ class A32Session:
                 entry["pose"] = migrate_legacy_pose(entry.get("pose"), self.limits, model_id=self.model_id)
             elif version == POSITIVE_COORDINATE_VERSION:
                 entry["pose"] = migrate_positive_pose(entry.get("pose"), self.limits)
-            self.validate_pose(entry.get("pose"))
+            else:
+                entry["pose"] = migrate_signed_pose(entry.get("pose"), self.limits)
+            entry["pose"] = self.validate_pose(entry.get("pose"))
             for field in ("transition", "interval"):
                 value = entry.get(field)
                 if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) or not 0 <= value <= 600:
@@ -314,7 +317,7 @@ class A32Session:
         return motions
 
     def persist(self, motions):
-        self.validate_file(self.payload(motions))
+        motions = self.validate_file(self.payload(motions))
         self.data_dir.mkdir(parents=True, exist_ok=True)
         tmp = self.path.with_suffix(".tmp")
         tmp.write_text(json.dumps(self.payload(motions), ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

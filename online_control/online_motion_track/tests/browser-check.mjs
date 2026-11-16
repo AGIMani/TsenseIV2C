@@ -12,9 +12,7 @@ const output = new URL(
 ).pathname.replace(/^\/([A-Za-z]:)/, "$1");
 await mkdir(output, { recursive: true });
 const browser = await chromium.launch({
-  executablePath:
-    process.env.CHROME_PATH ||
-    "C:/Program Files/Google/Chrome/Application/chrome.exe",
+  ...(process.env.CHROME_PATH ? {executablePath: process.env.CHROME_PATH} : {}),
   headless: true,
   args: [
     "--use-fake-ui-for-media-stream",
@@ -63,7 +61,7 @@ try {
     ),
   );
   await page.setViewportSize({ width: 1440, height: 1060 });
-  await page.locator(".record-control").click();
+  await page.locator(".record-control:has(#recording)").click();
   assert.equal(await page.locator("#recording").isChecked(), false);
   await page.locator("#start").click();
   await page.waitForFunction(
@@ -106,7 +104,7 @@ try {
   const root = fileURLToPath(new URL("../../../", import.meta.url));
   const fixtures = JSON.parse(
     execFileSync(
-      process.env.HAND_PYTHON || "E:/conda/envs/hand_dex/python.exe",
+      process.env.HAND_PYTHON || `${root}/.venvs/track/bin/python`,
       [
         "-c",
         `
@@ -182,18 +180,37 @@ print(json.dumps([s.fk.compute(a).tolist() for a in (q,extended)]))
     { fixtures },
   );
   const frames = [];
+  synthetic.on("pageerror", error => errors.push(error.message));
   synthetic.on("response", async (response) => {
-    if (response.url().endsWith("/api/frame") && response.ok())
-      frames.push(await response.json());
+    if (response.url().endsWith("/api/frame") && response.ok()) {
+      try { frames.push(await response.json()); }
+      catch (error) { if (!synthetic.isClosed()) errors.push(error.message); }
+    }
   });
   await synthetic.goto(url);
   await synthetic.waitForFunction(
     () => !document.querySelector("#start").disabled,
   );
+  // Explicitly select the hand used by the deterministic FK fixtures.
+  await synthetic.locator("#side").selectOption("left");
+  await synthetic.waitForFunction(() => !document.querySelector("#start").disabled
+    && document.querySelector("#model-caption").textContent.includes("LEFT"));
   await synthetic.locator("#start").click();
-  await synthetic.waitForFunction(() =>
-    document.querySelector("#tracking-text").textContent.includes("正在跟随"),
-  );
+  try {
+    // Software rendering may exceed the H7 freshness deadline. A valid
+    // offline preview still updates the optimized skeleton; it must not be
+    // mistaken for permission to submit a stale hardware target.
+    await synthetic.waitForFunction(() =>
+      document.querySelector("#skeleton-status").textContent.includes("优化后"),
+    );
+  } catch (error) {
+    console.error("SYNTHETIC DIAGNOSTICS", JSON.stringify({
+      frames:frames.slice(-2).map(({sequence,tracking,control_accepted,message,control_message}) =>
+        ({sequence,tracking,control_accepted,message,control_message})),
+      ui:await synthetic.locator("#tracking-text, #notice, #camera-state").allTextContents(),
+    }));
+    throw error;
+  }
   await new Promise((resolve) => {
     const check = setInterval(() => {
       if (frames.length >= 12) {
@@ -235,9 +252,9 @@ print(json.dumps([s.fk.compute(a).tolist() for a in (q,extended)]))
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
   assert(frames.at(-1).pose.left_hand_mid_PIP_joint < 0.15);
-  assert.equal(
+  assert.match(
     await synthetic.locator("#skeleton-status").innerText(),
-    "21 点 · 实时",
+    /21 点 · 优化后 · 左手镜像 · 实时/,
   );
   await synthetic.screenshot({
     path: `${output}/web-synthetic-middle.png`,
@@ -260,14 +277,21 @@ print(json.dumps([s.fk.compute(a).tolist() for a in (q,extended)]))
     "lost detection clears the overlay",
   );
   await synthetic.locator("#start").click();
-  await synthetic.waitForFunction(() =>
-    document.querySelector("#record-status").textContent.includes("记录已保存"),
-  );
+  await synthetic.waitForFunction(() => {
+    const link = document.querySelector("#download-local");
+    return !link.hidden && link.href.startsWith("blob:");
+  });
+  const savedRows = await synthetic.evaluate(async () =>
+    (await (await fetch(document.querySelector("#download-local").href)).text())
+      .trim().split("\n").map(line => JSON.parse(line)));
+  assert.equal(savedRows.at(-1).type, "session_end");
+  assert(savedRows.some(row => row.type === "joint_angles" && row.stage === "retarget"));
   console.log(
     "SYNTHETIC PIPELINE",
     frames.length,
     "frames, middle extended, recording saved",
   );
+  assert.deepEqual(errors, []);
   await synthetic.close();
   console.log("BROWSER CHECK PASSED", output);
 } finally {

@@ -2,11 +2,12 @@
 
 The current SDK uses four linkage curves. ``LOOP_ROWS`` remains as a
 compatibility alias for callers that used the old three-curve name; the last
-field in ``JOINT_ROWS`` is now a linkage index (1..4).
+field in ``JOINT_ROWS`` is now a linkage index (1..4). Joint limits include
+the project's 2026-11-16 CAD patch; the calibrated linkage rows are unchanged.
 """
 
 SDK_VERSION = "1.1.15"
-SOURCE_SHA256 = "b06f545a97146ea3fc5fb5086ff11d7230566e1c248a3b0fb1d94f32b6e196a2"
+SOURCE_SHA256 = "288fb085d461e32515a62c6df9fae54c6050196f8d7bd4183f1a755accdcf743"
 
 SOURCE_JOINT_NAMES = (
     "left_hand_thumb_rota_block_joint",
@@ -45,26 +46,27 @@ LINK_ROWS = (
 # Compatibility name retained for existing imports.
 LOOP_ROWS = LINK_ROWS
 
+# Local CAD 2026-11-16 joint limits; linkage curves remain SDK 1.1.15.
 # (linear, lower_rad, upper_rad, SDK destination, linkage index)
 JOINT_ROWS = (
-    (False, 0.0, 2.09, -2, 0),
-    (False, 0.0, 1.74, -1, 0),
+    (False, 0.0, 2.2689280275926285, -2, 0),
+    (False, 0.0, 1.7453292519943295, -1, 0),
     (True, 0.0, 1.5707963267948966, 17, 2),
     (True, 0.0, 1.5707963267948966, 16, 3),
-    (True, 0.0, 1.5707963267948966, 13, 1),
-    (False, -0.35, 0.35, 15, 0),
-    (True, 0.0, 1.5707963267948966, 12, 2),
-    (True, 0.0, 1.5707963267948966, 11, 3),
-    (True, 0.0, 1.5707963267948966, 10, 1),
-    (False, -0.35, 0.35, 14, 0),
-    (True, 0.0, 1.5707963267948966, 9, 2),
-    (True, 0.0, 1.5707963267948966, 8, 3),
-    (True, 0.0, 1.5707963267948966, 5, 1),
-    (False, -0.35, 0.35, 7, 0),
-    (True, 0.0, 1.5707963267948966, 4, 2),
-    (True, 0.0, 1.5707963267948966, 3, 3),
-    (True, 0.0, 1.5707963267948966, 2, 1),
-    (False, -0.35, 0.35, 6, 0),
-    (True, 0.0, 1.5707963267948966, 1, 4),
-    (True, 0.0, 1.5707963267948966, 0, 3),
+    (True, 0.0, 1.57, 13, 1),
+    (False, -0.3490658503988659, 0.3490658503988659, 15, 0),
+    (True, 0.0, 1.57, 12, 2),
+    (True, 0.0, 1.57, 11, 3),
+    (True, 0.0, 1.57, 10, 1),
+    (False, -0.3490658503988659, 0.3490658503988659, 14, 0),
+    (True, 0.0, 1.57, 9, 2),
+    (True, 0.0, 1.57, 8, 3),
+    (True, 0.0, 1.57, 5, 1),
+    (False, -0.3490658503988659, 0.3490658503988659, 7, 0),
+    (True, 0.0, 1.57, 4, 2),
+    (True, 0.0, 1.57, 3, 3),
+    (True, 0.0, 1.57, 2, 1),
+    (False, -0.3490658503988659, 0.3490658503988659, 6, 0),
+    (True, 0.0, 1.57, 1, 4),
+    (True, 0.0, 1.57, 0, 3),
 )

@@ -4,6 +4,7 @@ import {DetectorClient} from './detector-client.js';
 import {LatestFrameQueue} from './latest-frame-queue.js';
 import {WebXRReceiver, questStatus} from './webxr-receiver.js';
 import {WujiReceiver, wujiStatus} from './wuji-receiver.js';
+import {ManusReceiver, manusStatus} from './manus-receiver.js';
 import {LeapMotionReceiver, leapMotionStatus} from './leapmotion-receiver.js';
 import {LeapCameraClient, leapCameraStatus} from './leap-camera.js';
 import {RealSenseCameraClient, realSenseCameraStatus, realSenseFusionStatus, realSenseFrameFields} from './realsense-camera.js';
@@ -131,6 +132,7 @@ function sourceUI() {
   $('source-help').textContent=source==='mediapipe'?'相机由当前浏览器直接采集；RealSense 自动选择最高可用采集帧率，再开始识别。冻结后可拖动输入关键点。'
     :source==='realsense_rgbd'?'D455f 的同帧 RGB + 深度由 Linux 服务采集；MediaPipe 提供 21 点初值，深度与骨长约束修正相对三维位置。深度不可用时保持姿态。'
     :isLeapCamera()?'Leap Motion 2 左侧红外相机 → MediaPipe。目标采集 120 fps；识别速度取决于 GPU，三维点来自 MediaPipe 估计。'
+    :source==='manus_glove'?'复用当前 Linux 服务的 Manus SDK，接收所选手的米制 21 点骨架；SDK 或授权不可用时显示具体原因。'
     :source==='webxr'?'复用 Quest WebXR 配对。电脑与头显访问同一可信 HTTPS 站点，25 关节自动转为 21 点。'
     :source==='leapmotion'?'Linux 服务需安装 Ultraleap Tracking Service 和 LeapC SDK，并连接 Leap Motion 2；将「输入手别」所选手放入设备视野，接收 21 点骨架。'
     :'复用当前服务的 Wuji SDK / 桥接配置；接入后接收所选手套的 21 点骨架。';
@@ -194,19 +196,19 @@ async function startInput() {
     starting=false;active=true;createQueue();refresh();
     $('input-status').textContent=(browserCamera?cameraCaptureLabel(browserCamera)+' · ':'')+'输入已接入 · 等待所选手的关键点';
     if(source==='mediapipe'||source==='realsense_rgbd') {void cameraFrame(token,-1);return;}
-    const connection=await api(source==='webxr'?'/api/webxr/create':source==='leapmotion'?'/api/leapmotion/create':'/api/wuji/create',{session:session.session});
+    const connection=await api(source==='webxr'?'/api/webxr/create':source==='leapmotion'?'/api/leapmotion/create':source==='manus_glove'?'/api/manus/create':'/api/wuji/create',{session:session.session});
     if(token!==generation)return;
     if(source==='webxr') {
       $('quest-pairing').hidden=false;$('quest-code').textContent=connection.pairing_code;
       $('quest-link').value=new URL(connection.entry_path,location.href).href;$('quest-open').href=$('quest-link').value;
     }
-    const Receiver=source==='webxr'?WebXRReceiver:source==='leapmotion'?LeapMotionReceiver:WujiReceiver;
+    const Receiver=source==='webxr'?WebXRReceiver:source==='leapmotion'?LeapMotionReceiver:source==='manus_glove'?ManusReceiver:WujiReceiver;
     receiver=new Receiver({session:session.session,combined:false,staleAfterMs:connection.stale_after_ms,
       onFrame:snapshot=>{if(token===generation&&active)offer({frame:{source,
-        [source==='webxr'?'webxr_revision':source==='leapmotion'?'leapmotion_revision':'wuji_revision']:snapshot.revision,
+        [source==='webxr'?'webxr_revision':source==='leapmotion'?'leapmotion_revision':source==='manus_glove'?'manus_revision':'wuji_revision']:snapshot.revision,
         source_epoch:snapshot.source_epoch??snapshot.source_metadata?.source_epoch,
         hand:snapshot.hand,capture_unix_ms:Date.now()}});},
-      onStatus:snapshot=>{if(token===generation)$('input-status').textContent=source==='webxr'?questStatus(snapshot):source==='leapmotion'?leapMotionStatus(snapshot):wujiStatus(snapshot);},
+      onStatus:snapshot=>{if(token===generation)$('input-status').textContent=source==='webxr'?questStatus(snapshot):source==='leapmotion'?leapMotionStatus(snapshot):source==='manus_glove'?manusStatus(snapshot):wujiStatus(snapshot);},
       onError:async error=>{if(token===generation){await stopInput();notice(error.message);}},
     });void receiver.poll();
   } catch(error) {
@@ -351,6 +353,7 @@ window.addEventListener('pagehide',()=>{
 });
 setInterval(()=>{if(session)api('/api/calibration/touch',{session:session.session}).catch(error=>notice(error.message));},30000);
 const params=new URLSearchParams(location.search);
+if(params.get('source')==='manus')params.set('source','manus_glove');
 for(const [key,id] of [['model','hand-model'],['side','side'],['source','input-source']]) {
   if([...$(id).options].some(option=>option.value===params.get(key)))$(id).value=params.get(key);
 }

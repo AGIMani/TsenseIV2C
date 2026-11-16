@@ -78,7 +78,7 @@ for(const page of ['app','calibration']) {
     const {items,$}=elements(),events=[],requests=[];
     const context={$,active:false,starting:false,generation:0,clearTimeout,settleTimer:null,
       diagnostics:{record(){}},diagnosticState(){},refreshControls(){},refresh(){},notice:message=>{if(message)throw Error(message);},
-      ensureLocalRecording:async()=>{},isLeapCamera:()=>false,isLeapMotion:()=>false,isWuji:()=>false,isWebXR:()=>false,isMetricInput:()=>false,
+      ensureLocalRecording:async()=>{},isLeapCamera:()=>false,isLeapMotion:()=>false,isWuji:()=>false,isManus:()=>false,isWebXR:()=>false,isMetricInput:()=>false,
       RealSenseCameraClient:class {constructor(){events.push('rgbd');}},browserCamera:null,gpuBadge(){},
       isControlModel:()=>false,isA32:()=>false,directMode:()=>false,showResponsePose(){},recorder:{active:false},
       enumerateCameras:async()=>{throw Error('browser camera enumerated');},cameras:async()=>{throw Error('browser camera enumerated');},

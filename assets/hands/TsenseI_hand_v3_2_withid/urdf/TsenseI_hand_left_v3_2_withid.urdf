@@ -1,928 +1,22 @@
 <?xml version='1.0' encoding='utf-8'?>
-<robot name="TsenseI_hand_v3_2_withid_left_raised5mm" a32_cad_source="raised5mm-noupper-mid-20261027" a32_joint_coordinates="a32-signed-swing-v2" a32_swing_axis_alignment="id-cad-direction-v2" a32_thumb_zero_alignment="reference-cad-v2">
+<robot name="TsenseI_hand_v3_2_withid_left_customer_exterior" a32_cad_source="customer-exterior-20261116" a32_joint_coordinates="a32-signed-swing-v2" a32_swing_axis_alignment="id-cad-direction-v2" a32_thumb_zero_alignment="source-cad-20261116">
   <link name="base_link">
     <inertial>
-      <origin xyz="0.013740060602324999 0.0057550728445506134 0.05008396616290698" rpy="-0 0 -0" />
-      <mass value="0.14999999999999999" />
-      <inertia ixx="0.00015773465429675063" ixy="1.1222698139368838e-06" ixz="3.434570456661125e-06" iyy="8.9474047547241024e-05" iyz="6.0865343159111476e-06" izz="0.0001222629591587207" />
+      <origin xyz="-0.01563347057991394 0.0072793913337745346 -0.036956130907176567" rpy="0 0 0" />
+      <mass value="0.45598896500071223" />
+      <inertia ixx="0.00044257897630057663" ixy="8.5792351686655507e-06" ixz="7.9428989279037611e-06" iyy="0.00020581597457990092" iyz="2.0218982640395409e-05" izz="0.00031094165699747543" />
     </inertial>
-    <visual name="left_hand_base_support__P0051">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="hand_base_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_base_support__P0051.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/hand_base_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_base_fastener__P0052">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="hand_base_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0052.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/hand_base_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0053">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0053.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0054">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0054.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0055">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0055.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0056">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0056.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0057">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0057.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0058">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0058.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0059">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0059.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0060">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0060.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0061">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0061.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0062">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0062.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0063">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0063.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0064">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0064.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0065">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0065.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0066">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0066.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0067">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0067.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0068">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0068.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0069">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0069.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0070">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0070.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0071">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0071.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0072">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0072.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0073">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0073.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0074">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0074.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0075">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0075.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0076">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0076.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0077">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0077.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0078">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0078.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0079">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0079.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0080">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0080.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0081">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0081.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_support__P0082">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_support__P0082.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_support__P0083">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_support__P0083.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_support__P0084">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_support__P0084.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0085">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0085.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0086">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0086.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_sensor__P0087">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_sensor__P0087.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_support__P0088">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_support__P0088.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_support__P0089">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_support__P0089.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_electronics__P0216">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_electronics__P0216.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0220">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0220.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0221">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0221.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0222">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0222.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0223">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0223.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0224">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0224.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_fastener__P0225">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_fastener__P0225.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_rubber__P0226">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_rubber__P0226.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_housing__P0227">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_housing__P0227.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_sensor__P0228">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_sensor__P0228.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_housing__P0229">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_housing__P0229.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_base_electronics__P0230">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_base_electronics__P0230.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_electronics_motor_stator__P0241">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_electronics_motor_stator__P0241.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_support_motor_stator__P0241">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_support_motor_stator__P0241.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_housing_motor_stator__P0241">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_housing_motor_stator__P0241.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_stator_motor_stator__P0241">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_stator_motor_stator__P0241.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_bearing__P0266">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_bearing__P0266.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_fastener__P0242">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_fastener__P0242.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_mover_motor_mover__P0265">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_mover_motor_mover__P0265.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_housing_motor_mover__P0265">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_housing_motor_mover__P0265.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_fastener__P0279">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_fastener__P0279.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_fastener__P0269">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_fastener__P0269.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_MCP_rod__P0274">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_MCP_rod__P0274.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_electronics_motor_stator__P0304">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_electronics_motor_stator__P0304.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_support_motor_stator__P0304">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_support_motor_stator__P0304.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_housing_motor_stator__P0304">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_housing_motor_stator__P0304.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_stator_motor_stator__P0304">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_stator_motor_stator__P0304.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_bearing__P0305">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_bearing__P0305.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_mover_motor_mover__P0306">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_mover_motor_mover__P0306.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_housing_motor_mover__P0306">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_housing_motor_mover__P0306.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_fastener__P0313">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_fastener__P0313.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_rod__P0307">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_rod__P0307.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_MCP_fastener__P0317">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_MCP_fastener__P0317.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_bearing__P0026">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_bearing__P0026.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_electronics_motor_stator__P0050">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_electronics_motor_stator__P0050.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_support_motor_stator__P0050">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_support_motor_stator__P0050.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_housing_motor_stator__P0050">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_housing_motor_stator__P0050.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_stator_motor_stator__P0050">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_stator_motor_stator__P0050.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_fastener__P0022">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_fastener__P0022.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_fastener__P0028">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_fastener__P0028.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_mover_motor_mover__P0030">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_mover_motor_mover__P0030.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_housing_motor_mover__P0030">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_housing_motor_mover__P0030.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_rod__P0023">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_rod__P0023.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_MCP_fastener__P0031">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_MCP_fastener__P0031.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_bearing__P0425">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_bearing__P0425.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_electronics_motor_stator__P0438">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_electronics_motor_stator__P0438.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_support_motor_stator__P0438">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_support_motor_stator__P0438.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_housing_motor_stator__P0438">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_housing_motor_stator__P0438.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_stator_motor_stator__P0438">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_stator_motor_stator__P0438.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_fastener__P0420">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_fastener__P0420.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_mover_motor_mover__P0421">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_mover_motor_mover__P0421.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_housing_motor_mover__P0421">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_housing_motor_mover__P0421.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_rod__P0423">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_rod__P0423.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_MCP_fastener__P0429">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_MCP_fastener__P0429.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_fastener__P0351">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_fastener__P0351.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_support__P0352">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_support__P0352.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_rotary_motor__P0353">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_rotary_motor__P0353.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_fastener__P0354">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_fastener__P0354.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_fastener__P0355">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_fastener__P0355.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_fastener__P0356">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_fastener__P0356.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_fastener__P0357">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_fastener__P0357.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_fastener__P0358">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_fastener__P0358.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation1_support__P_THUMB_PALM_MOUNT">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation1_support__P_THUMB_PALM_MOUNT.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="base_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -930,821 +24,18 @@
         <mesh filename="../mjcf/collision_meshes/left_base_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  </link>
-  <link name="Left_hand_palm_link">
-    <inertial>
-      <origin xyz="-0.017791600629896556 -0.0082425065272972789 -0.039154211080934406" rpy="-0 0 -0" />
-      <mass value="0.017000000000000001" />
-      <inertia ixx="3.2513914639243255e-06" ixy="-6.3494466076428551e-07" ixz="7.8082827393655487e-07" iyy="4.2259769426458028e-06" iyz="1.0258910255737644e-06" izz="4.689511953835749e-06" />
-    </inertial>
-    <visual name="left_hand_palm_support__P0090">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_palm_support__P0090.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <collision name="Left_hand_palm_link_outer_hull">
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="../mjcf/collision_meshes/left_Left_hand_palm_link.stl" />
-      </geometry>
-    </collision>
-  </link>
-  <link name="left_hand_thumb_rota_block_link">
-    <inertial>
-      <origin xyz="0.017063330473789891 -0.0085120183746677097 -0.0084130709997597211" rpy="-0 0 -0" />
-      <mass value="0.035000000000000003" />
-      <inertia ixx="3.3795830173928898e-06" ixy="1.0288696996579948e-06" ixz="1.1467268166028452e-06" iyy="4.7951475027713978e-06" iyz="-5.5871388150688305e-07" izz="4.4772279728406822e-06" />
-    </inertial>
-    <visual name="left_hand_thumb_rotation2_rotary_motor__P0334">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_rotary_motor__P0334.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0335">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0335.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_support__P0336">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_support__P0336.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0337">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0337.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0338">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0338.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0339">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0339.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0340">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0340.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0341">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0341.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0342">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0342.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0343">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0343.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0344">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0344.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0345">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0345.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_fastener__P0346">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_fastener__P0346.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_rotation2_rotary_motor__P0353_OUTPUT">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_rotation2_rotary_motor__P0353_OUTPUT.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <collision name="left_hand_thumb_rota_block_link_outer_hull">
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="../mjcf/collision_meshes/left_left_hand_thumb_rota_block_link.stl" />
-      </geometry>
-    </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  </link>
-  <link name="left_hand_thumb_rotaback_link2">
-    <inertial>
-      <origin xyz="0.025633483169510793 -0.0015629614639098416 -0.00046424852535443552" rpy="-0 0 -0" />
-      <mass value="0.074999999999999997" />
-      <inertia ixx="6.0215133143899042e-06" ixy="9.4769934776882196e-07" ixz="-1.0528960641060975e-06" iyy="2.2722780352755823e-05" iyz="4.7951018471923443e-07" izz="2.2538277033622774e-05" />
-    </inertial>
-    <visual name="left_hand_thumb_MCP_rotary_motor__P0334_OUTPUT">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_rotary_motor__P0334_OUTPUT.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_fastener__P0360">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_fastener__P0360.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_sensor_motor_stator__P0361">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_sensor_motor_stator__P0361.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_electronics_motor_stator__P0361">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_electronics_motor_stator__P0361.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_housing_motor_stator__P0361">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_housing_motor_stator__P0361.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_support_motor_stator__P0361">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_support_motor_stator__P0361.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_stator_motor_stator__P0361">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_stator_motor_stator__P0361.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_fastener__P0362">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_fastener__P0362.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_fastener__P0363">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_fastener__P0363.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_housing__P0364">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_housing__P0364.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_rubber__P0365">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_rubber__P0365.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_support__P0366">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_support__P0366.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_support__P0386">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_support__P0386.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_fastener__P0368">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_fastener__P0368.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_mover_motor_mover__P0370">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_mover_motor_mover__P0370.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_housing_motor_mover__P0370">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_housing_motor_mover__P0370.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_fastener__P0369">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_fastener__P0369.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_rod__RECOVERED_THUMB_F2_ROD">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_rod__RECOVERED_THUMB_F2_ROD.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
-    </visual>
-    <collision name="left_hand_thumb_rotaback_link2_outer_hull">
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="../mjcf/collision_meshes/left_left_hand_thumb_rotaback_link2.stl" />
-      </geometry>
-    </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  </link>
-  <link name="left_hand_thumb_MCP_link">
-    <inertial>
-      <origin xyz="0.0034605642938316979 0.014966166634065015 -7.4690889898797623e-06" rpy="-0 0 -0" />
-      <mass value="0.040000000000000001" />
-      <inertia ixx="2.957510643250838e-06" ixy="6.982316458934537e-08" ixz="-2.5560634245473699e-09" iyy="2.5425255767865902e-06" iyz="-8.2548496884686074e-10" izz="3.8007875238376807e-06" />
-    </inertial>
-    <visual name="left_hand_thumb_MCP_fastener__P0367">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_fastener__P0367.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_housing__P0371">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_housing__P0371.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_rubber__P0372">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_rubber__P0372.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_PIP_stator_motor_stator__P0373">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_PIP_stator_motor_stator__P0373.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_PIP_sensor_motor_stator__P0373">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_PIP_sensor_motor_stator__P0373.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_PIP_support_motor_stator__P0373">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_PIP_support_motor_stator__P0373.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_PIP_housing_motor_stator__P0373">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_PIP_housing_motor_stator__P0373.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_PIP_electronics_motor_stator__P0373">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_PIP_electronics_motor_stator__P0373.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_MCP_fastener__P0377">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_MCP_fastener__P0377.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_mover_motor_mover__P0381">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_mover_motor_mover__P0381.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_housing_motor_mover__P0381">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_housing_motor_mover__P0381.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_fastener__P0383">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_fastener__P0383.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_fastener__P0380">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_fastener__P0380.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_rod__RECOVERED_THUMB_F1_ROD">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_rod__RECOVERED_THUMB_F1_ROD.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
-    </visual>
-    <collision name="left_hand_thumb_MCP_link_outer_hull">
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="../mjcf/collision_meshes/left_left_hand_thumb_MCP_link.stl" />
-      </geometry>
-    </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-  </link>
-  <link name="left_hand_thumb_PIP_link">
-    <inertial>
-      <origin xyz="0.0018687536236393649 0.0083369403913899128 -1.0376004973700785e-05" rpy="-0 0 -0" />
-      <mass value="0.014999999999999999" />
-      <inertia ixx="5.1451986392572163e-07" ixy="8.3344035318604908e-08" ixz="7.6899503869031983e-10" iyy="5.897669243444553e-07" iyz="-7.7427476588924634e-10" izz="7.1489926295652985e-07" />
-    </inertial>
-    <visual name="left_hand_thumb_tip_sensor__P0376">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_sensor__P0376.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_rubber__P0378">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_rubber__P0378.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_rubber__P0379">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_rubber__P0379.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_bearing__P0382">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_bearing__P0382.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_bearing__P0384">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_bearing__P0384.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_housing__P0385">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_housing__P0385.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_thumb_tip_support__RECOVERED_THUMB_F1_HINGE">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_thumb_tip_support__RECOVERED_THUMB_F1_HINGE.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <collision name="left_hand_thumb_PIP_link_outer_hull">
-      <origin xyz="0 0 0" rpy="0 0 0" />
-      <geometry>
-        <mesh filename="../mjcf/collision_meshes/left_left_hand_thumb_PIP_link.stl" />
-      </geometry>
-    </collision>
-
-
-
-
-
-
   </link>
   <link name="left_hand_index_MCP_link">
     <inertial>
-      <origin xyz="0.0041033733321269627 0.010916156410134829 -1.2289109870995425e-05" rpy="-0 0 -0" />
-      <mass value="0.029999999999999999" />
-      <inertia ixx="1.7503169087824773e-06" ixy="-2.6915210378928177e-07" ixz="8.1836102438932716e-10" iyy="2.2616372312333759e-06" iyz="3.1526008934481302e-09" izz="2.2960245374919526e-06" />
+      <origin xyz="0.0060072201016171702 0.012509585990078557 2.3736648952475861e-06" rpy="0 0 0" />
+      <mass value="0.025938948479955693" />
+      <inertia ixx="1.2057072202871913e-06" ixy="-9.5706054218993097e-08" ixz="-8.8380632731712887e-10" iyy="1.2510144606238994e-06" iyz="1.6135651006057155e-10" izz="1.364647206829861e-06" />
     </inertial>
-    <visual name="left_hand_index_swing_bearing__P0267">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="index_mcp_carrier_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_bearing__P0267.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/index_mcp_carrier_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_fastener__P0268">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_fastener__P0268.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_electronics__P0270">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_electronics__P0270.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_fastener__P0271">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_fastener__P0271.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_support__P0272">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_support__P0272.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_fastener__P0273">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_fastener__P0273.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_fastener__P0275">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_fastener__P0275.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_fastener__P0276">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_fastener__P0276.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_fastener__P0277">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_fastener__P0277.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_fastener__P0278">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_fastener__P0278.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_housing__P0280">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_housing__P0280.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_swing_rotary_motor__P0281">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_swing_rotary_motor__P0281.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
+      <material name="housing" />
     </visual>
     <collision name="left_hand_index_MCP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -1752,221 +43,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_index_MCP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_index_swing_link">
     <inertial>
-      <origin xyz="0.021598737690252254 -2.0496166041108782e-06 -0.018050431460278401" rpy="-0 0 -0" />
-      <mass value="0.070000000000000007" />
-      <inertia ixx="8.6948334773399952e-06" ixy="-2.3281267632149147e-09" ixz="3.6220038519286373e-06" iyy="1.6154028592785523e-05" iyz="-8.6266718234802789e-10" izz="1.2383372914295201e-05" />
+      <origin xyz="0.023550369128458166 2.1189212046989771e-06 -0.014796954595356369" rpy="0 0 0" />
+      <mass value="0.057645901048030579" />
+      <inertia ixx="4.0603783001957245e-06" ixy="1.1746994233525833e-09" ixz="8.2895594743499705e-07" iyy="7.9614780148063677e-06" iyz="-1.268107308517374e-09" izz="7.1857458135697226e-06" />
     </inertial>
-    <visual name="left_hand_index_PIP_bearing__P0246">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="index_proximal_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_bearing__P0246.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/index_proximal_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_index_PIP_fastener__P0254">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="index_proximal_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0254.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/index_proximal_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_fastener__P0255">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0255.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_fastener__P0256">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0256.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_fastener__P0257">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0257.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_support__P0258">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_support__P0258.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_fastener__P0259">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0259.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_support_motor_stator__P0260">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_support_motor_stator__P0260.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_sensor_motor_stator__P0260">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_sensor_motor_stator__P0260.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_housing_motor_stator__P0260">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_housing_motor_stator__P0260.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_electronics_motor_stator__P0260">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_electronics_motor_stator__P0260.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_stator_motor_stator__P0260">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_stator_motor_stator__P0260.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_fastener__P0261">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0261.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_housing__P0262">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_housing__P0262.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_fastener__P0263">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0263.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_rubber__P0264">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_rubber__P0264.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_rotary_motor__P0281_OUTPUT">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_rotary_motor__P0281_OUTPUT.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_mover_motor_mover__P0248">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_mover_motor_mover__P0248.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_housing_motor_mover__P0248">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_housing_motor_mover__P0248.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_fastener__P0249">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0249.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_fastener__P0244">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_fastener__P0244.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_PIP_rod__P0247">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_PIP_rod__P0247.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_index_swing_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -1974,159 +68,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_index_swing_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_index_PIP_link">
     <inertial>
-      <origin xyz="0.0034525327368116533 0.014981856990981646 -1.2433221849790793e-06" rpy="-0 0 -0" />
-      <mass value="0.040000000000000001" />
-      <inertia ixx="2.9768061657143192e-06" ixy="8.6659396626811729e-08" ixz="-2.7483267865423806e-09" iyy="2.5569364215339775e-06" iyz="8.788392643849583e-10" izz="3.8298559172888107e-06" />
+      <origin xyz="0.0061515072449498812 0.015637556892178012 -2.8277908903479104e-06" rpy="0 0 0" />
+      <mass value="0.031527143302675836" />
+      <inertia ixx="1.9132182011480546e-06" ixy="2.0837451173388402e-07" ixz="-1.4559944393677616e-09" iyy="1.466768186812394e-06" iyz="1.7187483209363301e-10" izz="2.2649795394768998e-06" />
     </inertial>
-    <visual name="left_hand_index_DIP_bearing__P0245">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="index_middle_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_bearing__P0245.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/index_middle_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_index_DIP_fastener__P0250">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="index_middle_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_fastener__P0250.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/index_middle_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_stator_motor_stator__P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_stator_motor_stator__P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_sensor_motor_stator__P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_sensor_motor_stator__P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_support_motor_stator__P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_support_motor_stator__P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_housing_motor_stator__P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_housing_motor_stator__P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_electronics_motor_stator__P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_electronics_motor_stator__P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_housing__P0252">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_housing__P0252.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_rubber__P0253">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_rubber__P0253.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_fastener__P0234">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_fastener__P0234.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_mover_motor_mover__P0235">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_mover_motor_mover__P0235.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_housing_motor_mover__P0235">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_housing_motor_mover__P0235.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_fastener__P0232">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_fastener__P0232.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_DIP_rod__P0239">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_DIP_rod__P0239.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_index_PIP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -2134,88 +93,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_index_PIP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_index_DIP_link">
     <inertial>
-      <origin xyz="0.0018164383483547813 0.0099644667769903435 -1.2173942788545782e-05" rpy="-0 0 -0" />
-      <mass value="0.014999999999999999" />
-      <inertia ixx="6.9813984085582656e-07" ixy="1.1168310428964271e-07" ixz="8.066141759921576e-10" iyy="5.9612341306198451e-07" iyz="-1.1602687742246404e-09" izz="9.1596737622883095e-07" />
+      <origin xyz="0.0023964332623570743 0.0091801336718526846 -1.0601753296991812e-05" rpy="0 0 0" />
+      <mass value="0.0028102195937170292" />
+      <inertia ixx="1.3312794775115953e-07" ixy="2.4074455193756865e-08" ixz="1.1443716477568121e-10" iyy="1.0339593744918262e-07" iyz="-1.6590507322132731e-10" izz="1.7161291376556555e-07" />
     </inertial>
-    <visual name="left_hand_index_tip_sensor__P0231">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="index_distal_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_index_tip_sensor__P0231.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/index_distal_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_index_tip_support__P0233">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="index_distal_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_index_tip_support__P0233.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/index_distal_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_tip_housing__P0236">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_tip_housing__P0236.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_tip_rubber__P0237">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_tip_rubber__P0237.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_tip_rubber__P0238">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_tip_rubber__P0238.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_tip_bearing__P0240">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_tip_bearing__P0240.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_index_tip_bearing__P0243">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_index_tip_bearing__P0243.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_index_DIP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -2223,126 +118,18 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_index_DIP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
   </link>
   <link name="left_hand_mid_MCP_link">
     <inertial>
-      <origin xyz="0.0041033720000980892 0.010916159316379263 -1.2289109856232228e-05" rpy="-0 0 -0" />
-      <mass value="0.029999999999999999" />
-      <inertia ixx="1.7503163736761512e-06" ixy="-2.6915132760092625e-07" ixz="8.1836970112389117e-10" iyy="2.2616380551488497e-06" iyz="3.1525819622295218e-09" izz="2.2960248263011056e-06" />
+      <origin xyz="0.0060072200119427582 0.012509586185733829 2.3736649101697668e-06" rpy="0 0 0" />
+      <mass value="0.025938948479955693" />
+      <inertia ixx="1.2057071165906489e-06" ixy="-9.5706030258117885e-08" ixz="-8.83806340310983e-10" iyy="1.2510145043715168e-06" iyz="1.6135653841992419e-10" izz="1.3646471468809322e-06" />
     </inertial>
-    <visual name="left_hand_mid_swing_fastener__P0308">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="middle_mcp_carrier_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_fastener__P0308.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/middle_mcp_carrier_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_fastener__P0309">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_fastener__P0309.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_fastener__P0310">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_fastener__P0310.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_fastener__P0311">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_fastener__P0311.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_fastener__P0312">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_fastener__P0312.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_bearing__P0314">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_bearing__P0314.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_support__P0315">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_support__P0315.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_electronics__P0316">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_electronics__P0316.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_fastener__P0318">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_fastener__P0318.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_fastener__P0319">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_fastener__P0319.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_rotary_motor__P0320">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_rotary_motor__P0320.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_swing_housing__P0321">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_swing_housing__P0321.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
+      <material name="housing" />
     </visual>
     <collision name="left_hand_mid_MCP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -2350,221 +137,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_mid_MCP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_mid_swing_link">
     <inertial>
-      <origin xyz="0.021598737689882366 -5.0433880208286663e-07 -0.016350431460858478" rpy="-0 0 -0" />
-      <mass value="0.070000000000000007" />
-      <inertia ixx="8.6948394266019353e-06" ixy="-1.3006344228270932e-09" ixz="3.6220031740989568e-06" iyy="1.6154028592019836e-05" iyz="1.5790982040050333e-09" izz="1.2383381863468309e-05" />
+      <origin xyz="0.023550369128153541 1.3314665161242847e-06 -0.013096954595834702" rpy="0 0 0" />
+      <mass value="0.057645901048030579" />
+      <inertia ixx="4.0603781253253228e-06" ixy="2.0987610249920514e-09" ixz="8.2895548730156334e-07" iyy="7.9614780145351495e-06" iyz="-1.1129367992064547e-09" izz="7.1857476745391547e-06" />
     </inertial>
-    <visual name="left_hand_mid_PIP_fastener__P0282">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="middle_proximal_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0282.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/middle_proximal_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_mid_PIP_rubber__P0283">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="middle_proximal_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_rubber__P0283.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/middle_proximal_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_fastener__P0284">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0284.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_fastener__P0285">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0285.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_support_motor_stator__P0286">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_support_motor_stator__P0286.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_sensor_motor_stator__P0286">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_sensor_motor_stator__P0286.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_housing_motor_stator__P0286">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_housing_motor_stator__P0286.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_electronics_motor_stator__P0286">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_electronics_motor_stator__P0286.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_stator_motor_stator__P0286">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_stator_motor_stator__P0286.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_fastener__P0287">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0287.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_fastener__P0288">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0288.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_fastener__P0289">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0289.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_support__P0290">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_support__P0290.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_fastener__P0291">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0291.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_housing__P0292">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_housing__P0292.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_bearing__P0329">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_bearing__P0329.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_rotary_motor__P0320_OUTPUT">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_rotary_motor__P0320_OUTPUT.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_mover_motor_mover__P0322">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_mover_motor_mover__P0322.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_housing_motor_mover__P0322">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_housing_motor_mover__P0322.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_fastener__P0327">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0327.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_rod__P0330">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_rod__P0330.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_PIP_fastener__P0331">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_PIP_fastener__P0331.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_mid_swing_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -2572,159 +162,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_mid_swing_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_mid_PIP_link">
     <inertial>
-      <origin xyz="0.003452532736811792 0.014981856990981882 -1.2433221843287034e-06" rpy="-0 0 -0" />
-      <mass value="0.040000000000000001" />
-      <inertia ixx="2.9768061657143184e-06" ixy="8.6659396626808288e-08" ixz="-2.7483267865472854e-09" iyy="2.5569364215339932e-06" iyz="8.7883926438403145e-10" izz="3.8298559172888302e-06" />
+      <origin xyz="0.0057792531417515574 0.016393746356453028 -4.3680162758412852e-06" rpy="0 0 0" />
+      <mass value="0.033267843120417848" />
+      <inertia ixx="2.4590214911922873e-06" ixy="3.8945164567362912e-07" ixz="-1.1412448639254293e-09" iyy="1.7137115099882684e-06" iyz="-3.0721171412884906e-10" izz="2.9335200635991293e-06" />
     </inertial>
-    <visual name="left_hand_mid_DIP_bearing__STD004_P0245">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="middle_middle_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_bearing__STD004_P0245.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/middle_middle_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_mid_DIP_fastener__STD004_P0250">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="middle_middle_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_fastener__STD004_P0250.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/middle_middle_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_stator_motor_stator__STD004_P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_stator_motor_stator__STD004_P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_sensor_motor_stator__STD004_P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_sensor_motor_stator__STD004_P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_support_motor_stator__STD004_P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_support_motor_stator__STD004_P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_housing_motor_stator__STD004_P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_housing_motor_stator__STD004_P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_electronics_motor_stator__STD004_P0251">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_electronics_motor_stator__STD004_P0251.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_housing__STD004_P0252">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_housing__STD004_P0252.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_rubber__STD004_P0253">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_rubber__STD004_P0253.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_fastener__STD004_P0234">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_fastener__STD004_P0234.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_mover_motor_mover__STD004_P0235">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_mover_motor_mover__STD004_P0235.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_housing_motor_mover__STD004_P0235">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_housing_motor_mover__STD004_P0235.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_fastener__STD004_P0232">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_fastener__STD004_P0232.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_DIP_rod__STD004_P0239">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_DIP_rod__STD004_P0239.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_mid_PIP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -2732,88 +187,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_mid_PIP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_mid_DIP_link">
     <inertial>
-      <origin xyz="0.0018164383483547642 0.0099644667769903644 -1.2173942788553488e-05" rpy="-0 0 -0" />
-      <mass value="0.014999999999999999" />
-      <inertia ixx="6.9813984085582497e-07" ixy="1.1168310428964335e-07" ixz="8.066141759922062e-10" iyy="5.9612341306198461e-07" iyz="-1.1602687742246681e-09" izz="9.1596737622883e-07" />
+      <origin xyz="0.0015196179330955999 0.01018011157889236 -8.2855142448810796e-06" rpy="0 0 0" />
+      <mass value="0.0035774955199461764" />
+      <inertia ixx="2.106873853151578e-07" ixy="4.4307664095756864e-08" ixz="1.5431424843735999e-10" iyy="1.5840191952812609e-07" iyz="-2.0007568753061123e-10" izz="2.5463244539810551e-07" />
     </inertial>
-    <visual name="left_hand_mid_tip_sensor__STD004_P0231">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="middle_distal_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_tip_sensor__STD004_P0231.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/middle_distal_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_mid_tip_support__STD004_P0233">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="middle_distal_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_tip_support__STD004_P0233.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/middle_distal_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_tip_housing__STD004_P0236">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_tip_housing__STD004_P0236.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_tip_rubber__STD004_P0237">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_tip_rubber__STD004_P0237.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_tip_rubber__STD004_P0238">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_tip_rubber__STD004_P0238.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_tip_bearing__STD004_P0240">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_tip_bearing__STD004_P0240.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_mid_tip_bearing__STD004_P0243">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_mid_tip_bearing__STD004_P0243.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_mid_DIP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -2821,90 +212,18 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_mid_DIP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
   </link>
   <link name="left_hand_ring_MCP_link">
     <inertial>
-      <origin xyz="0.0041298954513557112 0.010972830323006267 -1.2352443051433977e-05" rpy="-0 0 -0" />
-      <mass value="0.029999999999999999" />
-      <inertia ixx="1.7396582214407021e-06" ixy="-2.6430920145105e-07" ixz="8.1680098560360864e-10" iyy="2.263650261553746e-06" iyz="3.1590646455876373e-09" izz="2.2928897100894558e-06" />
+      <origin xyz="0.0060648757216047481 0.012607773581921127 2.4301414768448276e-06" rpy="0 0 0" />
+      <mass value="0.025679395016542331" />
+      <inertia ixx="1.1698454919259639e-06" ixy="-8.0911895326705683e-08" ixz="-8.7544990509774121e-10" iyy="1.2291869648559757e-06" iyz="1.7558750740953273e-10" izz="1.3286357694974005e-06" />
     </inertial>
-    <visual name="left_hand_ring_swing_support__P0021">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="ring_mcp_carrier_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_swing_support__P0021.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/ring_mcp_carrier_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_swing_fastener__P0024">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_swing_fastener__P0024.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_swing_fastener__P0027">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_swing_fastener__P0027.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_swing_bearing__P0029">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_swing_bearing__P0029.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_swing_fastener__P0033">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_swing_fastener__P0033.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_swing_electronics__P0035">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_swing_electronics__P0035.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_swing_rotary_motor__P0037">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_swing_rotary_motor__P0037.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_swing_housing__P0038">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_swing_housing__P0038.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
+      <material name="housing" />
     </visual>
     <collision name="left_hand_ring_MCP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -2912,217 +231,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_ring_MCP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_ring_swing_link">
     <inertial>
-      <origin xyz="0.021598737690252157 -2.0496166044137433e-06 -0.018050431460278703" rpy="-0 0 -0" />
-      <mass value="0.070000000000000007" />
-      <inertia ixx="8.6948334773399647e-06" ixy="-2.3281267639498519e-09" ixz="3.6220038519291099e-06" iyy="1.6154028592785425e-05" iyz="-8.6266718187316924e-10" izz="1.2383372914295142e-05" />
+      <origin xyz="0.02355036912845836 2.1189212052531895e-06 -0.014796954595356144" rpy="0 0 0" />
+      <mass value="0.057645901048030579" />
+      <inertia ixx="4.0603783001956415e-06" ixy="1.1746994233335647e-09" ixz="8.2895594743490843e-07" iyy="7.9614780148062017e-06" iyz="-1.2681073085079627e-09" izz="7.1857458135696404e-06" />
     </inertial>
-    <visual name="left_hand_ring_PIP_bearing__P0016">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="ring_proximal_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_bearing__P0016.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/ring_proximal_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0039">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="ring_proximal_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0039.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/ring_proximal_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_support__P0040">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_support__P0040.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_housing__P0041">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_housing__P0041.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0042">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0042.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_rubber__P0043">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_rubber__P0043.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0044">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0044.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_support_motor_stator__P0045">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_support_motor_stator__P0045.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_sensor_motor_stator__P0045">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_sensor_motor_stator__P0045.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_housing_motor_stator__P0045">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_housing_motor_stator__P0045.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_electronics_motor_stator__P0045">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_electronics_motor_stator__P0045.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_stator_motor_stator__P0045">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_stator_motor_stator__P0045.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0046">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0046.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0047">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0047.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0048">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0048.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0049">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0049.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_rotary_motor__P0037_OUTPUT">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_rotary_motor__P0037_OUTPUT.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_mover_motor_mover__P0011">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_mover_motor_mover__P0011.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_housing_motor_mover__P0011">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_housing_motor_mover__P0011.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0018">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0018.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_fastener__P0010">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_fastener__P0010.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_PIP_rod__P0017">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_PIP_rod__P0017.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_ring_swing_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -3130,159 +256,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_ring_swing_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_ring_PIP_link">
     <inertial>
-      <origin xyz="0.0034525327368119278 0.014981856990982223 -3.5641251344402236e-06" rpy="-0 0 -0" />
-      <mass value="0.040000000000000001" />
-      <inertia ixx="2.9766050782179056e-06" ixy="8.6659396626566486e-08" ixz="-2.0525922208733743e-09" iyy="2.5567353340372932e-06" iyz="-5.1195825144013677e-10" izz="3.8298559172890555e-06" />
+      <origin xyz="0.0061515072449496479 0.015637556892178103 -3.3568639984734275e-06" rpy="0 0 0" />
+      <mass value="0.031527143302675836" />
+      <inertia ixx="1.9131820465823335e-06" ixy="2.0837451173386102e-07" ixz="-1.3760035240775911e-09" iyy="1.4667320322466376e-06" iyz="-8.896217697685133e-11" izz="2.2649795394768363e-06" />
     </inertial>
-    <visual name="left_hand_ring_DIP_housing__P0013">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="ring_middle_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_housing__P0013.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/ring_middle_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_ring_DIP_rubber__P0014">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="ring_middle_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_rubber__P0014.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/ring_middle_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_bearing__P0015">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_bearing__P0015.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_fastener__P0019">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_fastener__P0019.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_stator_motor_stator__P0020">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_stator_motor_stator__P0020.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_sensor_motor_stator__P0020">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_sensor_motor_stator__P0020.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_support_motor_stator__P0020">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_support_motor_stator__P0020.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_housing_motor_stator__P0020">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_housing_motor_stator__P0020.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_electronics_motor_stator__P0020">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_electronics_motor_stator__P0020.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_fastener__P0005">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_fastener__P0005.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_mover_motor_mover__P0006">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_mover_motor_mover__P0006.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_housing_motor_mover__P0006">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_housing_motor_mover__P0006.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_fastener__P0003">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_fastener__P0003.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_DIP_rod__P0004">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_DIP_rod__P0004.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_ring_PIP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -3290,88 +281,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_ring_PIP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_ring_DIP_link">
     <inertial>
-      <origin xyz="0.0012591852887828693 0.011311492100787607 -8.4694904041848729e-06" rpy="-0 0 -0" />
-      <mass value="0.014999999999999999" />
-      <inertia ixx="8.1477036298448032e-07" ixy="1.5672488695430885e-07" ixz="6.729830989676074e-10" iyy="6.3439860249413406e-07" iyz="-1.0082972342249999e-09" izz="1.0363327371503534e-06" />
+      <origin xyz="0.0018232333997849045 0.010479230292168662 -7.5233418714484501e-06" rpy="0 0 0" />
+      <mass value="0.0033085065836697927" />
+      <inertia ixx="1.8604842126966532e-07" ixy="3.9867503239087795e-08" ixz="1.1811018457302055e-10" iyy="1.3246145619167117e-07" iyz="-1.7704740971054962e-10" izz="2.3419117180202227e-07" />
     </inertial>
-    <visual name="left_hand_ring_tip_bearing__P0000">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="ring_distal_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_tip_bearing__P0000.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/ring_distal_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_ring_tip_sensor__P0001">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="ring_distal_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_tip_sensor__P0001.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/ring_distal_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_tip_support__P0002">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_tip_support__P0002.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_tip_rubber__P0007">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_tip_rubber__P0007.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_tip_rubber__P0008">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_tip_rubber__P0008.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_tip_housing__P0009">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_tip_housing__P0009.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_ring_tip_bearing__P0012">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_ring_tip_bearing__P0012.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_ring_DIP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -3379,99 +306,18 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_ring_DIP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
   </link>
   <link name="left_hand_pinky_MCP_link">
     <inertial>
-      <origin xyz="0.0040842108357489974 0.01095280906223426 1.2068057963414211e-06" rpy="-0 0 -0" />
-      <mass value="0.029999999999999999" />
-      <inertia ixx="1.7453743418193678e-06" ixy="-2.7086299779634559e-07" ixz="-4.0030406878282384e-09" iyy="2.2588352420069736e-06" iyz="3.8740845467236436e-09" izz="2.2931108699905238e-06" />
+      <origin xyz="0.0059969896464234203 0.012577309921368877 2.2049534900974671e-05" rpy="0 0 0" />
+      <mass value="0.025702511840098884" />
+      <inertia ixx="1.180749090533272e-06" ixy="-9.3522077114023734e-08" ixz="-5.9144321762506418e-09" iyy="1.2315643542368036e-06" iyz="1.8732052001893471e-09" izz="1.3397912360567549e-06" />
     </inertial>
-    <visual name="left_hand_pinky_swing_electronics__P0422">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="little_mcp_carrier_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_electronics__P0422.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/little_mcp_carrier_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_swing_fastener__P0424">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_fastener__P0424.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_swing_support__P0430">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_support__P0430.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_swing_fastener__P0431">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_fastener__P0431.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_swing_fastener__P0432">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_fastener__P0432.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_swing_fastener__P0434">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_fastener__P0434.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_swing_bearing__P0435">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_bearing__P0435.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_swing_rotary_motor__P0436">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_rotary_motor__P0436.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_swing_housing__P0437">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_swing_housing__P0437.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
+      <material name="housing" />
     </visual>
     <collision name="left_hand_pinky_MCP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -3479,191 +325,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_pinky_MCP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_pinky_swing_link">
     <inertial>
-      <origin xyz="0.020047421211851858 -1.1049341151286215e-06 -0.016696554547904176" rpy="-0 0 -0" />
-      <mass value="0.070000000000000007" />
-      <inertia ixx="8.2770633254773901e-06" ixy="-4.3926102577494555e-09" ixz="3.550811478212509e-06" iyy="1.5410316645725563e-05" iyz="5.862531204067928e-10" izz="1.116983002384201e-05" />
+      <origin xyz="0.021810754388110344 1.186797874163818e-06 -0.013951555215023819" rpy="0 0 0" />
+      <mass value="0.041395085050191627" />
+      <inertia ixx="2.5443042779965433e-06" ixy="1.5635984218968666e-09" ixz="6.8022805680679972e-07" iyy="4.8110452760462977e-06" iyz="-1.3158410296647219e-09" izz="4.1506529809416694e-06" />
     </inertial>
-    <visual name="left_hand_pinky_PIP_fastener__P0388">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="little_proximal_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_fastener__P0388.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/little_proximal_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_pinky_PIP_fastener__P0397">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="little_proximal_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_fastener__P0397.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/little_proximal_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_fastener__P0398">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_fastener__P0398.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_fastener__P0399">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_fastener__P0399.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_support__P0400">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_support__P0400.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_fastener__P0401">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_fastener__P0401.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_fastener__P0402">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_fastener__P0402.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_sensor_motor_stator__P0405">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_sensor_motor_stator__P0405.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_support_motor_stator__P0405">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_support_motor_stator__P0405.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_stator_motor_stator__P0405">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_stator_motor_stator__P0405.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_housing_motor_stator__P0405">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_housing_motor_stator__P0405.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_electronics_motor_stator__P0405">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_electronics_motor_stator__P0405.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_rubber__P0406">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_rubber__P0406.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_housing__P0407">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_housing__P0407.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_rotary_motor__P0436_OUTPUT">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_rotary_motor__P0436_OUTPUT.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rotary_motor">
-        <color rgba="0.48 0.50 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_mover_motor_mover__P0390">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_mover_motor_mover__P0390.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_fastener__P0392">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_fastener__P0392.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_rod__P0391">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_rod__P0391.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_PIP_fastener__P0393">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_PIP_fastener__P0393.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_pinky_swing_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -3671,165 +350,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_pinky_swing_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_pinky_PIP_link">
     <inertial>
-      <origin xyz="0.0014675323348236362 0.013973744699402423 6.5808779225285646e-05" rpy="-0 0 -0" />
-      <mass value="0.040000000000000001" />
-      <inertia ixx="2.7654619961869705e-06" ixy="1.9256542452381246e-07" ixz="1.2552291404284398e-08" iyy="2.4616068375454833e-06" iyz="4.0310119676112819e-09" izz="3.5184829462799436e-06" />
+      <origin xyz="0.0039166782819188926 0.013849374769630343 1.5922656953846891e-05" rpy="0 0 0" />
+      <mass value="0.031286283157772515" />
+      <inertia ixx="1.8695008567739935e-06" ixy="1.9605749460941009e-07" ixz="3.322284618562615e-09" iyy="1.3703391762616543e-06" iyz="2.8557491517913801e-10" izz="2.1299553231242345e-06" />
     </inertial>
-    <visual name="left_hand_pinky_DIP_bearing__P0387">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="little_middle_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_bearing__P0387.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/little_middle_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_pinky_DIP_bearing__P0389">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="little_middle_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_bearing__P0389.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/little_middle_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_electronics_motor_stator__P0394">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_electronics_motor_stator__P0394.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_electronics">
-        <color rgba="0.25 0.57 0.57 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_stator_motor_stator__P0394">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_stator_motor_stator__P0394.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_stator">
-        <color rgba="0.84 0.53 0.20 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_sensor_motor_stator__P0394">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_sensor_motor_stator__P0394.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_support_motor_stator__P0394">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_support_motor_stator__P0394.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_housing_motor_stator__P0394">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_housing_motor_stator__P0394.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_housing__P0395">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_housing__P0395.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_rubber__P0396">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_rubber__P0396.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_fastener__P0414">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_fastener__P0414.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_fastener__P0409">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_fastener__P0409.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_mover_motor_mover__P0412">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_mover_motor_mover__P0412.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_mover">
-        <color rgba="0.24 0.51 0.93 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_housing_motor_mover__P0412">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_housing_motor_mover__P0412.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_fastener__P0408">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_fastener__P0408.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_fastener">
-        <color rgba="0.49 0.52 0.56 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_DIP_rod__P0410">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_DIP_rod__P0410.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rod">
-        <color rgba="0.86 0.26 0.29 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_pinky_PIP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -3837,89 +375,24 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_pinky_PIP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   </link>
   <link name="left_hand_pinky_DIP_link">
     <inertial>
-      <origin xyz="0.0018687536230172588 0.0083369403912220766 -2.0863071157148858e-05" rpy="-0 0 -0" />
-      <mass value="0.014999999999999999" />
-      <inertia ixx="5.1494143095474365e-07" ixy="8.3344035326256064e-08" ixz="1.6440810181920516e-09" iyy="5.901884913782747e-07" iyz="-2.0857254882513414e-09" izz="7.1489926295117226e-07" />
+      <origin xyz="0.0026000638343847749 0.0076632524345253451 -1.9374247678558979e-05" rpy="0 0 0" />
+      <mass value="0.0024121449370928935" />
+      <inertia ixx="8.2668182041515078e-08" ixy="1.5273234028420902e-08" ixz="2.1262208652857633e-10" iyy="8.7485205043889748e-08" iyz="-2.866193794803055e-10" izz="1.1373016361558978e-07" />
     </inertial>
-    <visual name="left_hand_pinky_tip_sensor__P0411">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="little_distal_phalanx_link_housing">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_tip_sensor__P0411.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/little_distal_phalanx_link_housing.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_sensor">
-        <color rgba="0.39 0.45 0.53 1" />
-      </material>
+      <material name="housing" />
     </visual>
-    <visual name="left_hand_pinky_tip_support__P0413">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
+    <visual name="little_distal_phalanx_link_rubber">
       <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_tip_support__P0413.STL" scale="1 1 1" />
+        <mesh filename="../meshes/left/visual/little_distal_phalanx_link_rubber.stl" scale="1 1 1" />
       </geometry>
-      <material name="structure_support">
-        <color rgba="0.33 0.68 0.44 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_tip_bearing__P0415">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_tip_bearing__P0415.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_tip_rubber__P0416">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_tip_rubber__P0416.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_tip_bearing__P0417">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_tip_bearing__P0417.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_bearing">
-        <color rgba="0.86 0.82 0.49 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_tip_housing__P0418">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_tip_housing__P0418.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_housing">
-        <color rgba="0.73 0.78 0.83 1" />
-      </material>
-    </visual>
-    <visual name="left_hand_pinky_tip_rubber__P0419">
-      <origin xyz="0 0 0" rpy="-0 0 -0" />
-      <geometry>
-        <mesh filename="../meshes/left/left_hand_pinky_tip_rubber__P0419.STL" scale="1 1 1" />
-      </geometry>
-      <material name="structure_rubber">
-        <color rgba="0.24 0.25 0.27 1" />
-      </material>
+      <material name="rubber" />
     </visual>
     <collision name="left_hand_pinky_DIP_link_outer_hull">
       <origin xyz="0 0 0" rpy="0 0 0" />
@@ -3927,155 +400,250 @@
         <mesh filename="../mjcf/collision_meshes/left_left_hand_pinky_DIP_link.stl" />
       </geometry>
     </collision>
-
-
-
-
-
-
   </link>
+  <link name="left_hand_thumb_rota_block_link">
+    <inertial>
+      <origin xyz="0.018771891107825275 -0.0095166706232304461 -0.010271034597160816" rpy="0 0 0" />
+      <mass value="0.045289075362480273" />
+      <inertia ixx="3.3915191831249859e-06" ixy="7.6918715318860593e-07" ixz="9.0912960911161994e-07" iyy="4.474876229220283e-06" iyz="-4.6364916170589611e-07" izz="4.045004420426657e-06" />
+    </inertial>
+    <visual name="thumb_base_axis1_carrier_link_housing">
+      <geometry>
+        <mesh filename="../meshes/left/visual/thumb_base_axis1_carrier_link_housing.stl" scale="1 1 1" />
+      </geometry>
+      <material name="housing" />
+    </visual>
+    <collision name="left_hand_thumb_rota_block_link_outer_hull">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../mjcf/collision_meshes/left_left_hand_thumb_rota_block_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_hand_thumb_rotaback_link2">
+    <inertial>
+      <origin xyz="0.031303921658790652 -0.0043812273539147678 0.0040526702912310839" rpy="0 0 0" />
+      <mass value="0.060426720296360072" />
+      <inertia ixx="4.0240674575148319e-06" ixy="7.5492224245535842e-07" ixz="-7.5379945142386069e-07" iyy="1.0639139398999281e-05" iyz="2.6734784581034434e-07" izz="1.049315448953751e-05" />
+    </inertial>
+    <visual name="thumb_metacarpal_link_housing">
+      <geometry>
+        <mesh filename="../meshes/left/visual/thumb_metacarpal_link_housing.stl" scale="1 1 1" />
+      </geometry>
+      <material name="housing" />
+    </visual>
+    <visual name="thumb_metacarpal_link_rubber">
+      <geometry>
+        <mesh filename="../meshes/left/visual/thumb_metacarpal_link_rubber.stl" scale="1 1 1" />
+      </geometry>
+      <material name="rubber" />
+    </visual>
+    <collision name="left_hand_thumb_rotaback_link2_outer_hull">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../mjcf/collision_meshes/left_left_hand_thumb_rotaback_link2.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_hand_thumb_MCP_link">
+    <inertial>
+      <origin xyz="0.0061409831537625652 0.015604224439983197 -4.3082077877687765e-06" rpy="0 0 0" />
+      <mass value="0.031585603658802475" />
+      <inertia ixx="1.9252083819958626e-06" ixy="1.9945727556990508e-07" ixz="-1.5541581695013597e-09" iyy="1.4665805043031654e-06" iyz="-2.4220454733608459e-10" izz="2.2773051596127034e-06" />
+    </inertial>
+    <visual name="thumb_proximal_phalanx_link_housing">
+      <geometry>
+        <mesh filename="../meshes/left/visual/thumb_proximal_phalanx_link_housing.stl" scale="1 1 1" />
+      </geometry>
+      <material name="housing" />
+    </visual>
+    <visual name="thumb_proximal_phalanx_link_rubber">
+      <geometry>
+        <mesh filename="../meshes/left/visual/thumb_proximal_phalanx_link_rubber.stl" scale="1 1 1" />
+      </geometry>
+      <material name="rubber" />
+    </visual>
+    <collision name="left_hand_thumb_MCP_link_outer_hull">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../mjcf/collision_meshes/left_left_hand_thumb_MCP_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <link name="left_hand_thumb_PIP_link">
+    <inertial>
+      <origin xyz="0.0026000638348913272 0.0076632524346329865 -8.8242149392167229e-06" rpy="0 0 0" />
+      <mass value="0.0024121449370928935" />
+      <inertia ixx="8.2599905562249285e-08" ixy="1.5273234026774581e-08" ixz="8.9665392831098749e-11" iyy="8.741692856211065e-08" iyz="-9.160329746351935e-11" izz="1.1373016361490411e-07" />
+    </inertial>
+    <visual name="thumb_distal_phalanx_link_housing">
+      <geometry>
+        <mesh filename="../meshes/left/visual/thumb_distal_phalanx_link_housing.stl" scale="1 1 1" />
+      </geometry>
+      <material name="housing" />
+    </visual>
+    <visual name="thumb_distal_phalanx_link_rubber">
+      <geometry>
+        <mesh filename="../meshes/left/visual/thumb_distal_phalanx_link_rubber.stl" scale="1 1 1" />
+      </geometry>
+      <material name="rubber" />
+    </visual>
+    <collision name="left_hand_thumb_PIP_link_outer_hull">
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+        <mesh filename="../mjcf/collision_meshes/left_left_hand_thumb_PIP_link.stl" />
+      </geometry>
+    </collision>
+  </link>
+  <material name="housing">
+    <color rgba="0.73 0.78 0.83 1" />
+  </material>
+  <material name="rubber">
+    <color rgba="0.24 0.25 0.27 1" />
+  </material>
+  <link name="Left_hand_palm_link" />
   <joint name="Left_hand_palm_joint" type="fixed">
-    <origin xyz="0.023699999999999999 0.0064999999999999997 0.044138006984399999" rpy="-0 0 -0" />
     <parent link="base_link" />
     <child link="Left_hand_palm_link" />
+    <origin xyz="0 0 0" rpy="0 0 0" />
   </joint>
   <joint name="left_hand_thumb_rota_block_joint" type="revolute">
-    <origin xyz="0.024488440509375025 -0.01869491074294765 0.036060974991322353" rpy="0.35982319468221313 0.20381117386131797 -1.5108048438524189" />
     <parent link="base_link" />
     <child link="left_hand_thumb_rota_block_link" />
+    <origin rpy="0.35982536134702964 0.20380723004130577 -1.5107941390476678" xyz="-0.0061115590289906657 -0.017194911964842286 -0.05307703223894665" />
     <axis xyz="0 0 1" />
-    <limit effort="1.0" lower="0.0" upper="2.09" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="2.2689280275926285" velocity="1.0" />
   </joint>
   <joint name="left_hand_thumb_rotaback_joint2" type="revolute">
-    <origin xyz="0.022315626236229048 -1.3877787807814457e-17 -0.0123000641755272" rpy="1.5707963267948892 -1.5247423161228992 -0.16657232709293579" />
     <parent link="left_hand_thumb_rota_block_link" />
     <child link="left_hand_thumb_rotaback_link2" />
-    <axis xyz="-0.0 -0.0 -1.0" />
-    <limit effort="1.0" lower="0.0" upper="1.74" velocity="1.0" />
+    <origin rpy="1.5707963267948968 -1.4508665818100004 -0.16657232709298109" xyz="0.022315626236230363 3.4694469519536142e-18 -0.012300064175522575" />
+    <axis xyz="0 0 -1" />
+    <limit effort="1.0" lower="0.0" upper="1.7453292519943295" velocity="1.0" />
   </joint>
   <joint name="left_hand_thumb_MCP_joint" type="revolute">
-    <origin xyz="0.051668942592601144 0 -0.0052920750176667572" rpy="0.52751078396112183 -0.90849658912994835 -2.2879591616094781" />
     <parent link="left_hand_thumb_rotaback_link2" />
     <child link="left_hand_thumb_MCP_link" />
+    <origin rpy="0.5275107839616224 -0.9084965891297185 -2.287959161610072" xyz="0.05166894259260281 -6.938893903907228e-18 -0.005292075017664846" />
     <axis xyz="0 0 1" />
-    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
   </joint>
   <joint name="left_hand_thumb_PIP_joint" type="revolute">
-    <origin xyz="-0.0053114137218506358 0.025846448194589706 -2.0539125955565396e-15" rpy="3.8857805861880479e-16 -4.2188474935755949e-15 0.1290378382195399" />
     <parent link="left_hand_thumb_MCP_link" />
     <child link="left_hand_thumb_PIP_link" />
+    <origin rpy="2.498001805406602e-16 -4.218847493575595e-15 0.1290378382192325" xyz="-0.005311413721872944 0.02584644819457699 -1.457167719820518e-15" />
     <axis xyz="0 0 1" />
-    <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
+    <limit effort="1.0" lower="0.0" upper="1.5707963267948966" velocity="1.0" />
   </joint>
   <joint name="left_hand_index_MCP_joint" type="revolute">
-    <origin xyz="0.027099703634998501 -0.027567214335181868 0.087707234999650913" rpy="1.4508509931644693 0.42625833852372441 3.084615774699254" />
     <parent link="base_link" />
     <child link="left_hand_index_MCP_link" />
+    <origin rpy="1.4508509931644664 0.42625833852376749 3.0846157746992446" xyz="-0.0035002959033684079 -0.026067215557077018 -0.0014307722306180061" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_index_swing_joint" type="revolute">
-    <origin xyz="0.018196447538264333 0.019340354107076393 -3.2139486642566995e-06" rpy="1.5707963267948974 -6.4392935428259079e-15 2.0005586058915856" />
     <parent link="left_hand_index_MCP_link" />
     <child link="left_hand_index_swing_link" />
+    <origin rpy="1.570796326794897 1.332267629550188e-15 2.000558605891626" xyz="0.01819644753826301 0.01934035410707653 -3.213948664010369e-06" />
     <axis xyz="0 0 1" />
-    <limit effort="1.0" lower="-0.35" upper="0.35" velocity="1.0" />
+    <limit effort="1.0" lower="-0.3490658503988659" upper="0.3490658503988659" velocity="1.0" />
   </joint>
   <joint name="left_hand_index_PIP_joint" type="revolute">
-    <origin xyz="0.041999999999999843 -6.9388939039072284e-18 -0.026999999999998192" rpy="1.5707963267948972 -1.1967399807954855 3.141592653589786" />
     <parent link="left_hand_index_swing_link" />
     <child link="left_hand_index_PIP_link" />
+    <origin rpy="1.570796326794897 -1.196739980795468 -3.141592653589791" xyz="0.04199999999999988 -6.938893903907228e-18 -0.02699999999999806" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_index_DIP_joint" type="revolute">
-    <origin xyz="-0.005311413721869232 0.025846448194579805 -1.1900203045200897e-15" rpy="-2.7755575615628914e-17 0 0.12903783821920919" />
     <parent link="left_hand_index_PIP_link" />
     <child link="left_hand_index_DIP_link" />
+    <origin rpy="0 0 0.1290378382191688" xyz="-0.005311413721872743 0.02584644819457978 -1.082467449009528e-15" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_mid_MCP_joint" type="revolute">
-    <origin xyz="0.027099703634997883 -0.0015860674645024192 0.088138007230611604" rpy="1.5707963267948961 0.42976227909668507 3.1344499886106498" />
     <parent link="base_link" />
     <child link="left_hand_mid_MCP_link" />
+    <origin rpy="1.5707963267948966 0.42976227909668024 3.1344499886106463" xyz="-0.0035002959033684062 -8.6068686397637421e-05 -0.0009999999996577187" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_mid_swing_joint" type="revolute">
-    <origin xyz="0.016651037339347238 0.018632041099237523 -3.2139486486977478e-06" rpy="1.570796326794897 1.021405182655144e-14 2.0005586058915852" />
     <parent link="left_hand_mid_MCP_link" />
     <child link="left_hand_mid_swing_link" />
+    <origin rpy="1.570796326794897 1.77635683940025e-15 2.000558605891578" xyz="0.01665103733934734 0.01863204109923749 -3.213948648701e-06" />
     <axis xyz="0 0 1" />
-    <limit effort="1.0" lower="-0.35" upper="0.35" velocity="1.0" />
+    <limit effort="1.0" lower="-0.3490658503988659" upper="0.3490658503988659" velocity="1.0" />
   </joint>
   <joint name="left_hand_mid_PIP_joint" type="revolute">
-    <origin xyz="0.041999999999999524 2.1684043449710089e-19 -0.025300000000000357" rpy="1.5707963267948983 -1.196739980795503 -3.1415926535897833" />
     <parent link="left_hand_mid_swing_link" />
     <child link="left_hand_mid_PIP_link" />
+    <origin rpy="1.570796326794897 -1.196739980795602 -3.141592653589792" xyz="0.04200000000000054 0 -0.02529999999999856" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_mid_DIP_joint" type="revolute">
-    <origin xyz="-0.0053114137218693014 0.02584644819457986 -5.9934696094998685e-16" rpy="-2.7755575615628914e-17 0 0.12903783821921641" />
     <parent link="left_hand_mid_PIP_link" />
     <child link="left_hand_mid_DIP_link" />
+    <origin rpy="-6.938893903907228e-17 2.220446049250313e-16 0.1290378382191328" xyz="-0.007869173744139264 0.0323624180892669 -7.240437633129759e-16" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_ring_MCP_joint" type="revolute">
-    <origin xyz="0.027099703634997717 0.022488449981419661 0.080993503376345019" rpy="1.6667660125609913 0.42864098926109384 -3.1087726476133133" />
     <parent link="base_link" />
     <child link="left_hand_ring_MCP_link" />
+    <origin rpy="1.6667660125609913 0.42864098926106908 -3.1087726476133182" xyz="-0.003500295903368407 0.023988448759532415 -0.0081445038539247599" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_ring_swing_joint" type="revolute">
-    <origin xyz="0.018196447538263112 0.019340354107076241 -3.2139486561156422e-06" rpy="1.5707963267948979 2.4424906541753444e-15 2.0005586058916132" />
     <parent link="left_hand_ring_MCP_link" />
     <child link="left_hand_ring_swing_link" />
+    <origin rpy="1.570796326794897 1.13242748511766e-14 2.000558605891586" xyz="0.0181964475382639 0.01934035410707572 -3.213948664104044e-06" />
     <axis xyz="0 0 1" />
-    <limit effort="1.0" lower="-0.35" upper="0.35" velocity="1.0" />
+    <limit effort="1.0" lower="-0.3490658503988659" upper="0.3490658503988659" velocity="1.0" />
   </joint>
   <joint name="left_hand_ring_PIP_joint" type="revolute">
-    <origin xyz="0.041999999999998067 3.4694469519536142e-18 -0.026999999999994938" rpy="1.570796326794897 -1.1967399807954719 -3.14159265358979" />
     <parent link="left_hand_ring_swing_link" />
     <child link="left_hand_ring_PIP_link" />
+    <origin rpy="1.570796326794896 -1.196739980795457 -3.141592653589781" xyz="0.04199999999999999 -3.469446951953614e-18 -0.02699999999999791" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_ring_DIP_joint" type="revolute">
-    <origin xyz="-0.0053114137218728263 0.025846448194579971 -1.8496055381733711e-12" rpy="-2.7755575615628914e-17 0 0.12903783821922268" />
     <parent link="left_hand_ring_PIP_link" />
     <child link="left_hand_ring_DIP_link" />
+    <origin rpy="0 0 0.1290378382192179" xyz="-0.005311413721872646 0.0258464481945797 -4.718447854656915e-16" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_pinky_MCP_joint" type="revolute">
-    <origin xyz="0.027099703634997516 0.043715192884881314 0.07037092455483579" rpy="1.7043559433280713 0.42725082875541376 -3.0931711956586163" />
     <parent link="base_link" />
     <child link="left_hand_pinky_MCP_link" />
+    <origin rpy="1.7043559433280664 0.42725082875539505 -3.0931711956586239" xyz="-0.0035002959033685163 0.045215191662985862 -0.018767082675433741" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_pinky_swing_joint" type="revolute">
-    <origin xyz="0.01819644753826722 0.019340354107075734 -3.2139486648014026e-06" rpy="1.570796326794897 -4.2188474935755949e-14 2.0005586058915821" />
     <parent link="left_hand_pinky_MCP_link" />
     <child link="left_hand_pinky_swing_link" />
+    <origin rpy="1.570796326794895 -1.998401444325282e-15 2.000558605891562" xyz="0.01819644753826797 0.01934035410707582 -3.213948663885469e-06" />
     <axis xyz="0 0 1" />
-    <limit effort="1.0" lower="-0.35" upper="0.35" velocity="1.0" />
+    <limit effort="1.0" lower="-0.3490658503988659" upper="0.3490658503988659" velocity="1.0" />
   </joint>
   <joint name="left_hand_pinky_PIP_joint" type="revolute">
-    <origin xyz="0.039500000000000451 0 -0.021809999999998733" rpy="1.5707963267948983 -1.3258211702686955 3.1415926535897452" />
     <parent link="left_hand_pinky_swing_link" />
     <child link="left_hand_pinky_PIP_link" />
+    <origin rpy="1.570796326794895 -1.325821170268655 3.141592653589792" xyz="0.03950000000000077 -6.938893903907228e-18 -0.02180999999999883" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>
   <joint name="left_hand_pinky_DIP_joint" type="revolute">
-    <origin xyz="-0.0063032454065007973 0.025224375205066263 0.00020675515638993863" rpy="-0.0062711979857275543 0.025075123623853113 -0.00012198116402324438" />
     <parent link="left_hand_pinky_PIP_link" />
     <child link="left_hand_pinky_DIP_link" />
+    <origin rpy="-0.00627119798572752 0.02507512362385267 -0.0001219811639855102" xyz="-0.00630324540645583 0.02522437520507719 0.0002067551582398269" />
     <axis xyz="0 0 1" />
     <limit effort="1.0" lower="0.0" upper="1.57" velocity="1.0" />
   </joint>

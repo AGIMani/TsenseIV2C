@@ -98,7 +98,7 @@ def test_pure_python_matches_sdk_cpp_over_linear_domain_and_clamp_boundaries(nat
 
 def test_sdk_cpp_and_python_reject_invalid_rotary_or_nonfinite_angles(native_converter):
     array20 = ctypes.c_float * 20
-    for index, value in ((0, -1.), (0, 121.), (1, 101.), (5, 21.), (5, -21.),
+    for index, value in ((0, -1.), (0, 131.), (1, 101.), (5, 21.), (5, -21.),
                          (2, float("nan")), (4, float("inf"))):
         pose = [0.] * 20
         pose[index] = value
@@ -125,7 +125,8 @@ def test_all_sdk_linkages_monotonic_and_inverse_includes_telemetry_endpoints():
     for index, joint in enumerate(sdk_stroke.JOINTS):
         if not joint.linear:
             continue
-        values = [sdk_stroke.joint_angle_deg_to_actuator(index, .005 + i * 89.99 / 2048)
+        span_degrees = math.degrees(joint.hi) - .01
+        values = [sdk_stroke.joint_angle_deg_to_actuator(index, .005 + i * span_degrees / 2048)
                   for i in range(2049)]
         assert all(a < b for a, b in zip(values, values[1:]))
         assert 0. < values[0] < values[-1] < joint.linkage.stroke_hi * 1000.
@@ -177,16 +178,18 @@ def test_motor_size_curves_and_all_hardware_destinations(sdk_cpp):
     for size, (slots, cap) in expected.items():
         indices = [i for i, j in enumerate(sdk_stroke.JOINTS) if j.loop == size]
         assert {sdk_stroke.JOINTS[i].destination for i in indices} == slots
-        for angle in (0., .005, 5., 15., 30., 45., 60., 75., 89.995, 90.):
+        for angle in (0., .005, 5., 15., 30., 45., 60., 75., 89.95):
             values = [sdk_stroke.joint_angle_deg_to_actuator(i, angle) for i in indices]
             assert len(set(values)) == 1
-        for slot in slots:
-            assert sdk_channel_limits("self", slot) == pytest.approx((0., cap), abs=1e-12, rel=0)
-            assert self_channels[slot]["limits"] == [0., cap]
+        for index in indices:
+            joint = sdk_stroke.JOINTS[index]
+            assert joint.linkage.stroke_hi * 1000 == pytest.approx(cap, abs=1e-12)
+            effective_cap = sdk_stroke.joint_angle_deg_to_actuator(index, math.degrees(joint.hi))
+            assert sdk_channel_limits("self", joint.destination) == pytest.approx((0., effective_cap), abs=1e-12, rel=0)
+            assert self_channels[joint.destination]["limits"] == [0., effective_cap]
     for slot in (6, 7, 14, 15):
         assert sdk_channel_limits("self", slot) == (-20., 20.)
-        assert self_channels[slot]["limits"] == pytest.approx(
-            [math.degrees(-.34), math.degrees(.34)], abs=1e-12, rel=0)
+        assert self_channels[slot]["limits"] == [-20., 20.]
     # Distinct values expose accidental swaps across all 18 SELF and 2 MIT.
     inputs = (ctypes.c_float * 20)(*range(20))
     self_out, mit_out = (ctypes.c_float * 18)(), (ctypes.c_float * 2)()
@@ -195,6 +198,26 @@ def test_motor_size_curves_and_all_hardware_destinations(sdk_cpp):
         assert (self_out[joint.destination] if joint.destination >= 0
                 else mit_out[-joint.destination - 1]) == i
     assert self_out[17] == 2 and mit_out[0] == 1 and mit_out[1] == 0
+
+
+def test_customer_cad_endpoint_angles_match_cpp_and_python(sdk_cpp):
+    from hand_profiles import load_hand_profile
+
+    mapper = A32StrokeMapper(model_id="TsenseI_v3_2_withid")
+    limits = load_hand_profile(mapper.model_id).joint_limits()
+    assert dict(zip(mapper.joint_names, mapper._limits)) == limits
+    array20 = ctypes.c_float * 20
+    for endpoint in (0, 1):
+        angles = array20(*(math.degrees(limits[name][endpoint]) for name in mapper.joint_names))
+        actual, recovered = array20(), array20()
+        assert sdk_cpp.forward(angles, actual) == 1
+        expected = sdk_stroke.angles_deg_to_actuators(list(angles))
+        assert list(actual) == pytest.approx(expected, abs=4e-6, rel=0)
+        assert sdk_cpp.inverse(actual, recovered) == 1
+        assert list(recovered) == pytest.approx(list(angles), abs=1e-5, rel=0)
+        if endpoint:
+            assert actual[0] == 130. and actual[1] == 100.
+            assert all(actual[index] == 20. for index in (5, 9, 13, 17))
 
 
 def test_analytic_inverse_matches_sdk_cpp_across_all_curves_and_rotary_signs(sdk_cpp):

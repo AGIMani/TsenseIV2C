@@ -404,13 +404,17 @@ void test_product_api() {
         for (int idx : linear_joints) ang90[idx] = 90.f;
         float act90[kJointNum];
         CHECK(anglesDegToActuator(ang90, act90));
-        CHECK(std::fabs(act90[19] - 12.437477f) < 1e-4f);
+        // The 2026-11-16 CAD retains exact 90 degrees for the thumb but
+        // specifies 1.57 rad (89.9543738 degrees) for the other fingers.
+        // Golden values below are the calibrated curves at that CAD endpoint.
+        constexpr float finger_flexion_max_deg = 89.95437383553924f;
+        CHECK(std::fabs(act90[19] - 12.429686f) < 1e-4f);
         CHECK(std::fabs(act90[11] - act90[19]) < 1e-4f);
-        CHECK(std::fabs(act90[3] - act90[19]) < 1e-4f);
-        CHECK(std::fabs(act90[18] - 11.761490f) < 1e-4f);
+        CHECK(std::fabs(act90[3] - 12.437477f) < 1e-4f);
+        CHECK(std::fabs(act90[18] - 11.755805f) < 1e-4f);
         CHECK(std::fabs(act90[2] - 16.939022f) < 1e-4f);
-        CHECK(std::fabs(act90[6] - act90[2]) < 1e-4f);
-        CHECK(std::fabs(act90[4] - 19.627779f) < 1e-4f);
+        CHECK(std::fabs(act90[6] - 16.928186f) < 1e-4f);
+        CHECK(std::fabs(act90[4] - 19.614365f) < 1e-4f);
         CHECK(act90[19] <= kDipPosMaxMm + 1e-4f);
         CHECK(act90[18] <= kPinkyPipPosMaxMm + 1e-4f);
         CHECK(act90[2] <= kPipPosMaxMm + 1e-4f);
@@ -450,9 +454,9 @@ void test_product_api() {
         fb[19] = kDipPosMaxMm;
         CHECK(actuatorToAnglesDeg(fb, recovered));
         CHECK(std::fabs(recovered[2] - 90.f) < 1e-3f);
-        CHECK(std::fabs(recovered[6] - 90.f) < 1e-3f);
-        CHECK(std::fabs(recovered[18] - 90.f) < 1e-3f);
-        CHECK(std::fabs(recovered[19] - 90.f) < 1e-3f);
+        CHECK(std::fabs(recovered[6] - finger_flexion_max_deg) < 1e-3f);
+        CHECK(std::fabs(recovered[18] - finger_flexion_max_deg) < 1e-3f);
+        CHECK(std::fabs(recovered[19] - finger_flexion_max_deg) < 1e-3f);
         const float kept = recovered[6];
         fb[6] = kPipPosMaxMm + 0.05f;
         CHECK(!actuatorToAnglesDeg(fb, recovered));
@@ -462,6 +466,29 @@ void test_product_api() {
         CHECK(actuatorToAnglesDeg(fb, recovered));
         fb[2] = -2e-4f;
         CHECK(!actuatorToAnglesDeg(fb, recovered));
+        float cad_max[kJointNum]{};
+        cad_max[0] = 130.f;
+        cad_max[1] = 100.f;
+        const int swing_joints[] = {5, 9, 13, 17};
+        for (int index : swing_joints) cad_max[index] = 20.f;
+        float cad_out[kJointNum];
+        CHECK(anglesDegToActuator(cad_max, cad_out));
+        CHECK(cad_out[0] == 130.f && cad_out[1] == 100.f);
+        CHECK(actuatorToAnglesDeg(cad_out, recovered));
+        CHECK(recovered[0] == 130.f && recovered[1] == 100.f);
+        for (int index : swing_joints) CHECK(recovered[index] == 20.f);
+        cad_max[0] = 130.01f;
+        CHECK(!anglesDegToActuator(cad_max, cad_out));
+        CHECK(cad_out[0] == 130.f);  // Failed conversion leaves output intact.
+        cad_max[0] = 130.f;
+        cad_max[1] = 100.01f;
+        CHECK(!anglesDegToActuator(cad_max, cad_out));
+        cad_max[1] = 100.f;
+        for (int index : swing_joints) cad_max[index] = -20.f;
+        CHECK(anglesDegToActuator(cad_max, cad_out));
+        for (int index : swing_joints) CHECK(cad_out[index] == -20.f);
+        cad_max[5] = -20.01f;
+        CHECK(!anglesDegToActuator(cad_max, cad_out));
         ang[5] = 40.f;
         CHECK(!anglesDegToActuator(ang, act));
         ang[5] = 20.f;

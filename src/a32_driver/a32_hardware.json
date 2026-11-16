@@ -12,7 +12,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        12.437476671033064
+        12.429685785707361
       ],
       "direction": 1,
       "offset": 0
@@ -24,7 +24,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        11.761489775595662
+        11.755805038540789
       ],
       "direction": 1,
       "offset": 0
@@ -36,7 +36,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        19.627778913882647
+        19.614365336242553
       ],
       "direction": 1,
       "offset": 0
@@ -48,7 +48,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        12.437476671033064
+        12.429685785707361
       ],
       "direction": 1,
       "offset": 0
@@ -60,7 +60,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        16.939021296767194
+        16.928186012160076
       ],
       "direction": 1,
       "offset": 0
@@ -72,7 +72,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        19.627778913882647
+        19.614365336242553
       ],
       "direction": 1,
       "offset": 0
@@ -83,8 +83,8 @@
       "index": 6,
       "unit": "deg",
       "limits": [
-        -19.48056503444799,
-        19.48056503444799
+        -20,
+        20
       ],
       "direction": 1,
       "offset": 0
@@ -95,8 +95,8 @@
       "index": 7,
       "unit": "deg",
       "limits": [
-        -19.48056503444799,
-        19.48056503444799
+        -20,
+        20
       ],
       "direction": 1,
       "offset": 0
@@ -108,7 +108,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        12.437476671033064
+        12.429685785707361
       ],
       "direction": 1,
       "offset": 0
@@ -120,7 +120,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        16.939021296767194
+        16.928186012160076
       ],
       "direction": 1,
       "offset": 0
@@ -132,7 +132,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        19.627778913882647
+        19.614365336242553
       ],
       "direction": 1,
       "offset": 0
@@ -144,7 +144,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        12.437476671033064
+        12.429685785707361
       ],
       "direction": 1,
       "offset": 0
@@ -156,7 +156,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        16.939021296767194
+        16.928186012160076
       ],
       "direction": 1,
       "offset": 0
@@ -168,7 +168,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        19.627778913882647
+        19.614365336242553
       ],
       "direction": 1,
       "offset": 0
@@ -179,8 +179,8 @@
       "index": 14,
       "unit": "deg",
       "limits": [
-        -19.48056503444799,
-        19.48056503444799
+        -20,
+        20
       ],
       "direction": 1,
       "offset": 0
@@ -191,8 +191,8 @@
       "index": 15,
       "unit": "deg",
       "limits": [
-        -19.48056503444799,
-        19.48056503444799
+        -20,
+        20
       ],
       "direction": 1,
       "offset": 0
@@ -204,7 +204,7 @@
       "unit": "mm",
       "limits": [
         0.0,
-        12.437476671033064
+        12.437476671033062
       ],
       "direction": 1,
       "offset": 0
@@ -228,7 +228,7 @@
       "unit": "deg",
       "limits": [
         0,
-        99
+        100
       ],
       "direction": 1,
       "offset": 0
@@ -240,18 +240,46 @@
       "unit": "deg",
       "limits": [
         0,
-        119
+        130
       ],
       "direction": 1,
       "offset": 0
     }
   ],
   "joint_coordinate_version": "a32-signed-swing-v2",
-  "range_note": "2026-10-12: SDK 1.1.15 四类连杆闭环查表；精确 90° 行程上限写入通道交集。应用屈曲范围仍为 [0, 1.57] rad，swing 模型 [-0.35, 0.35]，命令 [-0.34, 0.34] rad。两侧共用 A3.2 槽位映射。",
+  "range_note": "2026-11-16: User-authorized with-ID CAD limits: thumb rotary outputs 130/100 degrees; finger swing +/-20 degrees; thumb MCP/IP 90 degrees, other flexion 1.57 rad via mapper. Calibrated SDK 1.1.15 linkage curves, channel direction and offset are unchanged. Bare A3.2 retains its previous rotary command limits through model_limits.",
   "sdk_version": "1.1.15",
   "conversion": "sdk-1.1.15-calibrated-linkage",
   "supported_sides": [
     "left",
     "right"
-  ]
+  ],
+  "model_limits": {
+    "TsenseI_v3_2": {
+      "left_hand_pinky_swing_joint": [
+        -19.48056503444799,
+        19.48056503444799
+      ],
+      "left_hand_ring_swing_joint": [
+        -19.48056503444799,
+        19.48056503444799
+      ],
+      "left_hand_mid_swing_joint": [
+        -19.48056503444799,
+        19.48056503444799
+      ],
+      "left_hand_index_swing_joint": [
+        -19.48056503444799,
+        19.48056503444799
+      ],
+      "left_hand_thumb_rotaback_joint2": [
+        0,
+        99
+      ],
+      "left_hand_thumb_rota_block_joint": [
+        0,
+        119
+      ]
+    }
+  }
 }

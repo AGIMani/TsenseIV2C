@@ -37,6 +37,7 @@ from wuji_mediapipe import _OneEuroLandmarkFilter
 from online_control.online_motion_track.landmark_filter import A32LandmarkFilter
 from online_control.online_motion_track.webxr_input import WebXRInputRelay
 from online_control.online_motion_track.wuji_input import WujiInputRelay, resolve_wuji_config
+from online_control.online_motion_track.manus_input import ManusInputRelay
 from online_control.online_motion_track.leapmotion_input import LeapMotionInputRelay
 from online_control.online_motion_track.leap_camera import LeapCameraSource, encode_frame
 from online_control.online_motion_track.realsense_source import RealSenseSource
@@ -114,8 +115,8 @@ class WebSession:
     model_id = MODEL_ID
     def __init__(self, side="left", recording=True, log_dir=None, collision_mode="off", *, model_id=MODEL_ID,
                  input_source="mediapipe"):
-        if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
-            raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove、leapmotion 或 realsense_rgbd")
+        if input_source not in ("mediapipe", "webxr", "wuji_glove", "manus_glove", "leapmotion", "realsense_rgbd"):
+            raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove、manus_glove、leapmotion 或 realsense_rgbd")
         self.input_source = input_source
         self.mediapipe_filter_enabled = True
         self.direct_mode = False
@@ -138,7 +139,7 @@ class WebSession:
         self.filter = A32LandmarkFilter()
         self.normalized_filter = _OneEuroLandmarkFilter(min_cutoff=1.5, beta=.25, derivative_cutoff=1.)
         self.recorder = SessionRecorder(log_dir or HERE / "logs", self.pipeline,
-            camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2", "realsense_rgbd": "realsense-rgbd"}.get(input_source, "browser-webcam"),
+            camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "manus_glove": "manus-glove", "leapmotion": "leap-motion-2", "realsense_rgbd": "realsense-rgbd"}.get(input_source, "browser-webcam"),
             smoothing=input_source == "mediapipe", input_source=input_source) if recording else None
 
     def process(self, packet, *, touch_client=True):
@@ -152,8 +153,8 @@ class WebSession:
             if timestamp <= self.last_timestamp or sequence <= self.last_sequence:
                 raise StaleFrameError("丢弃过期或重复帧")
             input_source = packet.get("source", self.input_source)
-            if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
-                raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove、leapmotion 或 realsense_rgbd")
+            if input_source not in ("mediapipe", "webxr", "wuji_glove", "manus_glove", "leapmotion", "realsense_rgbd"):
+                raise ValueError("关键点来源必须为 mediapipe、webxr、wuji_glove、manus_glove、leapmotion 或 realsense_rgbd")
             filter_enabled = packet.get("mediapipe_filter_enabled", self.mediapipe_filter_enabled)
             if not isinstance(filter_enabled, bool):
                 raise ValueError("mediapipe_filter_enabled 必须为布尔值")
@@ -201,7 +202,7 @@ class WebSession:
                     detected_label=label, expected_label=expected,
                     mediapipe_filter_enabled=input_source == "mediapipe" and filter_enabled,
                     source=input_source, source_metadata=packet.get("source_metadata"),
-                    raw_webxr=packet.get("raw_webxr"),
+                    raw_webxr=packet.get("raw_webxr"), raw_manus=packet.get("raw_manus"),
                     held_last_valid=False, used_fallback_hand=False)
             else:
                 self.filter.reset()
@@ -287,7 +288,8 @@ def a32_control_available():
 
 class Application:
     def __init__(self, log_dir=None, *, public=False, allowed_hosts=(), max_sessions=4, collision_mode="off",
-                 wuji_source=None, wuji_url=None, wuji_address=None, wuji_serial=None):
+                 wuji_source=None, wuji_url=None, wuji_address=None, wuji_serial=None,
+                 manus_options=None):
         self.sessions = {}
         self.lock = threading.Lock()
         self.log_dir = log_dir
@@ -305,16 +307,20 @@ class Application:
         self.quest_connection = {}
         self.quest_adb_connection = {}
         self.wuji = WujiInputRelay(wuji_url, source=wuji_source, address=wuji_address, serial=wuji_serial)
+        self.manus = ManusInputRelay(**(manus_options or {}))
         self.leapmotion = LeapMotionInputRelay()
         self.leap_camera = LeapCameraSource()
         self.realsense = RealSenseSource()
         self.leapmotion_frame_lock = threading.Lock()
+        self.manus_frame_lock = threading.Lock()
         self.metric_workers = {}
 
     def _replace_metric_worker(self, token, session, relay):
         previous = self.metric_workers.pop(token, None)
         if previous:
             previous.cancel()
+        if session.input_source == 'manus_glove' and not self.manus.supports_background:
+            return False
         if session.model_id == MODEL_ID and hasattr(session, 'control'):
             if session.input_source != 'wuji_glove' or self.wuji.supports_background:
                 self.metric_workers[token] = SourceWorker(token, session, relay, session.input_source)
@@ -323,7 +329,8 @@ class Application:
 
     def _metric_result(self, data, session):
         worker = self.metric_workers.get(data['session'])
-        if worker is None or (session.input_source == 'wuji_glove' and not self.wuji.supports_background):
+        if (worker is None or (session.input_source == 'wuji_glove' and not self.wuji.supports_background)
+                or (session.input_source == 'manus_glove' and not self.manus.supports_background)):
             return None
         worker.touch_client()
         return worker.read(data.get('after_revision'))
@@ -331,10 +338,12 @@ class Application:
     def create(self, data, owner="local"):
         self.expire()
         input_source = data.get("input_source", data.get("source", "mediapipe"))
+        if input_source == "manus":
+            input_source = "manus_glove"
         camera_source = data.get('camera_source', 'realsense_rgbd' if input_source == 'realsense_rgbd' else 'browser')
         self._validate_camera_source(camera_source, input_source)
-        if input_source not in ("mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
-            raise ValueError("输入源必须为 mediapipe、webxr、wuji_glove、leapmotion 或 realsense_rgbd")
+        if input_source not in ("mediapipe", "webxr", "wuji_glove", "manus_glove", "leapmotion", "realsense_rgbd"):
+            raise ValueError("输入源必须为 mediapipe、webxr、wuji_glove、manus_glove、leapmotion 或 realsense_rgbd")
         direct_mode = data.get("direct_mode", False)
         if not isinstance(direct_mode, bool):
             raise ValueError("direct_mode 必须为布尔值")
@@ -419,6 +428,7 @@ class Application:
                 session.camera_source = camera_source
                 self.webxr.close(data['session'])
                 self.wuji.close(data['session'])
+                self.manus.close(data['session'])
                 self.leapmotion.close(data['session'])
                 self.realsense.close(data['session'])
                 if not any(getattr(s, 'camera_source', None) == 'leapmotion_camera' for s in self.sessions.values()):
@@ -444,6 +454,7 @@ class Application:
                     worker.cancel()
                 self.webxr.close(token)
                 self.wuji.close(token)
+                self.manus.close(token)
                 self.leapmotion.close(token)
                 self.realsense.close(token)
                 if not any(getattr(s, 'camera_source', None) == 'leapmotion_camera' for s in self.sessions.values()):
@@ -575,6 +586,22 @@ class Application:
             raise ValueError('相机会话已停止')
         return encode_frame(metadata, pixels)
 
+    def manus_create(self, data):
+        with self.lock:
+            token = data['session']
+            session = self.sessions.get(token)
+            if session is None or session.closed or session.input_source != 'manus_glove':
+                raise ValueError('请先选择 Manus 手套 并重新开始会话')
+            session.last_seen = time.monotonic()
+            session._manus_processed_revision = -1
+            session._manus_loss_at = -1.
+            previous = self.metric_workers.pop(token, None)
+            if previous:
+                previous.cancel()
+            result = self.manus.create(token, session.input_side)
+            background = self._replace_metric_worker(token, session, self.manus)
+            return {**result, 'combined_frame': True, 'background_processing': background}
+
     def leapmotion_create(self, data):
         with self.lock:
             token = data['session']
@@ -652,6 +679,53 @@ class Application:
             result['message'] = '深度约束不可用，保持上一姿态：' + diagnostics.get('reason', '')
         return result
 
+    def manus_latest(self, data):
+        session = self.get(data['session'])
+        if session.input_source != 'manus_glove':
+            raise ValueError('当前会话不是 Manus 手套 输入')
+        background = self._metric_result(data, session)
+        if background is not None:
+            return background
+        snapshot = self.manus.latest(data['session'])
+        session.last_seen = time.monotonic()
+        return snapshot
+
+    def manus_frame(self, data):
+        session = self.get(data['session'])
+        if session.input_source != 'manus_glove':
+            raise ValueError('当前会话不是 Manus 手套 输入')
+        background = self._metric_result(data, session)
+        if background is not None:
+            return background
+        # Serialize consumers separately: preview WebSession uses a plain Lock
+        # internally, so holding session.lock across process() would deadlock.
+        with self.manus_frame_lock:
+            snapshot = self.manus_latest(data)
+            snapshot['update'] = None
+            now = time.perf_counter()
+            if snapshot['hand'] is not None:
+                if snapshot['revision'] <= session._manus_processed_revision:
+                    return snapshot
+            elif now - session._manus_loss_at < .1:
+                return snapshot
+            sequence = getattr(session, '_metric_sequence', -1) + 1
+            session._metric_sequence = sequence
+            packet = dict(session=data['session'], source='manus_glove', sequence=sequence,
+                timestamp_ms=now * 1000, capture_unix_ms=time.time() * 1000,
+                manus_revision=snapshot['revision'])
+            if 'input_epoch' in data:
+                packet['input_epoch'] = data['input_epoch']
+            snapshot['update'] = self.frame(packet)
+            if snapshot['hand'] is not None:
+                session._manus_processed_revision = snapshot['revision']
+            else:
+                session._manus_loss_at = now
+            snapshot['update']['input_path'] = 'server_manus_frame'
+            snapshot['update']['source_age_at_solve_ms'] = snapshot['age_ms']
+            if snapshot['update'].get('display_discarded') or snapshot['update'].get('background_discarded'):
+                snapshot.update(hand=None, tracking=False, connected=False)
+            return snapshot
+
     def leapmotion_latest(self, data):
         session = self.get(data['session'])
         if session.input_source != 'leapmotion':
@@ -702,11 +776,14 @@ class Application:
     def frame(self, data):
         session = self.get(data["session"])
         source = data.get("source", "mediapipe")
+        if source == "manus":
+            source = "manus_glove"
+            data = {**data, "source": source}
         if source != session.input_source:
             raise ValueError("帧输入源与会话不一致，请重新开始会话")
         if source == 'realsense_rgbd':
             return self._process_realsense(data, session)
-        if source in ('wuji_glove', 'webxr', 'leapmotion'):
+        if source in ('wuji_glove', 'manus_glove', 'webxr', 'leapmotion'):
             background = self._metric_result(data, session)
             if background is not None:
                 # Older clients can read the completed result but cannot cause
@@ -723,6 +800,33 @@ class Application:
             data = {**data, "hand": snapshot["hand"], "source": "webxr",
                     "source_metadata": snapshot["source_metadata"], "raw_webxr": snapshot["raw_webxr"],
                     "camera_size": [0, 0]}
+        if source == 'manus_glove':
+            snapshot = self.manus.consume(data['session'], data.get('manus_revision'))
+            observed_at = time.perf_counter()
+            data = {**data, 'hand': snapshot['hand'], 'source_metadata': snapshot['source_metadata'],
+                    'raw_manus': snapshot.get('raw_manus'), 'raw_webxr': None,
+                    'raw_wuji': None, 'raw_leapmotion': None, 'camera_size': [0, 0]}
+            def commit(action):
+                accepted = False
+                def apply_fresh():
+                    nonlocal accepted
+                    age = snapshot.get('age_ms')
+                    if snapshot['hand'] is not None and (age is None or
+                            age + (time.perf_counter() - observed_at) * 1000 >= self.manus.stale_after_ms):
+                        return
+                    action()
+                    accepted = True
+                self.manus.commit_if_current(data['session'], snapshot, apply_fresh)
+                return accepted
+            if hasattr(session, 'process_metric'):
+                return session.process_metric(data, commit)
+            # Calibration owns no hardware target, but a delayed preview must
+            # still be marked obsolete before it reaches the browser.
+            result = session.process(data)
+            if not commit(lambda: None):
+                result.update(tracking=False, display_discarded=True,
+                              discard_reason='source_cancelled_or_expired')
+            return result
         if source == 'leapmotion':
             snapshot = self.leapmotion.consume(data['session'], data.get('leapmotion_revision'))
             observed_at = time.perf_counter()
@@ -791,6 +895,7 @@ class Application:
     def close(self):
         for token in list(self.sessions):
             self.remove(token)
+        self.manus.client.close()
         self.leap_camera.close()
         self.realsense.close_all()
 
@@ -915,9 +1020,10 @@ class Handler(BaseHTTPRequestHandler):
                             "server_pid": os.getpid(),
                             "recording_allowed": not self.application.public,
                             "browser_serial": False, "browser_recording": True,
-                            "input_sources": ["mediapipe", "webxr", "wuji_glove", "leapmotion", "realsense_rgbd"], "webxr_stale_after_ms": self.application.webxr.stale_after_ms,
+                            "input_sources": ["mediapipe", "webxr", "wuji_glove", "manus_glove", "leapmotion", "realsense_rgbd"], "webxr_stale_after_ms": self.application.webxr.stale_after_ms,
                             "camera_sources": ["browser", "leapmotion_camera", "realsense_rgbd"], "leap_camera_target_fps": 120,
                             "wuji_transport": self.application.wuji.source,
+                            "manus_transport": "manus_sdk", "manus_mode": self.application.manus.client.mode,
                             "control_chain_revision": "a32-withid",
                             "downlink_sha256": downlink_version(),
                             "a32_control_available": a32_control_available() and not self.application.public,
@@ -1055,6 +1161,12 @@ class Handler(BaseHTTPRequestHandler):
                 response = self.application.wuji_latest(data)
             elif self.path == "/api/wuji/frame":
                 response = self.application.wuji_frame(data)
+            elif self.path == "/api/manus/create":
+                response = self.application.manus_create(data)
+            elif self.path == "/api/manus/latest":
+                response = self.application.manus_latest(data)
+            elif self.path == "/api/manus/frame":
+                response = self.application.manus_frame(data)
             elif self.path == "/api/leapmotion/create":
                 response = self.application.leapmotion_create(data)
             elif self.path == "/api/leapmotion/latest":
@@ -1259,6 +1371,11 @@ def main():
     parser.add_argument("--wuji-address", help="Direct glove IPv4:port; otherwise discover locally")
     parser.add_argument("--wuji-serial", help="Glove serial number; also verifies identity when address is supplied")
     parser.add_argument("--wuji-url", help="Explicit legacy HTTP bridge URL; implies bridge unless source is specified")
+    parser.add_argument('--manus-mode', choices=('integrated', 'local', 'remote'), default='integrated')
+    parser.add_argument('--manus-module-dir', type=Path, help='Directory containing manus_glove*.so')
+    parser.add_argument('--manus-left-calibration', type=Path, help='Optional left glove .mcal file')
+    parser.add_argument('--manus-right-calibration', type=Path, help='Optional right glove .mcal file')
+    parser.add_argument('--manus-connect-timeout', type=int, default=10, choices=range(1, 61), metavar='1..60')
     parser.add_argument("--log-dir", type=Path, default=HERE / "logs")
     parser.add_argument("--public", action="store_true", help="HTTPS proxy mode; no server recording or server USB")
     parser.add_argument("--allowed-host", action="append", default=[])
@@ -1305,6 +1422,9 @@ def main():
                              allowed_hosts=args.allowed_host, max_sessions=args.max_sessions,
                              collision_mode=args.collision_mode, host=args.host,
                              tls_cert=args.tls_cert, tls_key=args.tls_key,
+                             manus_options=dict(mode=args.manus_mode, module_dir=args.manus_module_dir,
+                                 left_calibration=args.manus_left_calibration, right_calibration=args.manus_right_calibration,
+                                 connect_timeout=args.manus_connect_timeout),
                              **{'wuji_' + key: value for key, value in wuji_config.items()})
     except OSError as exc:
         parser.error(f"端口 {args.port} 无法使用，请通过 --port 指定其他端口：{exc}")

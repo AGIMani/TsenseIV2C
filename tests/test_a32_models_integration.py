@@ -52,7 +52,9 @@ def test_id_import_retains_every_joint_frame_mesh_and_base_scale(side):
     assert len(source.joints) == len(target.joints)
     for a, b in zip(source.joints, target.joints, strict=True):
         assert (a.name, a.parent, a.child, a.type) == (b.name, b.parent, b.child, b.type)
-        expected_limits = requested_limits(a.name) or (a.lower, a.upper)
+        # The supplied 2026-11-16 CAD owns its exact limits, including 130/100
+        # degree thumb roots and exact 20 degree swing; never apply bare ranges.
+        expected_limits = (a.lower, a.upper)
         sign = -1 if a.name.endswith('_thumb_rotaback_joint2') and a.lower < 0 else 1
         if sign == -1:
             expected_limits = (-a.upper, -a.lower)
@@ -62,11 +64,14 @@ def test_id_import_retains_every_joint_frame_mesh_and_base_scale(side):
             np.testing.assert_allclose((b.lower, b.upper), expected_limits, atol=1e-14)
         np.testing.assert_allclose(a.origin, b.origin, atol=1e-14)
         np.testing.assert_array_equal(sign * a.axis, b.axis)
-    assert len(source.root.findall('.//visual')) == len(target.root.findall('.//visual')) == 367
-    assert len(target.root.findall('.//inertial')) == 22
-    assert sum(float(n.get('value')) for n in target.root.findall('.//mass')) == pytest.approx(.952)
+    assert len(source.root.findall('.//visual')) == len(target.root.findall('.//visual')) == 37
+    assert sum(float(n.get('value')) for n in target.root.findall('.//mass')) == pytest.approx(1.053011880784252)
     for a, b in zip(source.root.findall('link'), target.root.findall('link'), strict=True):
-        assert ET.tostring(a.find('inertial')).strip() == ET.tostring(b.find('inertial')).strip()
+        ai, bi = a.find('inertial'), b.find('inertial')
+        if ai is None:
+            assert bi is None
+        else:
+            assert ET.tostring(ai).strip() == ET.tostring(bi).strip()
     for link, meshes in source.visual_meshes_by_link().items():
         for a, b in zip(meshes, target.visual_meshes_by_link()[link], strict=True):
             assert hashlib.sha256(a.path.read_bytes()).digest() == hashlib.sha256(b.path.read_bytes()).digest()
@@ -75,8 +80,10 @@ def test_id_import_retains_every_joint_frame_mesh_and_base_scale(side):
     np.testing.assert_array_equal(target.visual_meshes_by_link()["base_link"][0].scale,
                                   [1.] * 3 if profile.root.joinpath("source_20_outputs").exists() else [.001] * 3)
     manifest = yaml.safe_load((profile.root / "source_mapping.yaml").read_text(encoding="utf-8"))
-    for name, digest in manifest["source_sha256"].items():
-        path = profile.root / name
+    for name, digest in manifest["source_package_sha256"].items():
+        # Original left meshes are shared byte-for-byte; the rest of the
+        # supplied package is archived separately from executable app policy.
+        path = (profile.root / 'meshes/left' / name.removeprefix('meshes/')) if name.startswith('meshes/') else (profile.root / 'source_package' / name)
         assert hashlib.sha256(path.read_bytes()).hexdigest() == digest
     for name, digest in manifest['installed_sha256'].items():
         assert hashlib.sha256((profile.root / name).read_bytes()).hexdigest() == digest
@@ -115,7 +122,8 @@ def test_id_right_frames_are_equal_angle_xz_mirrors():
     left, right = (UrdfModel(profile.path("urdf", side)) for side in ("left", "right"))
     reflection = np.diag([1., -1., 1., 1.])
     offset_reflection = reflection.copy()
-    offset_reflection[1, 3] = .008
+    metadata = yaml.safe_load((profile.root / 'hand_profile.yaml').read_text())
+    offset_reflection[1, 3] = 2 * metadata.get('mirror_plane_offset_m', 0.)
     rng = np.random.default_rng(39)
     for _ in range(5):
         pose = {name: rng.uniform(lo, hi) for name, (lo, hi) in left.joint_limits().items()}
@@ -147,7 +155,9 @@ def test_generated_right_keypoints_are_equal_angle_mirrors(model_id, tmp_path):
     poses += [{name: rng.uniform(lo, hi) for name, (lo, hi) in left.model.joint_limits().items()}
               for _ in range(5)]
     for pose in poses:
-        offset = np.array([0., .008, 0.]) if model_id.endswith('withid') else np.zeros(3)
+        metadata = yaml.safe_load((profile.root / 'hand_profile.yaml').read_text())
+        offset = np.zeros(3)
+        offset['xyz'.index(profile.mirror_axis)] = 2 * metadata.get('mirror_plane_offset_m', 0.)
         np.testing.assert_allclose(right.compute({right_name(name): value for name, value in pose.items()}),
                                    left.compute(pose) @ reflection + offset, atol=1e-12)
     assert installed == {side: profile.path("keypoints", side).read_bytes() for side in ("left", "right")}
@@ -211,8 +221,12 @@ def test_retarget_collision_and_motor_preview_are_finite(model_id, side):
 def test_id_mapper_commands_same_signed_swing_without_second_reversal(method, side):
     bare = A32StrokeMapper(side, method=method)
     shell = A32StrokeMapper(side, method=method, model_id="TsenseI_v3_2_withid")
-    assert load_hand_profile(A32_MODEL_IDS[0]).joint_limits(side) == load_hand_profile(A32_MODEL_IDS[1]).joint_limits(side)
-    pose = {name: (lo + hi) * .25 for name, (lo, hi) in zip(shell.joint_names, shell._limits)}
+    # Both models share SDK channels, while their CAD limits are independent.
+    bare_limits = load_hand_profile(A32_MODEL_IDS[0]).joint_limits(side)
+    shell_limits = load_hand_profile(A32_MODEL_IDS[1]).joint_limits(side)
+    assert shell_limits[f'{side}_hand_thumb_rota_block_joint'][1] == pytest.approx(np.deg2rad(130))
+    pose = {name: (max(lo, bare_limits[name][0]) + min(hi, bare_limits[name][1])) * .25
+            for name, (lo, hi) in shell_limits.items()}
     for finger in ("index", "mid", "ring", "pinky"):
         pose[f"{side}_hand_{finger}_swing_joint"] = .2
     expected = bare.convert(pose)
@@ -224,10 +238,25 @@ def test_id_mapper_commands_same_signed_swing_without_second_reversal(method, si
     assert all(row["source_sign"] == 1 for row in shell.description()["channels"])
     pose[f"{side}_hand_index_swing_joint"] = .9
     clipped = shell.preview(pose)
-    assert clipped["clamped_joints_rad"][f"{side}_hand_index_swing_joint"] == .35
-    assert clipped["rotary_positions_deg"][f"{side}_hand_index_swing_joint"] == pytest.approx(np.rad2deg(.35))
+    assert clipped["clamped_joints_rad"][f"{side}_hand_index_swing_joint"] == pytest.approx(np.deg2rad(20))
+    assert clipped["rotary_positions_deg"][f"{side}_hand_index_swing_joint"] == pytest.approx(20.)
 
 
 def test_mapper_rejects_wrong_model_identity():
     with pytest.raises(ValueError, match="Unsupported A3.2 model"):
         A32StrokeMapper(model_id="TsenseI_v3_0")
+
+
+@pytest.mark.parametrize('side', ['left', 'right'])
+def test_sampled_collision_gate_keeps_exact_authored_ranges(side):
+    from online_control.online_motion_track.pipeline_v3_0.collision import StopCollisionGuard
+    profile = load_hand_profile('TsenseI_v3_2_withid')
+    gate = StopCollisionGuard(profile, side).guard
+    for name, bounds in profile.joint_limits(side).items():
+        np.testing.assert_allclose(gate._joint_bounds(name), bounds, atol=1e-14)
+        if side == 'left':
+            # Historical shared-left simulations can still accept right aliases.
+            np.testing.assert_allclose(gate._joint_bounds(name.replace('left_hand_', 'right_hand_')),
+                                       bounds, atol=1e-14)
+        for endpoint in bounds:
+            assert gate._clamp_joint(name, endpoint) == pytest.approx(endpoint, abs=1e-14)

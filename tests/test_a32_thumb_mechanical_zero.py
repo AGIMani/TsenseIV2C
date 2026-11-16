@@ -15,6 +15,7 @@ from a32_kinematics import A32StrokeMapper
 from a32_kinematics.joint_coordinates import (
     THUMB_ZERO_REFERENCE, THUMB_ZERO_REFERENCE_SHA256, THUMB_ZERO_ALIGNMENT,
     LEGACY_THUMB_ZERO_ALIGNMENT, LEGACY_THUMB_ROTABACK_ORIGIN_OFFSET, THUMB_ORIGIN_OFFSETS,
+    WITHID_THUMB_ZERO_ALIGNMENT,
 )
 from hand_profiles import A32_MODEL_IDS, load_hand_profile
 from TsenseI_retargeting.fk.urdf import UrdfModel
@@ -56,7 +57,8 @@ def test_zero_thumb_matches_reference_orientation_and_preserves_mirror(model_id,
                 np.testing.assert_allclose(b[name.replace("left_hand_", f"{side}_hand_")],
                                            reflection @ transform @ reflection, atol=2e-12)
     root = ET.parse(profile.path("urdf", side)).getroot()
-    assert root.get("a32_thumb_zero_alignment") == THUMB_ZERO_ALIGNMENT
+    assert root.get("a32_thumb_zero_alignment") == (
+        WITHID_THUMB_ZERO_ALIGNMENT if model_id.endswith('withid') else THUMB_ZERO_ALIGNMENT)
     before = ET.tostring(root)
     assert ET.tostring(apply_urdf_coordinates(root, model_id=model_id)) == before
 

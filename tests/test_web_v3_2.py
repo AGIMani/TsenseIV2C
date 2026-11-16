@@ -84,7 +84,7 @@ def test_web_session_rejects_stale_malformed_and_closed_frames():
 
 @pytest.mark.parametrize("side", ["left", "right"])
 @pytest.mark.parametrize("model_id,folder,prefix,count", [
-    ('TsenseI_v3_2_withid', 'TsenseI_hand_v3_2_withid', '/assets-v3-2-withid/', 367),
+    ('TsenseI_v3_2_withid', 'TsenseI_hand_v3_2_withid', '/assets-v3-2-withid/', 37),
 ])
 def test_descriptor_has_all_original_visuals_and_joint_names(side, model_id, folder, prefix, count):
     model = model_description(side, model_id)

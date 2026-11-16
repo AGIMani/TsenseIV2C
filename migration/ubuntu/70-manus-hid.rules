@@ -1,0 +1,5 @@
+# MANUS Linux Integrated SDK: local desktop access and dialout service access.
+# USB IDs follow the official MANUS Linux SDK device rules.
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="3325", MODE="0660", GROUP="dialout", TAG+="uaccess"
+SUBSYSTEMS=="usb", ATTRS{idVendor}=="1915", ATTRS{idProduct}=="83fd", MODE="0660", GROUP="dialout", TAG+="uaccess"
+KERNEL=="hidraw*", ATTRS{idVendor}=="3325", MODE="0660", GROUP="dialout", TAG+="uaccess"

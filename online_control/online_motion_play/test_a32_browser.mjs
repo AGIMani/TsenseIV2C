@@ -22,6 +22,8 @@ const deadline = async (promise, description) => {
 const errors = [], failedAssets = [];
 let statePolls = 0;
 const displayedModels = [];
+const output = process.env.MOTION_QA_OUTPUT || '.work/a32-browser';
+await mkdir(output, {recursive:true});
 page.on('pageerror', error => errors.push(error.message));
 page.on('request', request => { if (request.url().endsWith('/api/state')) statePolls++; });
 page.on('response', response => { if (/\/(assets|vendor|api)\//.test(response.url()) && !response.ok()) failedAssets.push(response.url()); });
@@ -34,8 +36,16 @@ const checkRanges = state => {
   assert.equal(state.connected, false, 'offline smoke must never connect a hand');
   assert.equal(state.joints.length, 20);
   for (const joint of state.joints) {
-    const expected = joint.name.includes('_swing_') ? [-.35,.35] : /_(MCP|PIP|DIP)_/.test(joint.name) ? [0,1.57] : null;
-    if (expected) assert.deepEqual([joint.min,joint.max], expected);
+    const expected = joint.name.includes('_swing_') ? [-Math.PI / 9, Math.PI / 9]
+      : joint.name.endsWith('_thumb_rota_block_joint') ? [0, 130 * Math.PI / 180]
+      : joint.name.endsWith('_thumb_rotaback_joint2') ? [0, 100 * Math.PI / 180]
+      : /_thumb_(MCP|PIP)_/.test(joint.name) ? [0, Math.PI / 2] : [0, 1.57];
+    assert.ok(Math.abs(joint.min - expected[0]) < 1e-12);
+    assert.ok(Math.abs(joint.max - expected[1]) < 1e-12);
+    if (joint.downlink?.unit === 'deg') {
+      assert.ok(Math.abs(joint.downlink.at_ui_min - expected[0] * 180 / Math.PI) < 1e-9);
+      assert.ok(Math.abs(joint.downlink.at_ui_max - expected[1] * 180 / Math.PI) < 1e-9);
+    }
   }
 };
 const ensureControl = async () => {
@@ -48,6 +58,7 @@ const waitModel = async () => {
     document.querySelector('#viewer canvas')?.dataset.modelUrl === url, state.urdf);
   displayedModels.push(state.urdf);
   await ensureControl();
+  await page.screenshot({path:`${output}/motion-play-withid-${state.side}.png`, fullPage:true});
 };
 
 try {
@@ -65,7 +76,8 @@ try {
     for (const joint of state.joints) {
       if (joint.name.includes('_swing_')) assert.equal(joint.value, 0);
     }
-    assert.match(await page.locator('#jointNote').textContent(), /\[-0\.35, 0\.35\].*\[-0\.34, 0\.34\]/);
+    assert.match(await page.locator('#jointNote').textContent(), /\[-0\.349066, 0\.349066\].*SDK/);
+    assert.equal(await page.locator('#finger-thumb .joint label').filter({hasText:/^IP$/}).count(), 1);
     assert.equal(await page.locator('#a32Motors').isVisible(), true);
     assert.equal(await page.locator('#a32Connection').isVisible(), true);
     assert.equal(await page.locator('#a32Enable button').isDisabled(), true);
@@ -118,8 +130,6 @@ try {
     await waitModel();
     assert.equal(await page.locator('#motionCount').innerText(), '1 个动作');
   }
-  const output = process.env.MOTION_QA_OUTPUT || '.work/a32-browser';
-  await mkdir(output, {recursive:true});
   await page.screenshot({path:output + '/motion-play-withid.png',fullPage:true});
   // Hold a replacement load in flight, then return to the already displayed
   // model. The cancelled request must never replace the current hand or leave

@@ -116,6 +116,7 @@ class SessionRecorder:
                                          if mediapipe_filter_enabled is None else mediapipe_filter_enabled),
             "source_metadata": source_metadata if source_metadata is not None else attr("source_metadata"),
             "raw_webxr": raw_webxr if raw_webxr is not None else attr("raw_webxr"),
+            "raw_manus": (source_metadata or attr("source_metadata") or {}).get("raw_manus", attr("raw_manus")),
             "raw_wuji": (source_metadata or attr("source_metadata") or {}).get("raw_wuji"),
             "raw_leapmotion": (source_metadata or attr("source_metadata") or {}).get("raw_leapmotion"),
             "capture_timestamp_unix_ns": capture_timestamp_ns,

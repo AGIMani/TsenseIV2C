@@ -90,7 +90,7 @@ class A32WebSession(WebSession):
             if action == "connect" and not device.is_connected:
                 self.control.start_recording(transport=data.get("transport", "usb"),
                     input_source=self.input_source,
-                    camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "leapmotion": "leap-motion-2", "realsense_rgbd": "realsense-rgbd"}.get(self.input_source, "browser-webcam"))
+                    camera_source={"webxr": "quest3-webxr", "wuji_glove": "wuji-glove", "manus_glove": "manus-glove", "leapmotion": "leap-motion-2", "realsense_rgbd": "realsense-rgbd"}.get(self.input_source, "browser-webcam"))
             self.control.record_action("requested", request_action=action,
                                        request={k: v for k, v in data.items() if k != "session"})
             try:
@@ -192,8 +192,8 @@ class A32WebSession(WebSession):
                    "tracking_session_id": packet.get("session"), "input_source": self.input_source,
                    "direct_mode": self.control.direct_mode,
                    "mediapipe_filter_enabled": result.get("mediapipe_filter_enabled")}
-        if self.input_source in ("webxr", "wuji_glove", "leapmotion", "realsense_rgbd"):
-            self.control.record_event(f"{self.input_source}_raw", **details, raw_webxr=packet.get("raw_webxr"), raw_wuji=packet.get("raw_wuji"), raw_leapmotion=packet.get("raw_leapmotion"),
+        if self.input_source in ("webxr", "wuji_glove", "manus_glove", "leapmotion", "realsense_rgbd"):
+            self.control.record_event(f"{self.input_source}_raw", **details, raw_webxr=packet.get("raw_webxr"), raw_wuji=packet.get("raw_wuji"), raw_manus=packet.get("raw_manus"), raw_leapmotion=packet.get("raw_leapmotion"),
                 source_metadata=packet.get("source_metadata"), raw_detection=packet.get("raw_detection"),
                 world_landmarks=[hand["world"]] if hand else [],
                 handedness=[hand.get("label")] if hand else [])

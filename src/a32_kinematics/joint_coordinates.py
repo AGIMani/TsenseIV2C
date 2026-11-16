@@ -1,6 +1,8 @@
 """A3.2 application coordinates; the source mechanism keeps its CAD zero."""
 from __future__ import annotations
 
+import math
+
 COORDINATE_VERSION = "a32-signed-swing-v2"
 POSITIVE_COORDINATE_VERSION = "a32-positive-swing-v1"
 POSITIVE_SWING_AXIS_ALIGNMENT = "id-direction-v1"
@@ -23,13 +25,27 @@ THUMB_ORIGIN_OFFSETS = {
 }
 POSITIVE_SWING_CENTER = .350
 SWING_CENTER = 0.
-# Reference ID CAD range; the hardware command reserves 0.01 rad at each end.
+# Original bare CAD range and its existing hardware margin.
 SWING_LIMITS = (-.35, .35)
-SWING_COMMAND_LIMITS = (-.34, .34)
+BARE_SWING_COMMAND_LIMITS = (-.34, .34)
+SWING_COMMAND_LIMITS = (-math.pi / 9., math.pi / 9.)
 # Match the active A3.2 URDF and SDK domain.  Keeping a narrower application
 # range here silently rejects valid motion files and clips their downlink.
 FLEXION_LIMITS = (0.0, 1.57)
 MCP_LIMITS = (0.0, 1.57)
+WITHID_CAD_VERSION = "customer-exterior-20261116"
+WITHID_THUMB_ZERO_ALIGNMENT = "source-cad-20261116"
+WITHID_SWING_LIMITS = (-math.pi / 9., math.pi / 9.)
+WITHID_THUMB_LIMITS = {
+    "thumb_rota_block_joint": (0., math.radians(130.)),
+    "thumb_rotaback_joint2": (0., math.radians(100.)),
+    "thumb_MCP_joint": (0., math.pi / 2.),
+    "thumb_PIP_joint": (0., math.pi / 2.),
+}
+BARE_THUMB_ROOT_LIMITS = {
+    "thumb_rota_block_joint": (0., 2.09),
+    "thumb_rotaback_joint2": (0., 1.74),
+}
 
 
 def thumb_origin_offset(model_id: str, name: str) -> float:
@@ -49,7 +65,16 @@ def is_finger_swing(name: str) -> bool:
                for finger in ("index", "mid", "ring", "pinky"))
 
 
-def requested_limits(name: str):
+def requested_limits(name: str, *, model_id: str = "TsenseI_v3_2"):
+    """Authored model ranges, independent of SDK and hardware restrictions."""
+    suffix = name.removeprefix("left_hand_").removeprefix("right_hand_")
+    if model_id == "TsenseI_v3_2_withid":
+        if suffix in WITHID_THUMB_LIMITS:
+            return WITHID_THUMB_LIMITS[suffix]
+        if is_finger_swing(name):
+            return WITHID_SWING_LIMITS
+    elif suffix in BARE_THUMB_ROOT_LIMITS:
+        return BARE_THUMB_ROOT_LIMITS[suffix]
     if is_finger_swing(name):
         return SWING_LIMITS
     if name.endswith(("_PIP_joint", "_DIP_joint")):
@@ -91,7 +116,7 @@ def migrate_legacy_pose(pose, limits, *, model_id):
         raise ValueError("A3.2 旧动作必须包含完整 20 个关节")
     result = {}
     for name, value in pose.items():
-        old_bounds = (-.35, .35) if is_finger_swing(name) else (0., 1.57) if requested_limits(name) else limits[name]
+        old_bounds = (-.35, .35) if is_finger_swing(name) else (0., 1.57) if name.endswith(("_MCP_joint", "_PIP_joint", "_DIP_joint")) else limits[name]
         if (not isinstance(value, Real) or isinstance(value, bool) or not math.isfinite(value)
                 or not old_bounds[0] - 1e-8 <= value <= old_bounds[1] + 1e-8):
             raise ValueError(f"A3.2 旧动作关节超出原坐标范围：{name}")
@@ -114,5 +139,27 @@ def migrate_positive_pose(pose, limits):
             raise ValueError(f"A3.2 旧动作关节超出原坐标范围：{name}")
         value = POSITIVE_SWING_CENTER - value if is_finger_swing(name) else value
         lo, hi = limits[name]
+        result[name] = min(hi, max(lo, value))
+    return result
+
+
+def migrate_signed_pose(pose, limits):
+    """Import signed poses saved before the exact 20-degree CAD boundary.
+
+    The coordinate version and direction are unchanged. Only the former
+    +/-0.35 rad swing endpoints can exceed the new CAD's +/-pi/9 range;
+    retain strict validation for every other joint and for wider swing input.
+    This migration is for file loading, never live target validation.
+    """
+    from numbers import Real
+    if not isinstance(pose, dict) or pose.keys() != limits.keys():
+        raise ValueError("A3.2 动作必须包含完整 20 个关节")
+    result = {}
+    for name, value in pose.items():
+        lo, hi = limits[name]
+        old_bounds = SWING_LIMITS if is_finger_swing(name) else (lo, hi)
+        if (not isinstance(value, Real) or isinstance(value, bool) or not math.isfinite(value)
+                or not old_bounds[0] - 1e-8 <= value <= old_bounds[1] + 1e-8):
+            raise ValueError(f"A3.2 动作关节超出模型范围：{name}")
         result[name] = min(hi, max(lo, value))
     return result

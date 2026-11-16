@@ -2,6 +2,7 @@
 import copy
 import io
 import json
+import math
 from pathlib import Path
 import time
 from types import SimpleNamespace
@@ -461,10 +462,11 @@ def test_mcp_editor_keeps_requested_angles_with_sdk_scaled_downlink(tmp_path, mo
         controls = {row["name"]: row for row in session.snapshot()["joints"]}
         for finger in ("thumb", "index", "mid", "ring", "pinky"):
             name = f"{side}_hand_{finger}_MCP_joint"
-            assert session.limits[name] == (0., 1.57)
-            assert (controls[name]["min"], controls[name]["max"]) == (0., 1.57)
-            widget(session, name, 1.57)
-        assert all(session.pose[f"{side}_hand_{finger}_MCP_joint"] == 1.57
+            expected = session.profile.joint_limits(side)[name]
+            assert session.limits[name] == expected
+            assert (controls[name]["min"], controls[name]["max"]) == expected
+            widget(session, name, expected[1])
+        assert all(session.pose[f"{side}_hand_{finger}_MCP_joint"] == session.profile.joint_limits(side)[f"{side}_hand_{finger}_MCP_joint"][1]
                    for finger in ("thumb", "index", "mid", "ring", "pinky"))
         pose = dict(session.pose)
         targets = session._preview_targets(pose)
@@ -472,7 +474,7 @@ def test_mcp_editor_keeps_requested_angles_with_sdk_scaled_downlink(tmp_path, mo
             name = channel["joint"]
             if not name.endswith("_MCP_joint"):
                 continue
-            upper = 1.57
+            upper = min(session.limits[name][1], device.joint_limits()[name][1])
             assert targets["applied_pose"][name] == pytest.approx(upper, abs=1e-10, rel=0)
             assert targets["self"][channel["index"]] == pytest.approx(controls[name]["downlink"]["at_ui_max"])
         assert session.pose == pose
@@ -497,7 +499,8 @@ def test_positive_motion_preserves_pose_and_migrates_only_once(tmp_path, model_i
             assert data == original
             for name, value in migrated["old"]["pose"].items():
                 if is_finger_swing(name):
-                    assert value == pytest.approx(.35 - old_angle)
+                    lo, hi = session.limits[name]
+                    assert value == pytest.approx(min(hi, max(lo, .35 - old_angle)))
             assert session.validate_file(session.payload(migrated)) == migrated
         for invalid in (-.1, .71, float("nan"), True):
             data["motions"]["old"]["pose"]["left_hand_index_swing_joint"] = invalid
@@ -710,3 +713,71 @@ def test_motion_play_motor_compensation_is_opt_in(tmp_path, model_id, side, comp
                 assert scaled[key][channel["index"]] == pytest.approx(expected)
     finally:
         s.close()
+
+
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_customer_cad_editor_uses_all_twenty_authored_limits(tmp_path, side):
+    from a32_driver import A32Device
+
+    device = A32Device(side, model_id="TsenseI_v3_2_withid")
+    session = A32Session(tmp_path, side, device=device, start=False)
+    try:
+        controls = {row["name"]: row for row in session.snapshot()["joints"]}
+        assert session.limits == session.profile.joint_limits(side)
+        expected = {
+            "thumb_rota_block_joint": math.radians(130),
+            "thumb_rotaback_joint2": math.radians(100),
+            "thumb_MCP_joint": math.pi / 2,
+            "thumb_PIP_joint": math.pi / 2,
+        }
+        for suffix, upper in expected.items():
+            name = f"{side}_hand_{suffix}"
+            assert controls[name]["min"] == 0
+            assert controls[name]["max"] == pytest.approx(upper, abs=1e-12)
+            widget(session, name, upper)
+            assert session.pose[name] == upper
+        assert controls[f"{side}_hand_thumb_PIP_joint"]["short"] == "thumb_ip"
+        for finger in ("index", "mid", "ring", "pinky"):
+            name = f"{side}_hand_{finger}_swing_joint"
+            assert session.limits[name] == pytest.approx((-math.pi / 9, math.pi / 9))
+        preview = session._preview_targets(session.pose)
+        for suffix in expected:
+            name = f"{side}_hand_{suffix}"
+            assert preview["applied_pose"][name] == pytest.approx(session.pose[name], abs=1e-10)
+        for index, finger in enumerate(("index", "mid", "ring", "pinky")):
+            name = f"{side}_hand_{finger}_swing_joint"
+            widget(session, name, math.pi / 9 if index % 2 else -math.pi / 9)
+        preview = session._preview_targets(session.pose)
+        for name, value in session.pose.items():
+            assert preview["applied_pose"][name] == pytest.approx(value, abs=1e-10)
+        payload = session.payload({"endpoints": {"pose": dict(session.pose), "transition": .2, "interval": .1}})
+        assert session.validate_file(payload)["endpoints"]["pose"] == session.pose
+        assert not device.is_connected and device._backend is None
+    finally:
+        session.close()
+
+
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_saved_signed_swing_edge_migrates_to_customer_cad_once(tmp_path, side):
+    session = A32Session(tmp_path, side, device=FakeDevice(side), start=False)
+    try:
+        old_pose = dict(session.pose)
+        for index, finger in enumerate(("index", "mid", "ring", "pinky")):
+            old_pose[f"{side}_hand_{finger}_swing_joint"] = .35 if index % 2 else -.35
+        original = session.payload({"old": {"pose": old_pose, "transition": .2, "interval": .1}})
+        before = copy.deepcopy(original)
+        motions = session.validate_file(original)
+        assert original == before
+        for name, value in motions["old"]["pose"].items():
+            if is_finger_swing(name):
+                assert abs(value) == pytest.approx(math.pi / 9)
+                assert value * old_pose[name] > 0
+        assert session.validate_file(session.payload(motions)) == motions
+        session.persist(before["motions"])
+        assert session.motions == motions
+        assert json.loads(session.path.read_text())["motions"] == motions
+        original["motions"]["old"]["pose"][f"{side}_hand_index_swing_joint"] = .351
+        with pytest.raises(ValueError):
+            session.validate_file(original)
+    finally:
+        session.close()

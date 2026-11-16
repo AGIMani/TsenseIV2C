@@ -62,7 +62,7 @@ class ExhaustiveMinkReference(MinkCollisionGuard):
     def _refine_clearances(self, q, indices):
         return self._distances(q)
 
-    def _path_feasible(self, start, end):
+    def _path_blockers(self, start, end):
         return self._check_path(start, end)
 
 

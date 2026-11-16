@@ -16,7 +16,7 @@ from online_control.online_motion_track.calibration import CalibrationSession
 from online_control.online_motion_track.pipeline_v3_2.pipeline import prepare_points
 from keypoint_mediapipe_input import align_world_landmarks
 
-SOURCES = ("webxr", "wuji_glove", "leapmotion", "mediapipe")
+SOURCES = ("webxr", "wuji_glove", "manus_glove", "leapmotion", "mediapipe")
 MODELS = ("TsenseI_v3_2_withid",)
 
 

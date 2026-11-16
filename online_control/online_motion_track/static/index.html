@@ -75,6 +75,7 @@
               <option value="webxr">Quest 3 · WebXR</option>
               <option value="quest_adb">Quest 3 · USB ADB（21点）</option>
               <option value="wuji_glove">Wuji · 数据手套</option>
+              <option value="manus_glove">Manus · 数据手套</option>
               <option value="leapmotion">Leap Motion 2 · 红外追踪</option>
             </select></div>
           </div>
@@ -179,6 +180,10 @@
         <section id="leapmotion-input-panel" class="hardware-panel" hidden aria-label="Leap Motion 2">
           <div class="hardware-heading"><strong>Leap Motion 2 · 21 点骨架输入</strong><span id="leapmotion-state" role="status">待开始</span></div>
           <p class="hardware-note">服务所在 Linux 需安装 Ultraleap Tracking Service 和 LeapC SDK，并能访问 USB 设备。选择与输入手一致的左右手，点击「开始识别」，将手放入设备视野。连接后仅预览骨架与模型；机械手实时下发需手动开启。</p>
+        </section>
+        <section id="manus-input-panel" class="hardware-panel" hidden aria-label="Manus 数据手套">
+          <div class="hardware-heading"><strong>Manus · 21 点骨架输入</strong><span id="manus-state" role="status">待开始</span></div>
+          <p class="hardware-note">在服务所在 Linux 电脑安装 Manus SDK 并接入手套，选择对应左右手后点击「开始识别」。本地接收 21 点骨架；连接后仅预览，机械手下发需手动开启。SDK 或授权不可用时会显示具体原因。</p>
         </section>
         <section id="wuji-input-panel" class="hardware-panel" hidden aria-label="Wuji 数据手套">
           <div class="hardware-heading"><strong>Wuji · 21 点骨架输入</strong><span id="wuji-state" role="status">待开始</span></div>

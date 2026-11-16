@@ -75,6 +75,14 @@ assets/hands/_backups/
 !src/a32_driver/native_linux/README.md
 /src/a32_driver/build-linux/
 
+# Customer MANUS runtime and interpreter-specific build output stay local.
+# Restore libraries from the customer archive using tools/install_manus_runtime.py.
+/vendor/manussdk/vendor/manus/lib/
+/vendor/manussdk/runtime/linux-x86_64/
+/vendor/manussdk/build/
+!vendor/manussdk/*.md
+!vendor/manussdk/bindings/python/*.md
+
 # Exclude compressed archives and installer bundles (case-insensitive).
 *.[zZ][iI][pP]
 *.[rR][aA][rR]

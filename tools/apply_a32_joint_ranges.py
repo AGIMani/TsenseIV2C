@@ -18,6 +18,7 @@ from a32_kinematics.joint_coordinates import (
     COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, SWING_COMMAND_LIMITS,
     POSITIVE_COORDINATE_VERSION, POSITIVE_SWING_AXIS_ALIGNMENT, POSITIVE_SWING_CENTER,
     THUMB_ZERO_ALIGNMENT, LEGACY_THUMB_ZERO_ALIGNMENT, LEGACY_THUMB_ROTABACK_ORIGIN_OFFSET,
+    WITHID_CAD_VERSION, WITHID_THUMB_ZERO_ALIGNMENT,
     thumb_zero_manifest,
     initial_pose, is_finger_swing, requested_limits, thumb_origin_offset,
 )
@@ -25,6 +26,8 @@ from a32_kinematics.joint_coordinates import (
 
 def apply_urdf_coordinates(root, *, model_id="TsenseI_v3_2"):
     """Apply ranges, swing alignment and the reference thumb zero once."""
+    authored_cad = (model_id == "TsenseI_v3_2_withid"
+                    and root.get("a32_cad_source") == WITHID_CAD_VERSION)
     replacement_cad = (model_id == "TsenseI_v3_2_withid"
                        and root.get("a32_cad_source") in (
                            "middle-dip-standard-20-outputs-v1", "raised5mm-noupper-mid-20261027")
@@ -38,11 +41,19 @@ def apply_urdf_coordinates(root, *, model_id="TsenseI_v3_2"):
     if alignment not in (None, POSITIVE_SWING_AXIS_ALIGNMENT, SWING_AXIS_ALIGNMENT):
         raise ValueError(f"Unknown A3.2 swing alignment: {alignment}")
     thumb_zero = root.get("a32_thumb_zero_alignment")
-    if thumb_zero not in (None, LEGACY_THUMB_ZERO_ALIGNMENT, THUMB_ZERO_ALIGNMENT):
+    if thumb_zero not in (None, LEGACY_THUMB_ZERO_ALIGNMENT, THUMB_ZERO_ALIGNMENT,
+                          WITHID_THUMB_ZERO_ALIGNMENT if authored_cad else None):
         raise ValueError(f"Unknown A3.2 thumb zero: {thumb_zero}")
+    if authored_cad and version in (None, COORDINATE_VERSION):
+        # This complete replacement supplies its own assembly zero, axes and
+        # exact limits. Do not reapply older shell offsets or rounded ranges.
+        root.set("a32_joint_coordinates", COORDINATE_VERSION)
+        root.set("a32_swing_axis_alignment", SWING_AXIS_ALIGNMENT)
+        root.set("a32_thumb_zero_alignment", WITHID_THUMB_ZERO_ALIGNMENT)
+        return root
     for joint in root.findall("joint"):
         name = joint.get("name", "")
-        offset = 0. if replacement_cad else thumb_origin_offset(model_id, name)
+        offset = 0. if replacement_cad or authored_cad else thumb_origin_offset(model_id, name)
         if (thumb_zero == LEGACY_THUMB_ZERO_ALIGNMENT and model_id == "TsenseI_v3_2"
                 and name.endswith("_thumb_rotaback_joint2")):
             offset -= LEGACY_THUMB_ROTABACK_ORIGIN_OFFSET
@@ -52,7 +63,11 @@ def apply_urdf_coordinates(root, *, model_id="TsenseI_v3_2"):
             old = Rotation.from_euler("xyz", np.fromstring(origin.get("rpy", "0 0 0"), sep=" "))
             shift = Rotation.from_rotvec(axis / np.linalg.norm(axis) * offset)
             origin.set("rpy", " ".join(format(v, ".17g") for v in (old * shift).as_euler("xyz")))
-        bounds = requested_limits(name)
+        bounds = requested_limits(name, model_id=model_id if authored_cad else "TsenseI_v3_2")
+        if not authored_cad and name.endswith(("_thumb_rota_block_joint", "_thumb_rotaback_joint2")):
+            # The older source already carries these root ranges; preserve
+            # their values and XML spelling while updating flexion/swing.
+            bounds = None
         if replacement_cad and name.endswith("_thumb_rotaback_joint2"):
             if (root.get("a32_cad_source") == "raised5mm-noupper-mid-20261027"
                     and version is None and float(joint.find("limit").get("lower")) < 0):
@@ -91,7 +106,7 @@ def apply_urdf_coordinates(root, *, model_id="TsenseI_v3_2"):
         joint.find("limit").set("upper", str(bounds[1]))
     root.set("a32_joint_coordinates", COORDINATE_VERSION)
     root.set("a32_swing_axis_alignment", SWING_AXIS_ALIGNMENT)
-    root.set("a32_thumb_zero_alignment", THUMB_ZERO_ALIGNMENT)
+    root.set("a32_thumb_zero_alignment", WITHID_THUMB_ZERO_ALIGNMENT if authored_cad else THUMB_ZERO_ALIGNMENT)
     return root
 
 
@@ -107,7 +122,8 @@ def sync_installed_assets(model_ids=None):
     from a32_driver.limits import sdk_channel_limits
     from a32_kinematics.sdk_stroke import METHOD, SDK_VERSION
 
-    for model_id in A32_MODEL_IDS if model_ids is None else model_ids:
+    selected_models = tuple(A32_MODEL_IDS if model_ids is None else model_ids)
+    for model_id in selected_models:
         profile = load_hand_profile(model_id)
         geometry = yaml.safe_load((profile.root / "collision_geometry.yaml").read_text(encoding="utf-8"))
         for side in ("left", "right"):
@@ -122,16 +138,38 @@ def sync_installed_assets(model_ids=None):
                 init_path.write_text(yaml.safe_dump(init_data, sort_keys=False), encoding="utf-8")
         manifest_path = profile.root / "source_mapping.yaml"
         manifest = yaml.safe_load(manifest_path.read_text(encoding="utf-8"))
-        manifest.update(joint_coordinate_version=COORDINATE_VERSION,
-                        joint_coordinate_change=("new bare swing = -original SDK swing; axes aligned with reference ID CAD" if model_id == "TsenseI_v3_2"
-                                                 else "new ID swing = original ID swing; reference CAD origin and axis restored")
-                        + "; model [-0.35, 0.35], default 0; command clipped to [-0.34, 0.34]")
+        authored_cad = model.root.get("a32_cad_source") == WITHID_CAD_VERSION
+        manifest["joint_coordinate_version"] = COORDINATE_VERSION
+        if authored_cad:
+            manifest["joint_coordinate_change"] = (
+                "Customer CAD origins, axes and exact limits retained; thumb roots 130/100 deg, "
+                "thumb MCP/IP 90 deg, finger flexion 1.57 rad and swing +/-20 deg; default 0. "
+                "SDK and hardware commands use the same limits, including swing +/-20 deg.")
+            manifest["thumb_zero_alignment"] = WITHID_THUMB_ZERO_ALIGNMENT
+            manifest["thumb_zero_reference"] = WITHID_CAD_VERSION
+            manifest["thumb_origin_offsets_rad"] = {
+                "thumb_rota_block_joint": 0., "thumb_rotaback_joint2": 0.}
+            manifest.pop("thumb_zero_reference_sha256", None)
+        else:
+            manifest["joint_coordinate_change"] = (
+                "new bare swing = -original SDK swing; axes aligned with reference ID CAD" if model_id == "TsenseI_v3_2"
+                else "new ID swing = original ID swing; reference CAD origin and axis restored"
+            ) + "; model [-0.35, 0.35], default 0; command clipped to [-0.34, 0.34]"
+            manifest.update(thumb_zero_manifest(model_id))
         manifest["swing_axis_alignment"] = SWING_AXIS_ALIGNMENT
-        manifest.update(thumb_zero_manifest(model_id))
         manifest.pop("thumb_rotaback_origin_offset_rad", None)
         if "sdk_joint_signs" in manifest:
             manifest["legacy_source_joint_signs"] = manifest.pop("sdk_joint_signs")
+        manifest["installed_sha256"] = {
+            str(path.relative_to(profile.root)): hashlib.sha256(path.read_bytes()).hexdigest()
+            for pattern in ("urdf/*.urdf", "mjcf/mjmodel*.xml")
+            for path in sorted(profile.root.glob(pattern))}
         manifest_path.write_text(yaml.safe_dump(manifest, sort_keys=False, allow_unicode=True), encoding="utf-8")
+
+    # An ID-only rebuild must not rewrite the bare profile or shared hardware
+    # calibration. Its new CAD boundaries do not authorize wider motor limits.
+    if "TsenseI_v3_2" not in selected_models:
+        return
 
     # Model limits stay in radians; the SDK defines calibrated actuator curves.
     # Rebuilding assets must not restore the former unscaled stroke bounds.
@@ -146,7 +184,7 @@ def sync_installed_assets(model_ids=None):
     hardware["joint_coordinate_version"] = COORDINATE_VERSION
     hardware["sdk_version"] = SDK_VERSION
     hardware["conversion"] = f"{METHOD}-calibrated-linkage"
-    hardware["range_note"] = f"2026-10-30: SDK {SDK_VERSION} calibrated closed-loop conversion, one curve per motor size; thumb MCP slot 17 uses the medium 16.95 mm stroke. Application flexion matches the URDF at [0, 1.57] rad; swing model [-0.35, 0.35], hardware command [-0.34, 0.34] rad. Preserve calibrated direction/offset, thumb zero and MIT limits. No hardware motion used for validation."
+    hardware["range_note"] = f"SDK {SDK_VERSION} calibrated closed-loop conversion, one curve per motor size; thumb MCP slot 17 uses the medium 16.95 mm stroke. With-ID commands match the 2026-11-16 CAD, including thumb roots 130/100 deg and swing +/-20 deg. Bare commands retain their model-specific limits. Preserve calibrated direction/offset and source thumb zero. No hardware motion used for validation."
     path.write_text(json.dumps(hardware, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     bare = load_hand_profile("TsenseI_v3_2")
     path = bare.root / "sdk_source_mapping.yaml"

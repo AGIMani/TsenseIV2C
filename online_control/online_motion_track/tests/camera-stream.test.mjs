@@ -135,7 +135,7 @@ test('page startup awaits RealSense configuration, while Leap keeps its separate
       $:id=>{if(!elements.has(id))elements.set(id,{value:'rgb-camera',selectedOptions:[{textContent:h.track.label}],play:async()=>{},parentElement:{classList:{add(){}}}});return elements.get(id);},
       window:{isSecureContext:true},navigator:{mediaDevices:h.mediaDevices},
       diagnostics:{record(){}},diagnosticState(){},refreshControls(){},refresh(){},notice(){},
-      ensureLocalRecording:async()=>{},isLeapCamera:()=>leap,isLeapMotion:()=>false,isWuji:()=>false,isWebXR:()=>false,isMetricInput:()=>false,
+      ensureLocalRecording:async()=>{},isLeapCamera:()=>leap,isLeapMotion:()=>false,isWuji:()=>false,isManus:()=>false,isWebXR:()=>false,isMetricInput:()=>false,
       LeapCameraClient:class {},cameraCaptureLabel,browserCamera:null,gpuBadge(){},
       isControlModel:()=>false,isA32:()=>false,directMode:()=>false,showResponsePose(){},recorder:{active:false},
       enumerateCameras:async()=>{},cameras:async()=>{},LatestFrameQueue:class {},createQueue(){},performance,

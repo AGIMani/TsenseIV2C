@@ -527,10 +527,13 @@ class SelfCollisionGuard:
     def _joint_bounds(self, name: str) -> tuple[float, float]:
         """Read MJCF limits when available, with conservative hand fallbacks."""
         canonical = str(name)
-        if canonical.startswith("right_hand_"):
-            canonical = "left_hand_" + canonical[len("right_hand_") :]
         model = getattr(self._filter, "model", None)
         names = getattr(self._filter, "_mjcf_joint_names", None)
+        # A3 models have a real right MJCF. Prefer its exact joint name;
+        # only older V2 profiles share the left simulation for both hands.
+        if (isinstance(names, list) and canonical not in names
+                and canonical.startswith("right_hand_")):
+            canonical = "left_hand_" + canonical[len("right_hand_") :]
         if model is not None and isinstance(names, list) and canonical in names:
             jid = names.index(canonical)
             try:

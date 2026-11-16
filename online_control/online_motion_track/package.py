@@ -30,7 +30,7 @@ def files(*, full=False):
         yield HERE / name, name
     for name in ("a32_platform_integration.md", "A32_NATIVE_SDK.md", "a32_motion_play.md", "a32_integration_validation.md",
                  "a32_motion_recording.md", "a32_connection_diagnostics.md", "a32_joint_ranges.md", "a32_gesture_control_policy.md",
-                 "online_webxr_quest3.md", "webxr_quest3_input.md", "leapmotion2_input.md", "realsense_rgbd_input.md", "online_control_latency.md", "motion_limits.md"):
+                 "online_webxr_quest3.md", "webxr_quest3_input.md", "leapmotion2_input.md", "realsense_rgbd_input.md", "manus_glove_input.md", "online_control_latency.md", "motion_limits.md"):
         yield ROOT / "docs" / name, "docs/" + name
     for name in ('__init__.py', 'version.py', 'aluminum.js', 'ui-language.js', 'ui-translations.js'):
         path = ROOT / 'online_control/shared' / name
@@ -73,6 +73,24 @@ def files(*, full=False):
             yield sdk / relative, "app/vendor/a3-cpp-sdk/" + relative
     yield sdk / "sdk-source.json", "app/vendor/a3-cpp-sdk/sdk-source.json"
     yield sdk / "README-migration.txt", "app/vendor/a3-cpp-sdk/README-migration.txt"
+    # Manus is optional at runtime. Ship only the source/build allowlist; the
+    # pinned customer libraries are restored explicitly on the deployment host.
+    manus_files = (
+        "requirements-manus.txt", "scripts/build_manus.sh", "tools/install_manus_runtime.py",
+        "migration/ubuntu/70-manus-hid.rules", "vendor/manussdk/UPSTREAM.md",
+        "vendor/manussdk/runtime-manifest.json", "vendor/manussdk/license/license.txt",
+        "vendor/manussdk/bindings/python/CMakeLists.txt",
+        "vendor/manussdk/bindings/python/src/ManusGlove.hpp",
+        "vendor/manussdk/bindings/python/src/ManusGlove.cpp",
+        "vendor/manussdk/bindings/python/src/bindings.cpp",
+        "vendor/manussdk/bindings/python/tests/test_snapshot.cpp",
+        "vendor/manussdk/bindings/python/tests/test_lifecycle.cpp",
+        "vendor/manussdk/vendor/manus/include/ManusSDK.h",
+        "vendor/manussdk/vendor/manus/include/ManusSDKTypes.h",
+        "vendor/manussdk/vendor/manus/include/ManusSDKTypeInitializers.h",
+    )
+    for relative in manus_files:
+        yield ROOT / relative, "app/" + relative
     if full:
         for name in ("__init__.py", "collision.py"):
             path = ROOT / "online_control/online_motion_track/pipeline_v3_0" / name
@@ -99,7 +117,8 @@ def files(*, full=False):
     yield HERE / "webxr_input.py", web + "webxr_input.py"
     yield HERE / "quest_adb_input.py", web + "quest_adb_input.py"
     for name in ("wuji_input.py", "wuji_transport.py", "wuji_sdk_source.py", "source_worker.py", "leapmotion_input.py", "leapmotion_source.py", "leap_camera.py",
-                 "realsense_source.py", "rgbd_fusion.py", "rgbd_input.py"):
+                 "realsense_source.py", "rgbd_fusion.py", "rgbd_input.py",
+                 "manus_input.py", "manus_source.py", "metric_input.py"):
         yield HERE / name, web + name
     for path in sorted((ROOT / "vendor/realsense-hand-tracking").iterdir()):
         if path.is_file() and path.name not in {'serial-trace.js', 'stream-clock.js'}:

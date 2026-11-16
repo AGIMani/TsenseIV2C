@@ -29,7 +29,7 @@ function harness(script = source) {
     loadingSide:'', failedModelSide:'', modelSide:'',
     loadModel:url => loaded.push(url), applyPose() {}, sendWidget() {},
   });
-  vm.runInContext(script + '\nglobalThis.ui = {render, setJointDisplayMode, jointRows, markJointTelemetryMissing};', context);
+  vm.runInContext(script + '\nglobalThis.ui = {render, setJointDisplayMode, jointRows, markJointTelemetryMissing, fromDisplay, toDisplay, formatDisplay};', context);
   return {ui:context.ui, $, loaded, document:context.document};
 }
 
@@ -75,6 +75,26 @@ test('model selector keeps the connected/read-only restrictions', () => {
   assert.equal(h.$('modelSelect').disabled, true);
   h.ui.render(state);
   assert.equal(h.$('modelSelect').disabled, false);
+});
+
+test('exact CAD endpoints survive all displayed units and rounded numeric text', () => {
+  const h = harness(), state = snapshot('TsenseI_v3_2_withid', 'left');
+  const joint = state.joints[0];
+  Object.assign(joint, {min:-Math.PI / 9, max:Math.PI / 9, value:0,
+    downlink:{min:-20, max:20, unit:'deg', slot:'self 15', at_ui_min:-20, at_ui_max:20}});
+  h.ui.render(state);
+  for (const mode of ['rad', 'deg', 'stroke']) {
+    h.ui.setJointDisplayMode(mode);
+    assert.equal(h.ui.jointRows.get(joint.name).slider.step, 'any');
+    for (const endpoint of [joint.min, joint.max]) {
+      const displayed = h.ui.toDisplay(joint, endpoint);
+      assert.equal(h.ui.fromDisplay(joint, displayed), endpoint);
+      assert.equal(h.ui.fromDisplay(joint, Number(h.ui.formatDisplay(joint, displayed))), endpoint);
+    }
+  }
+  h.ui.setJointDisplayMode('rad');
+  assert.equal(h.ui.fromDisplay(joint, .123456), .123456);
+  assert.equal(h.ui.fromDisplay(joint, .351), .351, 'ordinary out-of-range input remains subject to server validation');
 });
 
 test('regression fixture reproduces the previous rendering failure', () => {

@@ -51,5 +51,32 @@
     "webui/static/logo.png": "943c7fd0021046ccaf20f747e2e459c89ea7a280b3bf1c696241b895ee3eb96d",
     "webui/static/style.css": "54b687179b60103260a57ac15e88b0f4995178e369bd1baf0764aafb5f1184eb"
   },
-  "commit_source": "GitHub ZIP archive comment"
+  "commit_source": "GitHub ZIP archive comment",
+  "local_modifications": {
+    "id": "a32-withid-customer-exterior-20261116",
+    "applied_on": "2026-11-16",
+    "reason": "User-requested SDK joint limits matching the 2026-11-16 with-ID URDF; thumb roots 130/100 degrees, thumb flexion 90 degrees, four-finger flexion 1.57 rad, swing +/-20 degrees. Calibrated linkage curves unchanged.",
+    "files": {
+      "src/Stroke.cpp": {
+        "upstream_sha256": "b06f545a97146ea3fc5fb5086ff11d7230566e1c248a3b0fb1d94f32b6e196a2",
+        "local_sha256": "288fb085d461e32515a62c6df9fae54c6050196f8d7bd4183f1a755accdcf743"
+      },
+      "include/a3/Stroke.h": {
+        "upstream_sha256": "eeb23c075466fe66cf6a3c6536219f55490798b467d18c9245032dc544b7f61c",
+        "local_sha256": "c3430ac7bf9bba5f7bafa8ef033bbb0744957d4f64b362dbe5bd4a0465b59574"
+      },
+      "tests/test_protocol.cpp": {
+        "upstream_sha256": "6c509ff55b1767a03d93064f7259ba7f018e1acfe67323832905644b63e0873d",
+        "local_sha256": "18b5ad2593231c90a36690bdfcc17908ebad67817c4231d144904ea3a7ffa53b"
+      }
+    },
+    "validation": "Python/C++ joint conversion parity, endpoint and inverse checks; Linux native offline tests. No hardware motion.",
+    "documentation": "docs/a32_withid_20261116.md",
+    "native_build": {
+      "library": "src/a32_driver/bin/liba32_native.so",
+      "sha256": "517ab181594b7096567687593431dc6f8b4e299aa69f9458150001a9aff385a3",
+      "ctest_passed": 3,
+      "hardware_connected": false
+    }
+  }
 }

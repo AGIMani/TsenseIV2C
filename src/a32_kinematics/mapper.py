@@ -84,12 +84,14 @@ class A32StrokeMapper:
         self._linear = tuple(joint.linear for joint in sdk_stroke.JOINTS)
         self._joint_indices = {name: i for i, name in enumerate(self.joint_names)}
         self._source_signs = tuple(model_joint_to_source_sign(model_id, name) for name in self.joint_names)
-        # The SDK accepts the full linear domain up to 90 degrees. Match the
-        # active URDF/application range of 0..1.57 radians for flexion.
+        # The CAD defines the display range, while conversion is restricted
+        # to its intersection with the installed SDK's calibrated domain.
+        # The shared SDK also serves the older bare model, whose thumb roots
+        # retain their narrower authored limits.
         limits = []
         for name, joint in zip(self.joint_names, sdk_stroke.JOINTS):
             bounds = [joint.lo, joint.hi]
-            requested = requested_limits(name)
+            requested = requested_limits(name, model_id=model_id)
             if requested is not None:
                 bounds = [max(bounds[0], requested[0]), min(bounds[1], requested[1])]
             limits.append(tuple(bounds))

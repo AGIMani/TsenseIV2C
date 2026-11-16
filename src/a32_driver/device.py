@@ -37,7 +37,11 @@ class A32Device:
         config_path = Path(hardware_config or Path(__file__).with_name("a32_hardware.json"))
         self._config = json.loads(config_path.read_text(encoding="utf-8"))
         self.channels = copy.deepcopy(self._config["channels"])
+        model_limits = self._config.get("model_limits", {}).get(model_id, {})
         for row in self.channels:
+            if row["joint"] in model_limits:
+                bounds = model_limits[row["joint"]]
+                row["limits"] = [max(row["limits"][0], bounds[0]), min(row["limits"][1], bounds[1])]
             row["joint"] = row["joint"].replace("left_hand_", f"{hand_side}_hand_")
         self._validate_config()
         # Clamp before trajectory planning so the reported applied pose agrees

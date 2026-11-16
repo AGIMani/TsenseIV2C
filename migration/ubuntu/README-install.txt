@@ -28,6 +28,16 @@
    bash migration/ubuntu/start-track.sh --check
    bash migration/ubuntu/start-play.sh --check
 
+5. MANUS 手套使用客户包中的 Linux SDK 3.1.1，默认 Integrated 模式：
+   .venvs/track/bin/python -m pip install -r requirements-manus.txt
+   bash scripts/build_manus.sh
+   bash migration/ubuntu/start-track.sh
+   工作台选择 MANUS 手套和模型手别，或打开 ?source=manus。
+   大型厂商库保留本地；新检出项目时从客户ZIP恢复：
+   python3 tools/install_manus_runtime.py /path/to/TsenseIV2C-source-20261116.zip
+   SDK 库位于 vendor/manussdk；构建、USB/HID权限和详细流程见 docs/manus_glove_input.md。
+   此功能只使用track环境；安装脚本不会启动手套、改系统权限或执行厂商安装器。
+
 环境和数据位置：
 - 默认项目/.venvs/track、.venvs/play，彼此独立。
 - HAND_VENV_ROOT=/自选目录 可覆盖环境根目录；安装与启动要设置相同值。

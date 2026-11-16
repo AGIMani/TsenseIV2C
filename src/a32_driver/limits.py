@@ -1,14 +1,15 @@
 """SDK 1.1.15 bounds shared by planning and hardware-map generation.
 
-Linear caps come from the calibrated motor-size table, including the medium
-16.95 mm thumb MCP (slot 17). The application's swing range is narrower than
-the SDK's +/-20 degree cap and is applied separately.
+Linear caps are the calibrated motor-size curves evaluated at each CAD joint
+limit: 90 degrees for the thumb and 1.57 radians for the four fingers.
 """
-from a32_kinematics.sdk_stroke import JOINTS
+import math
+from a32_kinematics.sdk_stroke import JOINTS, joint_angle_deg_to_actuator
 
 _LINEAR_BOUNDS = {
-    joint.destination: (joint.linkage.stroke_lo * 1000., joint.linkage.stroke_hi * 1000.)
-    for joint in JOINTS if joint.linear
+    joint.destination: (joint_angle_deg_to_actuator(index, math.degrees(joint.lo)),
+                        joint_angle_deg_to_actuator(index, math.degrees(joint.hi)))
+    for index, joint in enumerate(JOINTS) if joint.linear
 }
 
 

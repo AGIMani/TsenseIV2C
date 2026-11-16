@@ -35,16 +35,19 @@ mirror_axis: y
 right_hand_provisional: true
 collision_scope: different_fingers_only
 notes:
-- Supplied raised5mm/noupper_mid left and right CAD; all 367 visual meshes per hand
-  retained.
-- Right CAD reflects about base Y=4 mm; it is a geometric mirror, not independently
-  measured CAD.
-- Source URDF rotation2 also normalized to [0, 1.74] rad; source and application axes
-  now agree.
-- Source joint frames and URDF mass/inertia retained; application flexion/swing limits
-  retained.
-- Each hand retains its local keypoint annotations; review on replacement geometry
-  is pending.
-- Collision envelopes rebuilt; existing different-finger-only policy and simulation
-  inertias retained.
-mirror_plane_offset_m: 0.004
+- 2026-11-16 supplied left exterior CAD; all source visual meshes, inertias, joint
+  origins, axes and limits retained.
+- Right hand is an exact Y=0 geometric mirror; equal named angles produce mirrored
+  poses.
+- Right STL winding/normals, joint axial vectors, mass centres and inertia tensors
+  reflected together.
+- Stable application names alias the new semantic names; thumb IP is the historical
+  thumb_PIP channel.
+- The palm frame is an identity alias of the supplied base; it adds no duplicate mass
+  or visual.
+- Keypoints regenerated from source joint centres and surface caps; physical calibration
+  remains unreviewed.
+- Collision envelopes rebuilt from the new exterior; different-finger-only collision
+  policy retained.
+mirror_plane_offset_m: 0.0
+cad_version: customer-exterior-20261116

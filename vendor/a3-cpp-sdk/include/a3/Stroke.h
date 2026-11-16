@@ -11,9 +11,12 @@ constexpr int kJointNum = 20;
 /**
  * 关节角（度）→ 执行器指令。
  * 直线关节输出毫米，为相对 0° 的正行程。四条连杆：四指 MCP；食/中/无名指 PIP 与拇指 MCP（F2）；
- * 四指 DIP 与拇指 DIP（F1）；小拇指 PIP。角度限制在 0°–90°，超出端点按端点计算。0° 为 0 mm，90° 为该连杆行程上限。
+ * 四指 DIP 与拇指 IP（F1）；小拇指 PIP。按 2026-11-16 CAD：拇指 MCP/IP 为 0°–90°，
+ * 四指屈伸为 0–1.57 rad（约 89.9544°）；超出端点按各关节端点计算。
+ * 0° 为 0 mm，底层连杆标定曲线仍覆盖完整 0°–90°。
  * 下发和反馈都用均匀线性查表。角度→行程的插值误差不超过 1e-9 m，行程→角度不超过 1e-6°。
- * 旋转关节输出度。角度非有限，或旋转关节超出机构范围时返回 false，out 不变。
+ * 旋转关节输出度：拇指旋转块 0°–130°、第二根轴 0°–100°、四指侧摆 ±20°。
+ * 角度非有限，或旋转关节超出机构范围时返回 false，out 不变。
  *
  * 顺序：拇指旋转块、拇指屈伸、拇指 MCP、拇指 PIP、
  * 食指 MCP/侧摆/PIP/DIP、中指 MCP/侧摆/PIP/DIP、
@@ -24,7 +27,8 @@ A3_API bool anglesDegToActuator(const float angle_deg[kJointNum], float out[kJoi
 /**
  * 执行器反馈 → 关节角（度）。直线为 mm，旋转为 deg。
  * 电机反馈是 float32。限位附近允许 1e-5 mm（直线）或 1e-6 rad（旋转）的边界容差，
- * 容差内先钳回行程再反算；超出容差返回 false，angle_deg 不变。
+ * 容差内先钳回连杆标定行程再反算，并将角度限制在各关节 CAD 范围；
+ * 超出标定行程容差返回 false，angle_deg 不变。
  */
 A3_API bool actuatorToAnglesDeg(const float actuator[kJointNum], float angle_deg[kJointNum]) noexcept;
 

@@ -1,6 +1,9 @@
 hand 原生 Ubuntu 网页版迁移包
 当前网页范围：仅 A3.2 with ID（左右手），手势页只提供 Mink 避碰与关闭保护。
 动作播放不提供碰撞避让。旧型号和旧碰撞模式的下文记录仅供历史参考。
+2026-11-16：A3.2 with ID 已替换为新版外壳左手及 Y=0 镜像右手，网页、SDK
+和下发限位同步新版 URDF（拇指根轴130°/100°，四指侧摆±20°）。
+关节名称映射、来源备份、重建和验证见 docs/a32_withid_20261116.md。
 目标：Ubuntu 24.04 LTS，x86_64 / amd64，Python 3.12。
 制作日期：2026-10-06（Asia/Shanghai）
 
@@ -63,7 +66,11 @@ A3.2 驱动可在新机重新编译：
 在项目根目录执行：
   bash migration/ubuntu/start-track.sh       # 手势工作台，https://127.0.0.1:8766/
   bash migration/ubuntu/start-play.sh        # 动作播放，http://127.0.0.1:8765/
-同一工作台可选择 Quest、wuji_glove、leapmotion 或摄像头。
+同一工作台可选择 Quest、wuji_glove、manus_glove、leapmotion 或摄像头。
+MANUS 使用客户包中的 Linux SDK 3.1.1 / Python 绑定，默认 Integrated 模式；
+只在 track 环境安装 requirements-manus.txt，再运行 bash scripts/build_manus.sh。
+安装、USB权限与启动步骤见 docs/manus_glove_input.md。
+入口：https://127.0.0.1:8766/?source=manus（也兼容 manus_glove）。
 新增「D455f 深度融合 · 21 点」：原生 SDK 同步读取 RGB/深度，MediaPipe
 识别后结合深度、骨长和姿态先验修正21点，工作台与动态标定页均可选择。
 入口：https://127.0.0.1:8766/?source=realsense_rgbd

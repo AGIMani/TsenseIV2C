@@ -5,7 +5,8 @@ if(NOT CMAKE_SYSTEM_NAME STREQUAL "Linux")
 endif()
 find_package(Threads REQUIRED)
 include(CTest)
-# Keep upstream source unchanged and build its protocol tests with the adapter.
+# Build the bundled SDK, including documented local CAD-limit patches, and
+# run its protocol tests with the adapter.
 # Only the SDK's protocol helpers are called: POSIX transport/lifecycle remains
 # here so connecting, stopping or destroying a handle never powers motors off.
 set(A3_SDK_BUILD_SHARED OFF CACHE BOOL "Build the SDK into the native adapter" FORCE)

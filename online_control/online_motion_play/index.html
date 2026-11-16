@@ -155,6 +155,12 @@ function toDisplay(spec, radians) {
   return downlink.at_ui_min + fraction * (downlink.at_ui_max - downlink.at_ui_min);
 }
 function fromDisplay(spec, displayed) {
+  // Preserve exact CAD endpoints even when the number field shows rounded
+  // radians (e.g. 0.349066 for 20 degrees). Interior values stay untouched.
+  for (const endpoint of [spec.min, spec.max]) {
+    const displayEndpoint = toDisplay(spec, endpoint);
+    if (Math.abs(displayed - displayEndpoint) < 1e-12 || displayed === Number(formatDisplay(spec, displayEndpoint))) return endpoint;
+  }
   if (jointDisplayMode === 'deg') return displayed * Math.PI / 180;
   if (jointDisplayMode !== 'stroke' || !spec.downlink) return displayed;
   const downlink = spec.downlink;
@@ -239,7 +245,9 @@ function renderJoints(joints) {
     control(spec, row.binding.host, spec.name);
     row.slider.disabled = !ownsControl || !spec.enabled;
     const [displayMin, displayMax] = displayBounds(spec);
-    row.slider.min = displayMin; row.slider.max = displayMax; row.slider.step = displayStep(spec);
+    // Fixed decimal steps cannot reach exact radian limits such as pi/9.
+    // Keep numeric-field increments below; the slider spans the full domain.
+    row.slider.min = displayMin; row.slider.max = displayMax; row.slider.step = 'any';
     const downlink = spec.downlink;
     const displayedValue = toDisplay(spec, spec.value);
     const feedbackKey = jointDisplayMode === 'stroke' && downlink ? 'stroke' : 'rad';
@@ -316,7 +324,9 @@ function render(next) {
   $('modelSelect').value = next.model_id;
   $('modelSelect').disabled = !ownsControl || next.connected;
   $('dof').textContent = `${next.joints.length} 自由度`;
-  $('jointNote').textContent = '关节输入使用当前模型范围。四指 swing 默认为 0，输入范围 [-0.35, 0.35] rad，下发前限幅到 [-0.34, 0.34] rad；下方同时显示实际 SDK 下发单位和范围。';
+  const swing = next.joints.find(joint => joint.name.includes('_swing_joint'));
+  const swingNote = swing ? `四指 swing 默认为 0，输入范围 [${Number(swing.min.toFixed(6))}, ${Number(swing.max.toFixed(6))}] rad。` : '';
+  $('jointNote').textContent = `关节输入使用当前模型范围。${swingNote}下方分别显示模型角度范围与 SDK 实际下发范围；下发按通道可用范围限幅。`;
   updateJointDisplayButton();
   for (const id of ['a32Transport','a32Port','a32Host','a32TcpPort']) $(id).disabled = !ownsControl || next.connected;
   {

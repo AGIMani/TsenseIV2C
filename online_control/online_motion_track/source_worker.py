@@ -140,7 +140,7 @@ class SourceWorker:
                             source=self.source, hand=consumed.get('hand'), camera_size=[0, 0],
                             source_metadata=consumed.get('source_metadata'),
                             raw_wuji=consumed.get('raw_wuji'), raw_webxr=consumed.get('raw_webxr'),
-                            raw_leapmotion=consumed.get('raw_leapmotion'))
+                            raw_leapmotion=consumed.get('raw_leapmotion'), raw_manus=consumed.get('raw_manus'))
                         update = self.session.process_background(packet,
                             lambda action: self._commit(snapshot, observed_at, action))
                     update['input_path'] = 'server_metric_worker'

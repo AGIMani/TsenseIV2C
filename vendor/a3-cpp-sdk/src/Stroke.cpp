@@ -59,27 +59,28 @@ const Link kLinks[5] = {
     make_link(2.0, 8.000119226, 8.0, 11.1),
 };
 
+// Project CAD 2026-11-16: thumb rotation 130/100 deg; finger swing +/-20 deg.
 const Joint kJoints[20] = {
-    {false, 0.0, 2.09, -2, 0},
-    {false, 0.0, 1.74, -1, 0},
+    {false, 0.0, 2.2689280275926285, -2, 0},
+    {false, 0.0, 1.7453292519943295, -1, 0},
     {true, 0.0, 1.5707963267948966, 17, 2},
     {true, 0.0, 1.5707963267948966, 16, 3},
-    {true, 0.0, 1.5707963267948966, 13, 1},
-    {false, -0.35, 0.35, 15, 0},
-    {true, 0.0, 1.5707963267948966, 12, 2},
-    {true, 0.0, 1.5707963267948966, 11, 3},
-    {true, 0.0, 1.5707963267948966, 10, 1},
-    {false, -0.35, 0.35, 14, 0},
-    {true, 0.0, 1.5707963267948966, 9, 2},
-    {true, 0.0, 1.5707963267948966, 8, 3},
-    {true, 0.0, 1.5707963267948966, 5, 1},
-    {false, -0.35, 0.35, 7, 0},
-    {true, 0.0, 1.5707963267948966, 4, 2},
-    {true, 0.0, 1.5707963267948966, 3, 3},
-    {true, 0.0, 1.5707963267948966, 2, 1},
-    {false, -0.35, 0.35, 6, 0},
-    {true, 0.0, 1.5707963267948966, 1, 4},
-    {true, 0.0, 1.5707963267948966, 0, 3},
+    {true, 0.0, 1.57, 13, 1},
+    {false, -0.3490658503988659, 0.3490658503988659, 15, 0},
+    {true, 0.0, 1.57, 12, 2},
+    {true, 0.0, 1.57, 11, 3},
+    {true, 0.0, 1.57, 10, 1},
+    {false, -0.3490658503988659, 0.3490658503988659, 14, 0},
+    {true, 0.0, 1.57, 9, 2},
+    {true, 0.0, 1.57, 8, 3},
+    {true, 0.0, 1.57, 5, 1},
+    {false, -0.3490658503988659, 0.3490658503988659, 7, 0},
+    {true, 0.0, 1.57, 4, 2},
+    {true, 0.0, 1.57, 3, 3},
+    {true, 0.0, 1.57, 2, 1},
+    {false, -0.3490658503988659, 0.3490658503988659, 6, 0},
+    {true, 0.0, 1.57, 1, 4},
+    {true, 0.0, 1.57, 0, 3},
 };
 
 constexpr double kDeg = 3.14159265358979323846 / 180.0;
@@ -308,7 +309,8 @@ bool anglesDegToActuator(const float angle_deg[kJointNum], float out[kJointNum])
             continue;
         }
         double mm = 0.0;
-        if (!solve_linear(j.link, deg, &mm)) return false;
+        const double limited = std::max(j.lo, std::min(j.hi, deg * kDeg)) / kDeg;
+        if (!solve_linear(j.link, limited, &mm)) return false;
         tmp[i] = static_cast<float>(mm);
     }
     for (int i = 0; i < kJointNum; ++i) out[i] = tmp[i];
@@ -331,7 +333,7 @@ bool actuatorToAnglesDeg(const float actuator[kJointNum], float angle_deg[kJoint
         }
         double deg = 0.0;
         if (!inverse_linear(j.link, raw, &deg)) return false;
-        tmp[i] = static_cast<float>(deg);
+        tmp[i] = static_cast<float>(std::max(j.lo, std::min(j.hi, deg * kDeg)) / kDeg);
     }
     for (int i = 0; i < kJointNum; ++i) angle_deg[i] = tmp[i];
     return true;

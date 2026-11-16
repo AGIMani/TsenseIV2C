@@ -128,11 +128,13 @@ def test_physical_limit_clamp_changes_joint_pose_before_conversion(model_id):
     assert command["applied_pose"] == constrained
     assert command["joint_angles_rad"] == constrained
     assert set(command["clamped_joints_rad"]) == set(pose)
-    assert math.degrees(-.34) - 1e-9 <= command["self"][6] <= math.degrees(.34) + 1e-9
+    swing_upper = 20. if model_id.endswith("withid") else math.degrees(.34)
+    assert -swing_upper - 1e-9 <= command["self"][6] <= swing_upper + 1e-9
     for c in device.channels:
         value = command["self" if c["channel"] == "self" else "mit_pos"][c["index"]]
         assert c["limits"][0] <= value <= c["limits"][1]
-    assert command["mit_pos"][0] <= 99 and command["mit_pos"][1] <= 119
+    upper = (100., 130.) if model_id.endswith("withid") else (99., 119.)
+    assert command["mit_pos"][0] <= upper[0] and command["mit_pos"][1] <= upper[1]
     with pytest.raises(A32DriverError, match="calibrated joint limits"):
         device.prepare_targets(pose, clamp=False)
 

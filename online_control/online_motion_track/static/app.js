@@ -7,6 +7,7 @@ import { DiagnosticLogger, errorDetails } from "./diagnostic-logger.js";
 import { LatestFrameQueue } from "./latest-frame-queue.js";
 import { WebXRReceiver, questStatus } from "./webxr-receiver.js";
 import { WujiReceiver, wujiStatus } from "./wuji-receiver.js";
+import { ManusReceiver, manusStatus } from "./manus-receiver.js";
 import { LeapMotionReceiver, leapMotionStatus } from "./leapmotion-receiver.js";
 import { FeedbackPreview } from "./feedback-preview.js";
 import { bindCameraSelector } from "./camera-selector.js";
@@ -40,8 +41,9 @@ const isQuestAdb = () => $("input-source").value === "quest_adb";
 const isWebXR = () => ["webxr", "quest_adb"].includes($("input-source").value);
 const inputSource = () => isQuestAdb() ? "webxr" : isLeapCamera() ? "mediapipe" : $("input-source").value;
 const isWuji = () => inputSource() === "wuji_glove";
+const isManus = () => inputSource() === "manus_glove";
 const isLeapMotion = () => inputSource() === "leapmotion";
-const isMetricInput = () => isWebXR() || isWuji() || isLeapMotion();
+const isMetricInput = () => isWebXR() || isWuji() || isManus() || isLeapMotion();
 let generation = 0,
   active = false,
   starting = false,
@@ -216,7 +218,7 @@ async function ensureLocalRecording() {
     control_order: (directMode()
       ? "MediaPipe -> retarget -> joint limits -> linkage/slot mapping -> native A3.2 SDK; no Ruckig, collision correction or extra joint smoothing"
       : "MediaPipe -> retarget -> model collision -> Ruckig -> sample collision -> A3.2 linkage/slot mapping -> native A3.2 SDK")
-      .replace("MediaPipe", isLeapMotion() ? "Leap Motion 2 -> 21" : isWuji() ? "Wuji Glove 21" : isQuestAdb() ? "Quest USB ADB 21" : isWebXR() ? "Quest WebXR 25 -> 21" : "MediaPipe")});
+      .replace("MediaPipe", isLeapMotion() ? "Leap Motion 2 -> 21" : isWuji() ? "Wuji Glove 21" : isManus() ? "Manus Glove 21" : isQuestAdb() ? "Quest USB ADB 21" : isWebXR() ? "Quest WebXR 25 -> 21" : "MediaPipe")});
   $("record-status").textContent = "关节角与遥测记录保存在本机浏览器 · 每段 512 MiB · 结束后保存";
 }
 
@@ -337,6 +339,7 @@ async function stop({
   $("quest-token").textContent = "";
   $("quest-state").textContent = "已停止";
   $("wuji-state").textContent = "已停止";
+  $("manus-state").textContent = "已停止";
   $("leapmotion-state").textContent = "已停止";
   framePipeline?.close();
   framePipeline = null;
@@ -607,8 +610,11 @@ function applyFrameUpdate(frame, update) {
     $("collision-status").textContent = directMode() ? "直控 · 碰撞处理关闭 · 关节限位后直接映射" : collision?.mode === "mink" && update.tracking
       ? `Mink · 间距 ${collision.min_distance_mm.toFixed(2)} mm · 修正 ${collision.correction_deg.toFixed(1)}°`
       : $("collision-mode").value === "mink" ? "Mink 避碰 · 等待手势" : "避碰关闭 · 原始映射";
+    const fingerLabels = {thumb: "拇指", index: "食指", mid: "中指", ring: "无名指", pinky: "小指"};
+    const fingerCorrections = Object.entries(collision?.correction_by_finger_deg || {})
+      .map(([finger, degrees]) => `${fingerLabels[finger] || finger} ${degrees.toFixed(1)}°`).join("，");
     $("collision-status").title = collision?.mode === "mink" && update.tracking
-      ? `原始间距 ${collision.raw_min_distance_mm.toFixed(2)} mm；避碰耗时 ${collision.solve_ms.toFixed(1)} ms；${collision.closest_pair.join(" ↔ ")}；${collision.status}`
+      ? `原始间距 ${collision.raw_min_distance_mm.toFixed(2)} mm；避碰耗时 ${collision.solve_ms.toFixed(1)} ms；${collision.closest_pair.join(" ↔ ")}；${collision.status}${fingerCorrections ? `；各指修正：${fingerCorrections}` : ""}`
       : "距离按碰撞代理计算；停止识别后可以切换模式对比。";
     $("solve-ms").textContent = update.tracking
       ? update.solve_ms.toFixed(1)
@@ -629,7 +635,7 @@ function applyFrameUpdate(frame, update) {
         && optimized.length === 21 && optimized.every(p => Array.isArray(p)
           && p.length === 3 && p.every(Number.isFinite)) ? optimized : null;
       $("skeleton-status").textContent = latestWorld
-        ? `${fromWebXR ? (isQuestAdb() ? "USB ADB · 21 点" : "WebXR 25 → 21 点") : source === "wuji_glove" ? "Wuji 21 点" : source === "leapmotion" ? "Leap Motion 2 · 21 点" : source === "realsense_rgbd" ? "D455f 深度融合 · 21 点" : "21 点"} · 优化后 · ${expected === "Left" ? "左手" : "右手"}镜像 · 实时`
+        ? `${fromWebXR ? (isQuestAdb() ? "USB ADB · 21 点" : "WebXR 25 → 21 点") : source === "wuji_glove" ? "Wuji 21 点" : source === "manus_glove" ? "Manus 21 点" : source === "leapmotion" ? "Leap Motion 2 · 21 点" : source === "realsense_rgbd" ? "D455f 深度融合 · 21 点" : "21 点"} · 优化后 · ${expected === "Left" ? "左手" : "右手"}镜像 · 实时`
         : update.tracking ? "等待优化结果" : "未检测";
       skeleton?.setPoints(latestWorld, expected);
     }
@@ -659,15 +665,15 @@ function offerQuestFrame(token, snapshot) {
   const hand = snapshot.hand;
   const source = snapshot.source || "webxr";
   const packet = {session:session.session, source,
-    [source === "wuji_glove" ? "wuji_revision" : source === "leapmotion" ? "leapmotion_revision" : "webxr_revision"]:snapshot.revision,
+    [source === "wuji_glove" ? "wuji_revision" : source === "manus_glove" ? "manus_revision" : source === "leapmotion" ? "leapmotion_revision" : "webxr_revision"]:snapshot.revision,
     sequence:frameId, timestamp_ms, capture_unix_ms:Date.now(), camera_size:[0,0], hand,
     source_epoch:snapshot.source_epoch??snapshot.source_metadata?.source_epoch,
-    source_metadata:snapshot.source_metadata, raw_webxr:snapshot.raw_webxr, raw_wuji:snapshot.raw_wuji, raw_leapmotion:snapshot.raw_leapmotion};
+    source_metadata:snapshot.source_metadata, raw_webxr:snapshot.raw_webxr, raw_wuji:snapshot.raw_wuji, raw_manus:snapshot.raw_manus, raw_leapmotion:snapshot.raw_leapmotion};
   recorder.record(`${source}_raw`, {frame_id:frameId, tracking_session_id:session.session,
     observation_revision:snapshot.revision,update_revision:snapshot.update_revision??null,
     timestamp_ms, source, age_ms:Number.isFinite(snapshot.age_ms)?snapshot.age_ms:null,
     tracked:!!hand, source_epoch:packet.source_epoch,
-    source_metadata:snapshot.source_metadata, raw_webxr:snapshot.raw_webxr, raw_wuji:snapshot.raw_wuji, raw_leapmotion:snapshot.raw_leapmotion});
+    source_metadata:snapshot.source_metadata, raw_webxr:snapshot.raw_webxr, raw_wuji:snapshot.raw_wuji, raw_manus:snapshot.raw_manus, raw_leapmotion:snapshot.raw_leapmotion});
   const frame={packet,frameId,hand,expected,timestamp_ms,inferredAt:timestamp_ms,receivedAt,
     sourceAgeMs:Number.isFinite(snapshot.age_ms)?snapshot.age_ms:null};
   if(directMetric){
@@ -695,10 +701,11 @@ function updateCalibrationLink() {
 function configureInputSource() {
   updateCalibrationLink();
   const quest = isWebXR();
-  const wuji = isWuji(), leap = isLeapMotion(), metric = isMetricInput();
+  const wuji = isWuji(), manus = isManus(), leap = isLeapMotion(), metric = isMetricInput();
   const rgbd = $("input-source").value === "realsense_rgbd", nativeCamera = isLeapCamera() || rgbd;
   $("quest-input-panel").hidden = !quest;
   $("wuji-input-panel").hidden = !wuji;
+  $("manus-input-panel").hidden = !manus;
   $("leapmotion-input-panel").hidden = !leap;
   $("leap-camera-panel").hidden = !isLeapCamera();
   $("realsense-camera-panel").hidden = !rgbd;
@@ -712,8 +719,8 @@ function configureInputSource() {
   $("camera-title").textContent = "原始关键点输入";
   $("video").parentElement.querySelector(".mirror-label").hidden = metric;
   const placeholder = $("camera-placeholder");
-  placeholder.querySelector("h3").textContent = leap ? "用 Leap Motion 2 采集手势" : wuji ? "用 Wuji 手套采集手势" : quest ? "用 Quest 采集手势" : "让手势进入画面";
-  placeholder.querySelector("p").textContent = leap ? "启动 Linux Ultraleap Tracking Service 后点击「开始识别」，将所选手放入设备视野" : wuji ? "连接手套后点击「开始识别」，在下方查看骨架与模型" : quest ? "开始识别后，按上方连接信息在 Quest 进入 XR" : "点击「开始识别」，允许浏览器使用相机";
+  placeholder.querySelector("h3").textContent = leap ? "用 Leap Motion 2 采集手势" : wuji ? "用 Wuji 手套采集手势" : manus ? "用 Manus 手套采集手势" : quest ? "用 Quest 采集手势" : "让手势进入画面";
+  placeholder.querySelector("p").textContent = leap ? "启动 Linux Ultraleap Tracking Service 后点击「开始识别」，将所选手放入设备视野" : wuji ? "连接手套后点击「开始识别」，在下方查看骨架与模型" : manus ? "将 Manus 手套接入 Linux 服务电脑，点击「开始识别」接收 21 点骨架" : quest ? "开始识别后，按上方连接信息在 Quest 进入 XR" : "点击「开始识别」，允许浏览器使用相机";
   placeholder.querySelector(":scope > span").textContent = metric ? "在下方骨架视图查看 21 点与模型映射" : "建议保持手掌完整入镜";
   if (isLeapCamera()) {
     placeholder.querySelector('h3').textContent = '用 Leap Motion 2 红外相机识别手势';
@@ -741,7 +748,7 @@ async function start() {
   starting = true;
   refreshControls();
   notice();
-  $("tracking-text").textContent = isLeapMotion() ? "正在连接 Leap Motion 2…" : isWuji() ? "正在连接 Wuji 手套…" : isWebXR() ? "正在创建 Quest 输入会话…" : "正在打开相机与识别引擎…";
+  $("tracking-text").textContent = isLeapMotion() ? "正在连接 Leap Motion 2…" : isWuji() ? "正在连接 Wuji 手套…" : isManus() ? "正在连接 Manus 手套…" : isWebXR() ? "正在创建 Quest 输入会话…" : "正在打开相机与识别引擎…";
   try {
     await ensureLocalRecording();
     if (!isMetricInput()) {
@@ -848,6 +855,30 @@ async function start() {
           $("camera-placeholder").querySelector("p").textContent=leapMotionStatus(snapshot);
         },
         onError:async error=>{if(token===generation){await stop({message:"Leap Motion 2 输入已停止"});notice(error.message);}},
+      });
+      refreshControls();
+      void questReceiver.poll();
+      return;
+    }
+    if (isManus()) {
+      const connection = await api('/api/manus/create', {session:created.session});
+      if(token !== generation)return;
+      $("camera-caption").textContent = "MANUS / 21 POINTS";
+      $("gpu-badge").className = "chip ready";
+      $("gpu-badge").querySelector("span").textContent = "Manus 手套";
+      questReceiver = new ManusReceiver({session:created.session, staleAfterMs:connection.stale_after_ms,
+        combined:connection.combined_frame===true,
+        background:connection.background_processing===true,
+        onFrame:snapshot=>offerQuestFrame(token,snapshot),
+        onDiagnostic:(event,detail)=>diagnostics.record(event,detail),
+        onStatus:snapshot=>{
+          if(token!==generation)return;
+          $("manus-state").textContent=manusStatus(snapshot);
+          $("camera-state").textContent=snapshot.hand?"实时":"等待手套";
+          $("camera-placeholder").querySelector("h3").textContent=snapshot.hand?"Manus 手套已连接":"等待 Manus 手套";
+          $("camera-placeholder").querySelector("p").textContent=manusStatus(snapshot);
+        },
+        onError:async error=>{if(token===generation){await stop({message:"手套输入已停止"});notice(error.message);}},
       });
       refreshControls();
       void questReceiver.poll();
@@ -1079,8 +1110,9 @@ try {
   for (const option of $("hand-model").options) option.disabled = !service.models?.includes(option.value);
   const requestedModel = new URLSearchParams(location.search).get("model");
   if (service.models?.includes(requestedModel)) $("hand-model").value = requestedModel;
-  const requestedSource = new URLSearchParams(location.search).get("source");
-  if (["webxr", "quest_adb", "wuji_glove", "leapmotion", "leapmotion_camera", "realsense_rgbd"].includes(requestedSource)) $("input-source").value = requestedSource;
+  const sourceParam = new URLSearchParams(location.search).get("source");
+  const requestedSource = sourceParam === "manus" ? "manus_glove" : sourceParam;
+  if (["webxr", "quest_adb", "wuji_glove", "manus_glove", "leapmotion", "leapmotion_camera", "realsense_rgbd"].includes(requestedSource)) $("input-source").value = requestedSource;
   const requestedSide = new URLSearchParams(location.search).get("side");
   if (["left", "right"].includes(requestedSide)) $("side").value = requestedSide;
   configureInputSource();

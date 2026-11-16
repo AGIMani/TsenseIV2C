@@ -17,7 +17,7 @@ function harness(){
   return {context,uploaded,applied,observed,records,
     offer:vm.runInNewContext(source+';offerQuestFrame;',context)};
 }
-for(const source of ['webxr','wuji_glove','leapmotion']){
+for(const source of ['webxr','wuji_glove','manus_glove','leapmotion']){
   test(`${source} combined result is applied without reuploading the skeleton`,()=>{
     const h=harness(),update={sequence:42,tracking:true,source_age_at_solve_ms:9};
     h.offer(2,{source,combined_frame:true,update,revision:7,update_revision:3,
@@ -48,4 +48,15 @@ test('Leap observation revision, source epoch and native bones survive preview a
   assert.equal(packet.raw_leapmotion,raw);assert(!('webxr_revision' in packet));
   assert.equal(h.records[0][0],'leapmotion_raw');
   assert.equal(h.records[0][1].raw_leapmotion,raw);assert.equal(h.records[0][1].source_epoch,4);
+});
+
+test('Manus observation revision, source epoch and native bones survive preview and raw recording',()=>{
+  const h=harness(),raw={frame_id:512,bones:[{prev_joint:[1,2,3],next_joint:[4,5,6]}]};
+  h.offer(2,{source:'manus_glove',revision:9,source_epoch:4,raw_manus:raw,
+    source_metadata:{source_epoch:4},hand:{label:'Left'},age_ms:5});
+  const packet=h.uploaded[0].packet;
+  assert.equal(packet.manus_revision,9);assert.equal(packet.source_epoch,4);
+  assert.equal(packet.raw_manus,raw);assert(!('webxr_revision' in packet));
+  assert.equal(h.records[0][0],'manus_glove_raw');
+  assert.equal(h.records[0][1].raw_manus,raw);assert.equal(h.records[0][1].source_epoch,4);
 });

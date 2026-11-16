@@ -14,9 +14,10 @@ sys.path[:0] = [str(ROOT), str(ROOT / "src"), str(ROOT / "tools")]
 from a32_driver import A32Device
 from a32_kinematics import A32Error, A32StrokeMapper
 from a32_kinematics.joint_coordinates import (
-    COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, SWING_COMMAND_LIMITS, is_finger_swing,
+    COORDINATE_VERSION, SWING_AXIS_ALIGNMENT, SWING_COMMAND_LIMITS, BARE_SWING_COMMAND_LIMITS, is_finger_swing,
     requested_limits, legacy_to_model, model_to_legacy,
-    thumb_origin_offset,
+    thumb_origin_offset, migrate_signed_pose,
+    WITHID_CAD_VERSION,
 )
 from hand_profiles import A32_MODEL_IDS, load_hand_profile
 from TsenseI_retargeting.fk.urdf import UrdfModel
@@ -31,12 +32,14 @@ def test_new_limits_initial_pose_and_retarget_seed(model_id, side):
     limits = profile.joint_limits(side)
     mechanism_limits = {c["joint"]: c["limits_rad"] for c in device.mapper.description()["channels"]}
     for name, bounds in limits.items():
-        expected = requested_limits(name)
+        expected = requested_limits(name, model_id=model_id)
         if expected:
             assert bounds == expected
-            np.testing.assert_allclose(device.joint_limits()[name],
-                                       SWING_COMMAND_LIMITS if is_finger_swing(name) else mechanism_limits[name],
-                                       atol=1e-12, rtol=0)
+            if "_thumb_rota" not in name:
+                np.testing.assert_allclose(device.joint_limits()[name],
+                                           (SWING_COMMAND_LIMITS if model_id.endswith("withid") else BARE_SWING_COMMAND_LIMITS)
+                                           if is_finger_swing(name) else mechanism_limits[name],
+                                           atol=1e-12, rtol=0)
     pose = profile.init_pose(side)
     suffix = "" if side == "left" else "_right"
     assert yaml.safe_load((profile.root / f"q_init{suffix}.yaml").read_text())["q"] == pose
@@ -49,22 +52,22 @@ def test_new_limits_initial_pose_and_retarget_seed(model_id, side):
 
 @pytest.mark.parametrize("model_id", A32_MODEL_IDS)
 @pytest.mark.parametrize("side", ["left", "right"])
-def test_all_mcp_models_extend_to_157_with_sdk_scaled_strokes(model_id, side):
+def test_all_mcp_models_use_authored_limits_with_sdk_scaled_strokes(model_id, side):
     profile = load_hand_profile(model_id)
     device = A32Device(side, model_id=model_id)
     pose = profile.init_pose(side)
     for finger in ("thumb", "index", "mid", "ring", "pinky"):
         name = f"{side}_hand_{finger}_MCP_joint"
-        assert profile.joint_limits(side)[name] == (0., 1.57)
-        expected_upper = 1.57
+        expected_upper = math.pi / 2 if model_id.endswith("withid") and finger == "thumb" else 1.57
+        assert profile.joint_limits(side)[name] == (0., expected_upper)
         assert device.joint_limits()[name] == pytest.approx((0., expected_upper), abs=1e-10, rel=0)
-        pose[name] = 1.57
+        pose[name] = expected_upper
     targets = device.prepare_targets(pose, clamp=True)
     for finger in ("thumb", "index", "mid", "ring", "pinky"):
         name = f"{side}_hand_{finger}_MCP_joint"
-        expected_upper = 1.57
+        expected_upper = math.pi / 2 if model_id.endswith("withid") and finger == "thumb" else 1.57
         assert targets["applied_pose"][name] == pytest.approx(expected_upper, abs=1e-10, rel=0)
-        assert pose[name] == 1.57
+        assert pose[name] == expected_upper
     for channel in device.channels:
         value = targets["self" if channel["channel"] == "self" else "mit_pos"][channel["index"]]
         assert channel["limits"][0] <= value <= channel["limits"][1]
@@ -129,7 +132,8 @@ def test_all_twenty_endpoints_send_within_limits_and_feedback_inverts(model_id, 
         if is_finger_swing(channel["joint"]):
             q = pose[channel["joint"]]
             assert value == pytest.approx(math.degrees(q))
-            assert -.34 - 1e-12 <= math.radians(value) <= .34 + 1e-12
+            bound = math.pi / 9 if model_id.endswith("withid") else .34
+            assert -bound - 1e-12 <= math.radians(value) <= bound + 1e-12
     assert device._backend is None  # No DLL or connection used for any sample.
 
 
@@ -139,13 +143,16 @@ def test_swing_source_coordinates_then_hardware_clip(model_id, old, bare_value, 
     profile = load_hand_profile(model_id)
     device = A32Device(model_id=model_id)
     translated = bare_value if model_id == "TsenseI_v3_2" else id_value
-    sent = min(.34, max(-.34, translated))
+    command_bound = math.pi / 9 if model_id.endswith("withid") else .34
+    sent = min(command_bound, max(-command_bound, translated))
     pose = profile.init_pose()
     for name in pose:
         if is_finger_swing(name):
             pose[name] = legacy_to_model(model_id, name, old)
             assert pose[name] == pytest.approx(translated)
-    model_targets = device.mapper.convert(pose)
+    pose = migrate_signed_pose(pose, profile.joint_limits())
+    translated = min(math.pi / 9, max(-math.pi / 9, translated))
+    model_targets = device.mapper.convert(pose, clamp=True)
     command = device.prepare_targets(pose)
     for channel in device.channels:
         name = channel["joint"]
@@ -194,7 +201,83 @@ def test_positive_asset_migration_preserves_fk_and_is_idempotent(tmp_path, model
         pose = profile.init_pose(side)
         pose.update({name: value for name in pose if is_finger_swing(name)})
         migrated = migrate_positive_pose(pose, profile.joint_limits(side))
-        a, b, c = old.forward_kinematics(pose), new.forward_kinematics(migrated), installed.forward_kinematics(migrated)
+        # The new exact 20-degree shell clips the old rounded endpoints.
+        # Compare FK at the same retained angle in each coordinate system.
+        retained_old = {name: .35 - angle if is_finger_swing(name) else angle
+                        for name, angle in migrated.items()}
+        a, b, c = old.forward_kinematics(retained_old), new.forward_kinematics(migrated), installed.forward_kinematics(migrated)
         for name in a:
             np.testing.assert_allclose(a[name], b[name], atol=2e-12)
             np.testing.assert_allclose(b[name], c[name], atol=2e-12)
+
+
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_customer_cad_limits_match_all_hardware_command_endpoints(side):
+    profile = load_hand_profile("TsenseI_v3_2_withid")
+    limits = profile.joint_limits(side)
+    device = A32Device(side, model_id=profile.model_id)
+    prefix = f"{side}_hand_"
+    expected = {
+        "thumb_rota_block_joint": math.radians(130),
+        "thumb_rotaback_joint2": math.radians(100),
+        "thumb_MCP_joint": math.pi / 2,
+        "thumb_PIP_joint": math.pi / 2,
+    }
+    for suffix, upper in expected.items():
+        assert limits[prefix + suffix] == pytest.approx((0., upper), abs=1e-14)
+    for finger in ("index", "mid", "ring", "pinky"):
+        assert limits[prefix + finger + "_swing_joint"] == pytest.approx((-math.pi / 9, math.pi / 9))
+        for part in ("MCP", "PIP", "DIP"):
+            assert limits[prefix + finger + "_" + part + "_joint"] == (0., 1.57)
+    endpoints = {name: hi for name, (lo, hi) in limits.items()}
+    result = device.prepare_targets(endpoints, clamp=True)
+    assert result["mit_pos"] == pytest.approx([100., 130.])
+    assert result["applied_pose"][prefix + "thumb_MCP_joint"] == math.pi / 2
+    assert result["applied_pose"][prefix + "thumb_PIP_joint"] == math.pi / 2
+    assert result["applied_pose"] == pytest.approx(endpoints, abs=1e-12)
+    for name, bounds in limits.items():
+        assert device.joint_limits()[name] == pytest.approx(bounds, abs=1e-12)
+    assert device._backend is None
+
+
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_bare_hardware_rotary_limits_are_preserved(side):
+    device = A32Device(side, model_id="TsenseI_v3_2")
+    limits = device.joint_limits()
+    assert limits[f"{side}_hand_thumb_rota_block_joint"] == pytest.approx((0., math.radians(119)))
+    assert limits[f"{side}_hand_thumb_rotaback_joint2"] == pytest.approx((0., math.radians(99)))
+    for name, bounds in limits.items():
+        if is_finger_swing(name):
+            assert bounds == pytest.approx((-.34, .34))
+
+
+@pytest.mark.parametrize("side", ["left", "right"])
+def test_customer_cad_synchronization_preserves_unmarked_source_joint_data(side):
+    profile = load_hand_profile("TsenseI_v3_2_withid")
+    root = ET.parse(profile.root / f"source_20_outputs/TsenseI_hand_{side}_v3_2_withid.urdf").getroot()
+    for key in ("a32_joint_coordinates", "a32_swing_axis_alignment", "a32_thumb_zero_alignment"):
+        root.attrib.pop(key, None)
+    root.set("a32_cad_source", WITHID_CAD_VERSION)
+    before = [ET.tostring(joint) for joint in root.findall("joint")]
+    apply_urdf_coordinates(root, model_id=profile.model_id)
+    assert [ET.tostring(joint) for joint in root.findall("joint")] == before
+
+
+@pytest.mark.parametrize("old_angle", [-.35, -.2, 0., .2, .35])
+def test_signed_motion_migration_clamps_only_old_swing_endpoints(old_angle):
+    limits = {"left_hand_index_swing_joint": (-math.pi / 9, math.pi / 9),
+              "left_hand_thumb_rota_block_joint": (0., math.radians(130)),
+              "left_hand_thumb_MCP_joint": (0., math.pi / 2)}
+    pose = {name: old_angle if is_finger_swing(name) else hi for name, (lo, hi) in limits.items()}
+    before = dict(pose)
+    migrated = migrate_signed_pose(pose, limits)
+    assert pose == before
+    assert migrated["left_hand_index_swing_joint"] == min(math.pi / 9, max(-math.pi / 9, old_angle))
+    assert migrated["left_hand_thumb_rota_block_joint"] == math.radians(130)
+    assert migrated["left_hand_thumb_MCP_joint"] == math.pi / 2
+    assert migrate_signed_pose(migrated, limits) == migrated
+    for invalid in (-.351, .351, float("nan"), True):
+        with pytest.raises(ValueError):
+            migrate_signed_pose({**pose, "left_hand_index_swing_joint": invalid}, limits)
+    with pytest.raises(ValueError):
+        migrate_signed_pose({**pose, "left_hand_thumb_MCP_joint": 1.58}, limits)

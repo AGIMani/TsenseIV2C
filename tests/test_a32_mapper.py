@@ -58,7 +58,7 @@ def test_pinky_flexion_and_signed_swing_remain_independent(side, method):
     mcp, swing = (f"{side}_hand_pinky_{part}_joint" for part in ("MCP", "swing"))
     pose[mcp] = 1.0  # Legal flexion must not be clamped to swing's 0.35 rad.
     expected = sdk_stroke.joint_angle_deg_to_actuator(16, math.degrees(pose[mcp]))
-    for angle in (-.35, -.15, 0., .15, .35):
+    for angle in (-math.pi / 9, -.15, 0., .15, math.pi / 9):
         pose[swing] = angle
         strict = mapper.convert(pose)
         preview = mapper.preview(pose)
@@ -114,7 +114,7 @@ def test_extended_mcp_range_uses_sdk_full_linear_domain(model_id, side, method):
         name = channel["joint"]
         if not name.endswith("_MCP_joint"):
             continue
-        upper = 1.57
+        upper = math.pi / 2 if model_id.endswith("withid") and "_thumb_" in name else 1.57
         assert channel["limits_rad"] == [0., upper]
         for angle in (0., upper):
             pose[name] = angle
