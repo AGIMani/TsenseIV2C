@@ -42,7 +42,14 @@ external/
 *.pkl
 !**/mano_mean_params.npz
 
-# 机器人资产唯一真源：assets/hands/TsenseI_hand（禁止再提交重复 meshes）
+# Retired hand models must not be added back to the current shell-only project.
+/assets/hands/daxian_hand_v3_2/
+/assets/hands/TsenseI_hand/
+/assets/hands/TsenseI_hand_v3_0/
+/assets/hands/TsenseI_hand_v3_0_withid/
+/assets/hands/TsenseI_hand_v3_2/
+
+# Do not add duplicate legacy retargeting meshes.
 TsenseI_retargeting/robots/left_hand/
 
 # Local archives of replaced robot packages and their annotations.
