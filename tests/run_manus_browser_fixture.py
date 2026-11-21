@@ -35,8 +35,9 @@ def main():
             if not paused.is_set():
                 sequence += 1
                 for side in points:
+                    # Exercise SDK callbacks that share a packed publish time.
                     glove.publish(points[side], side=side, sequence=sequence,
-                                  glove_id=42 if side=='left' else 43)
+                                  glove_id=42 if side=='left' else 43, timestamp=123456)
     producer = threading.Thread(target=publish, daemon=True)
     service = threading.Thread(target=server.serve_forever, daemon=True)
     producer.start()

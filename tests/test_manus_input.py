@@ -48,6 +48,7 @@ class FakeGlove:
         self.connected = False
         self.calibrations = []
         self.calibration_result = 1
+        self.node_queries = []
 
     def publish(self, points, side='left', **options):
         with self.lock:
@@ -72,6 +73,7 @@ class FakeGlove:
 
     def get_node_info(self, side):
         with self.lock:
+            self.node_queries.append((side, self.frames[side][1]['glove_id']))
             return deepcopy(self.frames[side][0])
 
     def get_raw_skeleton_snapshot(self, side):
@@ -195,6 +197,7 @@ def test_old_callback_and_replaced_glove_cannot_reuse_saved_frame(device):
     replaced = wait_for(lambda: relay.latest('a'), lambda x:x['source_metadata']['sequence']==1)
     assert replaced['source_metadata']['source_epoch'] > first['source_metadata']['source_epoch']
     assert relay.consume('a', first['revision'])['hand'] is None
+    assert glove.node_queries == [('left', 42), ('left', 99)]
 
 
 @pytest.mark.parametrize('result', [1, 2])
@@ -327,24 +330,48 @@ def test_invalid_packed_timestamp_is_rejected(timestamp):
         hand_frame(snapshot, nodes, 'left')
 
 
-def test_repeated_sdk_timestamp_cannot_renew_host_age_or_revision(device):
+def test_new_callback_with_repeated_sdk_timestamp_renews_host_age(device):
     clock, glove, relay = device
-    glove.publish(np.zeros((21, 3)), timestamp=(1 << 60))
+    timestamp = 1 << 60
+    glove.publish(np.zeros((21, 3)), timestamp=timestamp)
     relay.create('a', 'left')
     first = wait_for(lambda: relay.latest('a'))
-    clock.value += .12
-    glove.publish(np.zeros((21, 3)), sequence=2, timestamp=(1 << 60))
-    time.sleep(.03)
-    duplicate = relay.latest('a')
-    assert duplicate['revision'] == first['revision']
-    assert duplicate['age_ms'] == pytest.approx(120)
-    clock.value += .09
-    glove.publish(np.zeros((21, 3)), sequence=3, timestamp=(1 << 60))
-    time.sleep(.03)
-    assert relay.latest('a')['hand'] is None
-    # Packed values are identities, never compared as numeric capture times.
-    glove.publish(np.zeros((21, 3)), sequence=4, timestamp=1)
-    assert wait_for(lambda: relay.latest('a'))['hand'] is not None
+    previous_revision = first['revision']
+    for sequence in (2, 3):
+        clock.value += .12
+        glove.publish(np.zeros((21, 3)), sequence=sequence, timestamp=timestamp)
+        fresh = wait_for(lambda: relay.latest('a'), lambda s:s['source_metadata']['sequence'] == sequence)
+        assert fresh['hand'] is not None
+        assert fresh['revision'] > previous_revision
+        assert fresh['source_metadata']['source_epoch'] == first['source_metadata']['source_epoch']
+        assert fresh['age_ms'] == pytest.approx(0, abs=1e-6)
+        assert fresh['raw_manus']['source_timestamp_raw'] == str(timestamp)
+        previous_revision = fresh['revision']
+    clock.value += .21
+    expired = relay.latest('a')
+    assert expired['hand'] is None and expired['revision'] == previous_revision
+
+
+def test_node_metadata_reused_across_row_order_changes_and_refetched_for_new_ids(device):
+    clock, glove, relay = device
+    points = np.random.default_rng(92).normal(size=(21, 3)) * .02
+    glove.publish(points)
+    relay.create('a', 'left')
+    wait_for(lambda: relay.latest('a'))
+    for sequence in (2, 3):
+        nodes, snapshot = skeleton(points, clock, sequence=sequence)
+        if sequence == 3:
+            for node in nodes:
+                node.node_id += 1000
+                node.parent_id += 1000
+            snapshot['node_ids'] = [node_id + 1000 for node_id in snapshot['node_ids']]
+        snapshot['node_ids'].reverse()
+        snapshot['skeleton'] = snapshot['skeleton'][::-1]
+        with glove.lock:
+            glove.frames['left'] = nodes, snapshot
+        fresh = wait_for(lambda: relay.latest('a'), lambda s:s['source_metadata']['sequence'] == sequence)
+        np.testing.assert_allclose(fresh['hand']['world'], points - points[0], atol=1e-14)
+        assert glove.node_queries == [('left', 42)] * (1 if sequence == 2 else 2)
 
 
 def test_old_solve_cannot_commit_while_newer_frames_are_fresh(device):
@@ -377,6 +404,8 @@ def test_invalid_new_snapshot_immediately_clears_valid_frame(device, cause):
         elif cause == 'future_arrival':
             snapshot['host_arrival_ns'] += 1_000_000
         else:
+            # Switching gloves requires loading this device's metadata.
+            snapshot['glove_id'] = 43
             nodes[0].side = 2
         glove.frames['left'] = (nodes, snapshot)
     lost = wait_for(lambda: relay.latest('a'), lambda x:x['source_metadata']['event'] == 'invalid_frame')
@@ -399,6 +428,7 @@ def test_reconnect_resets_sequence_but_old_owner_cannot_publish(device):
     fresh = wait_for(lambda: relay.latest('b'))
     assert fresh['source_metadata']['stream_id'] != first['source_metadata']['stream_id']
     assert fresh['source_metadata']['sequence'] == 1
+    assert glove.node_queries == [('left', 42), ('left', 42)]
     nodes, snapshot = skeleton(np.ones((21, 3)), clock, sequence=999)
     relay.client._publish(old_worker, 'left', snapshot, nodes)
     assert relay.latest('b')['revision'] == fresh['revision']

@@ -1,6 +1,5 @@
 """One Manus SDK owner, shared by both hands and all browser sessions."""
 from copy import deepcopy
-from collections import OrderedDict
 import importlib
 from pathlib import Path
 import sys
@@ -147,8 +146,7 @@ class ManusSource:
     @staticmethod
     def _empty():
         return dict(revision=0, epoch=0, sequence=-1, glove_id=0, observed_at=None,
-                    raw=None, hand=None, event='waiting', error=None,
-                    sequences={}, timestamps=OrderedDict())
+                    raw=None, hand=None, event='waiting', error=None, sequences={})
 
     def _notify(self):
         if self.on_change:
@@ -177,7 +175,6 @@ class ManusSource:
         sequence = _uint(snapshot['sequence'], '回调序号')
         arrival = _uint(snapshot['host_arrival_ns'], '回调时间')
         glove_id = _uint(snapshot['glove_id'], '手套 ID', 32)
-        timestamp = _timestamp(snapshot['source_timestamp_raw'])
         now = self.clock()
         if snapshot['valid'] is not True or sequence <= 0 or not glove_id or arrival <= 0 or arrival > int(now * 1e9):
             raise ValueError('Manus 骨架或回调时间无效')
@@ -190,14 +187,9 @@ class ManusSource:
             if not self._current(worker):
                 return
             state = self.sides[side]
-            # The binding counts callbacks; a replay with a new local sequence
-            # must not renew the old SDK sample's host-arrival timestamp.
+            # Each new SDK callback has its own host arrival, even when the
+            # glove repeats its packed publish time.
             state['sequences'][glove_id] = sequence
-            if (glove_id, timestamp) in state['timestamps']:
-                return
-            state['timestamps'][(glove_id, timestamp)] = arrival
-            while len(state['timestamps']) > 256:
-                state['timestamps'].popitem(last=False)
             if (state['hand'] is None or state['glove_id'] != snapshot['glove_id'] or
                     (now - state['observed_at']) * 1000 >= STALE_AFTER_MS):
                 state['epoch'] += 1
@@ -236,7 +228,6 @@ class ManusSource:
                     for state in self.sides.values():
                         state['sequence'] = -1
                         state['sequences'].clear()
-                        state['timestamps'].clear()
                 mappings, calibrated, calibration_errors = {}, set(), {}
                 self._clear(worker, 'connected')
                 while not worker['stop'].is_set():
@@ -276,21 +267,20 @@ class ManusSource:
                                     self.sides[side]['sequence'] = sequence
                                     self.sides[side]['sequences'][glove_id] = sequence
                                     self.sides[side]['glove_id'] = glove_id
-                                    self.sides[side]['timestamps'][(glove_id,
-                                        _timestamp(cached['source_timestamp_raw']))] = cached['host_arrival_ns']
                                 mappings.pop(side, None)
                                 self._clear(worker, 'calibrated', side=side)
                             snapshot = dict(glove.get_raw_skeleton_snapshot(side))
                             if not self._current(worker):
                                 break
                             if not snapshot['valid'] or snapshot['glove_id'] != glove_id:
+                                mappings.pop(side, None)
                                 self._clear(worker, 'waiting_for_skeleton', side=side)
                                 continue
-                            if (side not in mappings or mappings[side][0] != glove_id or
-                                    mappings[side][2] != snapshot['sequence']):
-                                nodes = glove.get_node_info(side)
-                                mediapipe_rows(nodes)
-                                mappings[side] = (glove_id, nodes, snapshot['sequence'])
+                            # Node IDs travel with the coordinates. Reordering rows
+                            # keeps the same hierarchy; a changed set needs a new one.
+                            layout = (glove_id, frozenset(snapshot.get('node_ids') or ()))
+                            if side not in mappings or mappings[side][0] != layout:
+                                mappings[side] = (layout, glove.get_node_info(side))
                             self._publish(worker, side, snapshot, mappings[side][1])
                         except Exception as exc:
                             mappings.pop(side, None)
